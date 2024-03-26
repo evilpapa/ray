@@ -1,8 +1,8 @@
 (kuberay-examples)=
 
-# Examples
+# 示例
 
-This section presents example Ray workloads to try out on your Kubernetes cluster.
+本部分介绍了在 Kubernetes 集群上试用的 Ray 工作负载示例。
 
 - {ref}`kuberay-ml-example` (CPU-only)
 - {ref}`kuberay-gpu-training-example`

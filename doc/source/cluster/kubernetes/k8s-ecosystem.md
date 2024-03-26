@@ -1,6 +1,6 @@
 (kuberay-ecosystem-integration)=
 
-# KubeRay Ecosystem
+# KubeRay 生态系统
 
 * {ref}`kuberay-ingress`
 * {ref}`kuberay-prometheus-grafana`

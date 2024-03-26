@@ -1,58 +1,58 @@
-Deploying Ray for ML platforms
+机器学习平台部署 Ray
 ==============================
 
-Here, we describe how you might use or deploy Ray in your infrastructure. There are two main deployment patterns -- pick and choose and within existing platforms.
+在这里，我们将介绍如何在基础设施中使用或部署 Ray。有两种主要的部署模式 --pick 和在现有平台内部署。
 
-The core idea is that Ray can be **complementary** to your existing infrastructure and integration tools.
+核心思想是 Ray 可以 **补充** 您现有的基础设施和集成工具。
 
-Design Principles
+设计理念
 -----------------
 
-* Ray and its libraries handles the heavyweight compute aspects of AI apps and services.
-* Ray relies on external integrations (e.g., Tecton, MLFlow, W&B) for Storage and Tracking.
-* Workflow Orchestrators (e.g., AirFlow) are an optional component that can be used for scheduling recurring jobs, launching new Ray clusters for jobs, and running non-Ray compute steps.
-* Lightweight orchestration of task graphs within a single Ray app can be handled using Ray tasks.
-* Ray libraries can be used independently, within an existing ML platform, or to build a Ray-native ML platform.
+* Ray 及其库处理了人工智能应用程序和服务的计算较重的方面。
+* Ray依靠外部集成（例如Tecton、MLFlow、W&B）进行存储和跟踪。
+* 工作流编排器（例如，AirFlow）是一个可选组件，可用于调度重复作业、为作业启动新的 Ray 集群以及运行非 Ray 计算步骤。
+* 可以使用 Ray 任务处理单个 Ray 应用程序中任务图的轻量级编排。
+* Ray 库可以在现有的 ML 平台中独立使用，也可以构建 Ray 原生 ML 平台。
 
 
-Pick and choose your own libraries
+选择你自己的类库
 ----------------------------------
 
-You can pick and choose which Ray AI libraries you want to use.
+您可以选择要使用的 Ray AI 库。
 
-This is applicable if you are an ML engineer who wants to independently use a Ray library for a specific AI app or service use case and do not need to integrate with existing ML platforms.
+如果您是一名 ML 工程师，希望为特定的人工智能应用程序或服务用例独立使用 Ray 库，并且不需要与现有 ML 平台集成，则这一点适用。
 
-For example, Alice wants to use RLlib to train models for her work project. Bob wants to use Ray Serve to deploy his model pipeline. In both cases, Alice and Bob can leverage these libraries independently without any coordination.
+例如，Alice 希望使用 RLli b为她的工作项目训练模型。Bob 希望使用 Ray Serve 来部署他的模型管道。在这两种情况下，Alice 和 Bob 都可以独立地利用这些库，而无需任何协调。
 
-This scenario describes most usages of Ray libraries today.
+此场景描述了当今 Ray 库的大多数用法。
 
 .. https://docs.google.com/drawings/d/1DcrchNda9m_3MH45NuhgKY49ZCRtj2Xny5dgY0X9PCA/edit
 
 .. image:: /images/air_arch_1.svg
 
-In the above diagram:
+在上图中：
 
-* Only one library is used -- showing that you can pick and choose and do not need to replace all of your ML infrastructure to use Ray.
-* You can use one of :ref:`Ray's many deployment modes <jobs-overview>` to launch and manage Ray clusters and Ray applications.
-* Ray AI libraries can read data from external storage systems such as Amazon S3 / Google Cloud Storage, as well as store results there.
+* 只使用了一个库 -- 这表明您可以进行挑选，而不需要替换所有ML基础结构即可使用Ray。
+* 你可以使用 :ref:`Ray 的多种部署模式 <jobs-overview>` 的一种来启动和管理 Ray 集群和 Ray 应用程序。
+* Ray AI 库可以从外部存储系统（如 Amazon S3 /谷歌云存储）读取数据，并将结果存储在那里。
 
 
 
-Existing ML Platform integration
+现有 ML 平台集成
 --------------------------------
 
-You may already have an existing machine learning platform but want to use some subset of Ray's ML libraries. For example, an ML engineer wants to use Ray within the ML Platform their organization has purchased (e.g., SageMaker, Vertex).
+您可能已经有了一个现有的机器学习平台，但希望使用 Ray 的 ML 库的一些子集。例如，ML 工程师希望在其组织购买的ML平台（例如，SageMaker、Vertex）中使用 Ray。
 
-Ray can complement existing machine learning platforms by integrating with existing pipeline/workflow orchestrators, storage, and tracking services, without requiring a replacement of your entire ML platform.
+Ray 可以通过与现有的管道 / 工作流协调器、存储和跟踪服务集成来补充现有的机器学习平台，而不需要更换整个 ML 平台。
 
 
 .. image:: images/air_arch_2.png
 
 
-In the above diagram:
+在上图中：
 
-1. A workflow orchestrator such as AirFlow, Oozie, SageMaker Pipelines, etc. is responsible for scheduling and creating Ray clusters and running Ray apps and services. The Ray application may be part of a larger orchestrated workflow (e.g., Spark ETL, then Training on Ray).
-2. Lightweight orchestration of task graphs can be handled entirely within Ray. External workflow orchestrators will integrate nicely but are only needed if running non-Ray steps.
-3. Ray clusters can also be created for interactive use (e.g., Jupyter notebooks, Google Colab, Databricks Notebooks, etc.).
-4. Ray Train, Data, and Serve provide integration with Feature Stores like Feast for Training and Serving.
-5. Ray Train and Tune provide integration with tracking services such as MLFlow and Weights & Biases.
+1. 工作流协调器，如 AirFlow、Oozie、SageMaker Pipelines 等，负责调度和创建 Ray 集群以及运行 Ray 应用程序和服务。Ray 应用程序可能是更大的编排工作流的一部分（例如，Spark ETL，然后是在 Ray 上训练）。
+2. 任务图的轻量级编排可以完全在 Ray 中处理。外部工作流协调器将很好地集成，但只有在运行非 Ray 步骤时才需要。
+3. Ray 集群也可以创建用于交互使用（例如，Jupyter笔记本电脑、Google Colab、Databricks笔记本电脑等）。
+4. Ray Train、Data 和 Serve 提供与特征存储（如 Feast for Training and Serving）的集成。
+5. Ray Train 和 Tune 提供与 MLFlow 和 Weights&Biases 等跟踪服务的集成。

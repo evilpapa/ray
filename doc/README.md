@@ -1,19 +1,19 @@
-# Ray Documentation
+# Ray 文档
 
-Repository for documentation of the Ray project, hosted at [docs.ray.io](https://docs.ray.io).
+Ray 工程文档仓库，发布在 [docs.ray.io](https://docs.ray.io).
 
-## Installation
+## 安装
 
-To build the documentation, make sure you have `ray` installed first.
-For building the documentation locally install the following dependencies:
+要构建此文档，请确保先安装 `ray` 。
+要进行本地文档构建请安装以下依赖：
 
 ```bash
 pip install -r requirements-doc.txt
 ```
 
-## Building the documentation
+## 构建文档
 
-To compile the documentation and open it locally, run the following command from this directory.
+要编译文档并在本地打开，请在此目录运行以下命令：
 
 ```bash
 make develop && open _build/html/index.html
@@ -25,7 +25,7 @@ make develop && open _build/html/index.html
 > expensive parts of the build process. In particular, it will aggressively prune the
 > left-hand side navigation, but leave the documents itself intact.
 
-## Building just one subproject
+## 仅构建子项目
 
 Often your changes in documentation just concern one subproject, such as Tune or Train.
 To build just this one subproject, and ignore the rest
@@ -51,7 +51,7 @@ If not, add the template you want and include it accordingly, i.e. with
 
 This ensures consistent messaging across documentation pages.
 
-## Checking for broken links
+## 检查破坏的链接
 
 To check if there are broken links, run the following (we are currently not running this
 in the CI since there are false positives).
@@ -60,7 +60,7 @@ in the CI since there are false positives).
 make linkcheck
 ```
 
-## Running doctests
+## 运行 doctests
 
 To run tests for examples shipping with docstrings in Python files, run the following command:
 
@@ -134,6 +134,6 @@ More text
 
 Please note that the parsing is extremely simple (regex replace) and will not support nesting.
 
-## Testing changes locally
+## 测试本地修改
 
 If you want to run the preprocessing locally on a specific file (to eg. see how it will render after docs have been built), run `source/preprocess_github_markdown.py PATH_TO_MARKDOWN_FILE PATH_TO_PREPROCESSED_MARKDOWN_FILE`. Make sure to also edit `EXTERNAL_MARKDOWN_FILES` in `source/custom_directives.py` so that your file does not get overwritten by one downloaded from GitHub.

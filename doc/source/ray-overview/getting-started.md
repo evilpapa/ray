@@ -1,29 +1,29 @@
 (gentle-intro)=
 
-# Getting Started
-Use Ray to scale applications on your laptop or the cloud. Choose the right guide for your task.
-* Scale ML workloads: [Ray Libraries Quickstart](#ray-libraries-quickstart)
-* Scale general Python applications: [Ray Core Quickstart](#ray-core-quickstart)
-* Deploy to the cloud: [Ray Clusters Quickstart](#ray-cluster-quickstart)
-* Debug and monitor applications: [Debugging and Monitoring Quickstart](#debugging-and-monitoring-quickstart)
+# 入门
+使用 Ray 扩展笔记本电脑或云上的应用程序。为您的任务选择正确的指南。
+* 扩展 ML 工作负载：[Ray Libraries 快速入门](#ray-libraries-quickstart)
+* 扩展通用 Python 应用程序：[Ray Core 快速入门](#ray-core-quickstart)
+* 部署到云：[Ray Clusters 快速入门](#ray-cluster-quickstart)
+* 调试和监视应用：[调试和监视快速入门](#debugging-and-monitoring-quickstart)
 
 
 (libraries-quickstart)=
-## Ray AI Libraries Quickstart
+## Ray AI 库快速入门
 
-Use individual libraries for ML workloads. Click on the dropdowns for your workload below.
+使用单独的库来处理 ML 工作负载。单击下面适合您的工作负载的下拉菜单。
 
-`````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Data: Scalable Datasets for ML
+`````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> 数据：用于 ML 的可扩展数据集
 :animate: fade-in-slide-down
 
-Scale offline inference and training ingest with [Ray Data](data_key_concepts) --
-a data processing library designed for ML.
+使用 [Ray Data](data_key_concepts) 扩展离线推理和训练摄取。--
+一个专为 ML 设置的数据处理库。
 
-To learn more, see [Offline batch inference](batch_inference_overview) and
-[Data preprocessing and ingest for ML training](ml_ingest_overview).
+要了解更多信息，请参阅 [离线批量推理](batch_inference_overview) 和
+[用于 ML 训练的数据预处理和摄取](batch_inference_overview) 。
 
 ````{note}
-To run this example, install Ray Data:
+要运行此示例，请安装 Ray Data：
 
 ```bash
 pip install -U "ray[data]"
@@ -35,7 +35,7 @@ from typing import Dict
 import numpy as np
 import ray
 
-# Create datasets from on-disk files, Python objects, and cloud storage like S3.
+# 从本地磁盘文件，Python 对象，以及 s3 云存储 创建数据集
 ds = ray.data.read_csv("s3://anonymous@ray-example-data/iris.csv")
 
 # Apply functions to transform data. Ray Data executes transformations in parallel.
@@ -66,23 +66,22 @@ transformed_ds.write_parquet("local:///tmp/iris/")
 :outline:
 :expand:
 
-Learn more about Ray Data
+了解更多关于 Ray Data 的信息
 ```
 `````
 
-``````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Train: Distributed Model Training
+``````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> 训练：分布式模型训练
 :animate: fade-in-slide-down
 
-Ray Train abstracts away the complexity of setting up a distributed training
-system.
+Ray Train 抽象化了建立分布式训练系统的复杂性。
 
 `````{tab-set}
 
 ````{tab-item} PyTorch
 
-This example shows how you can use Ray Train with PyTorch.
+此示例展示了如何将 Ray Train 与 PyTorch 结合使用。
 
-To run this example install Ray Train and PyTorch packages:
+要运行此示例，请安装 Ray Train 和 PyTorch 软件包：
 
 :::{note}
 ```bash
@@ -90,7 +89,7 @@ pip install -U "ray[train]" torch torchvision
 ```
 :::
 
-Set up your dataset and model.
+设置您的数据集和模型。
 
 ```{literalinclude} /../../python/ray/train/examples/pytorch/torch_quick_start.py
 :language: python
@@ -98,7 +97,7 @@ Set up your dataset and model.
 :end-before: __torch_setup_end__
 ```
 
-Now define your single-worker PyTorch training function.
+现在定义您的 single-worker PyTorch 训练函数。
 
 ```{literalinclude} /../../python/ray/train/examples/pytorch/torch_quick_start.py
 :language: python
@@ -106,7 +105,7 @@ Now define your single-worker PyTorch training function.
 :end-before: __torch_single_end__
 ```
 
-This training function can be executed with:
+该训练函数可以通过以下方式执行：
 
 ```{literalinclude} /../../python/ray/train/examples/pytorch/torch_quick_start.py
 :language: python
@@ -115,13 +114,11 @@ This training function can be executed with:
 :dedent: 0
 ```
 
-Convert this to a distributed multi-worker training function.
+将其转换为分布式 multi-worker 训练函数。
 
-Use the ``ray.train.torch.prepare_model`` and
-``ray.train.torch.prepare_data_loader`` utility functions to
-set up your model and data for distributed training.
-This automatically wraps the model with ``DistributedDataParallel``
-and places it on the right device, and adds ``DistributedSampler`` to the DataLoaders.
+使用 `ray.train.torch.prepare_model` 和 `ray.train.torch.prepare_data_loader` 实用函数设置模型和数据以进行分布式训练。
+这会自动包装模型并将 `DistributedDataParallel` 其放置在正确的设备上，
+然后添加 `DistributedSampler` 到 `DataLoaders` 中。
 
 ```{literalinclude} /../../python/ray/train/examples/pytorch/torch_quick_start.py
 :language: python
@@ -129,8 +126,8 @@ and places it on the right device, and adds ``DistributedSampler`` to the DataLo
 :end-before: __torch_distributed_end__
 ```
 
-Instantiate a ``TorchTrainer``
-with 4 workers, and use it to run the new training function.
+实例化一个有 4 个工作线程的 ``TorchTrainer``，
+并使用他运行新的训练方法。
 
 ```{literalinclude} /../../python/ray/train/examples/pytorch/torch_quick_start.py
 :language: python
@@ -145,7 +142,7 @@ with 4 workers, and use it to run the new training function.
 This example shows how you can use Ray Train to set up [Multi-worker training
 with Keras](https://www.tensorflow.org/tutorials/distribute/multi_worker_with_keras).
 
-To run this example install Ray Train and Tensorflow packages:
+要运行本示例需安装 Ray Train 以及 Tensorflow 包：
 
 :::{note}
 ```bash
@@ -153,7 +150,7 @@ pip install -U "ray[train]" tensorflow
 ```
 :::
 
-Set up your dataset and model.
+设置数据集和模型。
 
 ```{literalinclude} /../../python/ray/train/examples/tf/tensorflow_quick_start.py
 :language: python
@@ -161,7 +158,7 @@ Set up your dataset and model.
 :end-before: __tf_setup_end__
 ```
 
-Now define your single-worker TensorFlow training function.
+现在定义 single-worker TensorFlow 训练方法。
 
 ```{literalinclude} /../../python/ray/train/examples/tf/tensorflow_quick_start.py
 :language: python
@@ -169,7 +166,7 @@ Now define your single-worker TensorFlow training function.
 :end-before: __tf_single_end__
 ```
 
-This training function can be executed with:
+此训练方法可通过以下执行：
 
 ```{literalinclude} /../../python/ray/train/examples/tf/tensorflow_quick_start.py
 :language: python
@@ -178,9 +175,9 @@ This training function can be executed with:
 :dedent: 0
 ```
 
-Now convert this to a distributed multi-worker training function.
+现在将其转换成分布式 multi-worker 训练方法。
 
-1. Set the *global* batch size - each worker processes the same size
+1. 设置 *global* 批量大小 - each worker processes the same size
    batch as in the single-worker code.
 2. Choose your TensorFlow distributed training strategy. This examples
    uses the ``MultiWorkerMirroredStrategy``.
@@ -191,8 +188,8 @@ Now convert this to a distributed multi-worker training function.
 :end-before: __tf_distributed_end__
 ```
 
-Instantiate a ``TensorflowTrainer``
-with 4 workers, and use it to run the new training function.
+初始化一个 4 个工作现成的 ``TensorflowTrainer``，
+并使用它运行新的训练方法。
 
 ```{literalinclude} /../../python/ray/train/examples/tf/tensorflow_quick_start.py
 :language: python
@@ -206,7 +203,7 @@ with 4 workers, and use it to run the new training function.
 :outline:
 :expand:
 
-Learn more about Ray Train
+了解更多 Ray Train
 ```
 
 ````
@@ -218,19 +215,19 @@ Learn more about Ray Train
 `````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Tune: Hyperparameter Tuning at Scale
 :animate: fade-in-slide-down
 
-[Tune](../tune/index.rst) is a library for hyperparameter tuning at any scale.
-With Tune, you can launch a multi-node distributed hyperparameter sweep in less than 10 lines of code.
-Tune supports any deep learning framework, including PyTorch, TensorFlow, and Keras.
+[Tune](../tune/index.rst) 是用于任何规模的超参数调优的库。
+借助 Tune，您可以用不到 10 行代码启动多节点分布式超参数扫描。
+Tune 支持任何深度学习框架，包括 PyTorch、TensorFlow 和 Keras。
 
 ````{note}
-To run this example, install Ray Tune:
+要运行此示例，请安装 Ray Tune：
 
 ```bash
 pip install -U "ray[tune]"
 ```
 ````
 
-This example runs a small grid search with an iterative training function.
+此示例使用迭代训练函数运行小型网格搜索。
 
 ```{literalinclude} ../../../python/ray/tune/tests/example.py
 :end-before: __quick_start_end__
@@ -238,7 +235,7 @@ This example runs a small grid search with an iterative training function.
 :start-after: __quick_start_begin__
 ```
 
-If TensorBoard is installed, automatically visualize all trial results:
+如果安装了 TensorBoard， automatically visualize all trial results:
 
 ```bash
 tensorboard --logdir ~/ray_results
@@ -249,26 +246,26 @@ tensorboard --logdir ~/ray_results
 :outline:
 :expand:
 
-Learn more about Ray Tune
+了解更多 Ray Tune
 ```
 
 `````
 
 
-`````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Serve: Scalable Model Serving
+`````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> 服务：可扩展模型服务
 :animate: fade-in-slide-down
 
-[Ray Serve](../serve/index) is a scalable model-serving library built on Ray.
+[Ray Serve](../serve/index) 是一个基于 Ray 构建的可扩展模型服务库。
 
 ````{note}
-To run this example, install Ray Serve and scikit-learn:
+运行此示例，需安装 Ray Serve 和 scikit-learn：
 
 ```{code-block} bash
 pip install -U "ray[serve]" scikit-learn
 ```
 ````
 
-This example runs serves a scikit-learn gradient boosting classifier.
+此示例运行服务于 scikit-learn 梯度增强分类器。
 
 ```{literalinclude} ../serve/doc_code/sklearn_quickstart.py
 :language: python
@@ -276,14 +273,14 @@ This example runs serves a scikit-learn gradient boosting classifier.
 :end-before: __serve_example_end__
 ```
 
-As a result you will see `{"result": "versicolor"}`.
+你将看到如示结果 `{"result": "versicolor"}`。
 
 ```{button-ref}  ../serve/index
 :color: primary
 :outline:
 :expand:
 
-Learn more about Ray Serve
+了解更多 Ray Serve
 ```
 
 `````
@@ -292,11 +289,11 @@ Learn more about Ray Serve
 `````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> RLlib: Industry-Grade Reinforcement Learning
 :animate: fade-in-slide-down
 
-[RLlib](../rllib/index.rst) is an industry-grade library for reinforcement learning (RL) built on top of Ray.
-RLlib offers high scalability and unified APIs for a variety of industry- and research applications.
+[RLlib](../rllib/index.rst) 是一个基于 Ray 构建的工业级强化学习 (RL) 库。
+RLlib 为各种行业和研究应用程序提供高可扩展性和统一的 API。
 
 ````{note}
-To run this example, install `rllib` and either `tensorflow` or `pytorch`:
+运行此示例，请安装 `rllib` 以及 `tensorflow` 或 `pytorch`：
 
 ```bash
 pip install -U "ray[rllib]" tensorflow  # or torch
@@ -314,15 +311,15 @@ pip install -U "ray[rllib]" tensorflow  # or torch
 :outline:
 :expand:
 
-Learn more about Ray RLlib
+了解更多 Ray RLlib
 ```
 
 `````
 
-## Ray Core Quickstart
+## Ray Core 入门
 
-Turn functions and classes easily into Ray tasks and actors,
-for Python and Java, with simple primitives for building and running distributed applications.
+将类和函数轻松转为 Ray 任务和 actor，
+适用于 Python 和 Java，具有用于构建和运行分布式应用程序的简单原语。
 
 
 ``````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Core: Parallelizing Functions with Ray Tasks
@@ -333,17 +330,17 @@ for Python and Java, with simple primitives for building and running distributed
 ````{tab-item} Python
 
 :::{note}
-To run this example install Ray Core:
+要运行此示例，请安装 Ray Core：
 
 ```bash
 pip install -U "ray"
 ```
 :::
 
-Import Ray and and initialize it with `ray.init()`.
-Then decorate the function with ``@ray.remote`` to declare that you want to run this function remotely.
-Lastly, call the function with ``.remote()`` instead of calling it normally.
-This remote call yields a future, a Ray _object reference_, that you can then fetch with ``ray.get``.
+导入 Ray 并用以下命令初始化它 `ray.init()`。
+使用 ``@ray.remote`` 装饰方法来定义要在远程运行的函数。
+最后，通过调用方法的 ``.remote()`` 来替代常规调用。
+这个远程调用会产生一个 future，一个 Ray _对象引用_，然后您可以使用 ``ray.get`` 获取它。
 
 ```{code-block} python
 
@@ -363,13 +360,13 @@ print(ray.get(futures)) # [0, 1, 4, 9]
 ````{tab-item} Java
 
 ```{note}
-To run this example, add the [ray-api](https://mvnrepository.com/artifact/io.ray/ray-api) and [ray-runtime](https://mvnrepository.com/artifact/io.ray/ray-runtime) dependencies in your project.
+要运行此示例，在你的项目添加 [ray-api](https://mvnrepository.com/artifact/io.ray/ray-api) 和 [ray-runtime](https://mvnrepository.com/artifact/io.ray/ray-runtime) 依赖。
 ```
 
-Use `Ray.init` to initialize Ray runtime.
-Then use `Ray.task(...).remote()` to convert any Java static method into a Ray task.
-The task runs asynchronously in a remote worker process. The `remote` method returns an ``ObjectRef``,
-and you can fetch the actual result with ``get``.
+使用 `Ray.init` 实例化 Ray 运行时。
+使用 `Ray.task(...).remote()` 来转换任何 Java 静态方法为 Ray 任务。
+该任务在远程工作进程中异步运行。`remote` 方法返回一个 ``ObjectRef``，
+你可以通过 ``get`` 来获取实际的结果。
 
 ```{code-block} java
 
@@ -399,15 +396,15 @@ public class RayDemo {
 }
 ```
 
-In the above code block we defined some Ray Tasks. While these are great for stateless operations, sometimes you
-must maintain the state of your application. You can do that with Ray Actors.
+在上面的代码块中，我们定义了一些 Ray 任务。
+虽然这些对于无状态操作非常有用，但有时您必须维护应用程序的状态。您可以使用 Ray Actors 来做到这一点。
 
 ```{button-ref}  ../ray-core/walkthrough
 :color: primary
 :outline:
 :expand:
 
-Learn more about Ray Core
+了解更多关于 Ray Core
 ```
 
 ````
@@ -419,17 +416,16 @@ Learn more about Ray Core
 ``````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Core: Parallelizing Classes with Ray Actors
 :animate: fade-in-slide-down
 
-Ray provides actors to allow you to parallelize an instance of a class in Python or Java.
-When you instantiate a class that is a Ray actor, Ray will start a remote instance
-of that class in the cluster. This actor can then execute remote method calls and
-maintain its own internal state.
+Ray 提供了 actor 来允许您并行化 Python 或 Java 中的类实例。
+当您实例化作为 Ray actor 的类时，Ray 将在集群中启动该类的远程实例。
+然后，该 actor 可以执行远程方法调用并维护其自己的内部状态。
 
 `````{tab-set}
 
 ````{tab-item} Python
 
 :::{note}
-To run this example install Ray Core:
+安装 Ray Core 运行示例：
 
 ```bash
 pip install -U "ray"
@@ -463,7 +459,7 @@ print(ray.get(futures)) # [1, 1, 1, 1]
 
 
 ```{note}
-To run this example, add the [ray-api](https://mvnrepository.com/artifact/io.ray/ray-api) and [ray-runtime](https://mvnrepository.com/artifact/io.ray/ray-runtime) dependencies in your project.
+要运行示例，需在项目添加 [ray-api](https://mvnrepository.com/artifact/io.ray/ray-api) 和 [ray-runtime](https://mvnrepository.com/artifact/io.ray/ray-runtime) 依赖。
 ```
 
 ```{code-block} java
@@ -519,7 +515,7 @@ public class RayDemo {
 :outline:
 :expand:
 
-Learn more about Ray Core
+了解更多 Ray Core
 ```
 
 ````
@@ -528,15 +524,15 @@ Learn more about Ray Core
 
 ``````
 
-## Ray Cluster Quickstart
+## Ray Cluster 入门
 
-Deploy your applications on Ray clusters, often with minimal code changes to your existing code.
+在 Ray 集群部署你的应用，通常对现有代码进行最少的代码更改。
 
 `````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Clusters: Launching a Ray Cluster on AWS
 :animate: fade-in-slide-down
 
-Ray programs can run on a single machine, or seamlessly scale to large clusters.
-Take this simple example that waits for individual nodes to join the cluster.
+Ray 程序可以在单台机器上运行，也可以无缝扩展到大型集群。
+以这个等待各个节点加入集群的简单示例为例。
 
 ````{dropdown} example.py
 :animate: fade-in-slide-down
@@ -545,11 +541,11 @@ Take this simple example that waits for individual nodes to join the cluster.
 :language: python
 ```
 ````
-You can also download this example from our [GitHub repository](https://github.com/ray-project/ray/blob/master/doc/yarn/example.py).
-Go ahead and store it locally in a file called `example.py`.
+你可以从我们的 [GitHub 仓库](https://github.com/ray-project/ray/blob/master/doc/yarn/example.py) 下载示例。
+继续将其存储在本地一个名为 `example.py` 的文件中。
 
-To execute this script in the cloud, just download [this configuration file](https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/aws/example-full.yaml),
-or copy it here:
+要在云端执行脚本，需要下载 [配置文件](https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/aws/example-full.yaml)，
+或者从这里拷贝：
 
 ````{dropdown} cluster.yaml
 :animate: fade-in-slide-down
@@ -559,7 +555,7 @@ or copy it here:
 ```
 ````
 
-Assuming you have stored this configuration in a file called `cluster.yaml`, you can now launch an AWS cluster as follows:
+假设您已将此配置存储在名为 `cluster.yaml` 的文件中，您现在可以按如下方式启动 AWS 集群：
 
 ```bash
 ray submit cluster.yaml example.py --start
@@ -570,40 +566,40 @@ ray submit cluster.yaml example.py --start
 :outline:
 :expand:
 
-Learn more about launching Ray Clusters
+了解有关启动 Ray Cluster 的更多信息
 ```
 
 `````
 
-## Debugging and Monitoring Quickstart
+## 调试和监控快速入门
 
-Use built-in observability tools to monitor and debug Ray applications and clusters.
+使用内置的可观察性工具来监视和调试 Ray 应用程序和集群。
 
 
 `````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Ray Dashboard: Web GUI to monitor and debug Ray
 :animate: fade-in-slide-down
 
-Ray dashboard provides a visual interface that displays real-time system metrics, node-level resource monitoring, job profiling, and task visualizations. The dashboard is designed to help users understand the performance of their Ray applications and identify potential issues.
+Ray仪表板提供可视化界面，显示实时系统指标、节点级资源监控、作业分析和任务可视化。该仪表板旨在帮助用户了解 Ray 应用程序的性能并识别潜在问题。
 
 ```{image} https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard/Dashboard-overview.png
 :align: center
 ```
 
 ````{note}
-To get started with the dashboard, install the default installation as follows:
+要开始使用仪表板，请安装默认安装，如下所示：
 
 ```bash
 pip install -U "ray[default]"
 ```
 ````
-Access the dashboard through the default URL, http://localhost:8265.
+通过默认 URL 访问仪表板，http://localhost:8265。
 
 ```{button-ref}  observability-getting-started
 :color: primary
 :outline:
 :expand:
 
-Learn more about Ray Dashboard
+了解更多 Ray Dashboard
 ```
 
 `````
@@ -611,17 +607,17 @@ Learn more about Ray Dashboard
 `````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Ray State APIs: CLI to access cluster states
 :animate: fade-in-slide-down
 
-Ray state APIs allow users to conveniently access the current state (snapshot) of Ray through CLI or Python SDK.
+Ray 状态 API 允许用户通过 CLI 或 Python SDK 方便地访问 Ray 的当前状态（快照）。
 
 ````{note}
-To get started with the state API, install the default installation as follows:
+要开始使用状态 API，请参考默认安装，如下所示：
 
 ```bash
 pip install -U "ray[default]"
 ```
 ````
 
-Run the following code.
+运行以下代码。
 
 ```{code-block} python
 
@@ -650,7 +646,7 @@ Run the following code.
 
 ```
 
-See the summarized statistics of Ray tasks using ``ray summary tasks``.
+使用 ``ray summary tasks`` 查看 Ray 任务的汇总统计数据。
 
 ```{code-block} bash
 
@@ -681,7 +677,7 @@ See the summarized statistics of Ray tasks using ``ray summary tasks``.
 :outline:
 :expand:
 
-Learn more about Ray State APIs
+学习更多关于 Ray State APIs
 ```
 
 `````

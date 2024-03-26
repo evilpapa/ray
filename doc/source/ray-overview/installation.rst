@@ -1,24 +1,24 @@
 .. _installation:
 
-Installing Ray
+安装 Ray
 ==============
 
-Ray currently officially supports x86_64, aarch64 (ARM) for Linux, and Apple silicon (M1) hardware.
-Ray on Windows is currently in beta.
+Ray 当前官方支持 x86_64, aarch64 (ARM) Linux，以及 Apple silicon (M1) 硬件。
+Ray 在 Windows 中当前处于 beta 状态。
 
-Official Releases
+官方发布
 -----------------
 
-From Wheels
+通过 Wheels
 ~~~~~~~~~~~
-You can install the latest official version of Ray from PyPI on Linux, Windows,
-and macOS by choosing the option that best matches your use case.
+您可以通过选择最适合您用例的选项，在 Linux、Windows 和 macOS 上安装
+来自 PyPI 的 Ray 的最新官方版本。
 
 .. tab-set::
 
-    .. tab-item:: Recommended
+    .. tab-item:: 推荐
 
-        **For machine learning applications**
+        **对于机器学习应用程序**
 
         .. code-block:: shell
 
@@ -27,7 +27,7 @@ and macOS by choosing the option that best matches your use case.
           # For reinforcement learning support, install RLlib instead.
           # pip install -U "ray[rllib]"
 
-        **For general Python applications**
+        **对于一般的 Python 应用程序**
 
         .. code-block:: shell
 
@@ -36,14 +36,14 @@ and macOS by choosing the option that best matches your use case.
           # If you don't want Ray Dashboard or Cluster Launcher, install Ray with minimal dependencies instead.
           # pip install -U "ray"
 
-    .. tab-item:: Advanced
+    .. tab-item:: 高级选项
 
         .. list-table::
           :widths: 2 3
           :header-rows: 1
 
-          * - Command
-            - Installed components
+          * - 命令
+            - 安装的组件
           * - `pip install -U "ray"`
             - Core
           * - `pip install -U "ray[default]"`
@@ -67,8 +67,8 @@ and macOS by choosing the option that best matches your use case.
 
         .. tip::
 
-          You can combine installation extras.
-          For example, to install Ray with Dashboard, Cluster Launcher, and Train support, you can run:
+          您可以组合安装附加功能。
+          例如，要安装带有 Dashboard、Cluster Launcher 和 Train 支持的 Ray，您可以运行：
 
           .. code-block:: shell
 
@@ -76,10 +76,10 @@ and macOS by choosing the option that best matches your use case.
 
 .. _install-nightlies:
 
-Daily Releases (Nightlies)
+每日版本 (Nightlies)
 --------------------------
 
-You can install the nightly Ray wheels via the following links. These daily releases are tested via automated tests but do not go through the full release process. To install these wheels, use the following ``pip`` command and wheels:
+您可以通过以下链接安装 nightly Ray wheels。这些每日发布是通过自动化测试进行测试的，但不会经历完整的发布过程。要安装这些轮子，请使用以下 ``pip`` 命令和 wheels：
 
 .. code-block:: bash
 
@@ -131,16 +131,16 @@ You can install the nightly Ray wheels via the following links. These daily rele
 
 .. note::
 
-  On Windows, support for multi-node Ray clusters is currently experimental and untested.
-  If you run into issues please file a report at https://github.com/ray-project/ray/issues.
+  在 Windows 上，对多节点 Ray 集群的支持目前处于实验阶段，未经测试。
+  如果您遇到问题，请在以下地址提交报告：https://github.com/ray-project/ray/issues.
 
 .. note::
 
-  :ref:`Usage stats <ref-usage-stats>` collection is enabled by default (can be :ref:`disabled <usage-disable>`) for nightly wheels including both local clusters started via ``ray.init()`` and remote clusters via cli.
+  :ref:`使用统计 <ref-usage-stats>` 收集选项 (can be :ref:`disabled <usage-disable>`) 针对每日版本包括本地集群通过 ``ray.init()`` 以及远程集群运行的 cli 默认开启。
 
 .. note::
 
-  Python 3.11 support is experimental.
+  Python 3.11 支持是实验性的。
 
 .. _`Linux Python 3.11 (x86_64) (EXPERIMENTAL)`: https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp311-cp311-manylinux2014_x86_64.whl
 .. _`Linux Python 3.10 (x86_64)`: https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp310-cp310-manylinux2014_x86_64.whl
@@ -174,34 +174,34 @@ You can install the nightly Ray wheels via the following links. These daily rele
 .. _`Windows Python 3.8`: https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp38-cp38-win_amd64.whl
 .. _`Windows Python 3.7`: https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp37-cp37m-win_amd64.whl
 
-Installing from a specific commit
+从指定提交处安装
 ---------------------------------
 
-You can install the Ray wheels of any particular commit on ``master`` with the following template. You need to specify the commit hash, Ray version, Operating System, and Python version:
+您可以使用以下模板在 ``master`` 上安装任何特定提交的 Ray wheels。您需要指定提交哈希、Ray 版本、操作系统和 Python 版本：
 
 .. code-block:: bash
 
     pip install https://s3-us-west-2.amazonaws.com/ray-wheels/master/{COMMIT_HASH}/ray-{RAY_VERSION}-{PYTHON_VERSION}-{PYTHON_VERSION}-{OS_VERSION}.whl
 
-For example, here are the Ray 3.0.0.dev0 wheels for Python 3.9, MacOS for commit ``4f2ec46c3adb6ba9f412f09a9732f436c4a5d0c9``:
+例如，这里针对 Ray 3.0.0.dev0 wheels 的 Python 3.9，MacOS 的 ``4f2ec46c3adb6ba9f412f09a9732f436c4a5d0c9`` commit：
 
 .. code-block:: bash
 
     pip install https://s3-us-west-2.amazonaws.com/ray-wheels/master/4f2ec46c3adb6ba9f412f09a9732f436c4a5d0c9/ray-3.0.0.dev0-cp39-cp39-macosx_10_15_x86_64.whl
 
-There are minor variations to the format of the wheel filename; it's best to match against the format in the URLs listed in the :ref:`Nightlies section <install-nightlies>`.
+针对 wheel 文件名格式有少量的变量组成；最好和 :ref:`每日构建 章节 <install-nightlies>` 列出的 URL 格式相匹配。
 Here's a summary of the variations:
 
-* For MacOS, commits predating August 7, 2021 will have ``macosx_10_13`` in the filename instead of ``macosx_10_15``.
+* 针对 MacOS，早于 2021 年 8 月 7 日的文件名会由 ``macosx_10_13`` 替代 ``macosx_10_15``。
 
 .. _ray-install-java:
 
-Install Ray Java with Maven
+通过 Maven 安装 Ray Java
 ---------------------------
-Before installing Ray Java with Maven, you should install Ray Python with `pip install -U ray` . Note that the versions of Ray Java and Ray Python must match.
-Note that nightly Ray python wheels are also required if you want to install Ray Java snapshot version.
+在通过 Maven 安装 Ray Java 之前，你需要通过 `pip install -U ray` 安装 Ray Python。注意 Ray Java 和 Ray Python 版本必须匹配。
+注意当安装 Ray Java snapshot 版本时，也需要安装 nightly Ray Python wheels。
 
-The latest Ray Java release can be found in `central repository <https://mvnrepository.com/artifact/io.ray>`__. To use the latest Ray Java release in your application, add the following entries in your ``pom.xml``:
+最新的 Ray Java 版本可在 `仓库中心 <https://mvnrepository.com/artifact/io.ray>`__ 找到。要在您的应用程序中使用最新的 Ray Java 版本，请在 ``pom.xml`` 中添加以下条目：
 
 .. code-block:: xml
 
@@ -216,7 +216,7 @@ The latest Ray Java release can be found in `central repository <https://mvnrepo
       <version>${ray.version}</version>
     </dependency>
 
-The latest Ray Java snapshot can be found in `sonatype repository <https://oss.sonatype.org/#nexus-search;quick~io.ray>`__. To use the latest Ray Java snapshot in your application, add the following entries in your ``pom.xml``:
+最新的 Ray Java snapshot 可在 `sonatype 仓库 <https://oss.sonatype.org/#nexus-search;quick~io.ray>`__ 中找到。要在您的应用程序中使用最新的 Ray Java snapshot，请在 ``pom.xml`` 中添加以下条目：
 
 .. code-block:: xml
 
@@ -249,16 +249,16 @@ The latest Ray Java snapshot can be found in `sonatype repository <https://oss.s
 
 .. note::
 
-  When you run ``pip install`` to install Ray, Java jars are installed as well. The above dependencies are only used to build your Java code and to run your code in local mode.
+  当你运行 ``pip install`` 来安装 Ray，Java jars 也会被安装。上述依赖项仅用于构建您的 Java 代码以及在本地模式下运行您的代码。
 
-  If you want to run your Java code in a multi-node Ray cluster, it's better to exclude Ray jars when packaging your code to avoid jar conficts if the versions (installed Ray with ``pip install`` and maven dependencies) don't match.
+  如果你想在多节点 Ray 集群运行你的 Java 代码，如果（通过 ``pip install`` 安装的 Ray 和 maven 依赖项）的版本不匹配，最好在打包代码时排除 Ray jars，以避免 jar 冲突。
 
 .. _ray-install-cpp:
 
-Install Ray C++
+安装 Ray C++
 ---------------
 
-You can install and use Ray C++ API as follows.
+你可以通过以下方式安装和使用 Ray C++ API。
 
 .. code-block:: bash
 
@@ -269,17 +269,17 @@ You can install and use Ray C++ API as follows.
 
 .. note::
 
-  If you build Ray from source, remove the build option ``build --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0"`` from the file ``cpp/example/.bazelrc`` before running your application. The related issue is `this <https://github.com/ray-project/ray/issues/26031>`_.
+  如果通过源码构建 Ray，请在运行应用程序之前从文件 ``cpp/example/.bazelrc`` 中删除构建选项 ``build --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0"``。相关问题是 `这个 <https://github.com/ray-project/ray/issues/26031>`_。
 
 .. _apple-silcon-supprt:
 
-M1 Mac (Apple Silicon) Support
+M1 Mac (Apple Silicon) 支持
 ------------------------------
 
-Ray supports machines running Apple Silicon (such as M1 macs).
-Multi-node clusters are untested. To get started with local Ray development:
+Ray 支持运行 Apple Silicon（例如 M1 Mac）的机器。
+多节点集群未经测试。要开始本地 Ray 开发：
 
-#. Install `miniforge <https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh>`_.
+#. 安装 `miniforge <https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh>`_。
 
    * ``wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh``
 
@@ -287,57 +287,55 @@ Multi-node clusters are untested. To get started with local Ray development:
 
    * ``rm Miniforge3-MacOSX-arm64.sh # Cleanup.``
 
-#. Ensure you're using the miniforge environment (you should see (base) in your terminal).
+#. 确保你在使用 miniforge 环境 (你将在终端看到 (base) )。
 
    * ``source ~/.bash_profile``
 
    * ``conda activate``
 
-#. Install Ray as you normally would.
+#. 像往常一样安装 Ray。
 
    * ``pip install ray``
 
 .. _windows-support:
 
-Windows Support
+Windows 支持
 ---------------
 
-Windows support is in Beta. Ray supports running on Windows with the following caveats (only the first is
-Ray-specific, the rest are true anywhere Windows is used):
+Windows 支持现在处理 Beta。Ray 支持在Windows上运行，但需要注意以下事项 (只有第一个是
+Ray 指定，其余都适用于任何使用Windows的地方):
 
-* Multi-node Ray clusters are untested.
+* 多节点 Ray 集群未经测试。
 
-* Filenames are tricky on Windows and there still may be a few places where Ray
-  assumes UNIX filenames rather than Windows ones. This can be true in downstream
-  packages as well.
+* 文件名在 Windows 上很棘手，Ray 可能仍有一些地方
+  假定使用 UNIX 文件名而不是 Windows 文件名。
+  在下游的包也是如此。
 
-* Performance on Windows is known to be slower since opening files on Windows
-  is considerably slower than on other operating systems. This can affect logging.
+* Windows 上的性能已知较慢，因为在 Windows 上打开文件比
+  其他操作系统慢得多。这可能会影响日志记录。
 
-* Windows does not have a copy-on-write forking model, so spinning up new
-  processes can require more memory.
+* Windows 没有写时复制 fork 模型，因此启动新的
+  进程可能需要更多的内存。
 
-Submit any issues you encounter to
+
+将您遇到的任何问题提交给
 `GitHub <https://github.com/ray-project/ray/issues/>`_.
 
-Installing Ray on Arch Linux
+在 Arch Linux 上安装 Ray
 ----------------------------
 
-Note: Installing Ray on Arch Linux is not tested by the Project Ray developers.
+Note: 在 Arch Linux 上安装 Ray 未经 Project Ray 开发者测试。
 
-Ray is available on Arch Linux via the Arch User Repository (`AUR`_) as
-``python-ray``.
+Ray 在 Arch Linux 上通过 Arch 用户存储库 (`AUR`_) 作为 ``python-ray``。
 
-You can manually install the package by following the instructions on the
-`Arch Wiki`_ or use an `AUR helper`_ like `yay`_ (recommended for ease of install)
-as follows:
+你可以手动安装包，按照 `Arch Wiki`_ 上的说明，
+或者使用 `AUR helper`_ 如 `yay`_ (推荐的简便安装)：
 
 .. code-block:: bash
 
   yay -S python-ray
 
-To discuss any issues related to this package refer to the comments section
-on the AUR page of ``python-ray`` `here`_.
+任何相关问题的讨论请参考 ``python-ray`` 的 AUR 页面上的 `评论部分`_。
 
 .. _`AUR`: https://wiki.archlinux.org/index.php/Arch_User_Repository
 .. _`Arch Wiki`: https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_packages
@@ -347,23 +345,23 @@ on the AUR page of ``python-ray`` `here`_.
 
 .. _ray_anaconda:
 
-Installing From conda-forge
+通过 conda-forge 安装
 ---------------------------
-Ray can also be installed as a conda package on Linux and Windows.
+Ray 可作为 conda 包在 Linux 和 Windows 上安装。
 
 .. code-block:: bash
 
-  # also works with mamba
+  # 也适用于 mamba
   conda create -c conda-forge python=3.9 -n ray
   conda activate ray
 
-  # Install Ray with support for the dashboard + cluster launcher
+  # 安装支持仪表板 + 集群启动器
   conda install -c conda-forge "ray-default"
 
-  # Install Ray with minimal dependencies
+  # 安装最小依赖的 Ray
   # conda install -c conda-forge ray
 
-To install Ray libraries, use ``pip`` as above or ``conda``/``mamba``.
+要安装 Ray 库包，使用如上 ``pip`` 或 ``conda``/``mamba``。
 
 .. code-block:: bash
 
@@ -372,91 +370,93 @@ To install Ray libraries, use ``pip`` as above or ``conda``/``mamba``.
   conda install -c conda-forge "ray-rllib"  # installs Ray + dependencies for Ray RLlib
   conda install -c conda-forge "ray-serve"  # installs Ray + dependencies for Ray Serve
 
-For a complete list of available ``ray`` libraries on Conda-forge, have a look
-at https://anaconda.org/conda-forge/ray-default
+要查看在 Conda-forge 上的完成可用 ``ray`` 库包，
+参考 https://anaconda.org/conda-forge/ray-default
 
 .. note::
 
-  Ray conda packages are maintained by the community, not the Ray team. While
-  using a conda environment, it is recommended to install Ray from PyPi using
-  `pip install ray` in the newly created environment.
+  Ray conda 库包由社区维护，而非 Ray 团队。即使
+  使用 conda 环境，也建议使用
+  `pip-install-ray` 在新创建的环境中从 PyPi 安装 Ray。
 
-Building Ray from Source
+从源码构建 Ray
 ------------------------
 
-Installing from ``pip`` should be sufficient for most Ray users.
+对于大多数 Ray 用户来说，从 ``pip`` 进行安装就足够了。
 
-However, should you need to build from source, follow :ref:`these instructions for building <building-ray>` Ray.
+然而，如果需要从源码构建，参考 :ref:`这篇 Ray 构建说明 <building-ray>`。
 
 
 .. _docker-images:
 
-Docker Source Images
+Docker 源镜像
 --------------------
 
-Most users should pull a Docker image from the `Ray Docker Hub <https://hub.docker.com/r/rayproject/>`__.
+多数用户应该从 `Ray Docker Hub <https://hub.docker.com/r/rayproject/>`__ 拉取 Ray 镜像。
 
-- The ``rayproject/ray`` `images <https://hub.docker.com/r/rayproject/ray>`__ include Ray and all required dependencies. It comes with anaconda and various versions of Python.
-- The ``rayproject/ray-ml`` `images <https://hub.docker.com/r/rayproject/ray-ml>`__ include the above as well as many additional ML libraries.
-- The ``rayproject/base-deps`` and ``rayproject/ray-deps`` images are for the Linux and Python dependencies respectively.
+- ``rayproject/ray`` `镜像 <https://hub.docker.com/r/rayproject/ray>`__ 包含 Ray 和 所有必须的依赖。它附带了 anaconda 和各种版本的 Python。
+- ``rayproject/ray-ml`` `镜像 <https://hub.docker.com/r/rayproject/ray-ml>`__ 包含以上以及众多 ML 类库。
+- ``rayproject/base-deps`` 和 ``rayproject/ray-deps`` 镜像分别为 Linux 和 Python 依赖。
 
-Images are `tagged` with the format ``{Ray version}[-{Python version}][-{Platform}]``. ``Ray version`` tag can be one of the following:
+镜像 `tagged` 格式为 ``{Ray version}[-{Python version}][-{Platform}]``。``Ray version`` 标签可能为以下某种：
 
 .. list-table::
    :widths: 25 50
    :header-rows: 1
 
-   * - Ray version tag
-     - Description
+   * - Ray 版本 tag
+     - 描述
    * - latest
-     - The most recent Ray release.
+     - 最新的 Ray 版本。
    * - x.y.z
-     - A specific Ray release, e.g. 1.12.1
+     - 特定 Ray 版本，如：1.12.1
    * - nightly
-     - The most recent Ray development build (a recent commit from Github ``master``)
-   * - 6 character Git SHA prefix
-     - A specific development build (uses a SHA from the Github ``master``, e.g. ``8960af``).
+     - 最近的 Ray 开发构建 (最新的 Github ``master`` 提交)
+   * - 6 字符 Git SHA 前缀
+     - 特定开发构建 (使用来自 Github ``master`` 的 SHA，例如 ``8960af``)。
 
-The optional ``Python version`` tag specifies the Python version in the image. All Python versions supported by Ray are available, e.g. ``py37``, ``py38``, ``py39`` and ``py310``. If unspecified, the tag points to an image using ``Python 3.7``.
+可选的 ``Python version`` 标签指定了镜像的 Python 版本。Ray 支持所有可用的 Python 版本。如 ``py37``, ``py38``, ``py39`` and ``py310``。如果未指定，镜像使用 ``Python 3.7``。
 
-The optional ``Platform`` tag specifies the platform where the image is intended for:
+可选的 ``Platform`` 标签指定用于镜像平台：
 
 .. list-table::
    :widths: 16 40
    :header-rows: 1
 
-   * - Platform tag
-     - Description
+   * - 平台标签
+     - 描述
    * - -cpu
-     - These are based off of an Ubuntu image.
+     - 以 Ubuntu 为基础镜像。
    * - -cuXX
-     - These are based off of an NVIDIA CUDA image with the specified CUDA version. They require the Nvidia Docker Runtime.
+     - 这里以 NVIDIA CUDA 进行集成特定的 CUDA 版本为基础。需要 Nvidia Docker Runtime。
    * - -gpu
-     - Aliases to a specific ``-cuXX`` tagged image.
+     - 为 ``-cuXX`` 镜像标签的别名。
    * - <no tag>
-     - Aliases to ``-cpu`` tagged images. For ``ray-ml`` image, aliases to ``-gpu`` tagged image.
+     - 为 ``-cpu`` 镜像标签的别名。针对 ``ray-ml`` 镜像，为 ``-gpu`` 镜像标签别名。
 
-Example: for the nightly image based on ``Python 3.8`` and without GPU support, the tag is ``nightly-py38-cpu``.
+例如：对于基于 ``Python 3.8`` 的 nightly 镜像且不支持 GPU，标签为 ``nightly-py38-cpu``。
 
-If you want to tweak some aspect of these images and build them locally, refer to the following script:
+如果您想调整这些镜像的某些方面并在本地构建它们，请参考以下脚本：
 
 .. code-block:: bash
 
   cd ray
   ./build-docker.sh
 
-Beyond creating the above Docker images, this script can also produce the following two images.
+除了创建上面的 Docker 镜像，这个脚本还可以生成以下两个镜像。
 
-- The ``rayproject/development`` image has the ray source code included and is setup for development.
-- The ``rayproject/examples`` image adds additional libraries for running examples.
 
-Review images by listing them:
+- ``rayproject/development`` 镜像包含了为开发而设置的 ray 源码。
+- ``rayproject/examples`` 镜像添加了额外的运行示例的类库。
+
+通过命令查看镜像：
+
 
 .. code-block:: bash
 
   docker images
 
-Output should look something like the following:
+输出应该类似于以下内容：
 
 .. code-block:: bash
 
@@ -467,55 +467,56 @@ Output should look something like the following:
   ubuntu                              focal               1e4467b07108        3 weeks ago         73.9 MB
 
 
-Launch Ray in Docker
+在 Docker 运行 Ray
 ~~~~~~~~~~~~~~~~~~~~
 
-Start out by launching the deployment container.
+从运行本地容器开始。
 
 .. code-block:: bash
 
   docker run --shm-size=<shm-size> -t -i rayproject/ray
 
-Replace ``<shm-size>`` with a limit appropriate for your system, for example
-``512M`` or ``2G``. A good estimate for this is to use roughly 30% of your available memory (this is
-what Ray uses internally for its Object Store). The ``-t`` and ``-i`` options here are required to support
-interactive use of the container.
+针对你的系统设置适当的 ``<shm-size>``，例如
+``512M`` 或 ``2G``。合理的预估大致为可用内存的 30% (这是因为
+Ray 内部会使用它自己的对象存储)。``-t`` 和 ``-i`` 选项用于
+容器的交互。
 
-If you use a GPU version Docker image, remember to add ``--gpus all`` option. Replace ``<ray-version>`` with your target ray version in the following command:
+如果您使用 GPU 版本的 Docker 镜像，请记得添加 ``--gpus all`` 选项。在以下命令中替换 ``<ray-version>`` 为您的目标 ray 版本：
 
 .. code-block:: bash
 
   docker run --shm-size=<shm-size> -t -i --gpus all rayproject/ray:<ray-version>-gpu
 
-**Note:** Ray requires a **large** amount of shared memory because each object
-store keeps all of its objects in shared memory, so the amount of shared memory
-will limit the size of the object store.
+**Note:** Ray 需要 **巨大** 数量的共享内存，以为每个对象存储
+的共享内存都保存了所有的对象，所有共享内存大小将
+限制对象存储的大小。
 
-You should now see a prompt that looks something like:
+现在，您应该会看到一个提示，内容如下：
+
 
 .. code-block:: bash
 
   root@ebc78f68d100:/ray#
 
-Test if the installation succeeded
+测试安装是否成功
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To test if the installation was successful, try running some tests. This assumes
-that you've cloned the git repository.
+要测试安装是否成功，请尝试运行一些测试。这假定
+您已经克隆了 git 仓库。
 
 .. code-block:: bash
 
   python -m pytest -v python/ray/tests/test_mini.py
 
 
-Installed Python dependencies
+安装 Python 依赖
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Our docker images are shipped with pre-installed Python dependencies
-required for Ray and its libraries.
+我们的 Docker 镜像已经预装了 Ray 和
+所需的 Python 依赖。
 
-We publish the dependencies that are installed in our ``ray`` and ``ray-ml``
-Docker images for Python 3.9.
+我们发布了 ``ray`` 和 ``ray-ml`` Docker 镜像中安装的依赖项，
+适用于 Python 3.9。
 
 .. tabs::
 

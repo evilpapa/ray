@@ -1,36 +1,34 @@
-# Ray on Kubernetes
+# Ray 在 Kubernetes
 (kuberay-index)=
-## Overview
+## 简介
 
-In this section we cover how to execute your distributed Ray programs on a Kubernetes cluster.
+本章，我们会覆盖如何在 Kubernetes 集群上执行你的分布式 Ray 程序。
 
-Using the [KubeRay Operator](https://github.com/ray-project/kuberay) is the
-recommended way to do so. The operator provides a Kubernetes-native way to manage Ray clusters.
-Each Ray cluster consists of a head node pod and a collection of worker node pods. Optional
-autoscaling support allows the KubeRay Operator to size your Ray clusters according to the
-requirements of your Ray workload, adding and removing Ray pods as needed. KubeRay supports
-heterogenous compute nodes (including GPUs) as well as running multiple Ray clusters with
-different Ray versions in the same Kubernetes cluster.
+推荐的方式是使用 [KubeRay Operator](https://github.com/ray-project/kuberay) 。
+该控制器提供了一个 Kubernetes 原生方式来管理 Ray clusters。
+每个 Ray 集群由一个头节点 pod 以及一批 work 节点 pod 组成。
+可选的自动缩放支持允许 KubeRay Operator 根据 Ray 工作负载的要求调整 Ray 集群的大小，并根据需要添加和删除 Ray pod。
+KubeRay 支持异构计算节点（包括 GPU）以及在同一 Kubernetes 集群中运行具有不同 Ray 版本的多个 Ray 集群。
 
 ```{eval-rst}
 .. image:: images/ray_on_kubernetes.png
     :align: center
 ..
-  Find source document here: https://docs.google.com/drawings/d/1E3FQgWWLuj8y2zPdKXjoWKrfwgYXw6RV_FWRwK8dVlg/edit
+  源文档可在这里找到：https://docs.google.com/drawings/d/1E3FQgWWLuj8y2zPdKXjoWKrfwgYXw6RV_FWRwK8dVlg/edit
 ```
 
-KubeRay introduces three distinct Kubernetes Custom Resource Definitions (CRDs): **RayCluster**, **RayJob**, and **RayService**.
-These CRDs assist users in efficiently managing Ray clusters tailored to various use cases.
+KubeRay 引入了三种不同的 Kubernetes 自定义资源 (CRDs)： **RayCluster**, **RayJob**, and **RayService**.
+这些 CRD 可帮助用户有效管理针对各种用例定制 Ray 集群。
 
-See [Getting Started](kuberay-quickstart) to learn the basics of KubeRay and follow the quickstart guides to run your first Ray application on Kubernetes with KubeRay.
+查看 [入门](kuberay-quickstart) 来学习 KubeRay 基础，跟随入门指引在 Kubernetes 上通过 KubeRay 来运行你的第一个 Ray 应用。
 
-* [RayCluster Quick Start](kuberay-raycluster-quickstart)
-* [RayJob Quick Start](kuberay-rayjob-quickstart)
-* [RayService Quick Start](kuberay-rayservice-quickstart)
+* [RayCluster 入门](kuberay-raycluster-quickstart)
+* [RayJob 入门](kuberay-rayjob-quickstart)
+* [RayService 入门](kuberay-rayservice-quickstart)
 
-## Learn More
+## 了解更多
 
-The Ray docs present all the information you need to start running Ray workloads on Kubernetes.
+Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所有信息。
 
 ```{eval-rst}
 .. grid:: 1 2 2 2
@@ -42,7 +40,7 @@ The Ray docs present all the information you need to start running Ray workloads
         **Getting Started**
         ^^^
     
-        Learn how to start a Ray cluster and deploy Ray applications on Kubernetes.
+        了解如何启动 Ray 集群并在 Kubernetes 上部署 Ray 应用程序。
     
         +++
         .. button-ref:: kuberay-quickstart
@@ -57,7 +55,7 @@ The Ray docs present all the information you need to start running Ray workloads
         **User Guides**
         ^^^
     
-        Learn best practices for configuring Ray clusters on Kubernetes.
+        了解在 Kubernetes 上配置 Ray 集群的最佳实践。
     
         +++
         .. button-ref:: kuberay-guides
@@ -72,7 +70,7 @@ The Ray docs present all the information you need to start running Ray workloads
         **Examples**
         ^^^
     
-        Try example Ray workloads on Kubernetes.
+        尝试 Kubernetes 上的 Ray 工作负载示例。
     
         +++
         .. button-ref:: kuberay-examples
@@ -87,7 +85,7 @@ The Ray docs present all the information you need to start running Ray workloads
         **Ecosystem**
         ^^^
     
-        Integrate KubeRay with third party Kubernetes ecosystem tools.
+        将 KubeRay 与第三方 Kubernetes 生态系统工具集成。
     
         +++
         .. button-ref:: kuberay-ecosystem-integration
@@ -102,7 +100,7 @@ The Ray docs present all the information you need to start running Ray workloads
         **Benchmarks**
         ^^^
     
-        Check the KubeRay benchmark results.
+        检查 KubeRay 基准测试结果。
     
         +++
         .. button-ref:: kuberay-benchmarks
@@ -117,7 +115,7 @@ The Ray docs present all the information you need to start running Ray workloads
         **Troubleshooting**
         ^^^
     
-        Consult the KubeRay troubleshooting guides.
+        参阅 KubeRay 故障排除指南。
     
         +++
         .. button-ref:: kuberay-troubleshooting
@@ -127,9 +125,8 @@ The Ray docs present all the information you need to start running Ray workloads
 
             Troubleshooting guides
 ```
-## About KubeRay
+## 关于 KubeRay
 
-Ray's Kubernetes support is developed at the [KubeRay GitHub repository](https://github.com/ray-project/kuberay), under the broader [Ray project](https://github.com/ray-project/). KubeRay is used by several companies to run production Ray deployments.
+Ray 的 Kubernetes 支持发布在 [KubeRay GitHub 仓库](https://github.com/ray-project/kuberay)，在 [Ray project](https://github.com/ray-project/) 板块。KubeRay 被多家公司用来运行 Ray 生产部署。
 
-- Visit the [KubeRay GitHub repo](https://github.com/ray-project/kuberay) to track progress, report bugs, propose new features, or contribute to
-the project.
+- 查看 [KubeRay GitHub repo](https://github.com/ray-project/kuberay) 跟踪进度、报告错误、提出新功能或为项目做出贡献。

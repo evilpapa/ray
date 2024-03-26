@@ -1,24 +1,24 @@
 (kuberay-mem-scalability)=
 
-# KubeRay memory and scalability benchmark
+# KubeRay 内存和可扩展性基准
 
-## Architecture
+## 架构
 
 ![benchmark architecture](../images/benchmark_architecture.png)
 
-This architecture is not a good practice, but it can fulfill the current requirements.
+这种架构不是一个好的实践，但它可以满足当前的需求。
 
-## Preparation
+## 准备
 
-Clone the [KubeRay repository](https://github.com/ray-project/kuberay) and checkout the `master` branch.
-This tutorial requires several files in the repository.
+克隆 [KubeRay 仓库](https://github.com/ray-project/kuberay) 并检出 `master` 分支。
+本教程需要存储库中的多个文件。
 
-## Step 1: Create a new Kubernetes cluster
+## 步骤 1：创建一个 Kubernetes 集群
 
-Create a GKE cluster with autoscaling enabled.
-The following command creates a Kubernetes cluster named `kuberay-benchmark-cluster` on Google GKE.
-The cluster can scale up to 16 nodes, and each node of type `e2-highcpu-16` has 16 CPUs and 16 GB of memory.
-The following experiments may create up to ~150 Pods in the Kubernetes cluster, and each Ray Pod requires 1 CPU and 1 GB of memory.
+创建一个 GKE 集群并启动自动扩缩容。
+以下命令在 Google GKE 创建一个名为 `kuberay-benchmark-cluster` 的 Kubernetes 集群。
+集群可以缩放到 16 个节点，每个 `e2-highcpu-16` 类型的节点拥有 16 CPU 和 16 GB 内存。
+以下实现会在 Kubernetes 集群创建约有 ~150 Pods，并且每个 Ray Pod 需要 1 CPU 以及 1 GB 内存。
 
 ```sh
 gcloud container clusters create kuberay-benchmark-cluster \
@@ -26,64 +26,64 @@ gcloud container clusters create kuberay-benchmark-cluster \
     --zone=us-west1-b --machine-type e2-highcpu-16
 ```
 
-## Step 2: Install Prometheus and Grafana
+## 步骤 2：安装 Prometheus 和 Grafana
 
 ```sh
 # Path: kuberay/
 ./install/prometheus/install.sh
 ```
 
-Follow "Step 2: Install Kubernetes Prometheus Stack via Helm chart" in [prometheus-grafana.md](kuberay-prometheus-grafana) to install the [kube-prometheus-stack v48.2.1](https://github.com/prometheus-community/helm-charts/tree/kube-prometheus-stack-48.2.1/charts/kube-prometheus-stack) chart and related custom resources.
+跟随 "步骤 2: 通过 [prometheus-grafana.md](kuberay-prometheus-grafana) 使用 Helm chart 在 Kubernetes 安装 Prometheus Stack" 来安装 [kube-prometheus-stack v48.2.1](https://github.com/prometheus-community/helm-charts/tree/kube-prometheus-stack-48.2.1/charts/kube-prometheus-stack) chart 以及相关自定义资源。
 
-## Step 3: Install a KubeRay operator
+## 步骤 3: 安装 KubeRay 控制器
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+跟随 [本文档](kuberay-operator-deploy) 通过 Helm 仓库 安装最新的稳定版本的 KubeRay 控制器。
 
-## Step 4: Run experiments
+## 步骤 4: 运行实验
 
-* Step 4.1: Make sure the `kubectl` CLI can connect to your GKE cluster. If not, run `gcloud auth login`.
-* Step 4.2: Run an experiment.
+* 步骤 4.1: 去报 `kubectl` CLI 可以连接你的 GKE 集群。如果不能，运行 `gcloud auth login`。
+* 步骤 4.2: 运行实验
   ```sh
-  # You can modify `memory_benchmark_utils` to run the experiment you want to run.
+  # 你可以修改 `memory_benchmark_utils` 来运行你想要的实验。
   # (path: benchmark/memory_benchmark/scripts)
   python3 memory_benchmark_utils.py | tee benchmark_log
   ```
-* Step 4.3: Follow [prometheus-grafana.md](kuberay-prometheus-grafana) to access Grafana's dashboard.
-  * Sign into the Grafana dashboard.
-  * Click on "Dashboards".
-  * Select "Kubernetes / Compute Resources / Pod".
-  * Locate the "Memory Usage" panel for the KubeRay operator Pod.
-  * Select the time range, then click on "Inspect" followed by "Data" to download the memory usage data of the KubeRay operator Pod.
-* Step 4.4: Delete all RayCluster custom resources.
+* 步骤 4.3: 跟随 [prometheus-grafana.md](kuberay-prometheus-grafana) 访问 Grafana 面板。
+  * 登录 Grafana 面板。
+  * 点击 "Dashboards"。
+  * 选择 "Kubernetes / Compute Resources / Pod".
+  * 找到 KubeRay operator Pod 的 "Memory Usage" 面板。
+  * 选取时间范围，然后点击 "Inspect" 其次通过 "Data" 下载  KubeRay operator Pod 的内存内存使用数据。
+* 步骤 4.4: 删除所有 RayCluster 自定义资源。
   ```sh
   kubectl delete --all rayclusters.ray.io --namespace=default
   ```
-* Step 4.5: Repeat Step 4.2 to Step 4.4 for other experiments.
+* 步骤 4.5: 重复 4.2 到 4.4 步骤来运行其他实验。
 
-# Experiments
+# 实验
 
-This benchmark is based on three benchmark experiments:
+该基准测试基于三个基准测试实验：
 
-* Experiment 1: Launch a RayCluster with 1 head and no workers. A new cluster is initiated every 20 seconds until there are a total of 150 RayCluster custom resources.
-* Experiment 2: Create a Kubernetes cluster, with only 1 RayCluster. Add 5 new worker Pods to this RayCluster every 60 seconds until the total reaches 150 Pods.
-* Experiment 3: Create a 5-node (1 head + 4 workers) RayCluster every 60 seconds up to 30 RayCluster custom resources.
+* 实验 1: 启动有 1 个头节点且没有工作线程的 RayCluster。每 20 秒启动一个新集群，直到总共有 150 个 RayCluster 自定义资源。
+* 实验 2: 创建一个 Kubernetes 集群，只有 1 个 RayCluster。每 60 秒向此 RayCluster 添加 5 个新工作 Pod，直到总数达到 150 个 Pod。
+* 实验 3: 每 60 秒创建一个 5 节点（1 个头 + 4 个工作线程）RayCluster，最多 30 个 RayCluster 自定义资源。
 
-Based on [the survey](https://forms.gle/KtMLzjXcKoeSTj359) for KubeRay users, the benchmark target is set at 150 Ray Pods to cover most use cases.
+基于针对 KubeRay 用户的 [调查](https://forms.gle/KtMLzjXcKoeSTj359)，基准目标设置为 150 个 Ray Pod，以覆盖大多数用例。
 
-## Experiment results (KubeRay v0.6.0)
+## 实验结果 (KubeRay v0.6.0)
 
 ![benchmark result](../images/benchmark_result.png)
 
-* You can generate the above figure by running:
+* 您可以通过运行命令生成上图：
   ```sh
   # (path: benchmark/memory_benchmark/scripts)
   python3 experiment_figures.py
-  # The output image `benchmark_result.png` will be stored in `scripts/`.
+  # 输出图像 `benchmark_result.png` 存储在 `scripts/`。
   ```
 
-* As shown in the figure, the memory usage of the KubeRay operator Pod is highly and positively correlated to the number of Pods in the Kubernetes cluster.
-In addition, the number of custom resources in the Kubernetes cluster does not have a significant impact on the memory usage.
-* Note that the x-axis "Number of Pods" is the number of Pods that are created rather than running.
-If the Kubernetes cluster does not have enough computing resources, the GKE Autopilot adds a new Kubernetes node into the cluster.
-This process may take a few minutes, so some Pods may be pending in the process.
-This lag may can explain why the memory usage is somewhat throttled.
+* 如图所示，KubeRay算子Pod的内存使用量与Kubernetes集群中Pod的数量呈高度正相关。
+此外，Kubernetes集群中自定义资源的数量对内存使用量并没有太大影响。
+* 请注意，x 轴“Pod 数量”是创建而不是运行的 Pod 数量。
+如果 Kubernetes 集群没有足够的计算资源，GKE Autopilot 会向集群添加新的 Kubernetes 节点。
+此过程可能需要几分钟，因此某些 Pod 可能在此过程中处于待处理状态。
+这种滞后可以解释为什么内存使用量受到一定程度的限制。

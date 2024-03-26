@@ -1,8 +1,8 @@
 .. _ray-cluster-cli:
 
-Cluster Management CLI
+集群管理 CLI
 ======================
-This section contains commands for managing Ray clusters.
+本节包含了管理 Ray 集群的命令。
 
 .. _ray-start-doc:
 

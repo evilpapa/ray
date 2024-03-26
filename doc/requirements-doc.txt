@@ -1,7 +1,9 @@
 # Production requirements. This is what readthedocs.com picks up
 
-git+https://github.com/ray-project/tune-sklearn@master#tune-sklearn
-watchfiles # Required because sphinx-click doesn't support mocking
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+
+#git+https://github.com/ray-project/tune-sklearn@master#tune-sklearn
+#watchfiles # Required because sphinx-click doesn't support mocking
 
 # Syntax highlighting
 Pygments==2.13.0
@@ -37,3 +39,21 @@ urllib3 < 1.27
 # For the API docs
 fastapi==0.99.1
 grpcio==1.57.0
+
+numpy>=1.16
+scikit-learn>=0.23
+pandas
+tabulate
+ray[tune]==2.7.2
+scikit-optimize>=0.8.1
+parameterized
+pytest>=6.1.2
+xgboost
+torch
+torchvision
+skorch
+lightgbm>=3.0.0
+keras
+tensorflow
+click
+catboost

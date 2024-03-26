@@ -1,6 +1,6 @@
 .. _ref-ray-examples:
 
-Ray Examples
+Ray 示例
 ============
 
 .. raw:: html
@@ -18,8 +18,7 @@ Ray Examples
               <h4>Sorry! We could not find an example matching that filter.</h4>
               <a id="newExampleIssueLink" href="https://github.com/ray-project/ray/issues/new?assignees=&labels=docs%2Ctriage&projects=&template=documentation-issue.yml&title=%5B%3CRay+component%3A+Core%7CRLlib%7Cetc...%3E%5D+"
                   <span id="newExampleIssueText">
-                    Help us improve our examples by suggesting one. Tell us what example you would like to
-                    have.
+                    建议一个例子来帮助我们改进我们的例子。 告诉我们你想要什么样的示例。
                   </span>
               </a>
           </div>
@@ -34,19 +33,19 @@ Ray Examples
         :class-item: gallery-item llm gen-ai
         :link: https://www.anyscale.com/blog/ray-common-production-challenges-for-generative-ai-infrastructure
 
-        How Ray solves common production challenges for generative AI infrastructure
+        Ray 如何解决生成式 AI 基础设施的常见生产挑战
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item training llm nlp gen-ai
         :link: https://www.anyscale.com/blog/training-175b-parameter-language-models-at-1000-gpu-scale-with-alpa-and-ray
 
-        Training 175B Parameter Language Models at 1000 GPU scale with Alpa and Ray
+        使用 Alpa 和 Ray 在 1000 GPU 规模上训练 175B 参数语言模型
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item gen-ai cv training
         :link: https://www.anyscale.com/blog/faster-stable-diffusion-fine-tuning-with-ray-air
 
-        Faster stable diffusion fine-tuning with Ray Train
+        使用 Ray Train 进行更快稳定的扩散微调
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item training serving huggingface llm gen-ai
@@ -58,7 +57,7 @@ Ray Examples
         :class-item: gallery-item llm gen-ai
         :link: https://www.businessinsider.com/openai-chatgpt-trained-on-anyscale-ray-generative-lifelike-ai-models-2022-12
 
-        How OpenAI Uses Ray to Train Tools like ChatGPT
+        OpenAI 如何使用 Ray 训练 ChatGPT 等工具
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item llm gen-ai huggingface training nlp
@@ -71,267 +70,267 @@ Ray Examples
         :class-item: gallery-item llm gen-ai
         :link: https://github.com/ray-project/aviary/
 
-        Aviary toolkit serving live traffic for LLMs
+        Aviary 工具集为 LLM 提供实时流量服务
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item pytorch training
         :link: /train/examples/pytorch/convert_existing_pytorch_code_to_ray_train
         :link-type: doc
 
-        Get started with Ray Train from an existing PyTorch codebase
+        通过现有的 PyTorch 代码库开始使用 Ray Train
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training
         :link: /train/examples/lightgbm/lightgbm_example
         :link-type: doc
 
-        Distributed training with LightGBM
+        LightGBM 分布式训练
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item training
         :link: /train/examples/xgboost/xgboost_example
         :link-type: doc
 
-        Distributed training with XGBoost
+        XGBoost 分布式训练
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item llm nlp gen-ai inference
         :link: /data/examples/gptj_batch_prediction
         :link-type: doc
 
-        How to use Ray Data to do batch prediction with the Hugging Face Transformers GPT-J model
+        如何利用 Ray Data 对 Hugging Face Transformers GPT-J 模型进行批量预测
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving llm gen-ai
         :link: /ray-air/examples/gptj_serving
         :link-type: doc
 
-        How to use Ray Serve to do online serving with the Hugging Face Transformers GPT-J model
+        如何利用 Ray Serve 对 Hugging Face Transformers GPT-J 模型进行在线服务
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item cv training gen-ai
         :link: /train/examples/pytorch/dreambooth_finetuning
         :link-type: doc
 
-        How to fine-tune a DreamBooth text-to-image model with your own images.
+        如何使用自己的图像对 DreamBooth 文本到图像模型进行微调
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training train llm nlp gen-ai
         :link: /train/examples/lightning/dolly_lightning_fsdp_finetuning
         :link-type: doc
 
-        Fine-tune dolly-v2-7b with Ray Train, PyTorch Lightning and FSDP
+        使用 Ray Train、PyTorch Lightning 和 FSDP 对 dolly-v2-7b 进行微调
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch cv
         :link: /train/examples/pytorch/torch_detection
         :link-type: doc
 
-        Torch Object Detection Example with Ray Train
+        使用 Ray Train 的 Torch 对象检测示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch
         :link: /data/examples/pytorch_resnet_batch_prediction
         :link-type: doc
 
-        Image Classification Batch Inference with PyTorch ResNet152
+        使用 PyTorch ResNet152 进行图像分类批量推理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item cv gen-ai inference
         :link: /data/examples/stablediffusion_batch_prediction
         :link-type: doc
 
-        How to use Ray Data to do batch prediction with the Stable Diffusion text-to-image model
+        如何使用 Ray Data 对 Stable Diffusion 文本到图像模型进行批量预测
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item cv pytorch inference
         :link: /data/examples/batch_inference_object_detection
         :link-type: doc
 
-        Object Detection Batch Inference with PyTorch FasterRCNN_ResNet50
+        使用 PyTorch FasterRCNN_ResNet50 进行对象检测批量推理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item cv pytorch inference
         :link: /data/examples/pytorch_resnet_batch_prediction
         :link-type: doc
 
-        Image Classification Batch Inference with PyTorch ResNet18
+        使用 PyTorch ResNet18 进行图像分类批量推理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item cv inference huggingface
         :link: /data/examples/huggingface_vit_batch_prediction
         :link-type: doc
 
-        Image Classification Batch Inference with Huggingface Vision Transformer
+        使用 Huggingface Vision Transformer 进行图像分类批量推理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch tensorflow serving
         :link: /serve/tutorials/serve-ml-models
         :link-type: doc
 
-        Serving ML models with Ray Serve (Tensorflow, PyTorch, Scikit-Learn, others)
+        使用 Ray Serve 服务 ML 模型（Tensorflow、PyTorch、Scikit-Learn 等）
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving
         :link: /serve/tutorials/batch
         :link-type: doc
 
-        Batching tutorial for Ray Serve
+        使用 Ray Serve 进行批处理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl serving
         :link: /serve/tutorials/rllib
         :link-type: doc
 
-        Serving RLlib Models with Ray Serve
+        使用 Ray Serve 服务 RLlib 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving
         :link: /serve/tutorials/gradio-integration
         :link-type: doc
 
-        Scaling your Gradio app with Ray Serve
+        使用 Ray Serve 扩展 Gradio 应用
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving
         :link: /serve/tutorials/gradio-dag-visualization
         :link-type: doc
 
-        Visualizing a Deployment Graph with Gradio
+        使用 Ray Serve 和 Gradio 可视化部署图
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving
         :link: /serve/tutorials/java
         :link-type: doc
 
-        Java tutorial for Ray Serve
+        使用 Ray Serve 的 Java 教程
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving cv
         :link: /serve/tutorials/stable-diffusion
         :link-type: doc
 
-        Serving a Stable Diffusion Model
+        服务 Stable Diffusion 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving nlp
         :link: /serve/tutorials/text-classification
         :link-type: doc
 
-        Serving a Distilbert Model
+        服务 Distilbert 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving inference aws-neuron-core
         :link: /serve/tutorials/aws-neuron-core-inference
         :link-type: doc
 
-        Serving a Bert Model on AWS NeuronCore
+        在 AWS NeuronCore 上服务 Bert 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item cv serving
         :link: /serve/tutorials/object-detection
         :link-type: doc
 
-        Serving an Object Detection Model
+        服务对象检测模型
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item inference
         :link: https://www.anyscale.com/blog/offline-batch-inference-comparing-ray-apache-spark-and-sagemaker
 
-        Offline Batch Inference: Comparing Ray, Apache Spark, and SageMaker
+        离线批量推理：比较 Ray、Apache Spark 和 SageMaker
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item
         :link: https://www.anyscale.com/blog/streaming-distributed-execution-across-cpus-and-gpus
 
-        Streaming distributed execution across CPUs and GPUs
+        通过 CPU 和 GPU 进行流式分布式执行
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item llm nlp data-processing inference gen-ai
         :link: https://www.anyscale.com/blog/turbocharge-langchain-now-guide-to-20x-faster-embedding
 
-        Using Ray Data to parallelize LangChain inference
+        使用 Ray Data 并行化 LangChain 推理
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item data-processing inference
         :link: /data/batch_inference
         :link-type: doc
 
-        Batch Prediction using Ray Data
+        使用 Ray Data 进行批量预测
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item data-processing inference
         :link: /data/examples/nyc_taxi_basic_processing
         :link-type: doc
 
-        Batch Inference on NYC taxi data using Ray Data
+        使用 Ray Data 对 NYC 出租车数据进行批量推理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item data-processing inference
         :link: /data/examples/ocr_example
         :link-type: doc
 
-        Batch OCR processing using Ray Data
+        使用 Ray Data 进行批量 OCR 处理
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item training
         :link: https://www.anyscale.com/blog/training-one-million-machine-learning-models-in-record-time-with-ray
 
-        Training One Million ML Models in Record Time with Ray
+        使用 Ray 在记录时间内训练一百万个机器学习模型
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item training
         :link: https://www.anyscale.com/blog/many-models-batch-training-at-scale-with-ray-core
 
-        Many Models Batch Training at Scale with Ray Core
+        使用 Ray Core 批量训练大规模模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training
         :link: /ray-core/examples/batch_training
         :link-type: doc
 
-        Batch Training with Ray Core
+        使用 Ray Core 进行批量训练
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item data-processing training
         :link: /data/examples/batch_training
         :link-type: doc
 
-        Batch Training with Ray Data
+        使用 Ray Data 进行批量训练
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item tuning
         :link: /tune/tutorials/tune-run
         :link-type: doc
 
-        Tune Basic Parallel Experiments
+        基础并行实验
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training tuning
         :link: /tune/examples/batch_tuning
         :link-type: doc
 
-        Batch Training and Tuning using Ray Tune
+        使用 Ray Tune 进行批量训练和调优
 
     .. grid-item-card:: :bdg-warning:`Video`
         :class-item: gallery-item
         :link: https://www.youtube.com/watch?v=3t26ucTy0Rs
 
-        Scaling Instacart fulfillment ML on Ray
+        在 Ray 上扩展 Instacart 履行 ML
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: tune-aim-ref
         :link-type: ref
 
-        Using Aim with Ray Tune For Experiment Management
+        使用 Aim 与 Ray Tune 进行实验管理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: tune-comet-ref
         :link-type: ref
 
-        Using Comet with Ray Tune For Experiment Management
+        使用 Comet 与 Ray Tune 进行实验管理
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tracking monitoring tuning
@@ -345,115 +344,115 @@ Ray Examples
         :link: tune-mlflow-ref
         :link-type: ref
 
-        Using MLflow Tracking & AutoLogging with Tune
+        使用 MLflow 跟踪和 Tune 进行自动记录
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/ax_example
         :link-type: doc
 
-        How To Use Tune With Ax
+        如何使用 Ax 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/dragonfly_example
         :link-type: doc
 
-        How To Use Tune With Dragonfly
+        如何使用 Dragonfly 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/hyperopt_example
         :link-type: doc
 
-        How To Use Tune With HyperOpt
+        如何使用 HyperOpt 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/bayesopt_example
         :link-type: doc
 
-        How To Use Tune With BayesOpt
+        如何使用 BayesOpt 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/flaml_example
         :link-type: doc
 
-        How To Use Tune With BlendSearch and CFO
+        如何使用 BlendSearch 和 CFO 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/bohb_example
         :link-type: doc
 
-        How To Use Tune With TuneBOHB
+        如何使用 Tune 与 TuneBOHB
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/nevergrad_example
         :link-type: doc
 
-        How To Use Tune With Nevergrad
+        如何使用 Nevergrad 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/optuna_example
         :link-type: doc
 
-        How To Use Tune With Optuna
+        如何使用 Optuna 与 Ray Tune
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: /tune/examples/sigopt_example
         :link-type: doc
 
-        How To Use Tune With SigOpt
+        如何使用 SigOpt 与 Ray Tune
 
     .. grid-item-card:: :bdg-warning:`Video`
         :class-item: gallery-item tuning serving
         :link: https://www.youtube.com/watch?v=UtH-CMpmxvI
 
-        Productionizing ML at Scale with Ray Serve
+        使用 Ray Serve 在规模上实现 ML 生产
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item tuning serving
         :link: https://www.anyscale.com/blog/simplify-your-mlops-with-ray-and-ray-serve
 
-        Simplify your MLOps with Ray & Ray Serve
+        使用 Ray & Ray Serve 简化您的 MLOps
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item tuning serving
         :link: /serve/getting_started
         :link-type: doc
 
-        Getting Started with Ray Serve
+        Ray Serve 入门
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item tuning serving
         :link: /serve/model_composition
         :link-type: doc
 
-        Model Composition in Serve
+        在 Serve 中进行模型组合
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item tuning
         :link: /tune/getting-started
         :link-type: doc
 
-        Getting Started with Ray Tune
+        Ray Tune 入门
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item tuning
         :link: https://www.anyscale.com/blog/how-to-distribute-hyperparameter-tuning-using-ray-tune
 
-        How to distribute hyperparameter tuning with Ray Tune
+        如何使用 Ray Tune 分布式超参数调优
 
     .. grid-item-card:: :bdg-warning:`Video`
         :class-item: gallery-item
         :link: https://www.youtube.com/watch?v=KgYZtlbFYXE
 
-        Simple Distributed Hyperparameter Optimization
+        简单的分布式超参数优化
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item tuning nlp huggingface
@@ -466,300 +465,300 @@ Ray Examples
         :link: tune-mnist-keras
         :link-type: ref
 
-        How To Use Tune With Keras & TF Models
+        如何使用 Tune 与 Keras 和 TF 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch tuning tune serve
         :link: tune-pytorch-cifar-ref
         :link-type: ref
 
-        How To Use Tune With PyTorch Models
+        如何使用 Tune 与 PyTorch 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch tuning tune serve
         :link: tune-pytorch-lightning-ref
         :link-type: ref
 
-        How To Tune PyTorch Lightning Models
+        如何调整 PyTorch Lightning 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning serving tune serve
         :link: /tune/examples/tune-serve-integration-mnist
         :link-type: doc
 
-        Model Selection & Serving With Ray Serve
+        使用 Ray Serve 进行模型选择和服务
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl tuning serving tune serve
         :link: tune-rllib-example
         :link-type: ref
 
-        Tuning RL Experiments With Ray Tune & Ray Serve
+        使用 Ray Tune 和 Ray Serve 调整 RL 实验
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning tune serve
         :link: tune-xgboost-ref
         :link-type: ref
 
-        A Guide To Tuning XGBoost Parameters With Tune
+        一个使用 Tune 调整 XGBoost 参数的指南
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning tune serve
         :link: tune-lightgbm-example
         :link-type: ref
 
-        A Guide To Tuning LightGBM Parameters With Tune
+        一个使用 Tune 调整 LightGBM 参数的指南
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning tune serve
         :link: tune-horovod-example
         :link-type: ref
 
-        A Guide To Tuning Horovod Parameters With Tune
+        一个使用 Tune 调整 Horovod 参数的指南
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning huggingface tune serve nlp
         :link: tune-huggingface-example
         :link-type: ref
 
-        A Guide To Tuning Huggingface Transformers With Tune
+        一个使用 Tune 调整 Huggingface Transformers 参数的指南
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tuning
         :link: https://www.anyscale.com/blog?tag=ray-tune
 
-        More Tune use cases on the Blog
+        更多关于 Ray Tune 的用例
 
     .. grid-item-card:: :bdg-warning:`Video`
         :class-item: gallery-item pytorch
         :link: https://www.youtube.com/watch?v=e-A93QftCfc
 
-        Ray Train, PyTorch, TorchX, and distributed deep learning
+        Ray Train, PyTorch, TorchX 和分布式深度学习
 
     .. grid-item-card:: :bdg-success:`Tutorial`
         :class-item: gallery-item
         :link: /train/train
         :link-type: doc
 
-        Getting Started with Ray Train
+        Ray Train 入门
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training huggingface nlp
         :link: /train/examples/transformers/huggingface_text_classification
         :link-type: doc
 
-        Fine-tune a 🤗 Transformers model on GLUE benchmark
+        在 GLUE 基准上微调 🤗 Transformers 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch training train cv
         :link: torch_fashion_mnist_ex
         :link-type: ref
 
-        PyTorch Fashion MNIST Training Example
+        PyTorch Fashion MNIST 训练示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tensorflow training train cv
         :link: tensorflow_mnist_example
         :link-type: ref
 
-        TensorFlow MNIST Training Example
+        TensorFlow MNIST 训练示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training train
         :link: horovod_example
         :link-type: ref
 
-        End-to-end Horovod Training Example
+        端到端 Horovod 训练示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch training cv
         :link: lightning_mnist_example
         :link-type: ref
 
-        End-to-end PyTorch Lightning Training Example
+        端到端 PyTorch Lightning 训练示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item data-processing training nlp
         :link: lightning_advanced_example
         :link-type: ref
 
-        Fine-tune a PyTorch Lightning Text Classifier with Ray Data
+        使用 Ray Data 对 PyTorch Lightning 文本分类器进行微调
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tensorflow tuning
         :link: tune_train_tf_example
         :link-type: ref
 
-        End-to-end Example for Tuning a TensorFlow Model
+        端到端示例，展示如何使用 Ray Tune 调整 TensorFlow 模型
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch tuning
         :link: tune_train_torch_example
         :link-type: ref
 
-        End-to-end Example for Tuning a PyTorch Model with PBT
+        端到端示例，展示如何使用 Ray Tune 调整 PyTorch 模型
 
     .. grid-item-card:: :bdg-info:`Course`
         :class-item: gallery-item rl
         :link: https://applied-rl-course.netlify.app/
 
-        Applied Reinforcement Learning with RLlib
+        使用 RLlib 进行应用强化学习
 
     .. grid-item-card:: :bdg-primary:`Blog`
         :class-item: gallery-item rl
         :link: https://medium.com/distributed-computing-with-ray/intro-to-rllib-example-environments-3a113f532c70
 
-        Intro to RLlib: Example Environments
+        RLlib 的示例环境介绍
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl tuning
         :link: https://github.com/ray-project/ray/blob/master/rllib/tuned_examples
 
-        A collection of tuned hyperparameters by RLlib algorithm
+        RLlib 算法的超参调整集合
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/rl-experiments
 
-         A collection of reasonably optimized Atari and MuJoCo results for RLlib
+         针对 RLlib 的一系列合理优化的 Atari 和 MuJoCo 结果
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://medium.com/distributed-computing-with-ray/attention-nets-and-more-with-rllibs-trajectory-view-api-d326339a6e65
 
-        RLlib's trajectory view API and how it enables implementations of GTrXL (attention net) architectures
+        RLlib 的轨迹视图 API 及如何实现 GTrXL（注意力网络）架构
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://medium.com/distributed-computing-with-ray/reinforcement-learning-with-rllib-in-the-unity-game-engine-1a98080a7c0d
 
-        A how-to on connecting RLlib with the Unity3D game engine for running visual- and physics-based RL experiments
+        一个关于如何将 RLlib 与 Unity3D 游戏引擎连接以运行基于视觉和物理的 RL 实验的指南
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item pytorch tensorflow rl
         :link: https://medium.com/distributed-computing-with-ray/lessons-from-implementing-12-deep-rl-algorithms-in-tf-and-pytorch-1b412009297d
 
-           How we ported 12 of RLlib's algorithms from TensorFlow to PyTorch and what we learnt on the way
+           我们如何将 12 个 RLlib 算法从 TensorFlow 移植到 PyTorch，以及我们在此过程中学到的东西
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: http://bair.berkeley.edu/blog/2018/12/12/rllib
 
-        This blog post is a brief tutorial on multi-agent RL and its design in RLlib
+        这篇博客是关于多智能体 RL 及其在 RLlib 中的设计的简要教程
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tensorflow rl
         :link: https://medium.com/riselab/functional-rl-with-keras-and-tensorflow-eager-7973f81d6345
 
-        Exploration of a functional paradigm for implementing reinforcement learning (RL) algorithms
+        探索了一种用于实现强化学习（RL）算法的函数式范式
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/custom_env.py
 
-        Example of defining and registering a gym env and model for use with RLlib
+        定义和注册一个 gym 环境和模型供 RLlib 使用的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/tree/master/rllib/examples/unity3d_env_local.py
 
-        Example of how to setup an RLlib algorithm against a locally running Unity3D editor
+        如何在本地运行的 Unity3D 编辑器上设置 RLlib 算法的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/env_rendering_and_recording.py
 
-        Rendering and recording of an environment
+        环境的渲染和记录
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/coin_game_env.py
 
-        Coin game example with RLlib
+        基于 RLlib 的金币游戏示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/dmlab_watermaze.py
 
-        Example for how to use a DMLab environment (Watermaze)
+        如何使用 DMLab 环境（Watermaze）的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/recommender_system_with_recsim_and_slateq.py
 
-        RecSym environment example (for recommender systems) using the SlateQ algorithm
+        RecSym 环境示例（用于推荐系统）使用 SlateQ 算法
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/sumo_env_local.py
 
-        Example demonstrating how to use the SUMO simulator in connection with RLlib.
+        演示如何在 RLlib 中使用 SUMO 仿真器的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/vizdoom_with_attention_net.py
 
-        VizDoom example script using RLlib's auto-attention wrapper
+        VizDoom 示例脚本使用 RLlib 的 auto-attention 包装器
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/env/tests/test_env_with_subprocess.py
 
-        Example of how to ensure subprocesses spawned by envs are killed when RLlib exits.
+        如何确保 RLlib 退出时由 envs 生成的子进程被终止的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/attention_net.py
 
-        Attention Net (GTrXL) learning the "repeat-after-me" environment
+        Attention Net (GTrXL) 学习“重复我说的话”环境
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/lstm_auto_wrapping.py
 
-        Example showing how to use the auto-LSTM wrapper for your default- and custom models in RLlib.
+        展示如何在 RLlib 中使用自动 LSTM 包装器
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib pytorch tensorflow
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/custom_rnn_model.py
 
-        Example of using a custom Keras- or PyTorch RNN model.
+        使用自定义 Keras 或 PyTorch RNN 模型的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/custom_model_loss_and_metrics.py
 
-        Example of defining and registering a custom model with a supervised loss.
+        定义和注册具有监督损失的自定义模型的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/batch_norm_model.py
 
-        Example of adding batch norm layers to a custom model.
+        添加批量规范化层到自定义模型的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/eager_execution.py
 
-        Example of how to leverage TensorFlow eager to simplify debugging and design of custom models and policies.
+        如何利用 TensorFlow eager 简化自定义模型和策略的调试和设计的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/custom_fast_model.py
 
-        Example of a "fast" Model learning only one parameter for tf and torch.
+        只有一个参数的快速 tf 和 torch 模型示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/custom_model_api.py
 
-        Shows how to define a custom Model API in RLlib, such that it can be used inside certain algorithms.
+        展示了如何在 RLlib 中定义自定义 Model API，以便它可以在某些算法中使用。
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/trajectory_view_api.py
 
-        An example on how a model can use the trajectory view API to specify its own input.
+        一个示例，展示了模型如何使用轨迹视图 API 来指定自己的输入。
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib
@@ -1335,7 +1334,7 @@ Ray Examples
         :class-item: gallery-item tune notebook tensorflow
         :link: https://colab.research.google.com/github/ray-project/tutorial/blob/master/tune_exercises/exercise_1_basics.ipynb
 
-        Basics of using Tune
+        Tune 的基础使用
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item tune notebook pytorch
@@ -1380,18 +1379,19 @@ Ray Examples
         :link: deepspeed_example
         :link-type: ref
 
-        Distributed Training with DeepSpeed ZeRO-3 and TorchTrainer
+        分布式 DeepSpeed ZeRO-3 及 TorchTrainer 训练
     
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item training llm pytorch huggingface nlp
         :link: deepspeed_example
         :link-type: ref
 
-        Distributed Training with Hugging Face Accelelate and TorchTrainer
+        分布式 Hugging Face Accelelate 及 TorchTrainer 训练
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item inference huggingface cv
         :link: kuberay-batch-inference-example
         :link-type: ref
 
-        RayJob Batch Inference Example on Kubernetes with Ray
+        RayJob 在 Kubernetes 构建的 Ray 上进行批量推理示例
+

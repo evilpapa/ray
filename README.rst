@@ -14,34 +14,34 @@
 
 |
 
-Ray is a unified framework for scaling AI and Python applications. Ray consists of a core distributed runtime and a set of AI libraries for simplifying ML compute:
+Ray 是一个统一的框架，用于扩展 AI 和 Python 应用程序。Ray 由一个核心分布式运行时和一组用于简化 ML 计算的 AI 库组成：
 
 .. image:: https://github.com/ray-project/ray/raw/master/doc/source/images/what-is-ray-padded.svg
 
 ..
   https://docs.google.com/drawings/d/1Pl8aCYOsZCo61cmp57c7Sja6HhIygGCvSZLi_AuBuqo/edit
 
-Learn more about `Ray AI Libraries`_:
+学习更多 `Ray AI 类库`_ :
 
-- `Data`_: Scalable Datasets for ML
-- `Train`_: Distributed Training
-- `Tune`_: Scalable Hyperparameter Tuning
-- `RLlib`_: Scalable Reinforcement Learning
-- `Serve`_: Scalable and Programmable Serving
+- `Data`_: ML 可扩展数据集
+- `Train`_: 分布式训练
+- `Tune`_: 可扩展超参转换
+- `RLlib`_: 可扩展的强化学习
+- `Serve`_: 可扩展及可编程服务
 
-Or more about `Ray Core`_ and its key abstractions:
+或者更多关于 `Ray Core`_ 及其关键抽象
 
-- `Tasks`_: Stateless functions executed in the cluster.
-- `Actors`_: Stateful worker processes created in the cluster.
-- `Objects`_: Immutable values accessible across the cluster.
+- `Tasks`_: 在集群执行的无状态函数。
+- `Actors`_: 在集群中创建的有状态工作进程。
+- `Objects`_: 跨集群可访问的不可变值。
 
-Monitor and debug Ray applications and clusters using the `Ray dashboard <https://docs.ray.io/en/latest/ray-core/ray-dashboard.html>`__.
+使用 `Ray 看板 <https://docs.ray.io/en/latest/ray-core/ray-dashboard.html>`__ 监控并调试 Ray 应用。
 
-Ray runs on any machine, cluster, cloud provider, and Kubernetes, and features a growing
-`ecosystem of community integrations`_.
+Ray 可运行在任何机器，集群，云上，Kubernetes，以及具有不断发展的
+`社区集成生态系统`__.
 
-Install Ray with: ``pip install ray``. For nightly wheels, see the
-`Installation page <https://docs.ray.io/en/latest/installation.html>`__.
+使用： ``pip install ray`` 安装 Ray。对于每日版本，查看
+`安装页 <https://docs.ray.io/en/latest/installation.html>`__.
 
 .. _`Serve`: https://docs.ray.io/en/latest/serve/index.html
 .. _`Data`: https://docs.ray.io/en/latest/data/dataset.html
@@ -52,26 +52,26 @@ Install Ray with: ``pip install ray``. For nightly wheels, see the
 .. _`ecosystem of community integrations`: https://docs.ray.io/en/latest/ray-overview/ray-libraries.html
 
 
-Why Ray?
+为什么是 Ray？
 --------
 
-Today's ML workloads are increasingly compute-intensive. As convenient as they are, single-node development environments such as your laptop cannot scale to meet these demands.
+当今的机器学习工作负载的计算密集程度越来越高。 尽管笔记本电脑等单节点开发环境很方便，但无法扩展以满足这些需求。
 
-Ray is a unified way to scale Python and AI applications from a laptop to a cluster.
+Ray 是一种将 Python 和 AI 应用程序从笔记本电脑扩展到集群的统一方法。
 
-With Ray, you can seamlessly scale the same code from a laptop to a cluster. Ray is designed to be general-purpose, meaning that it can performantly run any kind of workload. If your application is written in Python, you can scale it with Ray, no other infrastructure required.
+借助 Ray，您可以将相同的代码从笔记本电脑无缝扩展到集群。 Ray 被设计为通用型，这意味着它可以高效地运行任何类型的工作负载。 如果您的应用程序是用 Python 编写的，您可以使用 Ray 对其进行扩展，无需其他基础设施。
 
-More Information
+更多信息
 ----------------
 
-- `Documentation`_
-- `Ray Architecture whitepaper`_
+- `文档`_
+- `Ray 架构白皮书`_
 - `Exoshuffle: large-scale data shuffle in Ray`_
 - `Ownership: a distributed futures system for fine-grained tasks`_
-- `RLlib paper`_
-- `Tune paper`_
+- `RLlib 论文`_
+- `Tune 论文`_
 
-*Older documents:*
+*老文档：*
 
 - `Ray paper`_
 - `Ray HotOS paper`_
@@ -92,7 +92,7 @@ More Information
 .. _`RLlib paper`: https://arxiv.org/abs/1712.09381
 .. _`Tune paper`: https://arxiv.org/abs/1807.05118
 
-Getting Involved
+深入
 ----------------
 
 .. list-table::
@@ -129,7 +129,7 @@ Getting Involved
      - Ray DevRel
 
 .. _`Discourse Forum`: https://discuss.ray.io/
-.. _`GitHub Issues`: https://github.com/ray-project/ray/issues
+.. _`GitHub 讨论`: https://github.com/ray-project/ray/issues
 .. _`StackOverflow`: https://stackoverflow.com/questions/tagged/ray
 .. _`Meetup Group`: https://www.meetup.com/Bay-Area-Ray-Meetup/
 .. _`Twitter`: https://twitter.com/raydistributed

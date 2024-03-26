@@ -1,10 +1,9 @@
 (kuberay-guides)=
 
-# User Guides
+# 用户指引
 
 :::{note}
-To learn the basics of Ray on Kubernetes, we recommend taking a look
-at the {ref}`introductory guide <kuberay-quickstart>` first.
+了解 Kubernetes 上的 Ray 基础知识，推荐受限查看 {ref}`introductory guide <kuberay-quickstart>` 。
 :::
 
 * {ref}`kuberay-rayservice`

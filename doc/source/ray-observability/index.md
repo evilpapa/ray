@@ -1,6 +1,6 @@
 (observability)=
 
-# Monitoring and Debugging
+# 监控和调试
 
 This section covers how to **monitor and debug Ray applications and clusters** with Ray's Observability features.
 
