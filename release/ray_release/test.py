@@ -36,8 +36,8 @@ MACOS_TEST_PREFIX = "darwin://"
 LINUX_TEST_PREFIX = "linux://"
 WINDOWS_TEST_PREFIX = "windows://"
 MACOS_BISECT_DAILY_RATE_LIMIT = 3
-LINUX_BISECT_DAILY_RATE_LIMIT = 0
-WINDOWS_BISECT_DAILY_RATE_LIMIT = 0
+LINUX_BISECT_DAILY_RATE_LIMIT = 0  # linux bisect is disabled
+WINDOWS_BISECT_DAILY_RATE_LIMIT = 0  # windows bisect is disabled
 BISECT_DAILY_RATE_LIMIT = 10
 
 
@@ -275,6 +275,7 @@ class Test(dict):
         """
         return self["name"]
 
+    @classmethod
     def _get_s3_name(cls, test_name: str) -> str:
         """
         Returns the name of the test for s3. Since '/' is not allowed in s3 key,
