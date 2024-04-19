@@ -1,21 +1,21 @@
 .. _spark-on-ray:
 
 **************************
-Using Spark on Ray (RayDP)
+Ray 上运行 Spark (RayDP)
 **************************
 
-RayDP combines your Spark and Ray clusters, making it easy to do large scale
-data processing using the PySpark API and seemlessly use that data to train
-your models using TensorFlow and PyTorch.
+RayDP 合并了您的 Spark 和 Ray 集群，使得使用 PySpark API 进行大规模数据处理变得容易，
+并且可以无缝地使用这些数据来训练您的 TensorFlow 和 PyTorch 模型。
 
-For more information and examples, see the RayDP Github page:
+更多信息和示例，请参阅 RayDP Github 页面：
 https://github.com/oap-project/raydp
 
+
 ================
-Installing RayDP
+安装 RayDP
 ================
 
-RayDP can be installed from PyPI and supports PySpark 3.0 and 3.1.
+RayDP 可以从 PyPI 安装，支持 PySpark 3.0 和 3.1。
 
 .. code-block bash
 
@@ -25,15 +25,15 @@ RayDP can be installed from PyPI and supports PySpark 3.0 and 3.1.
   RayDP requires ray >= 1.2.0
 
 .. note::
-  In order to run Spark, the head and worker nodes will need Java installed.
+  要运行 Spark，head 和 worker 节点需要安装 Java。
 
 ========================
-Creating a Spark Session
+创建 Spark 会话
 ========================
 
-To create a spark session, call ``raydp.init_spark``
+要创建一个 Spark 会话，调用 ``raydp.init_spark``
 
-For example,
+例如，
 
 .. code-block:: python
 
@@ -49,14 +49,14 @@ For example,
   )
 
 ====================================
-Deep Learning with a Spark DataFrame
+使用 Spark DataFrame 进行深度学习
 ====================================
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Training a Spark DataFrame with TensorFlow
+使用 Spark DataFrame 进行 TensorFlow 训练
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``raydp.tf.TFEstimator`` provides an API for training with TensorFlow.
+``raydp.tf.TFEstimator`` 使用 Spark DataFrame 进行训练，支持分布式训练。
 
 .. code-block:: python
 
@@ -105,11 +105,10 @@ Training a Spark DataFrame with TensorFlow
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Training a Spark DataFrame with PyTorch
+使用 Spark DataFrame 进行 PyTorch 训练
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Similarly, ``raydp.torch.TorchEstimator`` provides an API for training with
-PyTorch.
+相似的，``raydp.torch.TorchEstimator`` 提供了一个 PyTorch 训练的 API。
 
 .. code-block:: python
 

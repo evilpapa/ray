@@ -60,5 +60,4 @@ Ray 支持使用 `Ray Actors <actors.html>`__ 的 `multiprocessing.Pool API`_ �
   # Alternatively, set the environment variable RAY_ADDRESS="<ip_address>:<port>".
   pool = Pool(ray_address="<ip_address>:<port>")
 
-You can also start Ray manually by calling ``ray.init()`` (with any of its supported
-configuration options) before creating a ``Pool``.
+你也可以在创建 ``Pool`` 之前手动调用 ``ray.init()`` (使用任何支持的配置选项) 来启动 Ray。

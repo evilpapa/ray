@@ -7,24 +7,23 @@
 
 .. _ray-collective:
 
-Ray Collective Communication Lib
+Ray 集体通信库
 ================================
 
-The Ray collective communication library (\ ``ray.util.collective``\ ) offers a set of native collective primitives for
-communication between distributed CPUs or GPUs.
+Ray 集体通信库(\ ``ray.util.collective``\ ) 提供了一组原生的集体原语，用于在分布式 CPU 或 GPU 之间进行通信。
 
-Ray collective communication library
+Ray 集体通信库
 
 
-* enables 10x more efficient out-of-band collective communication between Ray actor and task processes,
-* operates on both distributed CPUs and GPUs,
-* uses NCCL and GLOO as the optional high-performance communication backends,
-* is suitable for distributed ML programs on Ray.
+* 使 Ray actor 和 task 进程之间的集体通信效率提高了 10 倍，
+* 可在分布式 CPU 和 GPU 上运行，
+* 使用 NCCL 和 GLOO 作为可选的高性能通信后端，
+* 适用于 Ray 上的分布式 ML 程序。
 
-Collective Primitives Support Matrix
+集体原语支持矩阵
 ------------------------------------
 
-See below the current support matrix for all collective calls with different backends.
+查看下面的支持矩阵，了解不同后端的所有集体调用的当前支持情况。
 
 .. list-table::
    :header-rows: 1
@@ -96,7 +95,7 @@ See below the current support matrix for all collective calls with different bac
      - ✔
 
 
-Supported Tensor Types
+支持的张量类型
 ----------------------
 
 
@@ -104,35 +103,35 @@ Supported Tensor Types
 * ``numpy.ndarray``
 * ``cupy.ndarray``
 
-Usage
+用法
 -----
 
-Installation and Importing
+安装及引用
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Ray collective library is bundled with the released Ray wheel. Besides Ray, users need to install either `pygloo <https://github.com/ray-project/pygloo>`_
-or `cupy <https://docs.cupy.dev/en/stable/install.html>`_ in order to use collective communication with the GLOO and NCCL backend, respectively.
+Ray 集体库与发布的 Ray 轮包捆绑在一起。除了 Ray 之外，用户还需要安装 `pygloo <https://github.com/ray-project/pygloo>`_
+或 `cupy <https://docs.cupy.dev/en/stable/install.html>`_ 以便使用 GLOO 和 NCCL 后端的集体通信。
 
 .. code-block:: python
 
    pip install pygloo
    pip install cupy-cudaxxx # replace xxx with the right cuda version in your environment
 
-To use these APIs, import the collective package in your actor/task or driver code via:
+要使用这些 APIs，请通过以下方式在 actor/task 或 driver 代码中导入 collective 包：
 
 .. code-block:: python
 
    import ray.util.collective as col
 
-Initialization
+初始化
 ^^^^^^^^^^^^^^
 
-Collective functions operate on collective groups.
-A collective group contains a number of processes (in Ray, they are usually Ray-managed actors or tasks) that will together enter the collective function calls.
-Before making collective calls, users need to declare a set of actors/tasks, statically, as a collective group.
+集合函数在集合组上运行。
+集合组包含一组进程（在 Ray 中，它们通常是 Ray 管理的 actor 或 task），这些进程将一起进入集合函数调用。
+在进行集体调用之前，用户需要将一组 actor/task 静态地声明为一个集体组。
 
-Below is an example code snippet that uses the two APIs ``init_collective_group()`` and ``declare_collective_group()`` to initialize collective groups among a few
-remote actors. Refer to `APIs <#api-reference>`_ for the detailed descriptions of the two APIs.
+以下是一个示例代码片段，使用两个 API ``init_collective_group()`` 和 ``declare_collective_group()`` 在几个远程 actor 之间初始化集体组。
+参考 `APIs <#api-reference>`_ 以获取这两个 API 的详细描述。
 
 .. code-block:: python
 
@@ -184,23 +183,22 @@ remote actors. Refer to `APIs <#api-reference>`_ for the detailed descriptions o
    collective.declare_collective_group(workers, **_options)
    results = ray.get([w.compute.remote() for w in workers])
 
-Note that for the same set of actors/task processes, multiple collective groups can be constructed, with ``group_name`` as their unique identifier.
-This enables to specify complex communication patterns between different (sub)set of processes.
+注意，对于相同的 actor/task 进程集合，可以构建多个集合组，其中 ``group_name`` 是它们的唯一标识符。
+这使得可以在不同（子）进程集之间指定复杂的通信模式。
 
-Collective Communication
+集合通信
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Check `the support matrix <#collective-primitives-support-matrix>`_ for the current status of supported collective calls and backends.
+检查 `支持矩阵 <#collective-primitives-support-matrix>`_ 以了解支持的集体调用和后端的当前状态。
 
-Note that the current set of collective communication API are imperative, and exhibit the following behaviours:
+注意，当前的集体通信 API 是命令式的，并表现出以下行为：
 
 
-* All the collective APIs are synchronous blocking calls
-* Since each API only specifies a part of the collective communication, the API is expected to be called by each participating process of the (pre-declared) collective group.
-  Upon all the processes have made the call and rendezvous with each other, the collective communication happens and proceeds.
-* The APIs are imperative and the communication happends out-of-band --- they need to be used inside the collective process (actor/task) code.
+* 所有的集体 API 都是同步阻塞调用
+* 由于每个 API 仅指定集体通信的一部分，因此预计该 API 将由（预先声明的）集体组的每个参与进程调用。当所有进程都进行了调用并相互会合后，集体通信就会发生并继续进行。
+* API 是命令式的，并且通信发生在带外 —— 它们需要在集体流程（参与者/任务）代码内使用。
 
-An example of using ``ray.util.collective.allreduce`` is below:
+一个使用 ``ray.util.collective.allreduce`` 的示例如下：
 
 .. code-block:: python
 
@@ -224,10 +222,10 @@ An example of using ``ray.util.collective.allreduce`` is below:
    # Invoke allreduce remotely
    ray.get([A.compute.remote(), B.compute.remote()])
 
-Point-to-point Communication
+点对点通信
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``ray.util.collective`` also supports P2P send/recv communication between processes.
+``ray.util.collective`` 也提供了进程之间的 P2P 发送/接收通信。
 
 The send/recv exhibits the same behavior with the collective functions:
 they are synchronous blocking calls -- a pair of send and recv must be called together on paired processes in order to specify the entire communication,
