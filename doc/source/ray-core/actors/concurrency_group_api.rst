@@ -1,27 +1,25 @@
-Limiting Concurrency Per-Method with Concurrency Groups
+使用并发组来限制每个方法的并发数
 =======================================================
 
-Besides setting the max concurrency overall for an asyncio actor, Ray allows methods to be separated into *concurrency groups*, each with its own asyncio event loop. This allows you to limit the concurrency per-method, e.g., allow a health-check method to be given its own concurrency quota separate from request serving methods.
+除了为异步IO Actor 设置整体最大并发数之外，Ray 还允许将方法分成 *并发组* ，每个组都有自己的线程。这允许您限制每个方法的并发数，例如，允许为健康检查方法分配独立于请求服务方法的并发配额。
 
-.. warning:: Concurrency groups are only supported for asyncio actors, not threaded actors.
+.. warning:: 并发组只支持异步 actor，而不是线程 actor。
 
 .. _defining-concurrency-groups:
 
-Defining Concurrency Groups
+定义并发组
 ---------------------------
 
-This defines two concurrency groups, "io" with max concurrency = 2 and
-"compute" with max concurrency = 4.  The methods ``f1`` and ``f2`` are
-placed in the "io" group, and the methods ``f3`` and ``f4`` are placed
-into the "compute" group. Note that there is always a default
-concurrency group, which has a default concurrency of 1000 in Python and
-1 in Java.
+这里定义了两个并发组，"io" 的最大并发数为 2 ，
+"compute" 的最大并发数为 4。
+方法 ``f1`` 和 ``f2`` 被放置在“io” 组中，方法 ``f3`` 和 ``f4 ``被放置在 “compute” 组中。
+请注意，对于 actor ，始终有一个默认并发组，其默认并发数 Python 为 1000， Java 为 1。
 
 .. tab-set::
 
     .. tab-item:: Python
 
-        You can define concurrency groups for asyncio actors using the ``concurrency_group`` decorator argument:
+        您可以使用装饰器参数 ``concurrency_group`` 为异步IO actor 定义并发组：
 
         .. testcode::
 
@@ -60,7 +58,7 @@ concurrency group, which has a default concurrency of 1000 in Python and
 
     .. tab-item:: Java
 
-        You can define concurrency groups for concurrent actors using the API ``setConcurrencyGroups()`` argument:
+        你可以使用 ``setConcurrencyGroups()`` 参数为并发 actor 定义并发组：
 
         .. code-block:: java
 
@@ -114,18 +112,18 @@ concurrency group, which has a default concurrency of 1000 in Python and
 
 .. _default-concurrency-group:
 
-Default Concurrency Group
+默认并发组
 -------------------------
 
-By default, methods are placed in a default concurrency group which has a concurrency limit of 1000 in Python, 1 in Java.
-The concurrency of the default group can be changed by setting the ``max_concurrency`` actor option.
+默认情况下，方法被放置在一个默认并发组中，该组的并发限制为 1000（Python）或 1（Java）。
+可以通过设置 actor 选项 ``max_concurrency`` 来更改默认组的并发数。
 
 .. tab-set::
 
     .. tab-item:: Python
 
-        The following AsyncIOActor has 2 concurrency groups: "io" and "default".
-        The max concurrency of "io" is 2, and the max concurrency of "default" is 10.
+        以下 AsyncIOActor 有 2 个并发组："io" 和 "default"。
+        “io”最大并发为2，“default”最大并发为10。
 
         .. testcode::
 
@@ -138,8 +136,8 @@ The concurrency of the default group can be changed by setting the ``max_concurr
 
     .. tab-item:: Java
 
-        The following concurrent actor has 2 concurrency groups: "io" and "default".
-        The max concurrency of "io" is 2, and the max concurrency of "default" is 10.
+        以下 AsyncIOActor 有 2 个并发组："io" 和 "default"。
+        “io”最大并发为2，“default”最大并发为10。
 
         .. code-block:: java
 
@@ -163,19 +161,18 @@ The concurrency of the default group can be changed by setting the ``max_concurr
 
 .. _setting-the-concurrency-group-at-runtime:
 
-Setting the Concurrency Group at Runtime
+为运行时设置设置并发组
 ----------------------------------------
 
-You can also dispatch actor methods into a specific concurrency group at runtime.
+您还可以在运行时将 actor 方法分派到特定的并发组中。
 
-The following snippet demonstrates setting the concurrency group of the
-``f2`` method dynamically at runtime.
+以下代码片段演示了 ``f2`` 在运行时动态设置方法的并发组。
 
 .. tab-set::
 
     .. tab-item:: Python
 
-        You can use the ``.options`` method.
+        您可以使用 ``.options`` 方法。
 
         .. testcode::
 
@@ -187,7 +184,7 @@ The following snippet demonstrates setting the concurrency group of the
 
     .. tab-item:: Java
 
-        You can use ``setConcurrencyGroup`` method.
+        您可以使用 ``setConcurrencyGroup`` 方法。
 
         .. code-block:: java
 

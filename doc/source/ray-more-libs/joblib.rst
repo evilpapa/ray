@@ -1,33 +1,27 @@
 .. _ray-joblib:
 
-Distributed Scikit-learn / Joblib
+分布式 Scikit-learn / Joblib
 =================================
 
 .. _`issue on GitHub`: https://github.com/ray-project/ray/issues
 
-Ray supports running distributed `scikit-learn`_ programs by
-implementing a Ray backend for `joblib`_ using `Ray Actors <actors.html>`__
-instead of local processes. This makes it easy to scale existing applications
-that use scikit-learn from a single node to a cluster.
+Ray 支持通过使用 `Ray Actors <actors.html>`__ 来实现 `joblib`` 的 Ray 后端，
+从而支持在集群上运行分布式 `scikit-learn`_ 程序，而不是使用本地进程。
+这使得将现有使用 scikit-learn 的应用程序从单节点扩展到集群变得容易。
 
 .. note::
 
-  This API is new and may be revised in future Ray releases. If you encounter
-  any bugs, please file an `issue on GitHub`_.
+  这些 API 是新的，可能会在未来的 Ray 版本中进行修改。如果遇到任何错误，请在 GitHub 上提交 `issue`_。
 
 .. _`joblib`: https://joblib.readthedocs.io
 .. _`scikit-learn`: https://scikit-learn.org
 
-Quickstart
+快速入门
 ----------
 
-To get started, first `install Ray <installation.html>`__, then use
-``from ray.util.joblib import register_ray`` and run ``register_ray()``.
-This will register Ray as a joblib backend for scikit-learn to use.
-Then run your original scikit-learn code inside
-``with joblib.parallel_backend('ray')``. This will start a local Ray cluster.
-See the `Run on a Cluster`_ section below for instructions to run on
-a multi-node Ray cluster instead.
+要开始使用，首先 `安装 Ray <installation.html>`__，然后使用 ``from ray.util.joblib import register_ray`` 并运行 ``register_ray()``。
+这将注册 Ray 作为 scikit-learn 使用的 joblib 后端。然后在 ``with joblib.parallel_backend('ray')`` 中运行原始 scikit-learn 代码。
+查看下面的 `在集群上运行`_ 部分，以获取在多节点 Ray 集群上运行的说明。
 
 .. code-block:: python
 
@@ -51,9 +45,8 @@ a multi-node Ray cluster instead.
   with joblib.parallel_backend('ray'):
       search.fit(digits.data, digits.target)
 
-You can also set the ``ray_remote_args`` argument in ``parallel_backend`` to :func:`configure
-the Ray Actors <ray.remote>` making up the Pool. This can be used to eg. :ref:`assign resources
-to Actors, such as GPUs <actor-resource-guide>`.
+你也可以在 ``parallel_backend`` 中设置 ``ray_remote_args`` 参数来 :func:`配置 Ray Actors <ray.remote>` 组成的池。
+这可以用于例如 :ref:`为 Actor 分配资源，例如 GPU <actor-resource-guide>`。
 
 .. code-block:: python
 
@@ -61,19 +54,15 @@ to Actors, such as GPUs <actor-resource-guide>`.
   with joblib.parallel_backend('ray', ray_remote_args=dict(num_gpus=1)):
       search.fit(digits.data, digits.target)
 
-Run on a Cluster
+在集群上运行
 ----------------
 
-This section assumes that you have a running Ray cluster. To start a Ray cluster,
-please refer to the `cluster setup <cluster/index.html>`__ instructions.
+本章节假设你已经有一个运行中的 Ray 集群。要启动一个 Ray 集群，请参考 `集群设置 <cluster/index.html>`__ 说明。
 
-To connect a scikit-learn to a running Ray cluster, you have to specify the address of the
-head node by setting the ``RAY_ADDRESS`` environment variable.
+要在一个运行中的 Ray 集群上连接 scikit-learn，你需要通过设置 ``RAY_ADDRESS`` 环境变量来指定 head 节点的地址。
 
-You can also start Ray manually by calling ``ray.init()`` (with any of its supported
-configuration options) before calling ``with joblib.parallel_backend('ray')``.
+你也可以手动调用 ``ray.init()`` (使用任何支持的配置选项) 来在调用 ``with joblib.parallel_backend('ray')`` 之前启动 Ray。
 
 .. warning::
 
-    If you do not set the ``RAY_ADDRESS`` environment variable and do not provide
-    ``address`` in ``ray.init(address=<address>)`` then scikit-learn will run on a SINGLE node!
+    如果你不想设置 ``RAY_ADDRESS`` 环境变量并且不提供 ``address`` 参数给 ``ray.init(address=<address>)``，那么 scikit-learn 将在单个节点上运行！

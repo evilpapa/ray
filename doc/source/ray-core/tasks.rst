@@ -1,9 +1,9 @@
 .. _ray-remote-functions:
 
-Tasks
+任务
 =====
 
-Ray enables arbitrary functions to be executed asynchronously on separate Python workers. Such functions are called **Ray remote functions** and their asynchronous invocations are called **Ray tasks**. Here is an example.
+Ray 允许在单独的 Python worker 上异步执行任意函数。此类函数称为 **Ray 远程函数** ，其异步调用称为 **Ray 任务**。以下是示例。
 
 .. tab-set::
 
@@ -14,7 +14,7 @@ Ray enables arbitrary functions to be executed asynchronously on separate Python
             :start-after: __tasks_start__
             :end-before: __tasks_end__
 
-        See the `ray.remote package reference <package-ref.html>`__ page for specific documentation on how to use ``ray.remote``.
+        参阅 `ray.remote package reference <package-ref.html>`__ 页的具体文档来查看如何使用 ``ray.remote``。
 
     .. tab-item:: Java
 
@@ -81,7 +81,7 @@ Ray enables arbitrary functions to be executed asynchronously on separate Python
             ray::Task(SlowFunction).Remote();
           a
 
-Use `ray summary tasks` from :ref:`State API <state-api-overview-ref>`  to see running and finished tasks and count:
+从 :ref:`State API <state-api-overview-ref>` 使用 `ray summary tasks` 来查看运行中以及已完成的任务及总数：
 
 .. code-block:: bash
 
@@ -105,10 +105,10 @@ Use `ray summary tasks` from :ref:`State API <state-api-overview-ref>`  to see r
   0   slow_function         RUNNING: 4      NORMAL_TASK
   1   my_function           FINISHED: 1     NORMAL_TASK
 
-Specifying required resources
+指定所需资源
 -----------------------------
 
-You can specify resource requirements in tasks (see :ref:`resource-requirements` for more details.)
+您可以在任务中指定资源需求（有关更多详细信息，请参阅 :ref:`resource-requirements`。）
 
 .. tab-set::
 
@@ -135,10 +135,10 @@ You can specify resource requirements in tasks (see :ref:`resource-requirements`
 
 .. _ray-object-refs:
 
-Passing object refs to Ray tasks
+将对象引用传递给 Ray 任务
 ---------------------------------------
 
-In addition to values, `Object refs <objects.html>`__ can also be passed into remote functions. When the task gets executed, inside the function body **the argument will be the underlying value**. For example, take this function:
+除了值之外，`对象引用 <objects.html>`__ 还可以传递到远程函数中。执行任务时，函数体内的 **参数将是底层值**。例如，以下函数：
 
 .. tab-set::
 
@@ -182,19 +182,17 @@ In addition to values, `Object refs <objects.html>`__ can also be passed into re
             auto obj_ref2 = ray::Task(FunctionWithAnArgument).Remote(obj_ref1);
             assert(*obj_ref2.Get() == 2);
 
-Note the following behaviors:
+请注意以下行为：
 
-  -  As the second task depends on the output of the first task, Ray will not execute the second task until the first task has finished.
-  -  If the two tasks are scheduled on different machines, the output of the
-     first task (the value corresponding to ``obj_ref1/objRef1``) will be sent over the
-     network to the machine where the second task is scheduled.
+  -  由于第二个任务依赖于第一个任务的输出，因此 Ray 只有在第一个任务完成后才会执行第二个任务。
+  -  如果两个任务在不同的机器上调度，那么第一个任务的输出（对应的值 ``obj_ref1/objRef1``）
+     将通过网络发送到调度第二个任务的机器。
 
-Waiting for Partial Results
+等待部分结果
 ---------------------------
 
-Calling **ray.get** on Ray task results will block until the task finished execution. After launching a number of tasks, you may want to know which ones have
-finished executing without blocking on all of them. This could be achieved by :func:`ray.wait() <ray.wait>`. The function
-works as follows.
+在 Ray 任务结果上调用 **ray.get** 将阻塞，直到任务完成执行。启动多个任务后，
+您可能想知道哪些任务已完成执行，而无需阻塞所有任务。这可以通过 :func:`ray.wait() <ray.wait>` 来实现。该函数的工作原理如下：
 
 .. tab-set::
 
@@ -221,10 +219,10 @@ works as follows.
 
 .. _ray-task-returns:
 
-Multiple returns
+多返回值
 ----------------
 
-By default, a Ray task only returns a single Object Ref. However, you can configure Ray tasks to return multiple Object Refs, by setting the ``num_returns`` option.
+默认情况下，Ray 任务仅返回单个 Object Ref。但是，您可以通过 ``num_returns`` 设置选项将 Ray 任务配置为返回多个 Object Ref。
 
 .. tab-set::
 
@@ -235,7 +233,7 @@ By default, a Ray task only returns a single Object Ref. However, you can config
             :start-after: __multiple_returns_start__
             :end-before: __multiple_returns_end__
 
-For tasks that return multiple objects, Ray also supports remote generators that allow a task to return one object at a time to reduce memory usage at the worker. Ray also supports an option to set the number of return values dynamically, which can be useful when the task caller does not know how many return values to expect. See the :ref:`user guide <generators>` for more details on use cases.
+对于返回多个对象的任务，Ray 还支持远程生成器，允许任务一次返回一个对象，以减少工作器的内存使用量。Ray 还支持动态设置返回值数量的选项，当任务调用者不知道预期返回值的数量时，此选项非常有用。有关用例的更多详细信息，请参阅 :ref:`用户指南 <generators>`。
 
 .. tab-set::
 
@@ -247,10 +245,10 @@ For tasks that return multiple objects, Ray also supports remote generators that
             :end-before: __generator_end__
 
 
-Cancelling tasks
+任务取消
 ----------------
 
-Ray tasks can be canceled by calling :func:`ray.cancel() <ray.cancel>` on the returned Object ref.
+可以通过对返回的 Object ref 调用 :func:`ray.cancel() <ray.cancel>` 来取消 Ray 任务。
 
 .. tab-set::
 
@@ -262,28 +260,31 @@ Ray tasks can be canceled by calling :func:`ray.cancel() <ray.cancel>` on the re
             :end-before: __cancel_end__
 
 
-Scheduling
+调度
 ----------
 
 For each task, Ray will choose a node to run it
 and the scheduling decision is based on a few factors like
-:ref:`the task's resource requirements <ray-scheduling-resources>`,
+
 :ref:`the specified scheduling strategy <ray-scheduling-strategies>`
 and :ref:`locations of task arguments <ray-scheduling-locality>`.
 See :ref:`Ray scheduling <ray-scheduling>` for more details.
 
-Fault Tolerance
+对于每个任务，Ray 将选择一个节点来运行它，并且调度决策基于一些因素，例如 
+:ref:`任务的资源需求 <ray-scheduling-resources>`，
+:ref:`指定的调度策略 <ray-scheduling-strategies>`
+和 :ref:`任务参数的位置 <ray-scheduling-locality>`。有关更多详细信息，请参阅 :ref:`Ray 调度 <ray-scheduling>`。
+
+容错
 ---------------
 
-By default, Ray will :ref:`retry <task-retries>` failed tasks
-due to system failures and specified application-level failures.
-You can change this behavior by setting
-``max_retries`` and ``retry_exceptions`` options
-in :func:`ray.remote() <ray.remote>` and :meth:`.options() <ray.remote_function.RemoteFunction.options>`.
-See :ref:`Ray fault tolerance <fault-tolerance>` for more details.
+due to system failures and specified application-level failures. 
+默认情况下，Ray 将 :ref:`重试 <task-retries>` 由于系统故障和指定的应用程序级故障而失败的任务。
+你可以通过在 :func:`ray.remote() <ray.remote>` 和 :meth:`.options() <ray.remote_function.RemoteFunction.options>` 中设置 ``max_retries`` 和 ``retry_exceptions`` 选项来更改此行为。
+参考 :ref:`Ray 容错 <fault-tolerance>` 以获取更多详细信息。
 
 
-More about Ray Tasks
+关于 Ray Tasks 的更多信息
 --------------------
 
 .. toctree::

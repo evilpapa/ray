@@ -1,88 +1,72 @@
 .. _gpu-support:
 
-GPU Support
+GPU 支持
 ===========
 
-GPUs are critical for many machine learning applications.
-Ray natively supports GPU as a pre-defined :ref:`resource <core-resources>` type and allows tasks and actors to specify their GPU :ref:`resource requirements <resource-requirements>`.
+GPU 对于许多机器学习应用程序至关重要。
+Ray 远程支持 GPU 作为预定义的 :ref:`resource <core-resources>` 类型，并允许任务和 actor 指定它们的 GPU :ref:`资源需求 <resource-requirements>`。
 
-Starting Ray Nodes with GPUs
+启动 GPU 的 Ray 节点
 ----------------------------
 
-By default, Ray will set the quantity of GPU resources of a node to the physical quantities of GPUs auto detected by Ray.
-If you need to, you can :ref:`override <specify-node-resources>` this.
+默认的，Ray 会将节点的 GPU 资源数量设置为 Ray 自动检测到的物理 GPU 数量。
+如果需要，你可以 :ref:`覆盖 <specify-node-resources>` 这个设置。
 
 .. note::
 
-  There is nothing preventing you from specifying a larger value of
-  ``num_gpus`` than the true number of GPUs on the machine given Ray resources are :ref:`logical <logical-resources>`.
-  In this case, Ray will act as if the machine has the number of GPUs you specified
-  for the purposes of scheduling tasks and actors that require GPUs.
-  Trouble will only occur if those tasks and actors
-  attempt to actually use GPUs that don't exist.
+  没什么可以阻止你在机器上指定一个比真实 GPU 数量更大的 ``num_gpus`` 值，因为 Ray 资源是 :ref:`逻辑的 <logical-resources>`。
+  在此情况下，Ray 会表现的好像机器上有你指定的 GPU 数量一样，用于调度需要 GPU 的任务和 actor。
+  只有当这些任务和 actor 尝试使用不存在的 GPU 时才会出现问题。
 
 .. tip::
 
-  You can set ``CUDA_VISIBLE_DEVICES`` environment variable before starting a Ray node
-  to limit the GPUs that are visible to Ray.
-  For example, ``CUDA_VISIBLE_DEVICES=1,3 ray start --head --num-gpus=2``
-  will let Ray only see devices 1 and 3.
+  你可以在启动 Ray 节点之前设置 ``CUDA_VISIBLE_DEVICES`` 环境变量来限制 Ray 可见的 GPU。
+  比如，``CUDA_VISIBLE_DEVICES=1,3 ray start --head --num-gpus=2`` 将只让 Ray 看到设备 1 和 3。
 
-Using GPUs in Tasks and Actors
+在任务和 actor 中使用 GPU
 ------------------------------
 
-If a task or actor requires GPUs, you can specify the corresponding :ref:`resource requirements <resource-requirements>` (e.g. ``@ray.remote(num_gpus=1)``).
-Ray will then schedule the task or actor to a node that has enough free GPU resources
-and assign GPUs to the task or actor by setting the ``CUDA_VISIBLE_DEVICES`` environment variable before running the task or actor code.
+如果一个任务或 actor 需要 GPU，你可以指定相应的 :ref:`资源需求 <resource-requirements>`（比如 ``@ray.remote(num_gpus=1)``）。
+Ray 然后会将任务或 actor 调度到一个有足够空闲 GPU 资源的节点上，
+并在运行任务或 actor 代码之前通过设置 ``CUDA_VISIBLE_DEVICES`` 环境变量来分配 GPU。
 
 .. literalinclude:: ../doc_code/gpus.py
     :language: python
     :start-after: __get_gpu_ids_start__
     :end-before: __get_gpu_ids_end__
 
-Inside a task or actor, :func:`ray.get_gpu_ids() <ray.get_gpu_ids>` will return a
-list of GPU IDs that are available to the task or actor.
-Typically, it is not necessary to call ``ray.get_gpu_ids()`` because Ray will
-automatically set the ``CUDA_VISIBLE_DEVICES`` environment variable,
-which most ML frameworks will respect for purposes of GPU assignment.
+在任务或 actor 中，:func:`ray.get_gpu_ids() <ray.get_gpu_ids>` 会返回一个可用于任务或 actor 的 GPU ID 列表。
+通常，不需要调用 ``ray.get_gpu_ids()``，因为 Ray 会自动设置 ``CUDA_VISIBLE_DEVICES`` 环境变量，
+这在大多数机器学习框架中都会被用于 GPU 分配。
 
-**Note:** The function ``use_gpu`` defined above doesn't actually use any
-GPUs. Ray will schedule it on a node which has at least one GPU, and will
-reserve one GPU for it while it is being executed, however it is up to the
-function to actually make use of the GPU. This is typically done through an
-external library like TensorFlow. Here is an example that actually uses GPUs.
-In order for this example to work, you will need to install the GPU version of
-TensorFlow.
+**注意：** 上面定义的 ``use_gpu``  函数实际上并没有使用任何 GPU。Ray 会将其调度到至少有一个 GPU 的节点上，
+并在其执行时为其保留一个 GPU，但实际上使用 GPU 是由函数自己决定的。
+这通常通过外部库（比如 TensorFlow）来完成。下面是一个实际使用 GPU 的例子。
+为了使这个例子工作，你需要安装 TensorFlow 的 GPU 版本。
 
 .. literalinclude:: ../doc_code/gpus.py
     :language: python
     :start-after: __gpus_tf_start__
     :end-before: __gpus_tf_end__
 
-**Note:** It is certainly possible for the person implementing ``use_gpu`` to
-ignore ``ray.get_gpu_ids()`` and to use all of the GPUs on the machine. Ray does
-not prevent this from happening, and this can lead to too many tasks or actors using the
-same GPU at the same time. However, Ray does automatically set the
-``CUDA_VISIBLE_DEVICES`` environment variable, which will restrict the GPUs used
-by most deep learning frameworks assuming it's not overridden by the user.
+**注意：** 使用了 ``use_gpu`` 的人员可以忽略 ``ray.get_gpu_ids()`` 并使用机器上的所有 GPU。
+Ray 不会阻止这种情况发生，这可能导致太多任务或 actor 同时使用同一个 GPU。然而，Ray 会自动设置 ``CUDA_VISIBLE_DEVICES`` 环境变量，
+它会限制大多数深度学习框架使用的 GPU，假设用户没有覆盖它。
 
-Fractional GPUs
+分数 GPU
 ---------------
 
-Ray supports :ref:`fractional resource requirements <fractional-resource-requirements>`
-so multiple tasks and actors can share the same GPU.
+Ray 支持 :ref:`分数资源需求 <fractional-resource-requirements>`，这样多个任务和 actor 可以共享同一个 GPU。
 
 .. literalinclude:: ../doc_code/gpus.py
     :language: python
     :start-after: __fractional_gpus_start__
     :end-before: __fractional_gpus_end__
 
-**Note:** It is the user's responsibility to make sure that the individual tasks
-don't use more than their share of the GPU memory.
-TensorFlow can be configured to limit its memory usage.
+**注意：** 用户需要确保单个任务不会使用超过其 GPU 内存份额。
+TensorFlow 可以配置为限制其内存使用量。
 
-When Ray assigns GPUs of a node to tasks or actors with fractional resource requirements,
-it will pack one GPU before moving on to the next one to avoid fragmentation.
+当 Ray 将节点的 GPU 分配给具有分数资源需求的任务或 actor 时，它会先分配一个 GPU，然后再分配下一个 GPU，以避免碎片化。
 
 .. literalinclude:: ../doc_code/gpus.py
     :language: python
@@ -91,17 +75,12 @@ it will pack one GPU before moving on to the next one to avoid fragmentation.
 
 .. _gpu-leak:
 
-Workers not Releasing GPU Resources
+Worker 不释放 GPU 资源
 -----------------------------------
 
-Currently, when a worker executes a task that uses a GPU (e.g.,
-through TensorFlow), the task may allocate memory on the GPU and may not release
-it when the task finishes executing. This can lead to problems the next time a
-task tries to use the same GPU. To address the problem, Ray disables the worker
-process reuse between GPU tasks by default, where the GPU resources is released after
-the task process exits. Since this adds overhead to GPU task scheduling,
-you can re-enable worker reuse by setting ``max_calls=0``
-in the :func:`ray.remote <ray.remote>` decorator.
+目前，当 worker 执行使用 GPU 的任务（比如，通过 TensorFlow）时，任务可能会在 GPU 上分配内存，并且在任务执行完毕后可能不会释放它。
+这可能会导致下次任务尝试使用相同的 GPU 时出现问题。为了解决这个问题，Ray 默认情况下禁用了 GPU 任务之间的 worker 进程重用，其中 GPU 资源在任务进程退出后被释放。
+由于这会增加 GPU 任务调度的开销，你可以通过在 :func:`ray.remote <ray.remote>` 装饰器中设置 ``max_calls=0`` 来重新启用 worker 重用。
 
 .. literalinclude:: ../doc_code/gpus.py
     :language: python
@@ -110,37 +89,35 @@ in the :func:`ray.remote <ray.remote>` decorator.
 
 .. _accelerator-types:
 
-Accelerator Types
+加速器类型
 -----------------
 
-Ray supports resource specific accelerator types. The `accelerator_type` option can be used to force to a task or actor to run on a node with a specific type of accelerator.
-Under the hood, the accelerator type option is implemented as a :ref:`custom resource requirement <custom-resources>` of ``"accelerator_type:<type>": 0.001``.
-This forces the task or actor to be placed on a node with that particular accelerator type available.
-This also lets the multi-node-type autoscaler know that there is demand for that type of resource, potentially triggering the launch of new nodes providing that accelerator.
+Ray 支持特定资源的加速器类型。``accelerator_type`` 选项可以用于强制任务或 actor 在具有特定类型加速器的节点上运行。
+在底层，加速器类型选项被实现为 ``"accelerator_type:<type>": 0.001`` 的 :ref:`自定义资源需求 <custom-resources>`。
+这会强制任务或 actor 被放置在具有该特定加速器类型的节点上。
+这还让多节点类型自动缩放器知道有需求的资源类型，可能会触发提供该加速器的新节点的启动。
 
 .. literalinclude:: ../doc_code/gpus.py
     :language: python
     :start-after: __accelerator_type_start__
     :end-before: __accelerator_type_end__
 
-See ``ray.util.accelerators`` for available accelerator types. Current automatically detected accelerator types include:
+参考 ``ray.util.accelerators`` 获取可用的加速器类型。当前自动检测到的加速器类型包括：
 
- - Nvidia GPUs
+ - Nvidia GPU
  - AWS Neuron Cores
 
-AWS Neuron Core Accelerator (Experimental)
+AWS Neuron Core 加速器（实验性）
 ------------------------------------------
 
-Similar to Nvidia GPUs, Ray auto-detects `AWS Neuron Cores`_  by default.
-The user can specify `resources={"neuron_cores": some_number}` on
-task or actor resource requirements to assign the Neuron Core(s).
+类似于 Nvidia GPU，Ray 默认情况下会自动检测 `AWS Neuron Cores`_。
+用户可以在任务或 actor 的资源需求中指定 `resources={"neuron_cores": some_number}` 来分配 Neuron Core(s)。
 
 .. _`AWS Neuron Cores` : https://awsdocs-neuron.readthedocs-hosted.com/en/latest/general/arch/model-architecture-fit.html
 
 .. note::
 
-  Ray supports a heterogeneous cluster of GPUs and Neuron Cores but doesn't allow specifying resources requirements of
-  ``num_gpus`` and ``neuron_cores`` together for a task or actor.
+  Ray 支持异构的 GPU 和 Neuron Core 集群，但不允许为任务或 actor 指定 ``num_gpus`` 和 ``neuron_cores`` 的资源需求。
 
 .. literalinclude:: ../doc_code/neuron_core_accelerator.py
     :language: python

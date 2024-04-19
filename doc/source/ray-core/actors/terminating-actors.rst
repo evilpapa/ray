@@ -1,22 +1,19 @@
-Terminating Actors
+终止 Actor
 ==================
 
-Actor processes will be terminated automatically when all copies of the
-actor handle have gone out of scope in Python, or if the original creator
-process dies.
+当所有 actor handle 的副本都超出作用域时，actor 进程将在 Python 中自动终止，
+或者如果原始创建者进程死亡。
 
-Note that automatic termination of actors is not yet supported in Java or C++.
+注意，Java 和 C++ 中的 actor 的自动终止尚未支持。
 
 .. _ray-kill-actors:
 
-Manual termination via an actor handle
+通过 actor 句柄手动终止
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In most cases, Ray will automatically terminate actors that have gone out of
-scope, but you may sometimes need to terminate an actor forcefully. This should
-be reserved for cases where an actor is unexpectedly hanging or leaking
-resources, and for :ref:`detached actors <actor-lifetimes>`, which must be
-manually destroyed.
+在大多数情况下，Ray 会自动终止已经超出作用域的 actor，但是有时您可能需要强制终止 actor。
+这应该保留给 actor 出现意外挂起或泄漏资源的情况，
+以及必须手动销毁的 :ref:`游离 actors <actor-lifetimes>`。
 
 .. tab-set::
 
@@ -57,16 +54,16 @@ manually destroyed.
             // the actor using ``std::atexit`` will not be called.
 
 
-This will cause the actor to immediately exit its process, causing any current,
-pending, and future tasks to fail with a ``RayActorError``. If you would like
-Ray to :ref:`automatically restart <fault-tolerance-actors>` the actor, make sure to set a nonzero
-``max_restarts`` in the ``@ray.remote`` options for the actor, then pass the
-flag ``no_restart=False`` to ``ray.kill``.
+这会引起 actor 立即退出其进程，
+导致任何当前、挂起和未来的任务失败并抛出 ``RayActorError``。
+如果你想让 Ray :ref:`自动重启 <fault-tolerance-actors>` actor，
+确保在 actor 的 ``@ray.remote`` 选项中设置一个非零的 ``max_restarts``，
+然后将标志 ``no_restart=False`` 传递给 ``ray.kill``。
 
-For :ref:`named and detached actors <actor-lifetimes>`, calling ``ray.kill`` on
-an actor handle destroys the actor and allow the name to be reused.
+对于 :ref:`命名的游离 actor <actor-lifetimes>`, 在 actor 句柄调用 ``ray.kill``
+会销毁 actor 并可重复使用命名。
 
-Use `ray list actors --detail` from :ref:`State API <state-api-overview-ref>` to see the death cause of dead actors:
+从 :ref:`State API <state-api-overview-ref>` 使用 `ray list actors --detail` 查看死亡 actor 的死亡原因:
 
 .. code-block:: bash
 
@@ -103,11 +100,11 @@ Use `ray list actors --detail` from :ref:`State API <state-api-overview-ref>` to
       repr_name: ''
 
 
-Manual termination within the actor
+在 actor 内部手动终止
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If necessary, you can manually terminate an actor from within one of the actor methods.
-This will kill the actor process and release resources associated/assigned to the actor.
+如果需要，您可以从 actor 方法内部手动终止 actor。
+这会杀死 actor 进程并释放与 actor 相关的资源。
 
 .. tab-set::
 
@@ -123,9 +120,9 @@ This will kill the actor process and release resources associated/assigned to th
             actor = Actor.remote()
             actor.exit.remote()
 
-        This approach should generally not be necessary as actors are automatically garbage
-        collected. The ``ObjectRef`` resulting from the task can be waited on to wait
-        for the actor to exit (calling ``ray.get()`` on it will raise a ``RayActorError``).
+        此方法通常不需要，因为 actor 会自动进行垃圾回收。
+        ``ObjectRef`` 的结果可以等待 actor 退出时
+        获得（在其上调用 ``ray.get()`` 会引发 ``RayActorError``）。
 
     .. tab-item:: Java
 
@@ -133,10 +130,9 @@ This will kill the actor process and release resources associated/assigned to th
 
             Ray.exitActor();
 
-        Garbage collection for actors haven't been implemented yet, so this is currently the
-        only way to terminate an actor gracefully. The ``ObjectRef`` resulting from the task
-        can be waited on to wait for the actor to exit (calling ``ObjectRef::get`` on it will
-        throw a ``RayActorException``).
+        垃圾回收的实现尚未完成，因此这是目前唯一优雅终止 actor 的方法。
+        任务的结果是一个 ``ObjectRef``，
+        可以等待 actor 退出（在其上调用 ``ObjectRef::get`` 会引发 ``RayActorException``）。
 
     .. tab-item:: C++
 
@@ -144,17 +140,15 @@ This will kill the actor process and release resources associated/assigned to th
 
             ray::ExitActor();
 
-        Garbage collection for actors haven't been implemented yet, so this is currently the
-        only way to terminate an actor gracefully. The ``ObjectRef`` resulting from the task
-        can be waited on to wait for the actor to exit (calling ``ObjectRef::Get`` on it will
-        throw a ``RayActorException``).
+        垃圾回收的实现尚未完成，因此这是目前唯一优雅终止 actor 的方法。
+        任务的结果是一个 ``ObjectRef``，
+        可以等待 actor 退出（在其上调用 ``ObjectRef::get`` 会引发 ``RayActorException``）。
 
-Note that this method of termination waits until any previously submitted
-tasks finish executing and then exits the process gracefully with sys.exit.
+注意，这种终止方法会等待任何先前提交的任务执行完毕，然后使用 sys.exit 优雅地退出进程。
 
 
     
-You could see the actor is dead as a result of the user's `exit_actor()` call:
+你可以看到 actor 死于用户的 `exit_actor()` 调用:
 
 .. code-block:: bash
 

@@ -1,44 +1,45 @@
 .. _memory:
 
-Memory Management
+内存管理
 =================
 
-This page describes how memory management works in Ray.
+本页介绍了 Ray 中的内存管理工作原理。
 
-Also view :ref:`Debugging Out of Memory <troubleshooting-out-of-memory>` to learn how to troubleshoot out-of-memory issues.
+另请参阅 :ref:`Debugging Out of Memory <troubleshooting-out-of-memory>` 以了解如何排除内存不足问题。
 
-Concepts
+概念
 ~~~~~~~~
 
-There are several ways that Ray applications use memory:
+Ray 应用程序使用内存的几种方式：
 
 ..
   https://docs.google.com/drawings/d/1wHHnAJZ-NsyIv3TUXQJTYpPz6pjB6PUm2M40Zbfb1Ak/edit
 
 .. image:: ../images/memory.svg
 
-Ray system memory: this is memory used internally by Ray
-  - **GCS**: memory used for storing the list of nodes and actors present in the cluster. The amount of memory used for these purposes is typically quite small.
-  - **Raylet**: memory used by the C++ raylet process running on each node. This cannot be controlled, but is typically quite small.
+Ray 系统内存：Ray 内部使用的内存
+  - **GCS**：内存用于存储集群中存在的节点和 actor 的列表。通常，用于这些目的的内存量非常小。
+  - **Raylet**：内存用于在每个节点上运行的 C++ raylet 进程。这不能被控制，但通常非常小。
 
-Application memory: this is memory used by your application
-  - **Worker heap**: memory used by your application (e.g., in Python code or TensorFlow), best measured as the *resident set size (RSS)* of your application minus its *shared memory usage (SHR)* in commands such as ``top``. The reason you need to subtract *SHR* is that object store shared memory is reported by the OS as shared with each worker. Not subtracting *SHR* will result in double counting memory usage.
-  - **Object store memory**: memory used when your application creates objects in the object store via ``ray.put`` and when it returns values from remote functions. Objects are reference counted and evicted when they fall out of scope. An object store server runs on each node. By default, when starting an instance, Ray reserves 30% of available memory. The size of the object store can be controlled by `--object-store-memory <https://docs.ray.io/en/master/cluster/cli.html#cmdoption-ray-start-object-store-memory>`_. The memory is by default allocated to ``/dev/shm`` (shared memory) for Linux. For MacOS, Ray uses ``/tmp`` (disk), which can impact the performance compared to Linux. In Ray 1.3+, objects are :ref:`spilled to disk <object-spilling>` if the object store fills up.
+应用内存：这是应用程序使用的内存
+  - **工作堆**：内存用于你的应用（如，Python 代码或 TensorFlow），最好通过 ``top`` 等命令中的应用程序的 *驻留集大小 (RSS)* 减去其 *共享内存使用 (SHR)* 来测量。你需要减去 *SHR* 的原因是，对象存储共享内存由操作系统报告为与每个 worker 共享。不减去 *SHR* 会导致内存使用量重复计数。
+  - **对象存储内存**：当你的程序通过 ``ray.put`` 创建对象并通过远程函数返回值时使用的内存。对象是引用计数的，当它们超出范围时会被驱逐。每个节点上都运行一个对象存储服务器。默认情况下，Ray 在启动实例时会保留可用内存的 30%。对象存储的大小可以通过 `--object-store-memory <https://docs.ray.io/en/master/cluster/cli.html#cmdoption-ray-start-object-store-memory>`_ 控制。默认情况下，内存分配给 Linux 的 ``/dev/shm``（共享内存）。对于 MacOS，Ray 使用 ``/tmp``（磁盘），这可能会影响性能。在 Ray 1.3+ 中，如果对象存储填满，对象会被 :ref:`溢出到磁盘 <object-spilling>`。
   - **Object store shared memory**: memory used when your application reads objects via ``ray.get``. Note that if an object is already present on the node, this does not cause additional allocations. This allows large objects to be efficiently shared among many actors and tasks.
+  - **对象存储共享内存**：当你的程序通过 ``ray.get`` 读取对象时使用的内存。请注意，如果对象已经存在于节点上，则不会导致额外的分配。这允许大对象在许多 actor 和任务之间高效共享。
 
-ObjectRef Reference Counting
+ObjectRef 对象引用
 ----------------------------
 
-Ray implements distributed reference counting so that any ``ObjectRef`` in scope in the cluster is pinned in the object store. This includes local python references, arguments to pending tasks, and IDs serialized inside of other objects.
+Ray 实现了分布式引用计数，以便集群中的任何 ``ObjectRef`` 都会在对象存储中固定。这包括本地 Python 引用、待处理任务的参数以及序列化在其他对象中的 ID。
 
 .. _debug-with-ray-memory:
 
-Debugging using 'ray memory'
+使用 'ray memory' 进行调试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``ray memory`` command can be used to help track down what ``ObjectRef`` references are in scope and may be causing an ``ObjectStoreFullError``.
+``ray memory`` 命令可以帮助跟踪哪些 ``ObjectRef`` 引用在范围内，可能导致的 ``ObjectStoreFullError``。
 
-Running ``ray memory`` from the command line while a Ray application is running will give you a dump of all of the ``ObjectRef`` references that are currently held by the driver, actors, and tasks in the cluster.
+在 Ray 应用程序运行时从命令行运行 ``ray memory`` 将为你提供当前由驱动程序、actor 和集群中的任务持有的所有 ``ObjectRef`` 引用的转储。
 
 .. code-block:: text
 
@@ -76,13 +77,13 @@ Running ``ray memory`` from the command line while a Ray application is running 
   Plasma memory usage 0 MiB, 4 objects, 0.0% full
 
 
-Each entry in this output corresponds to an ``ObjectRef`` that's currently pinning an object in the object store along with where the reference is (in the driver, in a worker, etc.), what type of reference it is (see below for details on the types of references), the size of the object in bytes, the process ID and IP address where the object was instantiated, and where in the application the reference was created.
+输出中的每个条目都对应于当前在对象存储中固定对象的 ``ObjectRef``，以及引用所在的位置（在驱动程序中、在 worker 中等），引用的类型（有关引用类型的详细信息，请参见下文），对象的大小（以字节为单位），创建对象的进程 ID 和 IP 地址，以及引用在应用程序中创建的位置。
 
-``ray memory`` comes with features to make the memory debugging experience more effective. For example, you can add arguments ``sort-by=OBJECT_SIZE`` and ``group-by=STACK_TRACE``, which may be particularly helpful for tracking down the line of code where a memory leak occurs. You can see the full suite of options by running ``ray memory --help``.
+``ray memory`` 附带一些功能，使内存调试体验更加有效。例如，你可以添加参数 ``sort-by=OBJECT_SIZE`` 和 ``group-by=STACK_TRACE``，这对于跟踪内存泄漏发生的代码行可能特别有帮助。你可以通过运行 ``ray memory --help`` 查看完整的选项套件。
 
-There are five types of references that can keep an object pinned:
+有五种引用类型可以保持对象固定：
 
-**1. Local ObjectRef references**
+**1. 本地 ObjectRef 引用**
 
 .. testcode::
 
@@ -95,7 +96,7 @@ There are five types of references that can keep an object pinned:
   a = ray.put(None)
   b = f.remote(None)
 
-In this example, we create references to two objects: one that is ``ray.put()`` in the object store and another that's the return value from ``f.remote()``.
+在这个例子中，我们创建了两个对象的引用：一个是 ``ray.put()`` 在对象存储中的对象，另一个是 ``f.remote()`` 的返回值。
 
 .. code-block:: text
 
@@ -113,9 +114,9 @@ In this example, we create references to two objects: one that is ``ray.put()`` 
                                                                                                                     | test.py:
                                                                                                                     :<module>:13
 
-In the output from ``ray memory``, we can see that each of these is marked as a ``LOCAL_REFERENCE`` in the driver process, but the annotation in the "Reference Creation Site" indicates that the first was created as a "put object" and the second from a "task call."
+在 ``ray memory`` 的输出中，我们可以看到这两个引用都在驱动程序进程中标记为 ``LOCAL_REFERENCE``，但是“引用创建位置”中的注释表明第一个是从“put object”创建的，第二个是从“task call”创建的。
 
-**2. Objects pinned in memory**
+**2. 内存中固定的对象**
 
 .. testcode::
 
@@ -125,7 +126,7 @@ In the output from ``ray memory``, we can see that each of these is marked as a 
   b = ray.get(a)
   del a
 
-In this example, we create a ``numpy`` array and then store it in the object store. Then, we fetch the same numpy array from the object store and delete its ``ObjectRef``. In this case, the object is still pinned in the object store because the deserialized copy (stored in ``b``) points directly to the memory in the object store.
+此例中，我们创建了一个 ``numpy`` 数组，然后将其存储在对象存储中。然后，我们从对象存储中获取相同的 ``numpy`` 数组并删除其 ``ObjectRef``。在这种情况下，对象仍然固定在对象存储中，因为反序列化的副本（存储在 ``b`` 中）直接指向对象存储中的内存。
 
 .. code-block:: text
 
@@ -138,9 +139,9 @@ In this example, we create a ``numpy`` array and then store it in the object sto
   192.168.0.15  7066   Driver  ffffffffffffffffffffffffffffffffffffffff0100000001000000  243 MiB  PINNED_IN_MEMORY   test.
                                                                                                                     py:<module>:19
 
-The output from ``ray memory`` displays this as the object being ``PINNED_IN_MEMORY``. If we ``del b``, the reference can be freed.
+``ray memory`` 的输出显示这个对象是 ``PINNED_IN_MEMORY``。如果我们 ``del b``，引用就可以被释放。
 
-**3. Pending task references**
+**3. 待处理任务引用**
 
 .. testcode::
 
@@ -152,7 +153,7 @@ The output from ``ray memory`` displays this as the object being ``PINNED_IN_MEM
   a = ray.put(None)
   b = f.remote(a)
 
-In this example, we first create an object via ``ray.put()`` and then submit a task that depends on the object.
+本例中，我们首先通过 ``ray.put()`` 创建一个对象，然后提交一个依赖于该对象的任务。
 
 .. code-block:: text
 
@@ -173,9 +174,9 @@ In this example, we first create an object via ``ray.put()`` and then submit a t
                                                                                                                     test.py:
                                                                                                                     <module>:28
 
-While the task is running, we see that ``ray memory`` shows both a ``LOCAL_REFERENCE`` and a ``USED_BY_PENDING_TASK`` reference for the object in the driver process. The worker process also holds a reference to the object because the Python ``arg`` is directly referencing the memory in the plasma, so it can't be evicted; therefore it is ``PINNED_IN_MEMORY``.
+在任务运行时，我们看到 ``ray memory`` 显示驱动程序进程中的对象既有 ``LOCAL_REFERENCE`` 又有 ``USED_BY_PENDING_TASK`` 引用。工作进程也持有对象的引用，因为 Python ``arg`` 直接引用 plasma 中的内存，所以它不能被驱逐；因此它是 ``PINNED_IN_MEMORY``。
 
-**4. Serialized ObjectRef references**
+**4. 序列化的 ObjectRef 引用**
 
 .. testcode::
 
@@ -187,7 +188,7 @@ While the task is running, we see that ``ray memory`` shows both a ``LOCAL_REFER
   a = ray.put(None)
   b = f.remote([a])
 
-In this example, we again create an object via ``ray.put()``, but then pass it to a task wrapped in another object (in this case, a list).
+例子中，我们再次通过 ``ray.put()`` 创建一个对象，然后将其传递给另一个对象包装的任务（在本例中是一个列表）。
 
 .. code-block:: text
 
@@ -208,9 +209,9 @@ In this example, we again create an object via ``ray.put()``, but then pass it t
                                                                                                                     | test.py:
                                                                                                                     <module>:37
 
-Now, both the driver and the worker process running the task hold a ``LOCAL_REFERENCE`` to the object in addition to it being ``USED_BY_PENDING_TASK`` on the driver. If this was an actor task, the actor could even hold a ``LOCAL_REFERENCE`` after the task completes by storing the ``ObjectRef`` in a member variable.
+现在，驱动程序和运行任务的工作进程都持有对象的 ``LOCAL_REFERENCE``，除了驱动程序上的 ``USED_BY_PENDING_TASK``。如果这是一个 actor 任务，actor 可以在任务完成后通过将 ``ObjectRef`` 存储在成员变量中持有 ``LOCAL_REFERENCE``。
 
-**5. Captured ObjectRef references**
+**5. 捕获 ObjectRef 引用**
 
 .. testcode::
 
@@ -218,7 +219,7 @@ Now, both the driver and the worker process running the task hold a ``LOCAL_REFE
   b = ray.put([a])
   del a
 
-In this example, we first create an object via ``ray.put()``, then capture its ``ObjectRef`` inside of another ``ray.put()`` object, and delete the first ``ObjectRef``. In this case, both objects are still pinned.
+本例中，我们首先通过 ``ray.put()`` 创建一个对象，然后在另一个 ``ray.put()`` 对象中捕获其 ``ObjectRef``，然后删除第一个 ``ObjectRef``。在这种情况下，这两个对象仍然固定。
 
 .. code-block:: text
 
@@ -236,20 +237,20 @@ In this example, we first create an object via ``ray.put()``, then capture its `
                                                                                                                     test.py:
                                                                                                                     <module>:42
 
-In the output of ``ray memory``, we see that the second object displays as a normal ``LOCAL_REFERENCE``, but the first object is listed as ``CAPTURED_IN_OBJECT``.
+``ray memory`` 输出中，我们可以看到第二个对象显示为普通的 ``LOCAL_REFERENCE``，但第一个对象被列为 ``CAPTURED_IN_OBJECT``。
 
 .. _memory-aware-scheduling:
 
-Memory Aware Scheduling
+内存感知调度
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, Ray does not take into account the potential memory usage of a task or actor when scheduling. This is simply because it cannot estimate ahead of time how much memory is required. However, if you know how much memory a task or actor requires, you can specify it in the resource requirements of its ``ray.remote`` decorator to enable memory-aware scheduling:
+默认，Ray 在调度时不考虑任务或 actor 的潜在内存使用情况。这只是因为它无法提前估计需要多少内存。但是，如果你知道一个任务或 actor 需要多少内存，你可以在其 ``ray.remote`` 装饰器的资源需求中指定它，以启用内存感知调度：
 
 .. important::
 
-  Specifying a memory requirement does NOT impose any limits on memory usage. The requirements are used for admission control during scheduling only (similar to how CPU scheduling works in Ray). It is up to the task itself to not use more memory than it requested.
+  指定内存要求不会对内存使用施加任何限制。这些要求仅用于调度期间的准入控制（类似于 Ray 中的 CPU 调度工作原理）。任务本身不应使用超过请求的内存。
 
-To tell the Ray scheduler a task or actor requires a certain amount of available memory to run, set the ``memory`` argument. The Ray scheduler will then reserve the specified amount of available memory during scheduling, similar to how it handles CPU and GPU resources:
+要告诉 Ray 调度程序一个任务或 actor 需要一定数量的可用内存来运行，请设置 ``memory`` 参数。Ray 调度程序将在调度期间保留指定数量的可用内存，类似于它处理 CPU 和 GPU 资源的方式：
 
 .. testcode::
 
@@ -264,7 +265,7 @@ To tell the Ray scheduler a task or actor requires a certain amount of available
       def __init__(self, a, b):
           pass
 
-In the above example, the memory quota is specified statically by the decorator, but you can also set them dynamically at runtime using ``.options()`` as follows:
+上例中，内存配额是通过装饰器静态指定的，但你也可以在运行时使用 ``.options()`` 动态设置它们，如下所示：
 
 .. testcode::
 
@@ -274,7 +275,7 @@ In the above example, the memory quota is specified statically by the decorator,
   # override the memory quota to 1GiB when creating the actor
   SomeActor.options(memory=1000 * 1024 * 1024).remote(a=1, b=2)
 
-Questions or Issues?
+有疑问或问题？
 --------------------
 
 .. include:: /_includes/_help.rst

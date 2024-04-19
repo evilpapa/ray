@@ -1,11 +1,11 @@
 .. _core-use-guide:
 
-User Guides
+用户指引
 ===========
 
-This section explains how to use Ray's key concepts to build distributed applications.
+本节介绍如何使用 Ray 的关键概念来构建分布式应用程序。
 
-If you’re brand new to Ray, we recommend starting with the :ref:`walkthrough <core-walkthrough>`.
+如果您是 Ray 的新手，我们建议您从 :ref:`walkthrough <core-walkthrough>` 开始。
 
 .. toctree::
     :maxdepth: 4

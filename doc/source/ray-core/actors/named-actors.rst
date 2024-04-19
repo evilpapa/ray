@@ -1,13 +1,11 @@
-Named Actors
+命名的 Actor
 ============
 
-An actor can be given a unique name within their :ref:`namespace <namespaces-guide>`.
-This allows you to retrieve the actor from any job in the Ray cluster.
-This can be useful if you cannot directly
-pass the actor handle to the task that needs it, or if you are trying to
-access an actor launched by another driver.
-Note that the actor will still be garbage-collected if no handles to it
-exist. See :ref:`actor-lifetimes` for more details.
+一个 Actor 可以在它的 :ref:`namespace <namespaces-guide>` 赋予一个唯一的名字。
+这允许你从 Ray 集群中的任何作业中检索 Actor。
+这在无法直接传递 actor 句柄到任务时必须，或者尝试在其他驱动时访问 actor。
+注意，如果没有句柄指向它，actor 仍然会被垃圾回收。
+更多细节请参考 :ref:`actor-lifetimes`。
 
 .. tab-set::
 
@@ -66,8 +64,8 @@ exist. See :ref:`actor-lifetimes` for more details.
 
 .. note::
 
-     Named actors are scoped by namespace. If no namespace is assigned, they will
-     be placed in an anonymous namespace by default.
+     命名 actor 的作用域是由命名空间决定的。
+     如果没有分配命名空间，它们将默认放在一个匿名命名空间中。
 
 .. tab-set::
 
@@ -131,16 +129,15 @@ exist. See :ref:`actor-lifetimes` for more details.
             Optional<ActorHandle<Actor>> actor = Ray.getActor("orange");
             Assert.assertTrue(actor.isPresent());  // actor.isPresent() is true.
 
-Get-Or-Create a Named Actor
+获取或创建一个命名 actor
 ---------------------------
 
-A common use case is to create an actor only if it doesn't exist.
-Ray provides a ``get_if_exists`` option for actor creation that does this out of the box.
-This method is available after you set a name for the actor via ``.options()``.
+常用的方法是创建一个 actor，如果它不存在的话。
+Ray 提供了一个 ``get_if_exists`` 选项，用于创建 actor。
+该方法在你通过 ``.options()`` 为 actor 设置名称后可用。
 
-If the actor already exists, a handle to the actor will be returned
-and the arguments will be ignored. Otherwise, a new actor will be
-created with the specified arguments.
+如果 actor 已经存在，将返回 actor 的句柄并且参数将被忽略。
+否则，将使用指定的参数创建一个新的 actor。
 
 .. tab-set::
 
@@ -163,10 +160,10 @@ created with the specified arguments.
 
 .. _actor-lifetimes:
 
-Actor Lifetimes
+Actor 生命周期
 ---------------
 
-Separately, actor lifetimes can be decoupled from the job, allowing an actor to persist even after the driver process of the job exits. We call these actors *detached*.
+特别的，actor 的生命周期可以与作业分离，允许 actor 在作业的驱动程序进程退出后继续存在。我们称这些 actor 为 *detached*。
 
 .. tab-set::
 
@@ -176,17 +173,16 @@ Separately, actor lifetimes can be decoupled from the job, allowing an actor to 
 
             counter = Counter.options(name="CounterActor", lifetime="detached").remote()
 
-        The ``CounterActor`` will be kept alive even after the driver running above script
-        exits. Therefore it is possible to run the following script in a different
-        driver:
+        这个 ``CounterActor`` 将会在上面的脚本退出后继续存在。
+        因此可以在另一个驱动程序中运行以下脚本：
 
         .. testcode::
 
             counter = ray.get_actor("CounterActor")
 
-        Note that an actor can be named but not detached. If we only specified the
-        name without specifying ``lifetime="detached"``, then the CounterActor can
-        only be retrieved as long as the original driver is still running.
+        注意，一个 actor 可以被命名但不是游离的。
+        如果我们只指定了名称而没有指定 ``lifetime="detached"``，
+        那么 CounterActor 只能在原始驱动程序仍在运行时检索。
 
     .. tab-item:: Java
 
@@ -196,9 +192,8 @@ Separately, actor lifetimes can be decoupled from the job, allowing an actor to 
             Ray.init();
             ActorHandle<Counter> counter = Ray.actor(Counter::new).setName("some_name").setLifetime(ActorLifetime.DETACHED).remote();
 
-        The CounterActor will be kept alive even after the driver running above process
-        exits. Therefore it is possible to run the following code in a different
-        driver:
+        CounterActor 会一直保持活动状态，即使上面的进程退出。
+        因此，可以在另一个驱动程序中运行以下代码：
 
         .. code-block:: java
 
@@ -209,10 +204,10 @@ Separately, actor lifetimes can be decoupled from the job, allowing an actor to 
 
     .. tab-item:: C++
 
-        Customizing lifetime of an actor hasn't been implemented in C++ yet.
+        自定义 actor 的生命周期在 C++ 中尚未实现。
 
 
-Unlike normal actors, detached actors are not automatically garbage-collected by Ray.
-Detached actors must be manually destroyed once you are sure that they are no
-longer needed. To do this, use ``ray.kill`` to :ref:`manually terminate <ray-kill-actors>` the actor.
-After this call, the actor's name may be reused.
+和通常的 actor 不同，Ray 不会自动回收游离的 actor。
+游离的 actor 必须在确定不再需要它们时手动销毁。
+要完成此操作，请使用 ``ray.kill`` 来 :ref:`手动终止 <ray-kill-actors>` actor。
+在此调用之后，actor 的名称可能会被重用。

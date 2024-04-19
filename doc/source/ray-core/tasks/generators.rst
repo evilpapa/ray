@@ -1,100 +1,99 @@
 .. _generators:
 
-Generators
+生成器
 ==========
 
-Python generators are functions that behave like an iterator, yielding one
-value per iteration. Ray supports remote generators for two use cases:
+Python 生成器是一种类似迭代器的函数，每次迭代产生一个值。Ray 支持远程生成器用于两种情况：
 
-1. To reduce max heap memory usage when returning multiple values from a remote
-   function. See the :ref:`design pattern guide <generator-pattern>` for an
-   example.
-2. When the number of return values is set dynamically by the remote function
-   instead of by the caller.
+1. 减少从远程函数返回多个值时的最大堆内存使用。
+   请参阅 :ref:`设计模式指南 <generator-pattern>` 以获取示例。
+2. 当远程函数动态设置返回值的数量时，Ray 支持远程生成器。
 
-Remote generators can be used in both actor and non-actor tasks.
+远程生成器可以在 actor 和非 actor 任务中使用。
 
 .. _static-generators:
 
-`num_returns` set by the task caller
+`num_returns` 由任务调用者设置
 ------------------------------------
 
-Where possible, the caller should set the remote function's number of return values using ``@ray.remote(num_returns=x)`` or ``foo.options(num_returns=x).remote()``.
-Ray will return this many ``ObjectRefs`` to the caller.
-The remote task should then return the same number of values, usually as a tuple or list.
-Compared to setting the number of return values dynamically, this adds less complexity to user code and less performance overhead, as Ray will know exactly how many ``ObjectRefs`` to return to the caller ahead of time.
+如果可能，调用者应该使用 ``@ray.remote(num_returns=x)`` 或 ``foo.options(num_returns=x).remote()`` 来设置远程函数的返回值数量。
+Ray 将会返回多个 ``ObjectRefs`` 给调用者。
+远程函数应该返回相同数量的值，通常作为元组或列表。
+对比动态设置返回值数量，这样做会减少用户代码的复杂性和性能开销，因为 Ray 会提前知道要返回给调用者多少个 ``ObjectRefs``。
 
-Without changing the caller's syntax, we can also use a remote generator function to yield the values iteratively.
-The generator should yield the same number of return values specified by the caller, and these will be stored one at a time in Ray's object store.
-An error will be raised for generators that yield a different number of values from the one specified by the caller.
+除了调用者的语法不变外，我们还可以使用远程生成器函数来迭代地产生值。
+语法生成器函数的语法与普通远程函数相同，只是它们使用 ``@ray.remote`` 装饰器的 ``num_returns`` 参数来指定返回值的数量。
+如果生成器产生的值数量与调用者指定的数量不同，错误将会被抛出。
 
-For example, we can swap the following code that returns a list of return values:
+比如，我们可以将以下返回多个值的代码改为：
 
 .. literalinclude:: ../doc_code/pattern_generators.py
     :language: python
     :start-after: __large_values_start__
     :end-before: __large_values_end__
 
-for this code, which uses a generator function:
+针对这段代码，我们可以使用生成器函数：
 
 .. literalinclude:: ../doc_code/pattern_generators.py
     :language: python
     :start-after: __large_values_generator_start__
     :end-before: __large_values_generator_end__
 
-The advantage of doing so is that the generator function does not need to hold all of its return values in memory at once.
-It can yield the arrays one at a time to reduce memory pressure.
+这样做的优点是生成器函数不需要立即将其所有返回值保存在内存中。
+它可以逐个返回数组以减少内存压力。
 
 .. _dynamic-generators:
 
-`num_returns` set by the task executor
+任务执行器设置 `num_returns`
 --------------------------------------
 
-In some cases, the caller may not know the number of return values to expect from a remote function.
-For example, suppose we want to write a task that breaks up its argument into equal-size chunks and returns these.
-We may not know the size of the argument until we execute the task, so we don't know the number of return values to expect.
+在一些情况下，调用者可能不知道远程函数的返回值数量。
+比如，我们想要编写一个任务，将其参数分成相等大小的块并返回这些块。
+我们可能不知道参数的大小，直到执行任务，因此我们不知道要期望的返回值数量。
 
-In these cases, we can use a remote generator function that returns a *dynamic* number of values.
-To use this feature, set ``num_returns="dynamic"`` in the ``@ray.remote`` decorator or the remote function's ``.options()``.
-Then, when invoking the remote function, Ray will return a *single* ``ObjectRef`` that will get populated with an ``ObjectRefGenerator`` when the task completes.
-The ``ObjectRefGenerator`` can be used to iterate over a list of ``ObjectRefs`` containing the actual values returned by the task.
+
+
+在一些情况下，我们可以使用远程生成器函数，它返回 *动态* 数量的值。
+我们可以使用 ``num_returns="dynamic"`` 特性来设置 ``@ray.remote`` 装饰器或远程函数的 ``.options()``。
+然后，当调用远程函数时，Ray 将返回一个 *单个* ``ObjectRef``，当任务完成时，它将被填充为 ``ObjectRefGenerator``。
+``ObjectRefGenerator`` 可以用于迭代包含任务返回的实际值的 ``ObjectRefs`` 列表。
 
 .. literalinclude:: ../doc_code/generator.py
     :language: python
     :start-after: __dynamic_generator_start__
     :end-before: __dynamic_generator_end__
 
-We can also pass the ``ObjectRef`` returned by a task with ``num_returns="dynamic"`` to another task. The task will receive the ``ObjectRefGenerator``, which it can use to iterate over the task's return values. Similarly, you can also pass an ``ObjectRefGenerator`` as a task argument.
+我们也可以将 ``num_returns="dynamic"`` 返回的 ``ObjectRef`` 传递给另一个任务。任务将接收 ``ObjectRefGenerator``，它可以用于迭代任务的返回值。同样，您也可以将 ``ObjectRefGenerator`` 作为任务参数传递。
 
 .. literalinclude:: ../doc_code/generator.py
     :language: python
     :start-after: __dynamic_generator_pass_start__
     :end-before: __dynamic_generator_pass_end__
 
-Exception handling
+异常处理
 ------------------
 
-If a generator function raises an exception before yielding all its values, the values that it already stored will still be accessible through their ``ObjectRefs``.
-The remaining ``ObjectRefs`` will contain the raised exception.
-This is true for both static and dynamic ``num_returns``.
-If the task was called with ``num_returns="dynamic"``, the exception will be stored as an additional final ``ObjectRef`` in the ``ObjectRefGenerator``.
+如果一个生成器函数在产生所有值之前引发异常，那么已经存储的值仍然可以通过它们的 ``ObjectRefs`` 访问。
+其余的 ``ObjectRefs`` 将包含引发的异常。
+对于静态以及动态的 ``num_returns``，这一点都是 true 。
+如果任务通过 ``num_returns="dynamic"`` 调用，异常将作为额外最终 ``ObjectRef`` 存储在 ``ObjectRefGenerator`` 。
 
 .. literalinclude:: ../doc_code/generator.py
     :language: python
     :start-after: __generator_errors_start__
     :end-before: __generator_errors_end__
 
-Note that there is currently a known bug where exceptions will not be propagated for generators that yield more values than expected. This can occur in two cases:
+注意，目前已知的一个 bug 是，对于生成器产生的值数量超过预期的情况，异常不会被传播。这种情况可能发生在两种情况下：
 
-1. When ``num_returns`` is set by the caller, but the generator task returns more than this value.
-2. When a generator task with ``num_returns="dynamic"`` is :ref:`re-executed <task-retries>`, and the re-executed task yields more values than the original execution. Note that in general, Ray does not guarantee correctness for task re-execution if the task is nondeterministic, and it is recommended to set ``@ray.remote(num_retries=0)`` for such tasks.
+1. 当调用者设置 ``num_returns`` 时，但生成器任务返回的值超过了这个值。
+2. 当一个设置了 ``num_returns="dynamic"`` 的生成器任务被 :ref:`重新执行 <task-retries>` 时，如果重新执行的任务产生的值超过了原始执行的值，异常不会被传播。请注意，一般来说，如果任务是非确定性的，Ray 不保证任务重新执行的正确性，建议为这样的任务设置 ``@ray.remote(num_retries=0)``。
 
 .. literalinclude:: ../doc_code/generator.py
     :language: python
     :start-after: __generator_errors_unsupported_start__
     :end-before: __generator_errors_unsupported_end__
 
-Limitations
+限制
 -----------
 
-Although a generator function creates ``ObjectRefs`` one at a time, currently Ray will not schedule dependent tasks until the entire task is complete and all values have been created. This is similar to the semantics used by tasks that return multiple values as a list.
+尽管生成器函数一次创建一个 ``ObjectRef``，但目前 Ray 不会在整个任务完成并且所有值都被创建之前调度依赖任务。这类似于返回列表的多值任务的语义。

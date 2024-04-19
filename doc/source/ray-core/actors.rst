@@ -4,16 +4,15 @@
 Actors
 ======
 
-Actors extend the Ray API from functions (tasks) to classes.
-An actor is essentially a stateful worker (or a service). When a new actor is
-instantiated, a new worker is created, and methods of the actor are scheduled on
-that specific worker and can access and mutate the state of that worker.
+Actor 扩展了 Ray API 从函数（tasks）到类。
+一个 actor 是一个有状态的 worker（或者服务）。
+当一个新的 actor 被实例化时，一个新的 worker 被创建，actor 的方法被调度到这个特定的 worker 上，并且可以访问和修改这个 worker 的状态。
 
 .. tab-set::
 
     .. tab-item:: Python
 
-        The ``ray.remote`` decorator indicates that instances of the ``Counter`` class will be actors. Each actor runs in its own Python process.
+        ``ray.remote`` 装饰器作用在 ``Counter`` 类上，表示这个类的实例将会是 actor。每个 actor 运行在自己的 Python 进程中。
 
         .. testcode::
 
@@ -36,7 +35,7 @@ that specific worker and can access and mutate the state of that worker.
 
     .. tab-item:: Java
 
-        ``Ray.actor`` is used to create actors from regular Java classes.
+        ``Ray.actor`` 用于从普通的 Java 类创建 actor。
 
         .. code-block:: java
 
@@ -59,7 +58,7 @@ that specific worker and can access and mutate the state of that worker.
 
     .. tab-item:: C++
 
-        ``ray::Actor`` is used to create actors from regular C++ classes.
+        ``ray::Actor`` 用于从普通的 C++ 类创建 actor。
 
         .. code-block:: c++
 
@@ -91,7 +90,7 @@ that specific worker and can access and mutate the state of that worker.
 
 
 
-Use `ray list actors` from :ref:`State API <state-api-overview-ref>` to see actors states:
+使用 :ref:`状态 API <state-api-overview-ref>` 的 `ray list actors` 命令可以查看 actor 的状态：
 
 .. code-block:: bash
 
@@ -111,12 +110,12 @@ Use `ray list actors` from :ref:`State API <state-api-overview-ref>` to see acto
    0  9e783840250840f87328c9f201000000  Counter       ALIVE    01000000          13a475571662b784b4522847692893a823c78f1d3fd8fd32a2624923  38906  ef9de910-64fb-4575-8eb5-50573faa3ddf
 
 
-Specifying required resources
+指定所需资源
 -----------------------------
 
 .. _actor-resource-guide:
 
-You can specify resource requirements in actors too (see :ref:`resource-requirements` for more details.)
+你可以在 actor 上指定所需的资源（查看 :ref:`resource-requirements` 获取更多信息）。
 
 .. tab-set::
 
@@ -144,12 +143,11 @@ You can specify resource requirements in actors too (see :ref:`resource-requirem
             ray::Actor(CreateCounter).SetResource("CPU", 2.0).SetResource("GPU", 0.5).Remote();
 
 
-Calling the actor
+调用 actor
 -----------------
 
-We can interact with the actor by calling its methods with the ``remote``
-operator. We can then call ``get`` on the object ref to retrieve the actual
-value.
+我们可以通过调用 actor 的方法并使用 ``remote`` 操作符来与 actor 交互。
+然后我们可以调用 ``get`` 方法来获取实际的值。
 
 .. tab-set::
 
@@ -181,7 +179,7 @@ value.
             auto object_ref = counter.Task(&Counter::increment).Remote();
             assert(*object_ref.Get() == 1);
 
-Methods called on different actors can execute in parallel, and methods called on the same actor are executed serially in the order that they are called. Methods on the same actor will share state with one another, as shown below.
+在不同的 actor 上调用的方法可以并行执行，而在同一个 actor 上调用的方法将按照调用的顺序串行执行。在同一个 actor 上的方法将共享状态，如下所示。
 
 .. tab-set::
 
@@ -269,10 +267,10 @@ Methods called on different actors can execute in parallel, and methods called o
                 std::cout << *result;
             }
 
-Passing Around Actor Handles
+传递 Actor 句柄
 ----------------------------
 
-Actor handles can be passed into other tasks. We can define remote functions (or actor methods) that use actor handles.
+Actor 句柄可以传递给其他任务。我们可以定义使用 actor 句柄的远程函数（或 actor 方法）。
 
 .. tab-set::
 
@@ -313,7 +311,7 @@ Actor handles can be passed into other tasks. We can define remote functions (or
                 }
             }
 
-If we instantiate an actor, we can pass the handle around to various tasks.
+如果我们实例化一个 actor，我们可以将句柄传递给不同的任务。
 
 .. tab-set::
 
@@ -380,10 +378,10 @@ If we instantiate an actor, we can pass the handle around to various tasks.
             }
 
 
-Cancelling Actor Tasks
+取消 Actor 任务
 ----------------------
 
-Cancel Actor Tasks by calling :func:`ray.cancel() <ray.cancel>` on the returned `ObjectRef`.
+在返回的 `ObjectRef` 上调用 :func:`ray.cancel() <ray.cancel>` 可以取消 Actor 任务。
 
 .. tab-set::
 
@@ -395,73 +393,68 @@ Cancel Actor Tasks by calling :func:`ray.cancel() <ray.cancel>` on the returned 
             :end-before: __cancel_end__
 
 
-In Ray, Task cancellation behavior is contingent on the Task's current state:
+在 Ray 中，任务取消行为取决于任务的当前状态：
 
-**Unscheduled Tasks**:
-If the Actor Task hasn't been scheduled yet, Ray attempts to cancel the scheduling. 
-When successfully cancelled at this stage, invoking ``ray.get(actor_task_ref)`` 
-produce a :class:`TaskCancelledError <ray.exceptions.TaskCancelledError>`.
+**未调度的任务**: 
+如果 Actor 任务还没有被调度，Ray 会尝试取消调度。
+当在这个阶段成功取消时，调用 ``ray.get(actor_task_ref)`` 会
+产生一个 :class:`TaskCancelledError <ray.exceptions.TaskCancelledError>`。
 
-**Running Actor Tasks (Regular Actor, Threaded Actor)**:
-For tasks classified as a single-threaded Actor or a multi-threaded Actor,
-Ray offers no mechanism for interruption.
+**运行中的 Actor 任务（普通 Actor，线程 Actor）**:
+针对单进程和多线程类别的 Actor，Ray 提供了中断机制。
 
-**Running Async Actor Tasks**:
-For Tasks classified as `async Actors <_async-actors>`, Ray seeks to cancel the associated `asyncio.Task`. 
-This cancellation approach aligns with the standards presented in 
-`asyncio task cancellation <https://docs.python.org/3/library/asyncio-task.html#task-cancellation>`__.
-Note that `asyncio.Task` won't be interrupted in the middle of execution if you don't `await` within the async function.
+**运行中的异步 Actor 任务**:
+对于 `异步 Actor <_async-actors>` 类别的任务，Ray 会尝试取消关联的 `asyncio.Task`。
+这些取消方法与 `asyncio 任务取消 <https://docs.python.org/3/library/asyncio-task.html#task-cancellation>`__ 中的标准一致。
+注意，如果在异步函数中没有 `await`，`asyncio.Task` 不会在执行中间被中断。
 
-**Cancellation Guarantee**:
-Ray attempts to cancel Tasks on a *best-effort* basis, meaning cancellation isn't always guaranteed.
-For example, if the cancellation request doesn't get through to the executor,
-the Task might not be cancelled.
-You can check if a Task was successfully cancelled using ``ray.get(actor_task_ref)``.
+**取消保证**:
+Ray 尝试取消任务是 *尽力而为* 的，这意味着取消并不总是保证的。
+例如，如果取消请求没有传递给执行器，
+任务可能不会被取消。
+你可以检查任务是否成功取消，使用 ``ray.get(actor_task_ref)``。
 
-**Recursive Cancellation**:
-Ray tracks all child and Actor Tasks. When the``recursive=True`` argument is given,
-it cancels all child and Actor Tasks.
+**递归取消**:
+Ray 跟踪所有子任务和 Actor 任务。当给出 ``recursive=True`` 参数时，
+它取消所有子任务和 Actor 任务。
 
-Scheduling
+调度
 ----------
 
-For each actor, Ray will choose a node to run it
-and the scheduling decision is based on a few factors like
-:ref:`the actor's resource requirements <ray-scheduling-resources>`
-and :ref:`the specified scheduling strategy <ray-scheduling-strategies>`.
-See :ref:`Ray scheduling <ray-scheduling>` for more details.
+对于每个 actor，Ray 会选择一个节点来运行它，调度决策基于一些因素，如 
+:ref:`actor 的资源需求 <ray-scheduling-resources>` 
+和 :ref:`指定的调度策略 <ray-scheduling-strategies>`。
+有关更多详细信息，请参见 :ref:`Ray 调度 <ray-scheduling>`。
 
-Fault Tolerance
+容错能力
 ---------------
 
-By default, Ray actors won't be :ref:`restarted <fault-tolerance-actors>` and
-actor tasks won't be retried when actors crash unexpectedly.
-You can change this behavior by setting
-``max_restarts`` and ``max_task_retries`` options
-in :func:`ray.remote() <ray.remote>` and :meth:`.options() <ray.actor.ActorClass.options>`.
-See :ref:`Ray fault tolerance <fault-tolerance>` for more details.
+默认情况下，Ray actor 不会被 :ref:`重启 <fault-tolerance-actors>`，
+actor 任务不会在 actor 意外崩溃时重试。
+你可以通过在 :func:`ray.remote() <ray.remote>` 和 :meth:`.options() <ray.actor.ActorClass.options>` 
+中设置 ``max_restarts`` 和 ``max_task_retries`` 选项来更改此行为。
+参考 :ref:`Ray fault tolerance <fault-tolerance>` 获取更多信息。
 
-FAQ: Actors, Workers and Resources
+问答：Actor，Worker 以及资源
 ----------------------------------
 
-What's the difference between a worker and an actor?
+worker 和 actor 之间有何不同？
 
-Each "Ray worker" is a python process.
+每一个 "Ray worker" 都是一个 Python 进程。
 
-Workers are treated differently for tasks and actors. Any "Ray worker" is either 1. used to execute multiple Ray tasks or 2. is started as a dedicated Ray actor.
+Worker 却别于任务和 actor。任何 "Ray worker" 都是 1. 要么用于执行多个 Ray 任务，2. 作为一个专用的 Ray actor 启动。
 
-* **Tasks**: When Ray starts on a machine, a number of Ray workers will be started automatically (1 per CPU by default). They will be used to execute tasks (like a process pool). If you execute 8 tasks with `num_cpus=2`, and total number of CPUs is 16 (`ray.cluster_resources()["CPU"] == 16`), you will end up with 8 of your 16 workers idling.
+* **Tasks**: 当 Ray 在一台机器上启动时，会自动启动一些 Ray workers（默认情况下每个 CPU 一个）。它们将被用于执行任务（类似于进程池）。如果你使用 `num_cpus=2` 执行 8 个任务，而总的 CPU 数量是 16 (`ray.cluster_resources()["CPU"] == 16`)，16 个 worker 将会有 8 个闲置。
 
-* **Actor**: A Ray Actor is also a "Ray worker" but is instantiated at runtime (upon `actor_cls.remote()`). All of its methods will run on the same process, using the same resources (designated when defining the Actor). Note that unlike tasks, the python processes that runs Ray Actors are not reused and will be terminated when the Actor is deleted.
+* **Actor**: 
+一个 Ray Actor 也是一个 "Ray worker"，但是在运行时实例化（在 `actor_cls.remote()` 时）。所有的方法都将在同一个进程中运行，使用相同的资源（在定义 Actor 时指定）。请注意，与任务不同，运行 Ray Actor 的 Python 进程不会被重用，并且在 Actor 被删除时将被终止。
 
-To maximally utilize your resources, you want to maximize the time that
-your workers are working. You also want to allocate enough cluster resources
-so that both all of your needed actors can run and any other tasks you
-define can run. This also implies that tasks are scheduled more flexibly,
-and that if you don't need the stateful part of an actor, you're mostly
-better off using tasks.
+要最大化利用资源，你需要最大化 worker 的工作时间。
+你还需要分配足够的集群资源，以便你所有需要的 actor 都能运行，
+以及你定义的任何其他任务都能运行。这也意味着任务的调度更加灵活，
+如果你不需要 actor 的有状态部分，你大多数情况下最好使用任务。
 
-More about Ray Actors
+更多关于 Ray Actor 的信息
 ---------------------
 
 .. toctree::

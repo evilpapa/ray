@@ -1,57 +1,54 @@
 .. _ray-scheduling:
 
-Scheduling
+调度
 ==========
 
-For each task or actor, Ray will choose a node to run it and the scheduling decision is based on the following factors.
+对于每个任务和 actor，Ray 会选择一个节点来运行它，调度决策基于以下因素。
 
 .. _ray-scheduling-resources:
 
-Resources
+资源
 ---------
 
-Each task or actor has the :ref:`specified resource requirements <resource-requirements>`.
-Given that, a node can be in one of the following states:
+每个任务和节点有 :ref:`指定的资源需求 <resource-requirements>`。
+鉴于此，一个节点可以处于以下状态之一：
 
-- Feasible: the node has the required resources to run the task or actor.
-  Depending on the current availability of these resources, there are two sub-states:
+- 可行：节点有足够的资源来运行任务或 actor。
+  取决于这些资源的当前可用性，有两种子状态：
 
-  - Available: the node has the required resources and they are free now.
-  - Unavailable: the node has the required resources but they are currently being used by other tasks or actors.
+  - 可用：节点有所需的资源，现在是空闲的。
+  - 不可用：节点有所需的资源，但它们当前被其他任务或 actor 使用。
 
-- Infeasible: the node doesn't have the required resources. For example a CPU-only node is infeasible for a GPU task.
+- 不可行：此节点没有所需的资源。例如，对于 GPU 任务，只有 CPU 的节点是不可行的。
 
-Resource requirements are **hard** requirements meaning that only feasible nodes are eligible to run the task or actor.
-If there are feasible nodes, Ray will either choose an available node or wait until a unavailable node to become available
-depending on other factors discussed below.
-If all nodes are infeasible, the task or actor cannot be scheduled until feasible nodes are added to the cluster.
+资源需求是 **硬性** 需求，这意味着只有可行的节点才有资格运行任务或 actor。
+如果这个节点是可行的，Ray 将选择一个可用的节点，或者等待一个不可用的节点变为可用，具体取决于下面讨论的其他因素。
+如果所有节点都是不可行的，那么任务或 actor 将无法调度，直到可行的节点被添加到集群中。
 
 .. _ray-scheduling-strategies:
 
-Scheduling Strategies
+Scheduling Strategies 调度策略
 ---------------------
 
-Tasks or actors support a :func:`scheduling_strategy <ray.remote>` option to specify the strategy used to decide the best node among feasible nodes.
-Currently the supported strategies are the followings.
+任务和 actor 支持一个 :func:`scheduling_strategy <ray.remote>` 选项，用于指定用于在可行节点中选择最佳节点的策略。
+当前支持的策略如下。
 
 "DEFAULT"
 ~~~~~~~~~
 
-``"DEFAULT"`` is the default strategy used by Ray.
-Ray schedules tasks or actors onto a group of the top k nodes.
-Specifically, the nodes are sorted to first favor those that already have tasks or actors scheduled (for locality),
-then to favor those that have low resource utilization (for load balancing).
-Within the top k group, nodes are chosen randomly to further improve load-balancing and mitigate delays from cold-start in large clusters.
+``"DEFAULT"`` Ray 的默认策略。
+Ray 调度任务和 actor 到前 k 个节点的组中。
+特殊的，节点首先按照已经调度的任务或 actor 来排序（为了本地性），然后按照资源利用率低的节点来排序（为了负载均衡）。
+在前 k 组中，节点是随机选择的，以进一步改善负载均衡，并减轻大集群中冷启动的延迟。
 
-Implementation-wise, Ray calculates a score for each node in a cluster based on the utilization of its logical resources.
-If the utilization is below a threshold (controlled by the OS environment variable ``RAY_scheduler_spread_threshold``, default is 0.5), the score is 0,
-otherwise it is the resource utilization itself (score 1 means the node is fully utilized).
-Ray selects the best node for scheduling by randomly picking from the top k nodes with the lowest scores.
-The value of ``k`` is the max of (number of nodes in the cluster * ``RAY_scheduler_top_k_fraction`` environment variable) and ``RAY_scheduler_top_k_absolute`` environment variable.
-By default, it's 20% of the total number of nodes.
+在实现方面，Ray 根据集群中每个节点的逻辑资源利用率计算其分数。
+如果利用率低于阈值（由 OS 环境变量 ``RAY_scheduler_spread_threshold`` 控制，默认值为 0.5），则分数为 0，否则为资源利用率本身（分数 1 表示节点完全被利用）。
+Ray 通过从具有最低分数的前 k 个节点中随机选择来选择最佳节点进行调度。
+``k`` 的值是（集群中节点的数量 * ``RAY_scheduler_top_k_fraction`` 环境变量）和 ``RAY_scheduler_top_k_absolute`` 环境变量的最大值。
+默认情况下，它是总节点数的 20%。
 
-Currently Ray handles actors that don't require any resources (i.e., ``num_cpus=0`` with no other resources) specially by randomly choosing a node in the cluster without considering resource utilization.
-Since nodes are randomly chosen, actors that don't require any resources are effectively SPREAD across the cluster.
+当前，Ray 通过在集群中随机选择一个节点来处理不需要任何资源的 actor（即 ``num_cpus=0`` 且没有其他资源）。
+Since nodes are randomly chosen, actors that don't require any resources are effectively SPREAD across the cluster. 由于节点是随机选择的，不需要任何资源的 actor 实际上是在集群中 SPREAD 的。
 
 .. literalinclude:: ../doc_code/scheduling.py
     :language: python
@@ -61,7 +58,7 @@ Since nodes are randomly chosen, actors that don't require any resources are eff
 "SPREAD"
 ~~~~~~~~
 
-``"SPREAD"`` strategy will try to spread the tasks or actors among available nodes.
+``"SPREAD"`` strategy will try to spread the tasks or actors among available nodes. ``"SPREAD"`` 策略将尝试在可用节点之间分配任务或 actor。
 
 .. literalinclude:: ../doc_code/scheduling.py
     :language: python
@@ -71,27 +68,25 @@ Since nodes are randomly chosen, actors that don't require any resources are eff
 PlacementGroupSchedulingStrategy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:py:class:`~ray.util.scheduling_strategies.PlacementGroupSchedulingStrategy` will schedule the task or actor to where the placement group is located.
-This is useful for actor gang scheduling. See :ref:`Placement Group <ray-placement-group-doc-ref>` for more details.
+:py:class:`~ray.util.scheduling_strategies.PlacementGroupSchedulingStrategy` 会将任务或 actor 调度到放置组所在的位置。
+ 这对于 actor gang scheduling 很有用。有关更多详细信息，请参见 :ref:`Placement Group <ray-placement-group-doc-ref>`。
 
 NodeAffinitySchedulingStrategy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:py:class:`~ray.util.scheduling_strategies.NodeAffinitySchedulingStrategy` is a low-level strategy that allows a task or actor to be scheduled onto a particular node specified by its node id.
-The ``soft`` flag specifies whether the task or actor is allowed to run somewhere else if the specified node doesn't exist (e.g. if the node dies)
-or is infeasible because it does not have the resources required to run the task or actor.
-In these cases, if ``soft`` is True, the task or actor will be scheduled onto a different feasible node.
-Otherwise, the task or actor will fail with :py:class:`~ray.exceptions.TaskUnschedulableError` or :py:class:`~ray.exceptions.ActorUnschedulableError`.
-As long as the specified node is alive and feasible, the task or actor will only run there
-regardless of the ``soft`` flag. This means if the node currently has no available resources, the task or actor will wait until resources
-become available.
-This strategy should *only* be used if other high level scheduling strategies (e.g. :ref:`placement group <ray-placement-group-doc-ref>`) cannot give the
-desired task or actor placements. It has the following known limitations:
+:py:class:`~ray.util.scheduling_strategies.NodeAffinitySchedulingStrategy` 是一种低级策略，允许通过节点 ID 指定的特定节点调度任务或 actor。
+``soft`` 标志指定如果指定的节点不存在（例如，如果节点死机）或不可行，因为它没有运行任务或 actor 所需的资源，则任务或 actor 是否允许在其他地方运行。
+这种情况下，如果 ``soft`` 为 True，则任务或 actor 将被调度到另一个可行的节点。
+ 否则，任务或 actor 将失败，并显示 :py:class:`~ray.exceptions.TaskUnschedulableError` 或 :py:class:`~ray.exceptions.ActorUnschedulableError`。
+只要指定节点是活动的和可行的，任务或 actor 将只在那里运行，
+而不管 ``soft`` 标志如何。
+这意味着如果节点当前没有可用资源，任务或 actor 将等待资源可用。
+此策略应 *仅仅* 在其他高级调度策略（例如：:ref:`placement group <ray-placement-group-doc-ref>`）无法提供
+所需的任务或 actor 放置时使用。它具有以下已知限制：
 
-- It's a low-level strategy which prevents optimizations by a smart scheduler.
-- It cannot fully utilize an autoscaling cluster since node ids must be known when the tasks or actors are created.
-- It can be difficult to make the best static placement decision
-  especially in a multi-tenant cluster: for example, an application won't know what else is being scheduled onto the same nodes.
+- 这是一种低级策略，阻止了智能调度器的优化。
+- 它不能充分利用自动缩放集群，因为在创建任务或 actor 时必须知道节点 ID。
+- 它可能很难做出最佳的静态放置决策，特别是在多租户集群中：例如，应用程序不知道其他什么正在调度到相同的节点上。
 
 .. literalinclude:: ../doc_code/scheduling.py
     :language: python
@@ -100,28 +95,25 @@ desired task or actor placements. It has the following known limitations:
 
 .. _ray-scheduling-locality:
 
-Locality-Aware Scheduling
+位置感知调度
 -------------------------
 
-By default, Ray prefers available nodes that have large task arguments local
-to avoid transferring data over the network. If there are multiple large task arguments,
-the node with most object bytes local is preferred.
-This takes precedence over the ``"DEFAULT"`` scheduling strategy,
-which means Ray will try to run the task on the locality preferred node regardless of the node resource utilization.
-However, if the locality preferred node is not available, Ray may run the task somewhere else.
-When other scheduling strategies are specified,
-they have higher precedence and data locality is no longer considered.
+默认的，Ray 会优先选择有大型任务参数的可用节点，以避免在网络上传输数据。
+如果有多个大型任务参数，那么优先选择有最多对象字节的节点。
+这优先于 ``"DEFAULT"`` 调度策略，这意味着 Ray 将尝试在位置首选节点上运行任务，而不管节点资源利用率如何。
+ 然而，如果位置首选节点不可用，Ray 可能会在其他地方运行任务。
+当其他调度策略被指定时，它们具有更高的优先级，数据位置不再被考虑。
 
 .. note::
 
-  Locality-aware scheduling is only for tasks not actors.
+  位置感知调度仅适用于任务，而不适用于 actor。
 
 .. literalinclude:: ../doc_code/scheduling.py
     :language: python
     :start-after: __locality_aware_scheduling_start__
     :end-before: __locality_aware_scheduling_end__
 
-More about Ray Scheduling
+更多关于 Ray 调度的内容
 -------------------------
 
 .. toctree::

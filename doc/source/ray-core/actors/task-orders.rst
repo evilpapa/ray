@@ -1,15 +1,13 @@
 .. _actor-task-order:
 
-Actor Task Execution Order
+Actor 任务执行顺序
 ==========================
 
-Synchronous, Single-Threaded Actor
+同步、单线程 Actor
 ----------------------------------
-In Ray, an actor receives tasks from multiple submitters (including driver and workers).
-For tasks received from the same submitter, a synchronous, single-threaded actor executes
-them following the submission order.
-In other words, a given task will not be executed until previously submitted tasks from
-the same submitter have finished execution.
+在 Ray 中，一个 actor 从多个提交者（包括 driver 和 worker）接收任务。
+对于来自同一提交者的任务，同步、单线程 actor 按照提交顺序执行它们。
+换句话说，给定任务在之前提交的任务执行完之前不会执行。
 
 .. tab-set::
 
@@ -46,9 +44,9 @@ the same submitter have finished execution.
             3
 
 
-However, the actor does not guarantee the execution order of the tasks from different
-submitters. For example, suppose an unfulfilled argument blocks a previously submitted
-task. In this case, the actor can still execute tasks submitted by a different worker.
+然而，actor 不保证来自不同提交者的任务的执行顺序。
+例如，假设一个未满足的参数阻塞了之前提交的任务。
+在这种情况下，actor 仍然可以执行由不同 worker 提交的任务。
 
 .. tab-set::
 
@@ -98,11 +96,11 @@ task. In this case, the actor can still execute tasks submitted by a different w
             2
 
 
-Asynchronous or Threaded Actor
+异步或线程 Actor
 ------------------------------
-:ref:`Asynchronous or threaded actors <async-actors>` do not guarantee the
-task execution order. This means the system might execute a task
-even though previously submitted tasks are pending execution.
+:ref:`异步或线程 Actor <async-actors>` 不保证
+任务执行顺序。这意味着系统可能会执行一个任务，
+即使之前提交的任务正在等待执行。
 
 .. tab-set::
 

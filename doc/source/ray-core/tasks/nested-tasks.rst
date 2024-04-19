@@ -1,15 +1,14 @@
-Nested Remote Functions
+嵌套远程函数
 =======================
 
-Remote functions can call other remote functions, resulting in nested tasks.
-For example, consider the following.
+远程函数可以调用其他远程函数，从而产生嵌套任务。例如，考虑以下示例。
 
 .. literalinclude:: ../doc_code/nested-tasks.py
     :language: python
     :start-after: __nested_start__
     :end-before: __nested_end__
 
-Then calling ``g`` and ``h`` produces the following behavior.
+然后调用 ``g`` 和 ``h`` 会产生以下行为。
 
 .. code:: python
 
@@ -22,25 +21,22 @@ Then calling ``g`` and ``h`` produces the following behavior.
     >>> ray.get(h.remote())
     [1, 1, 1, 1]
 
-**One limitation** is that the definition of ``f`` must come before the
-definitions of ``g`` and ``h`` because as soon as ``g`` is defined, it
-will be pickled and shipped to the workers, and so if ``f`` hasn't been
-defined yet, the definition will be incomplete.
+**一个限制** 是 ``f`` 的定义必须在 ``g`` 和 ``h`` 的定义之前，
+因为一旦定义了 ``g``，它将被 pickled 并发送到 worker，
+所以如果 ``f`` 还没有被定义，定义将是不完整的。
 
-Yielding Resources While Blocked
+阻塞时释放资源
 --------------------------------
 
-Ray will release CPU resources when being blocked. This prevents
-deadlock cases where the nested tasks are waiting for the CPU
-resources held by the parent task.
-Consider the following remote function.
+Ray 会在被阻塞时释放 CPU 资源。
+这可以防止嵌套任务等待父任务持有的 CPU 资源的死锁情况。
+考虑以下远程函数。
 
 .. literalinclude:: ../doc_code/nested-tasks.py
     :language: python
     :start-after: __yield_start__
     :end-before: __yield_end__
 
-When a ``g`` task is executing, it will release its CPU resources when it gets
-blocked in the call to ``ray.get``. It will reacquire the CPU resources when
-``ray.get`` returns. It will retain its GPU resources throughout the lifetime of
-the task because the task will most likely continue to use GPU memory.
+当 ``g`` 任务正在执行时，在调用 ``ray.get`` 时被阻塞，它将释放其 CPU 资源。
+当 ``ray.get`` 返回时，它将重新释放 CPU 资源。
+它会在任务的整个生命周期内保留其 GPU 资源，因为该任务很可能会继续使用 GPU 内存。

@@ -1,16 +1,16 @@
 .. _core-walkthrough:
 
-What is Ray Core?
+什么是 Ray Core？
 =================
 
-Ray Core provides a small number of core primitives (i.e., tasks, actors, objects) for building and scaling distributed applications. Below we'll walk through simple examples that show you how to turn your functions and classes easily into Ray tasks and actors, and how to work with Ray objects.
+Ray Core 为构建和扩展分布式应用程序提供了少量的核心基元（即 task、actor、对象）。下面我们将介绍一些简单的示例，这些示例向您展示如何将函数和类轻松地转换为 Ray task 和 actor，以及如何使用 Ray 对象。
 
-Getting Started
+入门
 ---------------
 
-To get started, install Ray via ``pip install -U ray``. See :ref:`Installing Ray <installation>` for more installation options. The following few sections will walk through the basics of using Ray Core.
+要开始，请通过 ``pip-install-U Ray`` 安装 Ray。有关更多安装选项，请参阅：:ref:`Installing Ray<installation>`。以下几节将介绍使用 Ray Core 的基本知识。
 
-The first step is to import and initialize Ray:
+第一步导入并实例化 Ray：
 
 .. literalinclude:: doc_code/getting_started.py
     :language: python
@@ -19,49 +19,49 @@ The first step is to import and initialize Ray:
 
 .. note::
 
-  In recent versions of Ray (>=1.5), ``ray.init()`` is automatically called on the first use of a Ray remote API.
+  Ray 在最近的版本 (>=1.5), ``ray.init()`` 在第一个 Ray 远程 API 调用时会自动执行。
 
-Running a Task
+运行一个任务
 --------------
 
-Ray lets you run functions as remote tasks in the cluster. To do this, you decorate your function with ``@ray.remote`` to declare that you want to run this function remotely.
-Then, you call that function with ``.remote()`` instead of calling it normally.
-This remote call returns a future, a so-called Ray *object reference*, that you can then fetch with ``ray.get``:
+Ray 将你的函数作为集群远程任务。为此，你需要使用 ``@ray.remote`` 装饰你的函数，以声明你想要远程运行这个函数。
+然后，你使用 ``.remote()`` 而不是通常调用方式。
+这个远程调用返回一个 future，一个所谓的 Ray *对象引用*，你可以使用 ``ray.get`` 获取它：
 
 .. literalinclude:: doc_code/getting_started.py
     :language: python
     :start-after: __running_task_start__
     :end-before: __running_task_end__
 
-Calling an Actor
+Actor 调用
 ----------------
 
-Ray provides actors to allow you to parallelize computation across multiple actor instances. When you instantiate a class that is a Ray actor, Ray will start a remote instance of that class in the cluster. This actor can then execute remote method calls and maintain its own internal state:
+Ray 提供了 actor 来允许您在多个 actor 实例之间并行计算。当您实例化一个 Ray actor 类时，Ray 将在集群中启动该类的远程实例。这个 actor 之后可以执行远程方法调用并维护自己的内部状态：
 
 .. literalinclude:: doc_code/getting_started.py
     :language: python
     :start-after: __calling_actor_start__
     :end-before: __calling_actor_end__
 
-The above covers very basic actor usage. For a more in-depth example, including using both tasks and actors together, check out :ref:`monte-carlo-pi`.
+上面的内容涵盖了非常基本的 actor 使用。要了解更深入的示例，包括如何同时使用任务和 actor，请查看 :ref:`monte-carlo-pi`。
 
-Passing an Object
+对象传递
 -----------------
 
-As seen above, Ray stores task and actor call results in its :ref:`distributed object store <objects-in-ray>`, returning *object references* that can be later retrieved. Object references can also be created explicitly via ``ray.put``, and object references can be passed to tasks as substitutes for argument values:
+如上所述，Ray 将任务和 actor 调用结果存储在其 :ref:`分布式对象存储 <objects-in-ray>` 中，返回 *对象引用*，稍后可以检索。对象引用也可以通过 ``ray.put`` 明确创建，对象引用可以作为参数值的替代传递给任务：
 
 .. literalinclude:: doc_code/getting_started.py
     :language: python
     :start-after: __passing_object_start__
     :end-before: __passing_object_end__
 
-Next Steps
+下一步
 ----------
 
-.. tip:: To check how your application is doing, you can use the :ref:`Ray dashboard <observability-getting-started>`. 
+.. tip:: 要检查你的程序当前的运行情况，可以使用 :ref:`Ray 控制面板 <observability-getting-started>`。
 
-Ray's key primitives are simple, but can be composed together to express almost any kind of distributed computation.
-Learn more about Ray's :ref:`key concepts <core-key-concepts>` with the following user guides:
+Ray 的核心基础很简单，但可以组合在一起表达几乎任何类型的分布式计算。
+通过以下用户指南学习更多关于 Ray 的 :ref:`核心概念 <core-key-concepts>` ：
 
 .. grid:: 1 2 3 3
     :gutter: 1

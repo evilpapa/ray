@@ -1,29 +1,28 @@
-AsyncIO / Concurrency for Actors
+Actor 的 AsyncIO / 并发
 ================================
 
-Within a single actor process, it is possible to execute concurrent threads.
+在单个 actor 进程中，可以执行并发线程。
 
-Ray offers two types of concurrency within an actor:
+Ray 提供了两种 actor 内并发的方式：
 
- * :ref:`async execution <async-actors>`
- * :ref:`threading <threaded-actors>`
+ * :ref:`异步执行 <async-actors>`
+ * :ref:`线程 <threaded-actors>`
 
 
-Keep in mind that the Python's `Global Interpreter Lock (GIL) <https://wiki.python.org/moin/GlobalInterpreterLock>`_ will only allow one thread of Python code running at once.
+请记住，Python 的 `全局解释器锁 (GIL) <https://wiki.python.org/moin/GlobalInterpreterLock>`_ 一次只允许一个线程的 Python 代码运行。
 
-This means if you are just parallelizing Python code, you won't get true parallelism. If you call Numpy, Cython, Tensorflow, or PyTorch code, these libraries will release the GIL when calling into C/C++ functions.
+这意味着如果你只是并行化 Python 代码，你不会得到真正的并行性。如果你调用 Numpy、Cython、Tensorflow 或 PyTorch 代码，这些库在调用 C/C++ 函数时会释放 GIL。
 
-**Neither the** :ref:`threaded-actors` nor :ref:`async-actors` **model will allow you to bypass the GIL.**
+:ref:`threaded-actors` 和 :ref:`async-actors` **模型都不允许你绕过 GIL 。**
 
 .. _async-actors:
 
-AsyncIO for Actors
+AsyncIO Actor
 ------------------
 
-Since Python 3.5, it is possible to write concurrent code using the
-``async/await`` `syntax <https://docs.python.org/3/library/asyncio.html>`__.
-Ray natively integrates with asyncio. You can use ray alongside with popular
-async frameworks like aiohttp, aioredis, etc.
+从 Python 3.5 开始，可以使用 ``async/await`` `语法 <https://docs.python.org/3/library/asyncio.html>`__ 编写并发代码。
+Ray 与 asyncio 原生无缝集成。
+你可以将 ray 与流行的异步框架一起使用，如 aiohttp、aioredis 等。
 
 .. testcode::
 
@@ -64,8 +63,8 @@ async frameworks like aiohttp, aioredis, etc.
 .. testcode::
     :hide:
 
-    # NOTE: The outputs from the previous code block can show up in subsequent tests.
-    # To prevent flakiness, we wait for the async calls finish.
+    # 注意：前面代码块的输出可能会出现在后续测试中。
+    # 要防止不稳定性，我们等待异步调用完成。
     import time
     print("Sleeping...")
     time.sleep(3)
@@ -74,13 +73,12 @@ async frameworks like aiohttp, aioredis, etc.
 
     ...
 
-ObjectRefs as asyncio.Futures
+ObjectRefs 作为 asyncio.Futures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ObjectRefs can be translated to asyncio.Futures. This feature
-make it possible to ``await`` on ray futures in existing concurrent
-applications.
+ObjectRefs 可以转换成 asyncio.Futures。
+这使得在现有的并发应用中可以 ``await`` 的 ray 特性成为可能。
 
-Instead of:
+代替：
 
 .. testcode::
 
@@ -93,7 +91,7 @@ Instead of:
     ray.get(some_task.remote())
     ray.wait([some_task.remote()])
 
-you can do:
+你可以这样：
 
 .. testcode::
 
@@ -110,10 +108,10 @@ you can do:
 
     asyncio.run(await_obj_ref())
 
-Please refer to `asyncio doc <https://docs.python.org/3/library/asyncio-task.html>`__
-for more `asyncio` patterns including timeouts and ``asyncio.gather``.
+请参阅 `asyncio 文档 <https://docs.python.org/3/library/asyncio-task.html>`__
+了解更多 `asyncio` 模式，包括超时控制和 ``asyncio.gather``。
 
-If you need to directly access the future object, you can call:
+如果需要直接访问未来对象，可以调用：
 
 .. testcode::
 
@@ -131,10 +129,10 @@ If you need to directly access the future object, you can call:
 
 .. _async-ref-to-futures:
 
-ObjectRefs as concurrent.futures.Futures
+ObjectRefs 作为 concurrent.futures.Futures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ObjectRefs can also be wrapped into ``concurrent.futures.Future`` objects. This
-is useful for interfacing with existing ``concurrent.futures`` APIs:
+ObjectRefs 也可以被包装到 ``concurrent.futures.Future`` 对象。
+这对于与现有API ``concurrent.futures`` 交互非常有用：
 
 .. testcode::
 
@@ -153,10 +151,10 @@ is useful for interfacing with existing ``concurrent.futures`` APIs:
     1
     1
 
-Defining an Async Actor
+定义异步 Actor
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-By using `async` method definitions, Ray will automatically detect whether an actor support `async` calls or not.
+使用 `async` 方法定义。Ray 会自动检测 actor 是否支持 `async` 调用。
 
 .. testcode::
 
@@ -188,18 +186,16 @@ By using `async` method definitions, Ray will automatically detect whether an ac
     (AsyncActor pid=3456) ended
     (AsyncActor pid=3456) ended
 
-Under the hood, Ray runs all of the methods inside a single python event loop.
-Please note that running blocking ``ray.get`` or ``ray.wait`` inside async
-actor method is not allowed, because ``ray.get`` will block the execution
-of the event loop.
+在底层，Ray 在单个 Python 事件循环中运行所有方法。
+请注意，不允许在异步 actor 方法中运行阻塞的 ``ray.get`` 或 ``ray.wait``，因为 ``ray.get`` 会阻塞事件循环的执行。
 
-In async actors, only one task can be running at any point in time (though tasks can be multi-plexed). There will be only one thread in AsyncActor! See :ref:`threaded-actors` if you want a threadpool.
+在异步 actor 中，一次只能运行一个任务（尽管任务可以多路复用）。在 AsyncActor 中只有一个线程！如果你想要一个线程池，请参阅 :ref:`threaded-actors`。
 
-Setting concurrency in Async Actors
+在异步 actor 设置并发
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can set the number of "concurrent" task running at once using the
-``max_concurrency`` flag. By default, 1000 tasks can be running concurrently.
+你可以通过 ``max_concurrency`` 选项来设置并发任务的数量。
+默认情况下，可以同时运行 1000 个任务。
 
 .. testcode::
 
@@ -214,7 +210,7 @@ You can set the number of "concurrent" task running at once using the
 
     actor = AsyncActor.options(max_concurrency=2).remote()
 
-    # Only 2 tasks will be running concurrently. Once 2 finish, the next 2 should run.
+    # 只有两个任务会并发运行，一旦这两个任务结束，下两个才能运行
     ray.get([actor.run_task.remote() for _ in range(8)])
 
 .. testoutput::
@@ -239,19 +235,18 @@ You can set the number of "concurrent" task running at once using the
 
 .. _threaded-actors:
 
-Threaded Actors
+线程 Actors
 ---------------
 
-Sometimes, asyncio is not an ideal solution for your actor. For example, you may
-have one method that performs some computation heavy task while blocking the event loop, not giving up control via ``await``. This would hurt the performance of an Async Actor because Async Actors can only execute 1 task at a time and rely on ``await`` to context switch.
+有时，你可能需要一个线程池来执行多个任务。
+比如，你可能有一个方法执行一些计算密集型任务，而不释放事件循环的控制权。这会影响异步 Actor 的性能，因为异步 Actor 一次只能执行一个任务，并依赖 ``await`` 来切换上下文。
 
 
-Instead, you can use the ``max_concurrency`` Actor options without any async methods, allowng you to achieve threaded concurrency (like a thread pool).
+相反，你可以使用 ``max_concurrency`` Actor 选项，而不使用任何异步方法，从而实现线程并发（如线程池）。
 
 
 .. warning::
-    When there is at least one ``async def`` method in actor definition, Ray
-    will recognize the actor as AsyncActor instead of ThreadedActor.
+    当 actor 定义中至少有一个 ``async def`` 方法时，Ray 会将 actor 识别为 AsyncActor 而不是 ThreadedActor。
 
 
 .. testcode::
@@ -270,12 +265,12 @@ Instead, you can use the ``max_concurrency`` Actor options without any async met
     (ThreadedActor pid=4822) I'm running in a thread!
     (ThreadedActor pid=4822) I'm running in another thread!
 
-Each invocation of the threaded actor will be running in a thread pool. The size of the threadpool is limited by the ``max_concurrency`` value.
+线程 Actor 的每次调用都将在线程池中运行。线程池的大小受该 ``max_concurrency`` 值限制。
 
-AsyncIO for Remote Tasks
+用于远程任务的 AsyncIO
 ------------------------
 
-We don't support asyncio for remote tasks. The following snippet will fail:
+我们不支持使用 asyncio 执行远程任务。以下代码片段将失败：
 
 .. testcode::
     :skipif: True
@@ -284,7 +279,7 @@ We don't support asyncio for remote tasks. The following snippet will fail:
     async def f():
         pass
 
-Instead, you can wrap the ``async`` function with a wrapper to run the task synchronously:
+相反，您可以使用 ``async`` 包装该函数来同步运行该任务：
 
 .. testcode::
 

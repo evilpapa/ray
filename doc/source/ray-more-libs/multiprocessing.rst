@@ -1,25 +1,21 @@
 .. _ray-multiprocessing:
 
-Distributed multiprocessing.Pool
+分布式 multiprocessing.Pool
 ================================
 
-.. _`issue on GitHub`: https://github.com/ray-project/ray/issues
+.. _`GitHub 上的讨论`: https://github.com/ray-project/ray/issues
 
-Ray supports running distributed python programs with the `multiprocessing.Pool API`_
-using `Ray Actors <actors.html>`__ instead of local processes. This makes it easy
-to scale existing applications that use ``multiprocessing.Pool`` from a single node
-to a cluster.
+Ray 支持使用 `Ray Actors <actors.html>`__ 的 `multiprocessing.Pool API`_ 运行分布式 Python 程序而不是本地进程来运行。这使得将现有 ``multiprocessing.Pool`` 应用程序从单节点扩展到集群变得容易。
 
 .. _`multiprocessing.Pool API`: https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing.pool
 
-Quickstart
+快速入门
 ----------
 
-To get started, first `install Ray <installation.html>`__, then use
-``ray.util.multiprocessing.Pool`` in place of ``multiprocessing.Pool``.
-This will start a local Ray cluster the first time you create a ``Pool`` and
-distribute your tasks across it. See the `Run on a Cluster`_ section below for
-instructions to run on a multi-node Ray cluster instead.
+要开始，首先 `安装 Ray <installation.html>`__，
+然后使用 ``ray.util.multiprocessing.Pool`` 代替 ``multiprocessing.Pool``。
+这将在第一次创建 ``Pool`` 时启动一个本地 Ray 集群，并在集群中分发您的任务。
+请参见下面的 `在集群上运行`_ 部分，了解如何在多节点 Ray 集群上运行。
 
 .. code-block:: python
 
@@ -32,25 +28,22 @@ instructions to run on a multi-node Ray cluster instead.
   for result in pool.map(f, range(100)):
       print(result)
 
-The full ``multiprocessing.Pool`` API is currently supported. Please see the
-`multiprocessing documentation`_ for details.
+完整的 ``multiprocessing.Pool`` API 目前受支持。有关详细信息，请参见 `multiprocessing 文档`_。
 
 .. warning::
-  The ``context`` argument in the ``Pool`` constructor is ignored when using Ray.
+  在 ``Pool`` 构造器中的 ``context`` 参数在使用 Ray 时会被忽略。
 
-.. _`multiprocessing documentation`: https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing.pool
+.. _`multiprocessing 文档`: https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing.pool
 
-Run on a Cluster
+在集群上运行
 ----------------
 
-This section assumes that you have a running Ray cluster. To start a Ray cluster,
-please refer to the `cluster setup <cluster/index.html>`__ instructions.
+本章节假设您已经有一个运行中的 Ray 集群。要启动一个 Ray 集群，请参考 `集群设置 <cluster/index.html>`__ 说明。
 
-To connect a ``Pool`` to a running Ray cluster, you can specify the address of the
-head node in one of two ways:
+要在 ``Pool`` 中连接到运行中的 Ray 集群，可以通过以下两种方式之一指定 head 节点的地址：
 
-- By setting the ``RAY_ADDRESS`` environment variable.
-- By passing the ``ray_address`` keyword argument to the ``Pool`` constructor.
+- 通过设置 ``RAY_ADDRESS`` 环境变量。
+- 通过设置 ``ray_address`` 关键字参数到 ``Pool`` 构造器。
 
 .. code-block:: python
 

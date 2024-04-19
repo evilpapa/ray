@@ -1,45 +1,46 @@
 .. _core-key-concepts:
 
-Key Concepts
+核心概念
 ============
 
-This section overviews Ray's key concepts. These primitives work together to enable Ray to flexibly support a broad range of distributed applications.
+本节概述了 Ray 的关键概念。这些原语共同工作，使 Ray 能够灵活地支持广泛的分布式应用程序。
 
 .. _task-key-concept:
 
-Tasks
+任务
 -----
 
-Ray enables arbitrary functions to be executed asynchronously on separate Python workers. These asynchronous Ray functions are called "tasks". Ray enables tasks to specify their resource requirements in terms of CPUs, GPUs, and custom resources. These resource requests are used by the cluster scheduler to distribute tasks across the cluster for parallelized execution.
+Ray 允许在单独的 Python worker 上异步执行任意函数。这些异步 Ray 函数称为「任务」。Ray 允许任务根据 CPU、GPU 和自定义资源指定其资源需求。集群调度程序使用这些资源请求在集群中分配任务以实现并行执行。
 
-See the :ref:`User Guide for Tasks <ray-remote-functions>`.
+请参阅 :ref:`任务的用户指南 <ray-remote-functions>`。
 
 .. _actor-key-concept:
 
 Actors
 ------
 
-Actors extend the Ray API from functions (tasks) to classes. An actor is essentially a stateful worker (or a service). When a new actor is instantiated, a new worker is created, and methods of the actor are scheduled on that specific worker and can access and mutate the state of that worker. Like tasks, actors support CPU, GPU, and custom resource requirements.
+Actor 将 Ray API 从函数（任务）扩展到类。Actor 本质上是一个有状态的工作器（或服务）。当实例化新的 Actor 时，会创建一个新的工作器，并且 Actor 的方法会在该特定工作器上安排，并且可以访问和改变该工作器的状态。与任务一样，Actor 支持 CPU、GPU 和自定义资源要求。
 
-See the :ref:`User Guide for Actors <actor-guide>`.
+请参阅 :ref:`Actor 的用户指南 <actor-guide>`。
 
-Objects
+对象
 -------
 
-In Ray, tasks and actors create and compute on objects. We refer to these objects as *remote objects* because they can be stored anywhere in a Ray cluster, and we use *object refs* to refer to them. Remote objects are cached in Ray's distributed `shared-memory <https://en.wikipedia.org/wiki/Shared_memory>`__ *object store*, and there is one object store per node in the cluster. In the cluster setting, a remote object can live on one or many nodes, independent of who holds the object ref(s).
+在 Ray 中，任务和 actor 通过对象创建和计算。我们将这些对象称为 *远程对象*，因为它们可以存储在 Ray 集群中的任何位置，并且我们使用 *对象引用* 来引用它们。远程对象缓存在 Ray 的分布式 `共享内存 <https://en.wikipedia.org/wiki/Shared_memory>` *对象存储* 中，并且集群中每个节点都有一个对象存储。在集群设置中，远程对象可以存在于一个或多个节点上，与谁持有对象引用无关。
 
-See the :ref:`User Guide for Objects <objects-in-ray>`.
+请参阅 :ref:`对象的用户指南 <objects-in-ray>`。
 
-Placement Groups
+归置组 Placement Groups
 ----------------
 
-Placement groups allow users to atomically reserve groups of resources across multiple nodes (i.e., gang scheduling). They can be then used to schedule Ray tasks and actors packed as close as possible for locality (PACK), or spread apart (SPREAD). Placement groups are generally used for gang-scheduling actors, but also support tasks.
+归置组允许用户原子地在多个节点上预留资源组（即成组调度）。然后可以使用它们来调度 Ray 任务和 actor ，尽可能紧密地打包（PACK）或分散（SPREAD）。归置组通常用于成组调度 actor ，但也支持任务。
 
-See the :ref:`User Guide for Placement Groups <ray-placement-group-doc-ref>`.
+请参阅 :ref:`归置组用户指南 <ray-placement-group-doc-ref>`。
 
-Environment Dependencies
+环境依赖
 ------------------------
 
 When Ray executes tasks and actors on remote machines, their environment dependencies (e.g., Python packages, local files, environment variables) must be available for the code to run. To address this problem, you can (1) prepare your dependencies on the cluster in advance using the Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`, or (2) use Ray's :ref:`runtime environments <runtime-environments>` to install them on the fly.
+当 Ray 在远程机器上执行任务和参与者时，它们的环境依赖项（例如 Python 包、本地文件、环境变量）必须可用才能运行代码。为了解决这个问题，您可以 (1) 使用 Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`，或者 (2) 使用 Ray 的 :ref:`运行时环境 <runtime-environments>` 动态安装它们。
 
-See the :ref:`User Guide for Environment Dependencies <handling_dependencies>`.
+请参阅 :ref:`环境依赖关系的用户指南 <handling_dependencies>`。
