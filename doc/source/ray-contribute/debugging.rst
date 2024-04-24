@@ -1,4 +1,4 @@
-Debugging for Ray Developers
+Ray 开发者调试
 ============================
 
 This debugging guide is for contributors to the Ray project. 

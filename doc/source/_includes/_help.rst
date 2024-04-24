@@ -1,4 +1,4 @@
-You can post questions or issues or feedback through the following channels:
+你可以通过以下渠道提问、报告问题或者提供反馈：
 
 1. `Discussion Board`_: For **questions about Ray usage** or **feature requests**.
 2. `GitHub Issues`_: For **bug reports**.

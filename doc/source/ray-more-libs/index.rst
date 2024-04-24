@@ -1,11 +1,11 @@
-More Ray ML Libraries
+更多 Ray ML 类库
 =====================
 
 .. TODO: we added the three Ray Core examples below, since they don't really belong there.
     Going forward, make sure that all "Ray Lightning" and XGBoost topics are in one document or group,
     and not next to each other.
 
-Ray has a variety of additional integrations with ecosystem libraries.
+Ray 有许多额外的生态系统库集成。
 
 - :ref:`ray-joblib`
 - :ref:`ray-multiprocessing`
@@ -17,14 +17,14 @@ Ray has a variety of additional integrations with ecosystem libraries.
 
 .. _air-ecosystem-map:
 
-Ecosystem Map
+生态地图
 -------------
 
-The following map visualizes the landscape and maturity of Ray components and their integrations. Solid lines denote integrations between Ray components; dotted lines denote integrations with the broader ML ecosystem.
+以下地图可视化了 Ray 组件及其集成的组件和成熟度。实线表示 Ray 组件之间的集成；虚线表示与更广泛的 ML 生态系统的集成。
 
-* **Stable**: This component is stable.
-* **Beta**: This component is under development and APIs may be subject to change.
-* **Alpha**: This component is in early development.
-* **Community-Maintained**: These integrations are community-maintained and may vary in quality.
+* **Stable**: 组件时稳定的。
+* **Beta**: 组件仍在开发，并且 API 可能根据主题进行变更。
+* **Alpha**: 组件处于早期开发阶段。
+* **Community-Maintained**: 这些实现由社区维护，质量可能有所不同。
 
 .. image:: /images/air-ecosystem.svg

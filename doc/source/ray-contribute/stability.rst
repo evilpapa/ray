@@ -1,38 +1,37 @@
 .. _api-stability:
 
-API stability
+API 稳定性
 =============
 
-Ray provides stability guarantees for its public APIs in Ray core and libraries, which are decorated/labeled accordingly.
+Ray 为 Ray 核心和库中的公共 API 提供稳定性保证，并进行相应的装饰/标记。
 
-An API can be labeled:
+API 可以被标记为：
 
-* :ref:`PublicAPI <public-api-def>`, which means the API is exposed to end users. PublicAPI has three sub-levels (alpha, beta, stable), as described below.
-* :ref:`DeveloperAPI <developer-api-def>`, which means the API is explicitly exposed to *advanced* Ray users and library developers
-* :ref:`Deprecated <deprecated-api-def>`, which may be removed in future releases of Ray.
+* :ref:`PublicAPI <public-api-def>`，这意味着 API 公开给最终用户。 PublicAPI 具有三个子级别（alpha、beta、stable），如下所述。
+* :ref:`DeveloperAPI <developer-api-def>`这意味着 API 显式暴露给 *高级* Ray 用户和库开发人员
+* :ref:`Deprecated <deprecated-api-def>`，可能会在 Ray 的未来版本中删除。
 
-Ray's PublicAPI stability definitions are based off the `Google stability level guidelines <https://google.aip.dev/181>`_, with minor differences:
+Ray 的 PublicAPI 稳定性定义基于 `Google 稳定性级别指南 <https://google.aip.dev/181>`_，有细微差别：
 
 .. _api-stability-alpha:
 
 Alpha
 ~~~~~
 
-An *alpha* component undergoes rapid iteration with a known set of users who
-**must** be tolerant of change. The number of users **should** be a
-curated, manageable set, such that it is feasible to communicate with all
-of them individually.
+*alpha* 组件会与一组已知的用户进行快速迭代，这些用户
+**必须** 能够容忍变化。用户数量 **应该** 是经过精心策划、
+可管理的集合，以便可以单独与所有用户进行通信。
 
-Breaking changes **must** be both allowed and expected in alpha components, and
-users **must** have no expectation of stability.
+alpha 组件重大更改 **必须** 允许和预期，并且
+用户 **必须** 不能期望稳定性。
 
 .. _api-stability-beta:
 
-Beta
+测试版
 ~~~~
 
-A *beta* component **must** be considered complete and ready to be declared
-stable, subject to public testing.
+*beta* 组件应该尽可能稳定；然而，
+beta 组件 **必须** 允许随时间变化。
 
 Because users of beta components tend to have a lower tolerance of change, beta
 components **should** be as stable as possible; however, the beta component

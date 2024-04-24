@@ -1,20 +1,20 @@
 .. _data:
 
 ==================================
-Ray Data: Scalable Datasets for ML
+Ray Data: 可扩展的机器学习数据集
 ==================================
 
-Ray Data is a scalable data processing library for ML workloads. It provides flexible and performant APIs for scaling :ref:`Offline batch inference <batch_inference_overview>` and :ref:`Data preprocessing and ingest for ML training <ml_ingest_overview>`. Ray Data uses `streaming execution <https://www.anyscale.com/blog/streaming-distributed-execution-across-cpus-and-gpus>`__ to efficiently process large datasets.
+Ray Data 是一个可扩展的机器学习数据处理库。它提供了灵活且高性能的 API，用于扩展 :ref:`离线批量推断 <batch_inference_overview>` 和 :ref:`用于 ML 训练的数据预处理和摄取 <ml_ingest_overview>`。Ray Data 使用 `流式执行 <https://www.anyscale.com/blog/streaming-distributed-execution-across-cpus-and-gpus>`__ 来高效处理大型数据集。
 
 .. image:: images/dataset.svg
 
 ..
   https://docs.google.com/drawings/d/16AwJeBNR46_TsrkOmMbGaBK7u-OPsf_V8fHjU-d2PPQ/edit
 
-Install Ray Data
+安装 Ray Data
 ----------------
 
-To install Ray Data, run:
+要安装 Ray Data，请运行以下命令：
 
 .. code-block:: console
 

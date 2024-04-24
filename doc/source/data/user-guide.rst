@@ -1,11 +1,11 @@
 .. _data_user_guide:
 
 ===========
-User Guides
+用户指南
 ===========
 
-If you’re new to Ray Data, start with the
-:ref:`Ray Data Key Concepts <data_key_concepts>`.
+如果你是使用 Ray Data 的新手，
+请从 :ref:`Ray Data 关键概念 <data_key_concepts>` 开始。
 This user guide helps you navigate the Ray Data project and
 show you how achieve several tasks.
 
