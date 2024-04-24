@@ -2103,8 +2103,8 @@ py_test(
 py_test(
     name = "examples/checkpoints/checkpoint_by_custom_criteria",
     main = "examples/checkpoints/checkpoint_by_custom_criteria.py",
-    tags = ["team:rllib", "exclusive", "examples"],
-    size = "medium",
+    tags = ["team:rllib", "exclusive", "examples", "examples_use_all_core"],
+    size = "large",
     srcs = ["examples/checkpoints/checkpoint_by_custom_criteria.py"],
     args = ["--enable-new-api-stack", "--stop-reward=150.0", "--num-cpus=9"]
 )
@@ -2312,8 +2312,8 @@ py_test(
 py_test(
     name = "examples/evaluation/evaluation_parallel_to_training_multi_agent_duration_auto_torch_envrunner",
     main = "examples/evaluation/evaluation_parallel_to_training.py",
-    tags = ["team:rllib", "exclusive", "examples"],
-    size = "medium",
+    tags = ["team:rllib", "exclusive", "examples", "examples_use_all_core"],
+    size = "large",
     srcs = ["examples/evaluation/evaluation_parallel_to_training.py"],
     args = ["--enable-new-api-stack", "--num-agents=2", "--as-test", "--stop-reward=900.0", "--num-cpus=6", "--evaluation-duration=auto", "--evaluation-duration-unit=episodes"]
 )
@@ -2619,8 +2619,8 @@ py_test(
 py_test(
     name = "examples/multi_agent/custom_heuristic_policy",
     main = "examples/multi_agent/custom_heuristic_policy.py",
-    tags = ["team:rllib", "exclusive", "examples"],
-    size = "medium",
+    tags = ["team:rllib", "exclusive", "examples", "examples_use_all_core"],
+    size = "large",
     srcs = ["examples/multi_agent/custom_heuristic_policy.py"],
     args = ["--enable-new-api-stack", "--num-agents=2", "--as-test", "--framework=torch", "--stop-reward=450.0"]
 )
