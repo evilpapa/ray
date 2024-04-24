@@ -1,6 +1,6 @@
 .. _whitepaper:
 
-Architecture Whitepapers
+架构白皮书
 ========================
 
 For an in-depth overview of Ray internals, check out the `Ray 2.0 Architecture whitepaper <https://docs.google.com/document/d/1tBw9A4j62ruI5omIJbMxly-la5w4q_TjyJgJL_jN2fI/preview>`__.

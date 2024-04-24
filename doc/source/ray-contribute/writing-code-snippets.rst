@@ -1,7 +1,7 @@
 .. _writing-code-snippets_ref:
 
 ==========================
-How to write code snippets
+如何编写代码片段
 ==========================
 
 Users learn from example. So, whether you're writing a docstring or a user guide,

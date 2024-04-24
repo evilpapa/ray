@@ -1,6 +1,6 @@
 (observability-user-guides)=
 
-# User Guides
+# 用户指引
 
 These guides help you monitor and debug your Ray applications and clusters.
 

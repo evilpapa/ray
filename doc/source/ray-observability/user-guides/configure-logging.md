@@ -1,6 +1,6 @@
 (configure-logging)=
 
-# Configuring Logging
+# 日志配置
 
 This guide helps you understand and modify the configuration of Ray's logging system.
 

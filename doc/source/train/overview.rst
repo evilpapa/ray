@@ -2,7 +2,7 @@
 
 .. _train-overview:
 
-Ray Train Overview
+Ray Train 概览
 ==================
 
         

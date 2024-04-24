@@ -1,6 +1,6 @@
 .. _data_performance_tips:
 
-Advanced: Performance Tips and Tuning
+高级：性能技巧和调整
 =====================================
 
 Optimizing transforms

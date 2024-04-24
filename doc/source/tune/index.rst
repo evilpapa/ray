@@ -1,6 +1,6 @@
 .. _tune-main:
 
-Ray Tune: Hyperparameter Tuning
+Ray Tune: 超参数调优
 ===============================
 
 .. image:: images/tune_overview.png

@@ -2,7 +2,7 @@
 
 .. _rllib-index:
 
-RLlib: Industry-Grade Reinforcement Learning
+RLlib: 工业级强化学习
 ============================================
 
 .. image:: images/rllib-logo.png

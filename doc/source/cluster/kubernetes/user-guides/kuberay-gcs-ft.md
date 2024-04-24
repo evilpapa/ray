@@ -259,4 +259,4 @@ Ray读取 `RAY_REDIS_ADDRESS` 环境变量来与Redis服务器建立连接。
 ## 下一步
 
 * 有关更多信息，请参阅 {ref}`Ray Serve 端到端容错文档 <serve-e2e-ft-guide-gcs>` 。
-* 参阅 `Ray Core GCS fault tolerance documentation <fault-tolerance-gcs>` 获取更多信息。
+* 参阅 `Ray Core GCS 容错文档 <fault-tolerance-gcs>` 获取更多信息。

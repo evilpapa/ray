@@ -1,6 +1,6 @@
 .. _train-docs:
 
-Ray Train: Scalable Model Training
+Ray Train：可扩展模型训练
 ==================================
 
 |

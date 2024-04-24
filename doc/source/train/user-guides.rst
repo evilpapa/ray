@@ -1,6 +1,6 @@
 .. _train-user-guides:
 
-Ray Train User Guides
+Ray Train 用户指南
 =====================
 
 .. toctree::

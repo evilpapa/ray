@@ -1,6 +1,6 @@
 (serve-configure-deployment)=
 
-# Configure Ray Serve deployments
+# 配置 Ray Serve 发布
 
 These parameters are configurable on a Ray Serve deployment. Documentation is also in the [API reference](../serve/api/doc/ray.serve.deployment_decorator.rst).
 

@@ -20,7 +20,7 @@ parts:
         title: "生态"
 
       - file: ray-core/walkthrough
-        title: "Ray Core"
+        title: "Ray 核心"
         sections:
           - file: ray-core/key-concepts
             title: "关键概念"

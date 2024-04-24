@@ -1,6 +1,6 @@
 .. _working_with_pytorch:
 
-Working with PyTorch
+处理 PyTorch
 ====================
 
 Ray Data integrates with the PyTorch ecosystem.

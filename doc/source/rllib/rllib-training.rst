@@ -4,7 +4,7 @@
 
 .. _rllib-getting-started:
 
-Getting Started with RLlib
+RLlib 入门
 ==========================
 
 At a high level, RLlib provides you with an ``Algorithm`` class which

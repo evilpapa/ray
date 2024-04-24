@@ -1,6 +1,6 @@
 .. _train-deepspeed:
 
-Get Started with DeepSpeed
+DeepSpeed 入门
 ==========================
 
 The :class:`~ray.train.torch.TorchTrainer` can help you easily launch your `DeepSpeed <https://www.deepspeed.ai/>`_  training across a distributed Ray cluster.

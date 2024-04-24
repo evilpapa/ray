@@ -1,7 +1,7 @@
 .. _datasets_scheduling:
 
 ==================
-Ray Data Internals
+Ray Data 内部结构
 ==================
 
 This guide describes the implementation of Ray Data. The intended audience is advanced

@@ -1,6 +1,6 @@
 (serve-key-concepts)=
 
-# Key Concepts
+# 关键概念
 
 (serve-key-concepts-deployment)=
 

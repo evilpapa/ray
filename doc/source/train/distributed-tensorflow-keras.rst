@@ -1,6 +1,6 @@
 .. _train-tensorflow-overview:
 
-Get Started with TensorFlow and Keras
+TensorFlow 和 Keras 入门
 =====================================
 
 Ray Train's `TensorFlow <https://www.tensorflow.org/>`__ integration enables you

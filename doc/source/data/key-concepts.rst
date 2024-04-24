@@ -1,6 +1,6 @@
 .. _data_key_concepts:
 
-Key Concepts
+关键概念
 ============
 
 Learn about :class:`Dataset <ray.data.Dataset>` and the capabilities it provides.

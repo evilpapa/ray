@@ -1,6 +1,6 @@
 .. _workflows:
 
-Ray Workflows: Durable Ray Task Graphs
+Ray Workflows: 持久 Ray 任务图
 ======================================
 
 .. warning::

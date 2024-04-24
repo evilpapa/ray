@@ -1,7 +1,7 @@
 .. _tune-60-seconds:
 
 ========================
-Key Concepts of Ray Tune
+Ray Tune 关键概念
 ========================
 
 .. TODO: should we introduce checkpoints as well?

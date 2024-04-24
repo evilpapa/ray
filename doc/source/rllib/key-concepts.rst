@@ -8,7 +8,7 @@
 
 .. _rllib-core-concepts:
 
-Key Concepts
+关键概念
 ============
 
 On this page, we'll cover the key concepts to help you understand how RLlib works and

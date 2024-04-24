@@ -1,6 +1,6 @@
 (serve-resource-allocation)=
 
-# Resource Allocation
+# 资源分配
 
 This guide helps you configure Ray Serve to:
 

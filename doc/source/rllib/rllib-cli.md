@@ -11,7 +11,7 @@ kernelspec:
 
 (rllib-cli-doc)=
 
-# Working with the RLlib CLI
+# 使用 RLlib CLI
 
 RLlib is built in Python and if you're an advanced user, you will primarily use its 
 Python API to build and run your experiments. 

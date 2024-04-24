@@ -1,6 +1,6 @@
 .. _ray_glossary:
 
-Ray Glossary
+Ray 术语表
 ============
 
 On this page you find a list of important terminology used throughout the Ray

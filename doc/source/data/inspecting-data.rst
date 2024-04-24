@@ -1,7 +1,7 @@
 .. _inspecting-data:
 
 ===============
-Inspecting Data
+检查数据
 ===============
 
 Inspect :class:`Datasets <ray.data.Dataset>` to better understand your data.

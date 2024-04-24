@@ -1,6 +1,6 @@
 .. _train-examples:
 
-Ray Train Examples
+Ray 训练示例
 ==================
 
 .. Organize example .rst files in the same manner as the

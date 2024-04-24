@@ -2,7 +2,7 @@
 
 .. include:: /_includes/rllib/rlm_learner_migration_banner.rst
 
-Examples
+示例
 ========
 
 This page is an index of examples for the various use cases and features of RLlib.

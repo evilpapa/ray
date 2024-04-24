@@ -1,6 +1,6 @@
 .. _train-gbdt-guide:
 
-Get Started with XGBoost and LightGBM
+开始使用 XGBoost 和 LightGBM
 =====================================
 
 Ray Train has built-in support for XGBoost and LightGBM.

@@ -1,6 +1,6 @@
 (serve-monitoring)=
 
-# Monitor Your Application
+# 监控你的应用
 
 This section helps you debug and monitor your Serve applications by:
 

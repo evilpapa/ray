@@ -1,6 +1,6 @@
 .. _fake-multinode:
 
-Testing Autoscaling Locally
+本地测试自动缩放
 ===========================
 
 Testing autoscaling behavior is important for autoscaler development and the debugging of applications that depend

@@ -1,6 +1,6 @@
 .. _batch_inference_home:
 
-End-to-end: Offline Batch Inference
+端到端：离线批量预估
 ===================================
 
 .. tip::

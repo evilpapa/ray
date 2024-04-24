@@ -1,7 +1,7 @@
 .. _loading_data:
 
 ============
-Loading Data
+数据加载
 ============
 
 Ray Data loads data from various sources. This guide shows you how to:

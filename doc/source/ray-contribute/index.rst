@@ -1,5 +1,5 @@
 
-Developer Guides
+开发者指引
 ================
 
 .. toctree::

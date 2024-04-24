@@ -1,6 +1,6 @@
 :orphan:
 
-FAQ
+问答
 ==============
 
 .. toctree::

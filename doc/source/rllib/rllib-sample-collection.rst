@@ -1,6 +1,6 @@
 .. include:: /_includes/rllib/we_are_hiring.rst
 
-Sample Collections and Trajectory Views
+样本集合和轨迹视图
 =======================================
 
 The SampleCollector Class is Used to Store and Retrieve Temporary Data

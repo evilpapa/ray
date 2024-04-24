@@ -1,6 +1,6 @@
 .. _train-benchmarks:
 
-Ray Train Benchmarks
+Ray Train 基准测试
 ====================
 
 Below we document key performance benchmarks for common Ray Train tasks and workflows.

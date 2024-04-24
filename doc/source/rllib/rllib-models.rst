@@ -4,7 +4,7 @@
 
 .. _rllib-models-walkthrough:
 
-Models, Preprocessors, and Action Distributions
+模型、预处理器和动作分布
 ===============================================
 
 The following diagram provides a conceptual overview of data flow between different components in RLlib.

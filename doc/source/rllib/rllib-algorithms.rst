@@ -4,7 +4,7 @@
 
 .. _rllib-algorithms-doc:
 
-Algorithms
+算法
 ==========
 
 .. tip::

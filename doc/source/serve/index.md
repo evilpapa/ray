@@ -1,6 +1,6 @@
 (rayserve)=
 
-# Ray Serve: Scalable and Programmable Serving
+# Ray Serve: 可扩展和可编程的服务
 
 :::{tip}
 [Get in touch with us](https://docs.google.com/forms/d/1l8HT35jXMPtxVUtQPeGoe09VGp5jcvSv0TqPgyz6lGU) if you're using or considering using Ray Serve.

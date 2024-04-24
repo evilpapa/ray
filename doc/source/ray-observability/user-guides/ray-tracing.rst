@@ -1,6 +1,6 @@
 .. _ray-tracing:
 
-Tracing
+追踪
 =======
 To help debug and monitor Ray applications, Ray integrates with OpenTelemetry to facilitate exporting traces to external tracing stacks such as Jaeger.
 

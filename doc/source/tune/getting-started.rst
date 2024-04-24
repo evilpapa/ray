@@ -2,7 +2,7 @@
 
 .. TODO: make this an executable notebook later on.
 
-Getting Started with Ray Tune
+开始使用 Ray Tune
 =============================
 
 This tutorial will walk you through the process of setting up a Tune experiment.

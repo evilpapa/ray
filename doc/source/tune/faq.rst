@@ -1,6 +1,6 @@
 .. _tune-faq:
 
-Ray Tune FAQ
+Ray Tune 问答
 ------------
 
 Here we try to answer questions that come up often.

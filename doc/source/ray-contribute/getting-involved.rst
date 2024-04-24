@@ -2,7 +2,7 @@
 
 .. _getting-involved:
 
-Getting Involved / Contributing
+参与/贡献
 ===============================
 
 

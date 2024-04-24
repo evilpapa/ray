@@ -2,7 +2,7 @@
 
 .. _rllib-environments-doc:
 
-Environments
+环境
 ============
 
 RLlib works with several different types of environments, including `Farama-Foundation Gymnasium <https://gymnasium.farama.org/>`__, user-defined, multi-agent, and also batched environments.

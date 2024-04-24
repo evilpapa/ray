@@ -1,6 +1,6 @@
 .. _working_with_tensors:
 
-Working with Tensors
+处理 Tensors
 ====================
 
 N-dimensional arrays (in other words, tensors) are ubiquitous in ML workloads. This guide

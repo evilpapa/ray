@@ -1,6 +1,6 @@
 (serve-getting-started)=
 
-# Getting Started
+# 入门
 
 This tutorial will walk you through the process of writing and testing a Ray Serve application. It will show you how to
 

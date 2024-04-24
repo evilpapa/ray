@@ -1,6 +1,6 @@
 .. _data-utility:
 
-Utility
+工具类
 =======
 
 .. currentmodule:: ray.data

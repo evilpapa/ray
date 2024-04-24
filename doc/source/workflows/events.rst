@@ -1,4 +1,4 @@
-Events
+事件
 ======
 
 To allow an event to trigger a workflow, Ray Workflows supports pluggable event systems. Using the event framework provides a few properties.

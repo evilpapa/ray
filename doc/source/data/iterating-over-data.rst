@@ -1,7 +1,7 @@
 .. _iterating-over-data:
 
 ===================
-Iterating over Data
+数据迭代
 ===================
 
 Ray Data lets you iterate over rows or batches of data.

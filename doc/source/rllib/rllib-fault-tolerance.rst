@@ -1,6 +1,6 @@
 .. include:: /_includes/rllib/we_are_hiring.rst
 
-Fault Tolerance And Elastic Training
+容错与弹性训练
 ====================================
 
 RLlib handles common failures modes, such as machine failures, spot instance preemption,
