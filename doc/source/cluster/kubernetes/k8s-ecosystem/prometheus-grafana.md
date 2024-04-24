@@ -1,23 +1,23 @@
 (kuberay-prometheus-grafana)=
 
-# Using Prometheus and Grafana
+# 使用 Prometheus 和 Grafana 
 
-This section will describe how to monitor Ray Clusters in Kubernetes using Prometheus & Grafana.
+本节将介绍如何使用 Prometheus 和 Grafana 监控 Kubernetes 中的 Ray 集群。
 
-If you do not have any experience with Prometheus and Grafana on Kubernetes, watch this [YouTube playlist](https://youtube.com/playlist?list=PLy7NrYWoggjxCF3av5JKwyG7FFF9eLeL4).
+如果您没有 Kubernetes 上的 Prometheus 和 Grafana 的任何经验，请观看此 [YouTube 播放列表](https://youtube.com/playlist?list=PLy7NrYWoggjxCF3av5JKwyG7FFF9eLeL4)。
 
-## Preparation
+## 准备
 
-Clone the [KubeRay repository](https://github.com/ray-project/kuberay) and checkout the `master` branch.
-This tutorial requires several files in the repository.
+克隆 [KubeRay 仓库](https://github.com/ray-project/kuberay)签出 `master` 分支。
+本教程需要存储库中的多个文件。
 
-## Step 1: Create a Kubernetes cluster with Kind
+## 步骤 1: 使用 Kind 创建 Kubernetes 集群
 
 ```sh
 kind create cluster
 ```
 
-## Step 2: Install Kubernetes Prometheus Stack via Helm chart
+## 步骤 2: 通过 Helm Chart 安装 Kubernetes Prometheus Stack
 
 ```sh
 # Path: kuberay/
@@ -33,9 +33,9 @@ kubectl get all -n prometheus-system
 # deployment.apps/prometheus-kube-state-metrics         1/1     1            1           46s
 ```
 
-* KubeRay provides an [install.sh script](https://github.com/ray-project/kuberay/blob/master/install/prometheus/install.sh) to install the [kube-prometheus-stack v48.2.1](https://github.com/prometheus-community/helm-charts/tree/kube-prometheus-stack-48.2.1/charts/kube-prometheus-stack) chart and related custom resources, including **ServiceMonitor**, **PodMonitor** and **PrometheusRule**, in the namespace `prometheus-system` automatically.
+* KubeRay 提供了 [install.sh 脚本](https://github.com/ray-project/kuberay/blob/master/install/prometheus/install.sh) 来自动在命名空间 `prometheus-system` 中安装 [kube-prometheus-stack v48.2.1](https://github.com/prometheus-community/helm-charts/tree/kube-prometheus-stack-48.2.1/charts/kube-prometheus-stack) chart 和相关的自定义资源，包括 **ServiceMonitor**、 **PodMonitor** 和 **PrometheusRule**。
 
-* We made some modifications to the original `values.yaml` in kube-prometheus-stack chart to allow embedding Grafana panels in Ray Dashboard. See [overrides.yaml](https://github.com/ray-project/kuberay/tree/master/install/prometheus/overrides.yaml) for more details.
+* 我们对 kube-prometheus-stack 图表中的原始图表  `values.yaml` 进行了一些修改，以允许在 Ray Dashboard 中嵌入 Grafana 面板。有关更多详细信息，请参阅 [overrides.yaml](https://github.com/ray-project/kuberay/tree/master/install/prometheus/overrides.yaml)。
   ```yaml
   grafana:
     grafana.ini:
@@ -48,11 +48,11 @@ kubectl get all -n prometheus-system
 
 
 
-## Step 3: Install a KubeRay operator
+## 步骤 3: 安装 KubeRay operator
 
-* Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+* 按照 [文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
 
-## Step 4: Install a RayCluster
+## 步骤 4: 安装 RayCluster
 
 ```sh
 # path: ray-operator/config/samples/
@@ -81,13 +81,13 @@ kubectl get service
 # raycluster-kuberay-head-svc   ClusterIP   10.96.201.142   <none>        6379/TCP,8265/TCP,8080/TCP,8000/TCP,10001/TCP   106m
 ```
 
-* KubeRay exposes a Prometheus metrics endpoint in port **8080** via a built-in exporter by default. Hence, we do not need to install any external exporter.
-* If you want to configure the metrics endpoint to a different port, see [kuberay/#954](https://github.com/ray-project/kuberay/pull/954) for more details.
-* Prometheus metrics format:
-  * `# HELP`: Describe the meaning of this metric.
-  * `# TYPE`: See [this document](https://prometheus.io/docs/concepts/metric_types/) for more details.
+* 默认情况下，KubeRay 通过内置导出器在端口 **8080** 中公开 Prometheus 指标端点。因此，我们不需要安装任何外部导出器。
+* 如果要将指标端点配置到不同的端口，请参阅 [kuberay/#954](https://github.com/ray-project/kuberay/pull/954) 。
+* Prometheus 指标格式：
+  * `# HELP`: 描述这个指标的含义。
+  * `# TYPE`: 参考 [文档](https://prometheus.io/docs/concepts/metric_types/) 了解更多详细信息。
 
-* Three required environment variables are defined in [ray-cluster.embed-grafana.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.embed-grafana.yaml). See [Configuring and Managing Ray Dashboard](https://docs.ray.io/en/latest/cluster/configure-manage-dashboard.html) for more details about these environment variables.
+* [ray-cluster.embed-grafana.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.embed-grafana.yaml)中定义了三个必需的环境变量。有关这些环境变量的更多详细信息，请参阅 [配置和管理 Ray Dashboard](https://docs.ray.io/en/latest/cluster/configure-manage-dashboard.html) 。
   ```yaml
   env:
     - name: RAY_GRAFANA_IFRAME_HOST
@@ -97,13 +97,13 @@ kubectl get service
     - name: RAY_PROMETHEUS_HOST
       value: http://prometheus-kube-prometheus-prometheus.prometheus-system.svc:9090
   ```
-  * Note that we do not deploy Grafana in the head Pod, so we need to set both `RAY_GRAFANA_IFRAME_HOST` and `RAY_GRAFANA_HOST`. 
-    `RAY_GRAFANA_HOST` is used by the head Pod to send health-check requests to Grafana in the backend.
-    `RAY_GRAFANA_IFRAME_HOST` is used by your browser to fetch the Grafana panels from the Grafana server rather than from the head Pod.
-    Because we forward the port of Grafana to `127.0.0.1:3000` in this example, we set `RAY_GRAFANA_IFRAME_HOST` to `http://127.0.0.1:3000`.
-  * `http://` is required.
+  * 请注意，我们没有在 head Pod 中部署 Grafana，因此我们需要同时设置 `RAY_GRAFANA_IFRAME_HOST` 和 `RAY_GRAFANA_HOST`。
+    `RAY_GRAFANA_HOST` 由 head Pod 用于向后端的 Grafana 发送健康检查请求。
+    `RAY_GRAFANA_IFRAME_HOST` 您的浏览器使用它从 Grafana 服务器而不是从 head Pod 获取 Grafana 面板。
+    在本例中我们将 Grafana 的端口转发到 `127.0.0.1:3000` 所以我们设置 `RAY_GRAFANA_IFRAME_HOST` 为 `http://127.0.0.1:3000`。
+  * `http://` 是必须的。
 
-## Step 5: Collect Head Node metrics with a ServiceMonitor
+## 步骤 5: 使用 ServiceMonitor 收集头节点指标
 
 ```yaml
 apiVersion: monitoring.coreos.com/v1
@@ -131,9 +131,9 @@ spec:
   - ray.io/cluster
 ```
 
-* The YAML example above is [serviceMonitor.yaml](https://github.com/ray-project/kuberay/blob/master/config/prometheus/serviceMonitor.yaml), and it is created by **install.sh**. Hence, no need to create anything here.
-* See [ServiceMonitor official document](https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitor) for more details about the configurations.
-* `release: $HELM_RELEASE`: Prometheus can only detect ServiceMonitor with this label.
+* 以上 YAML 示例是 [serviceMonitor.yaml](https://github.com/ray-project/kuberay/blob/master/config/prometheus/serviceMonitor.yaml)，它是由 **install.sh** 创建。因此，不需要在这里创建任何东西。
+* 更多配置信息请参见 [ServiceMonitor 官方文档](https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitor)。
+* `release: $HELM_RELEASE`: Prometheus 只检测带有 ServiceMonitor 标签的。
 
 <div id="prometheus-can-only-detect-this-label" ></div>
 
@@ -155,7 +155,7 @@ spec:
   #     release: prometheus
   ```
 
-* `namespaceSelector` and `seletor` are used to select exporter's Kubernetes service. Because Ray uses a built-in exporter, the **ServiceMonitor** selects Ray's head service which exposes the metrics endpoint (i.e. port 8080 here).
+* `namespaceSelector` 和 `seletor` 用于选择导出器的 Kubernetes 服务。 。由于 Ray 使用内置导出器，因此 **ServiceMonitor** 选择 Ray 的头服务来公开指标端点（即此处的端口 8080）。
   ```sh
   kubectl get service -n default -l ray.io/node-type=head
   # NAME                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                         AGE
@@ -164,7 +164,7 @@ spec:
 
 * `targetLabels`: We added `spec.targetLabels[0].ray.io/cluster` because we want to include the name of the RayCluster in the metrics that will be generated by this ServiceMonitor. The `ray.io/cluster` label is part of the Ray head node service and it will be transformed into a `ray_io_cluster` metric label. That is, any metric that will be imported, will also contain the following label `ray_io_cluster=<ray-cluster-name>`. This may seem optional but it becomes mandatory if you deploy multiple RayClusters.
 
-## Step 6: Collect Worker Node metrics with PodMonitors
+## 步骤 6: Collect Worker Node metrics with PodMonitors
 
 KubeRay operator does not create a Kubernetes service for the Ray worker Pods, therefore we cannot use a Prometheus ServiceMonitor to scrape the metrics from the worker Pods. To collect worker metrics, we can use `Prometheus PodMonitors CRD` instead.
 
@@ -206,7 +206,7 @@ spec:
 
 * `ray.io/cluster: $RAY_CLUSTER_NAME`: We also define `metadata.labels` by manually adding `ray.io/cluster: <ray-cluster-name>` and then instructing the PodMonitors resource to add that label in the scraped metrics via `spec.podTargetLabels[0].ray.io/cluster`.
 
-## Step 7: Collect custom metrics with Recording Rules
+## 步骤 7: Collect custom metrics with Recording Rules
 
 [Recording Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/) allow us to precompute frequently needed or computationally expensive [PromQL](https://prometheus.io/docs/prometheus/latest/querying/basics/) expressions and save their result as custom metrics. Note this is different from [Custom Application-level Metrics](application-level-metrics) which aim for the visibility of ray applications.
 
@@ -254,7 +254,7 @@ $$\frac{ number\ of\ update\ resource\ usage\ RPCs\ that\ have\ RTT\ smaller\ th
 * PrometheusRule can be reloaded at runtime. Use `kubectl apply {modified prometheusRules.yaml}` to reconfigure the rules if needed.
 
 
-## Step 8: Define Alert Conditions with Alerting Rules
+## 步骤 8: Define Alert Conditions with Alerting Rules
 
 [Alerting rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) allow us to define alert conditions based on [PromQL](https://prometheus.io/docs/prometheus/latest/querying/basics/) expressions and to send notifications about firing alerts to [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager) which adds summarization, notification rate limiting, silencing and alert dependencies on top of the simple alert definitions.
 
@@ -299,7 +299,7 @@ spec:
 
 * Alerting rules are configured in the same way as recording rules.
 
-## Step 9: Access Prometheus Web UI
+## 步骤 9: Access Prometheus Web UI
 ```sh
 # Forward the port of Prometheus Web UI in the Prometheus server Pod.
 kubectl port-forward --address 0.0.0.0 prometheus-prometheus-kube-prometheus-prometheus-0 -n prometheus-system 9090:9090
@@ -319,7 +319,7 @@ kubectl port-forward --address 0.0.0.0 prometheus-prometheus-kube-prometheus-pro
 - Go to `${YOUR_IP}:9090/alerts`. You should be able to see:
   - Alerting Rules (e.g. `MissingMetricRayGlobalControlStore`).
 
-## Step 10: Access Grafana
+## 步骤 10: Access Grafana
 
 ```sh
 # Forward the port of Grafana
@@ -349,7 +349,7 @@ Refer to [this Grafana document](https://grafana.com/tutorials/run-grafana-behin
 
 ![Grafana Ray Dashboard](../images/grafana_ray_dashboard.png)
 
-## Step 11: Embed Grafana panels in Ray Dashboard
+## 步骤 11: Embed Grafana panels in Ray Dashboard
 
 ```sh
 kubectl port-forward --address 0.0.0.0 svc/raycluster-embed-grafana-head-svc 8265:8265

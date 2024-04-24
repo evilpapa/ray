@@ -1,26 +1,26 @@
 (kuberay-kubeflow-integration)=
 
-# Kubeflow: an interactive development solution
+# Kubeflow: 交互式开发解决方案
 
 <!-- TODO(kevin85421): Update Ray versions and replace Ray client with the Ray Job Submission -->
 
-> Credit: This manifest refers a lot to the engineering blog ["Building a Machine Learning Platform with Kubeflow and Ray on Google Kubernetes Engine"](https://cloud.google.com/blog/products/ai-machine-learning/build-a-ml-platform-with-kubeflow-and-ray-on-gke) from Google Cloud.
+> Credit: 此清单大量引用了 Google Cloud 的工程博客 ["在 Google Kubernetes Engine 上使用 Kubeflow 和 Ray 构建机器学习平台"](https://cloud.google.com/blog/products/ai-machine-learning/build-a-ml-platform-with-kubeflow-and-ray-on-gke) 。
 
-The [Kubeflow](https://www.kubeflow.org/) project is dedicated to making deployments of machine learning (ML) workflows on Kubernetes simple, portable and scalable.
+[Kubeflow](https://www.kubeflow.org/) 项目致力于使 Kubernetes 上的机器学习 (ML) 工作流程部署变得简单、可移植且可扩展。
 
-# Requirements
-* Dependencies
-    * `kustomize`: v3.2.0 (Kubeflow manifest is sensitive to `kustomize` version.)
+# 要求
+* 依赖关系
+    * `kustomize`: v3.2.0 （Kubeflow 清单对 `kustomize` 版本敏感)
     * `Kubernetes`: v1.23
 
-* Computing resources:
-    * 16GB RAM
-    * 8 CPUs
+* 计算资源：
+    * 16GB 内存
+    * 8 CPU
 
-# Example: Use Kubeflow to provide an interactive development envirzonment
+# 示例：使用 Kubeflow 提供交互式开发环境
 ![image](../images/kubeflow-architecture.svg)
 
-## Step 1: Create a Kubernetes cluster with Kind.
+## 步骤 1: 使用 Kind 创建 Kubernetes 集群
 ```sh
 # Kubeflow is sensitive to Kubernetes version and Kustomize version.
 kind create cluster --image=kindest/node:v1.23.0
@@ -28,17 +28,17 @@ kustomize version --short
 # 3.2.0
 ```
 
-## Step 2: Install Kubeflow v1.6-branch
-* This example installs Kubeflow with the [v1.6-branch](https://github.com/kubeflow/manifests/tree/v1.6-branch).
+## 步骤 2: 安装 Kubeflow v1.6-branch
+* 此示例使用 [v1.6-branch](https://github.com/kubeflow/manifests/tree/v1.6-branch) 安装 Kubeflow。
 
-* Install all Kubeflow official components and all common services using [one command](https://github.com/kubeflow/manifests/tree/v1.6-branch#install-with-a-single-command).
-    * If you do not want to install all components, you can comment out **KNative**, **Katib**, **Tensorboards Controller**, **Tensorboard Web App**, **Training Operator**, and **KServe** from [example/kustomization.yaml](https://github.com/kubeflow/manifests/blob/v1.6-branch/example/kustomization.yaml).
+* 使用 [一条命令](https://github.com/kubeflow/manifests/tree/v1.6-branch#install-with-a-single-command) 安装所有 Kubeflow 官方组件和所有常用服务。
+    * 果您不想安装所有组件，可以从 [example/kustomization.yaml](https://github.com/kubeflow/manifests/blob/v1.6-branch/example/kustomization.yaml) 注释掉 **KNative**、 **Katib**、 **Tensorboards Controller**、 **Tensorboard Web App**、 **Training Operator** 或 **KServe** 。
 
-## Step 3: Install KubeRay operator
+## 步骤 3: 安装 KubeRay operator
 
-* Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+* 按照 [文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
 
-## Step 4: Install RayCluster
+## 步骤 4: 安装 RayCluster
 ```sh
 # Create a RayCluster CR, and the KubeRay operator will reconcile a Ray cluster
 # with 1 head Pod and 1 worker Pod.
@@ -51,24 +51,24 @@ kubectl get pod -l ray.io/cluster=raycluster-kuberay
 # raycluster-kuberay-worker-workergroup-8gr5q   1/1     Running   0          63s
 ```
 
-* This step uses `rayproject/ray:2.2.0-py38-cpu` as its image. Ray is very sensitive to the Python versions and Ray versions between the server (RayCluster) and client (JupyterLab) sides. This image uses:
+* 此步骤 `rayproject/ray:2.2.0-py38-cpu` 作为镜像。Ray对服务器端（RayCluster）和客户端（JupyterLab）之间的Python版本和Ray版本非常敏感。该镜像使用：
     * Python 3.8.13
     * Ray 2.2.0
 
-## Step 5: Forward the port of Istio's Ingress-Gateway
-* Follow the [instructions](https://github.com/kubeflow/manifests/tree/v1.6-branch#port-forward) to forward the port of Istio's Ingress-Gateway and log in to Kubeflow Central Dashboard.
+## 步骤 5: 转发 Istio 的 Ingress-Gateway 端口
+* 按照 [说明](https://github.com/kubeflow/manifests/tree/v1.6-branch#port-forward) 转发 Istio 的 Ingress-Gateway 端口并登录 Kubeflow Central Dashboard。
 
-## Step 6: Create a JupyterLab via Kubeflow Central Dashboard
-* Click "Notebooks" icon in the left panel.
-* Click "New Notebook"
-* Select `kubeflownotebookswg/jupyter-scipy:v1.6.1` as OCI image.
-* Click "Launch"
-* Click "CONNECT" to connect into the JupyterLab instance.
+## 步骤 6: 通过 Kubeflow Central Dashboard 创建 JupyterLab
+* 单击左侧面板中的“笔记本”图标。
+* 单击“新建笔记本”
+* 选择 `kubeflownotebookswg/jupyter-scipy:v1.6.1` 作为 OCI 镜像。
+* 点击 "Launch"
+* 点击 "CONNECT" 连接到 JupyterLab 实例。
 
-## Step 7: Use Ray client in the JupyterLab to connect to the RayCluster
-> Warning: Ray client has some known [limitations](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/ray-client.html#things-to-know) and is not actively maintained. We recommend using the [Ray Job Submission](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/) instead.
+## 步骤 7: 使用 JupyterLab 中的 Ray 客户端连接到 RayCluster
+> Warning: Ray 客户端有一些已知的 [限制](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/ray-client.html#things-to-know) ，并且没有得到积极维护。我们建议改用 [Ray Job Submission](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/) 。
 
-* As mentioned in Step 4, Ray is very sensitive to the Python versions and Ray versions between the server (RayCluster) and client (JupyterLab) sides. Open a terminal in the JupyterLab:
+* 正如步骤 4 提到的，Ray对服务器端（RayCluster）和客户端（JupyterLab）之间的Python版本和Ray版本非常敏感。在 JupyterLab 中打开终端：
     ```sh
     # Check Python version. The version's MAJOR and MINOR should match with RayCluster (i.e. Python 3.8)
     python --version 
@@ -77,7 +77,7 @@ kubectl get pod -l ray.io/cluster=raycluster-kuberay
     # Install Ray 2.2.0
     pip install -U ray[default]==2.2.0
     ```
-* Connect to RayCluster via Ray client.
+* 通过 Ray 客户端连接到 RayCluster。
     ```python
     # Open a new .ipynb page.
 
