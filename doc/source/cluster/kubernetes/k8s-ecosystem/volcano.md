@@ -1,46 +1,45 @@
 (kuberay-volcano)=
-# KubeRay integration with Volcano
+# KubeRay 与 Volcano 集成
 
-[Volcano](https://github.com/volcano-sh/volcano) is a batch scheduling system built on Kubernetes. It provides a suite of mechanisms (gang scheduling, job queues, fair scheduling policies) currently missing from Kubernetes that are commonly required by many classes of batch and elastic workloads. KubeRay's Volcano integration enables more efficient scheduling of Ray pods in multi-tenant Kubernetes environments.
+[Volcano](https://github.com/volcano-sh/volcano) 是一个基于Kubernetes构建的批量调度系统。它提供了 Kubernetes 目前缺少的一套机制（组调度、作业队列、公平调度策略），而许多类别的批处理和弹性工作负载通常需要这些机制。 KubeRay 的 Volcano 集成可以在多租户 Kubernetes 环境中更有效地调度 Ray pod。
 
-## Setup
+## 设置
 
-### Step 1: Create a Kubernetes cluster with KinD
-Run the following command in a terminal:
+### 步骤 1: 使用KinD创建Kubernetes集群
+在终端中运行以下命令：
 
 ```shell
 kind create cluster
 ```
 
-### Step 2: Install Volcano
+### 步骤 2: 安装 Volcano
 
-You need to successfully install Volcano on your Kubernetes cluster before enabling Volcano integration with KubeRay.
-See [Quick Start Guide](https://github.com/volcano-sh/volcano#quick-start-guide) for Volcano installation instructions.
+您需要在 Kubernetes 集群上成功安装 Volcano，然后才能启用 Volcano 与 KubeRay 的集成。
+有关 Volcano 安装说明，请参阅 [快速入门指南](https://github.com/volcano-sh/volcano#quick-start-guide) 。
 
-### Step 3: Install the KubeRay Operator with batch scheduling
+### 步骤 3: 安装具有批量调度功能的 KubeRay Operator 
 
-Deploy the KubeRay Operator with the `--enable-batch-scheduler` flag to enable Volcano batch scheduling support.
+部署 KubeRay Operator 使用 `--enable-batch-scheduler` 标志以启用 Volcano 批量调度支持。
 
-When installing KubeRay Operator using Helm, you should use one of these two options:
+使用 Helm 安装 KubeRay Operator 时，您应该使用以下两个选项之一：
 
-* Set `batchScheduler.enabled` to `true` in your
-[`values.yaml`](https://github.com/ray-project/kuberay/blob/753dc05dbed5f6fe61db3a43b34a1b350f26324c/helm-chart/kuberay-operator/values.yaml#L48)
-file:
+* 在你的 [`values.yaml`](https://github.com/ray-project/kuberay/blob/753dc05dbed5f6fe61db3a43b34a1b350f26324c/helm-chart/kuberay-operator/values.yaml#L48)
+文件设置 `batchScheduler.enabled` 为 `true` 
 ```shell
 # values.yaml file
 batchScheduler:
     enabled: true
 ```
 
-* Pass the `--set batchScheduler.enabled=true` flag when running on the command line:
+* 在命令行上运行时传递 `--set batchScheduler.enabled=true` 标识：
 ```shell
 # Install the Helm chart with --enable-batch-scheduler flag set to true 
 helm install kuberay-operator kuberay/kuberay-operator --version 1.0.0-rc.0 --set batchScheduler.enabled=true
 ```
 
-### Step 4: Install a RayCluster with the Volcano scheduler
+### 步骤 4: 使用 Volcano 调度程序安装 RayCluster
 
-The RayCluster custom resource must include the `ray.io/scheduler-name: volcano` label to submit the cluster Pods to Volcano for scheduling.
+RayCluster 自定义资源必须包含 `ray.io/scheduler-name: volcano` 标签来将集群 Pod 提交到 Volcano 进行调度的。
 
 ```shell
 # Path: kuberay/ray-operator/config/samples
@@ -54,41 +53,41 @@ kubectl get pod -l ray.io/cluster=test-cluster-0
 # test-cluster-0-head-jj9bg            1/1     Running   0          36s
 ```
 
-You can also be provide the following labels in the RayCluster metadata:
+您还可以在 RayCluster 元数据中提供以下标签：
 
-- `ray.io/priority-class-name`: The cluster priority class as defined by [Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass)
-  - This label only works after you create a `PriorityClass` resource
+- `ray.io/priority-class-name`: [Kubernetes](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass) 定义的集群优先级
+  - 该标签仅在创建 `PriorityClass` 资源才有效
   - ```shell
     labels:
       ray.io/scheduler-name: volcano
       ray.io/priority-class-name: <replace with correct PriorityClass resource name>
     ```
-- `volcano.sh/queue-name`: The Volcano [queue](https://volcano.sh/en/docs/queue/) name the cluster submits to.
-  - This label only works after you create a `Queue` resource
+- `volcano.sh/queue-name`: 集群提交到的 Volcano [queue](https://volcano.sh/en/docs/queue/) 名。
+  - 该标签仅在创建 `Queue` 资源后才有效
   - ```shell
     labels:
       ray.io/scheduler-name: volcano
       volcano.sh/queue-name: <replace with correct Queue resource name>
     ```
 
-If autoscaling is enabled, `minReplicas` is used for gang scheduling, otherwise the desired `replicas` is used.
+如果启用了自动缩放， `minReplicas` 则用于组调度， 否则 `replicas` 使用所需的。
 
-### Step 5: Use Volcano for batch scheduling
+### 步骤 5: 使用Volcano进行批量调度
 
-For guidance, see [examples](https://github.com/volcano-sh/volcano/tree/master/example).
+如需指导，请参阅 [示例](https://github.com/volcano-sh/volcano/tree/master/example)。
 
-## Example
+## 示例
 
-Before going through the example, remove any running Ray Clusters to ensure a successful run through of the example below. 
+在执行示例之前，请删除所有正在运行的 Ray Cluster，以确保成功运行下面的示例。
 ```shell
 kubectl delete raycluster --all
 ```
 
-### Gang scheduling
+### 组调度
 
-This example walks through how gang scheduling works with Volcano and KubeRay.
+此示例演示了群组调度如何与 Volcano 和 KubeRay 配合使用。
 
-First, create a queue with a capacity of 4 CPUs and 6Gi of RAM:
+首先，创建一个容量为 4 个 CPU 和 6Gi RAM 的队列：
 
 ```shell
 kubectl create -f - <<EOF
@@ -104,11 +103,11 @@ spec:
 EOF
 ```
 
-The **weight** in the definition above indicates the relative weight of a queue in a cluster resource division. Use this parameter in cases where the total **capability** of all the queues in your cluster exceeds the total available resources, forcing the queues to share among themselves. Queues with higher weight are allocated a proportionally larger share of the total resources.
+上述定义中的 **权重** 表示队列在集群资源划分中的相对权重。当集群中所有队列的总 **容量** 超过可用资源总量时，请使用此参数，从而强制队列在它们之间共享。权重较高的队列分配的总资源比例较大。
 
-The **capability** is a hard constraint on the maximum resources the queue supports at any given time. You can update it as needed to allow more or fewer workloads to run at a time.
+**容量** 是对队列在任何给定时间支持的最大资源的硬性约束。您可以根据需要更新它，以允许一次运行更多或更少的工作负载。
 
-Next, create a RayCluster with a head node (1 CPU + 2Gi of RAM) and two workers (1 CPU + 1Gi of RAM each), for a total of 3 CPU and 4Gi of RAM:
+接下来，创建一个具有头节点（1 个 CPU + 2Gi RAM）和两个 worker 节点（每个 worker 节点 1 CPU + 1Gi RAM）的 RayCluster，总共 3 个 CPU 和 4Gi RAM：
 
 ```shell
 # Path: kuberay/ray-operator/config/samples
@@ -117,7 +116,7 @@ curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-o
 kubectl apply -f ray-cluster.volcano-scheduler-queue.yaml
 ```
 
-Because the queue has a capacity of 4 CPU and 6Gi of RAM, this resource should schedule successfully without any issues. You can verify this by checking the status of the cluster's Volcano PodGroup to see that the phase is `Running` and the last status is `Scheduled`:
+由于队列的容量为 4 个 CPU 和 6Gi RAM，因此该资源应该可以成功调度，不会出现任何问题。您可以通过检查集群的 Volcano PodGroup 的状态来验证这一点，以查看该阶段是 `Running` 以及最后一个状态是 `Scheduled`：
 
 ```shell
 kubectl get podgroup ray-test-cluster-0-pg -o yaml
@@ -154,7 +153,7 @@ kubectl get podgroup ray-test-cluster-0-pg -o yaml
 #   phase: Running
 ```
 
-Check the status of the queue to see 1 running job:
+检查队列的状态以查看 1 个正在运行的作业：
 
 ```shell
 kubectl get queue kuberay-test-queue -o yaml
@@ -179,7 +178,7 @@ kubectl get queue kuberay-test-queue -o yaml
 #   state: Open
 ```
 
-Next, add an additional RayCluster with the same configuration of head and worker nodes, but with a different name:
+接下来，添加一个具有相同头节点和 worker 节点配置但名称不同的附加 RayCluster：
 
 ```shell
 # Path: kuberay/ray-operator/config/samples
@@ -188,7 +187,7 @@ Next, add an additional RayCluster with the same configuration of head and worke
 sed 's/test-cluster-0/test-cluster-1/' ray-cluster.volcano-scheduler-queue.yaml | kubectl apply -f-
 ```
 
-Check the status of its PodGroup to see that its phase is `Pending` and the last status is `Unschedulable`:
+检查其 PodGroup 的状态以查看其阶段为 `Pending` ，最后状态为 `Unschedulable`:
 
 ```shell
 kubectl get podgroup ray-test-cluster-1-pg -o yaml
@@ -227,9 +226,9 @@ kubectl get podgroup ray-test-cluster-1-pg -o yaml
 #   phase: Pending
 ```
 
-Because the new cluster requires more CPU and RAM than our queue allows, even though one of the pods would fit in the remaining 1 CPU and 2Gi of RAM, none of the cluster's pods are placed until there is enough room for all the pods. Without using Volcano for gang scheduling in this way, one of the pods would ordinarily be placed, leading to the cluster being partially allocated, and some jobs (like [Horovod](https://github.com/horovod/horovod) training) being stuck waiting for resources to become available.
+由于新集群需要的 CPU 和 RAM 超过了队列允许的数量，因此即使其中一个 Pod 可以容纳剩余的 1 个 CPU 和 2Gi RAM，在有足够的空间容纳所有 Pod 之前，不会放置任何集群的 Pod。如果不以这种方式使用 Volcano 进行群组调度，通常会放置其中一个 Pod，从而导致集群被部分分配，并且某些作业（例如 [Horovod](https://github.com/horovod/horovod) 训练）陷入等待资源可用的状态。
 
-See the effect this has on scheduling the pods for our new RayCluster, which are listed as `Pending`:
+查看这对为我们的新 RayCluster 调度 Pod 的影响，这些 Pod 列出如下 `Pending`:
 
 ```shell
 kubectl get pods
@@ -243,7 +242,7 @@ kubectl get pods
 # test-cluster-1-worker-worker-n5g8k              0/1     Pending        0          2m12s
 ```
 
-Look at the pod details to see that Volcano cannot schedule the gang:
+查看 Pod 详细信息，发现 Volcano 无法安排该组团：
 
 ```shell
 kubectl describe pod test-cluster-1-head-6668q | tail -n 3
@@ -253,13 +252,13 @@ kubectl describe pod test-cluster-1-head-6668q | tail -n 3
 # Warning  FailedScheduling  4m5s  volcano  3/3 tasks in gang unschedulable: pod group is not ready, 3 Pending, 3 minAvailable; Pending: 3 Undetermined
 ```
 
-Delete the first RayCluster to make space in the queue:
+删除第一个 RayCluster 以在队列中腾出空间：
 
 ```shell
 kubectl delete raycluster test-cluster-0
 ```
 
-The PodGroup for the second cluster changed to the `Running` state, because enough resources are now available to schedule the entire set of pods:
+第二个集群的 PodGroup 更改为以下 `Running` 状态，因为现在有足够的资源可用于调度整组 pod：
 
 ```shell
 kubectl get podgroup ray-test-cluster-1-pg -o yaml
@@ -304,7 +303,7 @@ kubectl get podgroup ray-test-cluster-1-pg -o yaml
 #   running: 3
 ```
 
-Check the pods again to see that the second cluster is now up and running:
+再次检查 Pod 以查看第二个集群现已启动并正在运行：
 
 ```shell
 kubectl get pods
@@ -315,7 +314,7 @@ kubectl get pods
 # test-cluster-1-worker-worker-6tzf7              1/1     Running        0          9m4s
 ```
 
-Finally, clean up the remaining cluster and queue:
+最后，清理剩余的集群和队列：
 
 ```shell
 kubectl delete raycluster test-cluster-1

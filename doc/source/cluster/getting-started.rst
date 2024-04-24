@@ -6,7 +6,7 @@ Ray 集群概述
 Ray 可以将工作负载从笔记本电脑无缝扩展到大型集群。
 虽然 Ray 可以在单台机器上直接运行，只需调用 ``ray.init``，但要在多个节点上运行 Ray 应用程序，您必须首先 *部署 Ray 集群*。
 
-Ray 集群是一组连接到共同 :ref:`Ray head 节点 <cluster-head-node>` 的工作节点。
+Ray 集群是一组连接到共同 :ref:`Ray head 节点 <cluster-head-node>` 的 worker 节点。
 Ray 集群可以是固定大小的，也可以根据集群上运行的应用程序请求的资源 :ref:`自动扩展和缩减 <cluster-autoscaler>`。
 
 我可以在哪里部署 Ray 集群？

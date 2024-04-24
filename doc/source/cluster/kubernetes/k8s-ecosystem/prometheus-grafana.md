@@ -164,7 +164,7 @@ spec:
 
 * `targetLabels`: 我们添加了 `spec.targetLabels[0].ray.io/cluster` 因为我们希望在此 ServiceMonitor 生成的指标中包含 RayCluster 的名称。`ray.io/cluster` 标签是Ray头节点服务的一部分，它将被转换为 `ray_io_cluster` 指标标签。 也就是说，将导入的任何指标也将包含以下标签 `ray_io_cluster=<ray-cluster-name>`。这可能看起来是可选的，但如果您部署多个 RayCluster，则它变得强制。
 
-## 步骤 6: 使用 PodMonitors 收集工作节点指标
+## 步骤 6: 使用 PodMonitors 收集 worker 节点指标
 
 KubeRay Operator 不会为 Ray Worker Pod 创建 Kubernetes 服务，因此我们无法使用 Prometheus ServiceMonitor 从 Worker Pod 中获取指标。要收集 worker 指标，我们可以使用 `Prometheus PodMonitors CRD` 。
 

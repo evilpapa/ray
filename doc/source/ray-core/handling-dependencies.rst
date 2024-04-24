@@ -20,7 +20,7 @@
 概念
 --------
 
-- **Ray 应用程序**。  包含 Ray 脚本的程序，用于调用 ``ray.init()`` 和使用 Ray 任务或参与者。
+- **Ray 应用程序**。  包含 Ray 脚本的程序，用于调用 ``ray.init()`` 和使用 Ray task 或 actor。
 
 - **依赖项** 或 **环境**。  应用程序需要运行的 Ray 脚本之外的任何内容，包括文件、包和环境变量。
 
@@ -30,7 +30,7 @@
 
 - **本地机器** 和 **集群**。  通常，您可能希望将 Ray 集群计算机器/pod 与处理和提交应用程序的机器/pod 分开。您可以通过 :ref:`Ray 作业提交机制 <jobs-overview>` 提交 Ray 作业，或使用 `ray attach` 以交互方式连接到集群。 我们将提交作业的机器称为 *本地机器*.
 
-- **作业**.  :ref:`Ray 作业 <cluster-clients-and-jobs>` 是单个应用程序：它是来自同一脚本的 Ray 任务、对象和参与者的集合。
+- **作业**.  :ref:`Ray 作业 <cluster-clients-and-jobs>` 是单个应用程序：它是来自同一脚本的 Ray 任务、对象和 actor 的集合。
 
 .. _using-the-cluster-launcher:
 
@@ -62,7 +62,7 @@
 
 如果使用了 :ref:`the Ray Cluster launcher <using-the-cluster-launcher>` ，则可以在准备好的环境上使用运行时环境。
 例如，您可以使用 Cluster 启动器安装一组基本软件包，然后使用运行时环境安装其他软件包。
-与基本集群环境相比，运行时环境仅对 Ray 进程有效。（例如，如果使用运行时环境 指定的 ``pip`` 包 ``my_pkg``，则在 Ray 任务、参与者或作业之外调用 ``import my_pkg`` 语句将失败。）
+与基本集群环境相比，运行时环境仅对 Ray 进程有效。（例如，如果使用运行时环境 指定的 ``pip`` 包 ``my_pkg``，则在 Ray 任务、 actor 或作业之外调用 ``import my_pkg`` 语句将失败。）
 
 运行时环境还允许您在长期运行的 Ray 集群上设置每个任务、actor 和每个作业的依赖项。
 
@@ -162,7 +162,7 @@
 为每个任务或每个 Actor 指定运行时
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-您可以使用 ``@ray.remote`` 装饰器或者 ``.options()`` 为每个参与者或每个任务指定不同的运行时环境：
+您可以使用 ``@ray.remote`` 装饰器或者 ``.options()`` 为每个 actor 或每个任务指定不同的运行时环境：
 
 .. literalinclude:: /ray-core/doc_code/runtime_env_example.py
    :language: python
@@ -356,7 +356,7 @@ API 参考
 
   这些模块将被下载到集群上的每个节点。
 
-  注意：目前不支持按任务或按参与者设置选项 (1)、(3) 和 (4)，只能按作业设置（即，在 ``ray.init()`` 中）。
+  注意：目前不支持按任务或按 actor 设置选项 (1)、(3) 和 (4)，只能按作业设置（即，在 ``ray.init()`` 中）。
 
   注意：对于选项 (1)，如果本地目录包含 ``.gitignore`` 文件，则不会将其中指定的文件和路径上传到集群。您可以通过在 `RAY_RUNTIME_ENV_IGNORE_GITIGNORE=1` 执行上传的机器上设置环境变量来禁用此功能。
 
@@ -450,7 +450,7 @@ API 参考
 继承
 """""""""""
 
-运行时环境是可继承的，因此它将应用于作业中的所有任务 / actor 以及任务或参与者的所有子任务 / actor，除非它被覆盖。
+运行时环境是可继承的，因此它将应用于作业中的所有任务 / actor 以及task 或 actor的所有子任务 / actor，除非它被覆盖。
 
 如果一个 actor 或任务指定了一个新的 ``runtime_env``，它将覆盖父级的 ``runtime_env``（即，父级 actor/任务的 ``runtime_env``，或者如果没有父级 actor 或任务，则是作业的 ``runtime_env``）如下：
 
@@ -507,13 +507,13 @@ API 参考
 
 （请注意，加载缓存的 ``conda`` 环境可能仍然很慢，因为 ``conda activate`` 命令有时需要几秒钟。）
 
-你可以设置 ``setup_timeout_seconds`` 配置来避免安装时间过长。如果安装在此时间内没有完成，您的任务或参与者将无法启动。
+你可以设置 ``setup_timeout_seconds`` 配置来避免安装时间过长。如果安装在此时间内没有完成，您的task 或 actor将无法启动。
 
 运行环境和 Docker 有什么关系？
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 它们可以单独使用，也可以一起使用。
-可以在 :ref:`Cluster Launcher <vm-cluster-quick-start>` 中指定容器映像，用于大型或静态依赖项，并且可以为每个作业或每个任务/参与者指定运行时环境，以用于更动态的用例。
+可以在 :ref:`Cluster Launcher <vm-cluster-quick-start>` 中指定容器映像，用于大型或静态依赖项，并且可以为每个作业或每个任务/ actor 指定运行时环境，以用于更动态的用例。
 运行时环境将从容器映像继承包、文件和环境变量。
 
 我的 ``runtime_env`` 已经安装了，但是当我登录到节点时，我无法导入这些包。
@@ -719,7 +719,7 @@ API 参考
 
 调试
 ---------
-如果 runtime_env 无法设置（例如，网络问题、下载失败等），Ray 将无法调度需要 runtime_env 的任务/参与者。
+如果 runtime_env 无法设置（例如，网络问题、下载失败等），Ray 将无法调度需要 runtime_env 的任务/ actor 。
 如果你调用 ``ray.get``，它将引发 ``RuntimeEnvSetupError`` 并提供详细的错误消息。
 
 .. testcode::
@@ -758,7 +758,7 @@ API 参考
   Actor fails with RuntimeEnvSetupError
 
 
-完整的日志可以在 ``runtime_env_setup-[job_id].log`` 文件中找到，用于每个参与者、每个任务和每个作业的环境，或者
+完整的日志可以在 ``runtime_env_setup-[job_id].log`` 文件中找到，用于每个 actor 、每个任务和每个作业的环境，或者
 在使用 Ray Client 时用于每个作业的环境中的 ``runtime_env_setup-ray_client_server_[port].log`` 文件中找到。
 
  你也可以在每个节点上在启动 Ray 之前设置环境变量 ``RAY_RUNTIME_ENV_LOG_TO_DRIVER_ENABLED=1``，例如使用 Ray 集群配置文件中的 ``setup_commands`` (:ref:`reference <cluster-configuration-setup-commands>`)。

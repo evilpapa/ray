@@ -2,30 +2,30 @@
 
 # 监控和调试
 
-This section covers how to **monitor and debug Ray applications and clusters** with Ray's Observability features.
+本节介绍如何使用 Ray 的 **监视和调试 Ray 应用程序和集群** 可观测性特性。
 
 
-## What is observability
-In general, observability is a measure of how well the internal states of a system can be inferred from knowledge of its external outputs.
+## 什么是可观测行
+一般来说，可观测性是衡量系统内部状态可以从外部输出的知识中推断出来的程度的指标。
 
-In Ray's context, observability refers to the ability for users to observe and infer Ray applications' and Ray clusters' internal states with various external outputs, such as logs, metrics, events, etc.
+在 Ray 的上下文中，可观察性是指用户通过各种外部输出（例如日志、指标、事件等）观察和推断 Ray 应用程序和 Ray 集群的内部状态的能力。
 
-![what is ray's observability](./images/what-is-ray-observability.png)
-
-
-## Importance of observability
-Debugging a distributed system can be challenging due to the large scale and complexity. Good observability is important for Ray users to be able to easily monitor and debug their Ray applications and clusters.
-
-![Importance of observability](./images/importance-of-observability.png)
+![什么是可观测行](./images/what-is-ray-observability.png)
 
 
-## Monitoring and debugging workflow and tools
+## 可观察性的重要性
+由于分布式系统规模庞大且复杂，调试分布式系统可能具有挑战性。良好的可观察性对于 Ray 用户能够轻松监控和调试其 Ray 应用程序和集群非常重要。
 
-Monitoring and debugging Ray applications consist of 4 major steps:
-1. Monitor the clusters and applications.
-2. Identify the surfaced problems or errors.
-3. Debug with various tools and data.
-4. Form a hypothesis, implement a fix, and validate it.
+![可观察性的重要性](./images/importance-of-observability.png)
 
-The remainder of this section covers the observability tools that Ray provides to accelerate your monitoring and debugging workflow.
+
+## 监控和调试工作流程和工具
+
+监控和调试 Ray 应用程序包含 4 个主要步骤：
+1. 监控集群和应用程序。
+2. 识别出现的问题或错误。
+3. 使用各种工具和数据进行调试。
+4. 形成假设，实施修复并验证它。
+
+本节的其余部分介绍 Ray 提供的可观察性工具，以加速您的监视和调试工作流程。
 

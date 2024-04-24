@@ -84,7 +84,7 @@ curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-o
           iam.gke.io/gke-metadata-server-enabled: "true"
 ```
 
-将这些行包含在 Ray 集群的每个 pod 规范中。为了简单起见，本示例使用单节点集群（1 个头节点和 0 个工作节点）。
+将这些行包含在 Ray 集群的每个 pod 规范中。为了简单起见，本示例使用单节点集群（1 个头节点和 0 个 worker 节点）。
 
 ## 创建 RayCluster
 

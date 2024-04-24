@@ -83,11 +83,11 @@ kubectl create secret generic ca-tls --from-file=ca.key --from-file=ca.crt
 
 在 [ray-cluster.tls.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.tls.yaml) 中，
 每个 Ray Pod（头和工作线程）在其 init 容器中生成自己的私钥文件 ( `tls.key`) 和自签名证书文件 ( `tls.crt`)。
-我们为每个 Pod 生成单独的文件，因为工作 Pod 没有确定性的 DNS 名称，并且我们无法在不同的 Pod 之间使用相同的证书。
+我们为每个 Pod 生成单独的文件，因为 worker Pod 没有确定性的 DNS 名称，并且我们无法在不同的 Pod 之间使用相同的证书。
 
 在 YAML 文件中，您将找到一个名为 `tls` 的 ConfigMap 包含两个 shell 脚本：
 `gencert_head.sh` 和 `gencert_worker.sh`。 这些脚本用于为 
-Ray 头和工作 Pod生成私钥和自签名证书文件 (`tls.key` 和 `tls.crt`)。
+Ray 头和 worker Pod生成私钥和自签名证书文件 (`tls.key` 和 `tls.crt`)。
 用户的另一种方法是将 shell 脚本直接打包到 init 容器使用的 docker 映像中，而不是依赖 ConfigMap。
 
 请在下面找到每个脚本中发生的情况的简要说明：
@@ -97,7 +97,7 @@ Ray 头和工作 Pod生成私钥和自签名证书文件 (`tls.key` 和 `tls.crt
 
 `gencert_head.sh` 和 `gencert_worker.sh` 的唯一不同是在 `csr.conf` 和 `cert.conf` 的 `[ alt_names ]` 部分。
 Worker Pod 使用头 Kubernetes Service 的完全限定域名 (FQDN) 与头 Pod 建立连接。
-因此，头 Pod 的 `[alt_names]` 部分需要包含头 Kubernetes Service 的 FQDN。顺便说一句，头 Pod 用 `$POD_IP` 来与工作 Pod 进行通信。
+因此，头 Pod 的 `[alt_names]` 部分需要包含头 Kubernetes Service 的 FQDN。顺便说一句，头 Pod 用 `$POD_IP` 来与 worker Pod 进行通信。
 
 ```sh
 # gencert_head.sh

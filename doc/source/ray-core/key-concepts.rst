@@ -30,17 +30,17 @@ Actor 将 Ray API 从函数（任务）扩展到类。Actor 本质上是一个�
 
 请参阅 :ref:`对象的用户指南 <objects-in-ray>`。
 
-归置组 Placement Groups
+占位组 Placement Groups
 ----------------
 
-归置组允许用户原子地在多个节点上预留资源组（即成组调度）。然后可以使用它们来调度 Ray 任务和 actor ，尽可能紧密地打包（PACK）或分散（SPREAD）。归置组通常用于成组调度 actor ，但也支持任务。
+占位组允许用户原子地在多个节点上预留资源组（即成组调度）。然后可以使用它们来调度 Ray 任务和 actor ，尽可能紧密地打包（PACK）或分散（SPREAD）。占位组通常用于成组调度 actor ，但也支持任务。
 
-请参阅 :ref:`归置组用户指南 <ray-placement-group-doc-ref>`。
+请参阅 :ref:`占位组用户指南 <ray-placement-group-doc-ref>`。
 
 环境依赖
 ------------------------
 
 When Ray executes tasks and actors on remote machines, their environment dependencies (e.g., Python packages, local files, environment variables) must be available for the code to run. To address this problem, you can (1) prepare your dependencies on the cluster in advance using the Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`, or (2) use Ray's :ref:`runtime environments <runtime-environments>` to install them on the fly.
-当 Ray 在远程机器上执行任务和参与者时，它们的环境依赖项（例如 Python 包、本地文件、环境变量）必须可用才能运行代码。为了解决这个问题，您可以 (1) 使用 Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`，或者 (2) 使用 Ray 的 :ref:`运行时环境 <runtime-environments>` 动态安装它们。
+当 Ray 在远程机器上执行task 和 actor时，它们的环境依赖项（例如 Python 包、本地文件、环境变量）必须可用才能运行代码。为了解决这个问题，您可以 (1) 使用 Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`，或者 (2) 使用 Ray 的 :ref:`运行时环境 <runtime-environments>` 动态安装它们。
 
 请参阅 :ref:`环境依赖关系的用户指南 <handling_dependencies>`。

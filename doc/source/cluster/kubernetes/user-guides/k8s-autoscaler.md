@@ -53,4 +53,4 @@ Ray Autoscaler 和 Kubernetes [Vertical Pod Autoscaler](https://github.com/kuber
 VPA 的目的是根据当前和过去的使用情况将各个 Pod 调整为适当的大小。
 如果您发现单个 Ray Pod 上的负载过高，可以使用多种手动技术来减少负载，其中一种方法是通过增加 `ray.remote` 注释中指定的资源需求来减少每个节点的任务/actor。
 例如，更改 `@ray.remote(num_cpus=2)` 为 `@ray.remote(num_cpus=4)`
-将使给定 Ray Pod 中可以容纳的任务或参与者的数量减半。
+将使给定 Ray Pod 中可以容纳的task 或 actor的数量减半。

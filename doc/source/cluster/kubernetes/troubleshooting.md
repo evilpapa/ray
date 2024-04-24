@@ -1,6 +1,6 @@
 (kuberay-troubleshooting)=
 
-# KubeRay 问题排查
+# KubeRay 故障排除
 
 - {ref}`kuberay-troubleshootin-guides`
 - {ref}`kuberay-raysvc-troubleshoot`

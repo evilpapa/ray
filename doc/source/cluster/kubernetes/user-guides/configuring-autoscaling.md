@@ -8,7 +8,7 @@ Autoscaler 通过根据任务、actor 或置放组所需的资源调整集群中
 
 Autoscaler 利用逻辑资源请求（如 `@ray.remote` 和 `ray status` 的展示）而不是物理机利用率来进行扩展。
 如果您启动的 actor、任务或置放群组并且资源不足，则自动缩放器会将请求排队。
-它会调整节点数量以满足队列需求，并随着时间的推移删除没有任务、参与者或对象的空闲节点。
+它会调整节点数量以满足队列需求，并随着时间的推移删除没有任务、 actor 或对象的空闲节点。
 
 <!-- TODO(ekl): probably should change the default kuberay examples to not use autoscaling -->
 ```{admonition} 何时使用自动缩放？
@@ -38,12 +38,12 @@ Autoscaler 利用逻辑资源请求（如 `@ray.remote` 和 `ray status` 的展�
   1. 用户提交 Ray 工作负载。
   2. Ray head 容器聚合工作负载资源需求并将其传达给 Ray Autoscaler sidecar。
   3. Autoscaler 决定添加 Ray Worker Pod 来满足工作负载的资源需求。
-  4. Autoscaler 通过增加 RayCluster CR 的 `replicas` 字段来请求额外的工作 Pod。
+  4. Autoscaler 通过增加 RayCluster CR 的 `replicas` 字段来请求额外的 worker Pod。
   5. KubeRay operator 创建 Ray Worker Pod 来匹配新 `replicas` 规范。
-  6. Ray 调度程序将用户的工作负载放置在新的工作 Pod 上。
+  6. Ray 调度程序将用户的工作负载放置在新的 worker Pod 上。
 
-* Autoscaler 还通过删除空闲工作 Pod 来缩小集群规模。
-如果它找到空闲工作 Pod，它会减少 RayCluster CR 字段中 `replicas` 的计数，并将识别出的 Pod 添加到 CR  字段。
+* Autoscaler 还通过删除空闲 worker Pod 来缩小集群规模。
+如果它找到空闲 worker Pod，它会减少 RayCluster CR 字段中 `replicas` 的计数，并将识别出的 Pod 添加到 CR  字段。
 然后，KubeRay 操作员删除`workersToDelete` 字段中的 Pod。
 
 ## 快速开始
@@ -84,7 +84,7 @@ kubectl get configmaps
 # ...
 ```
 
-RayCluster 有一个头 Pod 和零个工作 Pod。 head Pod 有两个容器：Ray head 容器和 Ray Autoscaler sidecar 容器。
+RayCluster 有一个头 Pod 和零个 worker Pod。 head Pod 有两个容器：Ray head 容器和 Ray Autoscaler sidecar 容器。
 此外， [ray-cluster.autoscaler.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml) 包含一个名为 `ray-example` 的 ConfigMap，其中包含两个 Python 脚本：`detached_actor.py` 和 `terminate_detached_actor.py`。
 
 * `detached_actor.py` 是一个 Python 脚本，用于创建需要 1 个 CPU 的独立 Actor。
@@ -151,16 +151,16 @@ kubectl exec -it $HEAD_POD -- ray list actors
 #  1  xxxxxxxx  Actor         ALIVE    03000000  actor2  ...
 ```
 
-Ray Autoscaler 为每个新的独立 Actor 生成一个新的工作 Pod。
+Ray Autoscaler 为每个新的独立 Actor 生成一个新的 worker Pod。
 这是因为Ray head 中的字段 `rayStartParams` 指定了 `num-cpus: "0"`，从而阻止 Ray 调度程序在 Ray head Pod 上调度任何 Ray actor 或任务。
 此外，每个 Ray Worker Pod 的容量为 1 个 CPU，因此 Autoscaler 创建一个新的 Worker Pod 来满足需要 1 个 CPU 的分离 Actor 的资源需求。
 
 * 不需要使用分离的 actor 来触发集群扩展。
-普通的参与者和任务也可以启动它。
+普通的 actor 和任务也可以启动它。
 [游离 actors](actor-lifetimes) 即使作业的驱动程序进程退出后，也会保持持久状态，这就是为什么 Autoscaler 不会 `detached_actor.py` 在进程退出时自动缩小集群规模，从而使本教程更加方便。
 
 * 在此 RayCluster 自定义资源中，从 Ray Autoscaler 的角度来看，每个 Ray Worker Pod 仅拥有 1 个逻辑 CPU。
-因此，如果您使用 `@ray.remote(num_cpus=2)` 来创建分离的 Actor，则 Autoscaler 不会启动新工作 Pod 的创建，因为现有 Pod 的容量仅限于 1 个 CPU。
+因此，如果您使用 `@ray.remote(num_cpus=2)` 来创建分离的 Actor，则 Autoscaler 不会启动新 worker Pod 的创建，因为现有 Pod 的容量仅限于 1 个 CPU。
 
 * 高级）Ray Autoscaler 还提供 [Python SDK](ref-autoscaler-sdk)，使高级用户（如 Ray 维护人员）能够直接从 Autoscaler 请求资源。一般来说，大多数用户不需要使用SDK。
 
@@ -273,13 +273,13 @@ helm uninstall kuberay-operator
 利用 `RayCluster` CR 的 `autoscalerOptions` 字段来实现这一点。该字段包含以下子字段：
 
 * **`upscalingMode`**: 这控制放大过程的速率。有效值为：
-  - `Conservative`: 升级是有速率限制的；待处理的工作 Pod 数量最多为连接到 Ray 集群的工作 Pod 数量。
+  - `Conservative`: 升级是有速率限制的；待处理的 worker Pod 数量最多为连接到 Ray 集群的 worker Pod 数量。
   - `Default`: 升级不受速率限制。
   - `Aggressive`:Default 的别名；升级不受速率限制。
 
 * **`idleTimeoutSeconds`** (默认 60s):
-这表示缩小空闲工作 Pod 之前的等待时间（以秒为单位）。
-当工作节点没有活动任务、参与者或引用的对象（存储在内存中或溢出到磁盘）时，它处于空闲状态。
+这表示缩小空闲 worker Pod 之前的等待时间（以秒为单位）。
+当 worker 节点没有活动任务、 actor 或引用的对象（存储在内存中或溢出到磁盘）时，它处于空闲状态。
 
 ### 3. Autoscaler sidecar 容器
 

@@ -65,7 +65,7 @@ gcloud container clusters create kuberay-benchmark-cluster \
 该基准测试基于三个基准测试实验：
 
 * 实验 1: 启动有 1 个头节点且没有工作线程的 RayCluster。每 20 秒启动一个新集群，直到总共有 150 个 RayCluster 自定义资源。
-* 实验 2: 创建一个 Kubernetes 集群，只有 1 个 RayCluster。每 60 秒向此 RayCluster 添加 5 个新工作 Pod，直到总数达到 150 个 Pod。
+* 实验 2: 创建一个 Kubernetes 集群，只有 1 个 RayCluster。每 60 秒向此 RayCluster 添加 5 个新 worker Pod，直到总数达到 150 个 Pod。
 * 实验 3: 每 60 秒创建一个 5 节点（1 个头 + 4 个工作线程）RayCluster，最多 30 个 RayCluster 自定义资源。
 
 基于针对 KubeRay 用户的 [调查](https://forms.gle/KtMLzjXcKoeSTj359)，基准目标设置为 150 个 Ray Pod，以覆盖大多数用例。

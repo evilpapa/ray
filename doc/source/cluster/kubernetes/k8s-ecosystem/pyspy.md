@@ -1,12 +1,12 @@
 (kuberay-pyspy-integration)=
 
-# Profiling with py-spy
+# 使用 py-spy 进行 分析
 
-## Stack trace and CPU profiling
-[py-spy](https://github.com/benfred/py-spy/tree/master) is a sampling profiler for Python programs. It lets you visualize what your Python program is spending time on without restarting the program or modifying the code in any way. This section describes how to configure RayCluster YAML file to enable py-spy and see Stack Trace and CPU Flame Graph via Ray Dashboard.
+## 堆栈跟踪和 CPU 分析
+[py-spy](https://github.com/benfred/py-spy/tree/master) 是 Python 程序的采样分析器。它可以让您直观地了解 Python 程序在哪些方面花费了时间，而无需重新启动程序或以任何方式修改代码。本节介绍如何配置 RayCluster YAML 文件以启用 py-spy 并通过 Ray Dashboard 查看堆栈跟踪和 CPU 火焰图。
 
-## Prerequisite
-py-spy requires the `SYS_PTRACE` capability to read process memory. However, Kubernetes omits this capability by default. To enable profiling, add the following to the `template.spec.containers` for both the head and worker Pods.
+## 先决条件
+py-spy 需要 `SYS_PTRACE` 读取进程内存的能力。但是，Kubernetes 默认忽略了此功能。要启用分析，请将以下内容添加到 head 和 worker Pod 的 `template.spec.containers`。
 
 ```bash
 securityContext:
@@ -15,21 +15,21 @@ securityContext:
     - SYS_PTRACE
 ```
 **Notes:**
-- Adding `SYS_PTRACE` is forbidden under `baseline` and `restricted` Pod Security Standards. See [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) for more details.
+- 在 Pod 安全标准的 `baseline` 和 `restricted` 模式下添加 `SYS_PTRACE` 是禁止的。参考 [Pod 安全标准](https://kubernetes.io/docs/concepts/security/pod-security-standards/) 了解更多详细信息。
 
-## Check CPU flame graph and stack trace via Ray Dashboard
+## 通过 Ray Dashboard 检查 CPU 火焰图和堆栈跟踪
 
-### Step 1: Create a Kind cluster
+### 步骤 1: 创建 Kind 集群
 
 ```bash
 kind create cluster
 ```
 
-### Step 2: Install the KubeRay operator
+### 步骤 2: 安装 KubeRay operator
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+按照 [本文档](kuberay-operator-deploy) 过 Helm 存储库安装最新稳定的 KubeRay 操作员。
 
-### Step 3: Create a RayCluster with `SYS_PTRACE` capability
+### 步骤 3: 创建具有 `SYS_PTRACE` 功能的 RayCluster
 
 ```bash
 # Download `ray-cluster.py-spy.yaml`
@@ -39,13 +39,13 @@ curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-o
 kubectl apply -f ray-cluster.py-spy.yaml
 ```
 
-### Step 4: Forward the dashboard port
+### 步骤 4: 转发 dashboard port
 
 ```bash
 kubectl port-forward --address 0.0.0.0 svc/raycluster-py-spy-head-svc 8265:8265
 ```
 
-### Step 5: Run a sample job within the head Pod
+### 步骤 5: 在 head Pod 运行示例作业
 
 ```bash
 # Log in to the head Pod
@@ -58,18 +58,18 @@ python3 samples/long_running_task.py
 ```
 
 **Notes:**
-- If you're running your own examples and encounter the error `Failed to write flamegraph: I/O error: No stack counts found` when viewing CPU Flame Graph, it might be due to the process being idle. Notably, using the `sleep` function can lead to this state. In such situations, py-spy filters out the idle stack traces. Refer to this [issue](https://github.com/benfred/py-spy/issues/321#issuecomment-731848950) for more information.
+- 如果您正在运行自己的示例并在查看 CPU 火焰图时遇到 Failed to write flamegraph: I/O error: No stack counts found` 的错误，则可能是由于进程处于空闲状态。值得注意的是，使用该函数可能会导致此状态。在这种情况下，py-spy 会过滤掉空闲的堆栈跟踪。有关更多信息，请参阅此 [问题](https://github.com/benfred/py-spy/issues/321#issuecomment-731848950)。
 
-### Step 6: Profile using Ray Dashboard
+### 步骤 6: 使用 Ray Dashboard 分析
 
-- Visit http://localhost:8265/#/cluster.
-- Click `Stack Trace` for `ray::long_running_task`.
+- 访问 http://localhost:8265/#/cluster.
+- 点击 `Stack Trace` 查看 `ray::long_running_task`.
     ![StackTrace](../images/stack_trace.png)
-- Click `CPU Flame Graph` for `ray::long_running_task`.
+- 点击 `CPU Flame Graph` 查看 `ray::long_running_task`.
     ![FlameGraph](../images/cpu_flame_graph.png)
-- For additional details on using the profiler, See [Python CPU profiling in the Dashboard](https://docs.ray.io/en/latest/ray-observability/user-guides/debug-apps/optimize-performance.html#python-cpu-profiling-in-the-dashboard).
+- 有关使用分析器的更多详细信息，请参阅 [仪表板中的 Python CPU 分析](https://docs.ray.io/en/latest/ray-observability/user-guides/debug-apps/optimize-performance.html#python-cpu-profiling-in-the-dashboard)。
 
-### Step 7: Clean up
+### 步骤 7: 清理
 
 ```bash
 kubectl delete -f ray-cluster.py-spy.yaml

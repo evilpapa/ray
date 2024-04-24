@@ -29,7 +29,7 @@ Ray 同样提供了一些机制来自动从内部系统级故障中恢复，例�
 
 其次，避免让 ``ObjectRef`` 超出其 :ref:`所有者 <fault-tolerance-objects>` 任务或 actor 的生命周期
 （任务或 actor 通过调用 :meth:`ray.put() <ray.put>` 或 ``foo.remote()`` 创建初始 ``ObjectRef`` 的）。
-只要仍有对对象的引用，对象的所有者 worker 就会在相应任务或参与者完成后继续运行。
+只要仍有对对象的引用，对象的所有者 worker 就会在相应task 或 actor完成后继续运行。
 如果对象的所有者 worker 失败，Ray :ref:`无法自动为尝试访问对象的用户 <fault-tolerance-ownership>`恢复对象。
 从任务返回由 ``ray.put()`` 创建的 ``ObjectRef`` 是创建这种超出生命周期的对象的一个例子：
 
@@ -51,7 +51,7 @@ Ray 同样提供了一些机制来自动从内部系统级故障中恢复，例�
     :end-before: __return_directly_end__
 
 第三，避免使用只能由特定节点满足的 :ref:`自定义资源需求 <custom-resources>`。
-如果特定节点失败，正在运行的任务或参与者将无法重试。
+如果特定节点失败，正在运行的task 或 actor将无法重试。
 
 .. literalinclude:: doc_code/fault_tolerance_tips.py
     :language: python

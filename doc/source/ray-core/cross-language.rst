@@ -79,7 +79,7 @@ Python 调用 Java
     }
   }
 
-然后，在 Python 中，我们可以调用上述 Java 远程函数，或者从上述 Java 类创建一个参与者。
+然后，在 Python 中，我们可以调用上述 Java 远程函数，或者从上述 Java 类创建一个 actor 。
 
 .. literalinclude:: ./doc_code/cross_language.py
   :language: python
@@ -100,7 +100,7 @@ Java 调用 Python
 
   * 该函数或类应该被 `@ray.remote` 装饰。
 
-然后，在 Java 中，我们可以调用上述 Python 远程函数，或者从上述 Python 类创建一个参与者。
+然后，在 Java 中，我们可以调用上述 Python 远程函数，或者从上述 Python 类创建一个 actor 。
 
 .. code-block:: java
 

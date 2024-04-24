@@ -1,50 +1,48 @@
 (kuberay-raysvc-troubleshoot)=
 
-# RayService troubleshooting
+# RayService 故障排除
 
-RayService is a Custom Resource Definition (CRD) designed for Ray Serve. In KubeRay, creating a RayService will first create a RayCluster and then
-create Ray Serve applications once the RayCluster is ready. If the issue pertains to the data plane, specifically your Ray Serve scripts 
-or Ray Serve configurations (`serveConfigV2`), troubleshooting may be challenging. This section provides some tips to help you debug these issues.
+RayService 是专为 Ray Serve 设计的自定义资源定义 (CRD)。在 KubeRay 中，创建 RayService 将首先创建 RayCluster，然后在 RayCluster 准备就绪后创建 Ray Serve 应用程序。如果问题与数据平面有关，特别是 Ray Serve 脚本或 Ray Serve 配置 (`serveConfigV2`)，则故障排除可能会很困难。本节提供一些提示来帮助您调试这些问题。
 
-## Observability
+## 可观察性
 
-### Method 1: Check KubeRay operator's logs for errors
+### 方法 1: 检查 KubeRay operator 的日志是否有错误
 
 ```bash
 kubectl logs $KUBERAY_OPERATOR_POD -n $YOUR_NAMESPACE | tee operator-log
 ```
 
-The above command will redirect the operator's logs to a file called `operator-log`. You can then search for errors in the file.
+上面的命令会将 operator 的日志重定向到名为 `operator-log` 的文件。然后您可以搜索文件中的错误。
 
-### Method 2: Check RayService CR status
+### 方法 2: 检查 RayService CR 状态
 
 ```bash
 kubectl describe rayservice $RAYSERVICE_NAME -n $YOUR_NAMESPACE
 ```
 
-You can check the status and events of the RayService CR to see if there are any errors.
+您可以检查RayService CR的状态和事件，看看是否有错误。
 
-### Method 3: Check logs of Ray Pods
+### 方法 3: 检查 Ray Pod 日志
 
-You can also check the Ray Serve logs directly by accessing the log files on the pods. These log files contain system level logs from the Serve controller and HTTP proxy as well as access logs and user-level logs. See [Ray Serve Logging](serve-logging) and [Ray Logging](configure-logging) for more details.
+您还可以通过访问 Pod 上的日志文件来直接检查 Ray Serve 日志。这些日志文件包含来自 Serve controller 和 HTTP 代理的系统级日志以及访问日志和用户级日志。有关更多详细信息，请参阅 [Ray Serve Logging](serve-logging) 和 [Ray Logging](configure-logging)。
 
 ```bash
 kubectl exec -it $RAY_POD -n $YOUR_NAMESPACE -- bash
 # Check the logs under /tmp/ray/session_latest/logs/serve/
 ```
 
-### Method 4: Check Dashboard
+### 方法 4: 检查 Dashboard
 
 ```bash
 kubectl port-forward $RAY_POD -n $YOUR_NAMESPACE --address 0.0.0.0 8265:8265
 # Check $YOUR_IP:8265 in your browser
 ```
 
-For more details about Ray Serve observability on the dashboard, you can refer to [the documentation](dash-serve-view) and [the YouTube video](https://youtu.be/eqXfwM641a4).
+有关仪表板上 Ray Serve 可观测性的更多详细信息，您可以参考 [文档](dash-serve-view) 和 [YouTube 视频](https://youtu.be/eqXfwM641a4)。
 
-### Method 5: Ray State CLI
+### 方法 5: Ray State CLI
 
-You can use the [Ray State CLI](state-api-cli-ref) on the head Pod to check the status of Ray Serve applications.
+您可以使用头 Pod 上的 [Ray State CLI](state-api-cli-ref) 检查 Ray Serve 应用程序的状态。
 
 ```bash
 # Log into the head Pod
@@ -75,7 +73,7 @@ kubectl exec -it $HEAD_POD -- ray summary actors
 # 11  ServeReplica:fruit_app_PearStand    ALIVE: 1
 ```
 
-## Common issues
+## 常见问题
 
 * {ref}`kuberay-raysvc-issue1`
 * {ref}`kuberay-raysvc-issue2`
@@ -89,13 +87,12 @@ kubectl exec -it $HEAD_POD -- ray summary actors
 * {ref}`kuberay-raysvc-issue9`
 
 (kuberay-raysvc-issue1)=
-### Issue 1: Ray Serve script is incorrect.
+### 问题 1: Ray Serve 脚本不正确。
 
-We strongly recommend that you test your Ray Serve script locally or in a RayCluster before
-deploying it to a RayService. Refer to [rayserve-dev-doc.md](kuberay-dev-serve) for more details.
+我们强烈建议您先在本地或 RayCluster 中测试 Ray Serve 脚本，然后再将其部署到 RayService。请参阅 [rayserve-dev-doc.md](kuberay-dev-serve) 。
 
 (kuberay-raysvc-issue2)=
-### Issue 2: `serveConfigV2` is incorrect.
+### 问题 2: `serveConfigV2` 不正确
 
 For the sake of flexibility, we have set `serveConfigV2` as a YAML multi-line string in the RayService CR.
 This implies that there is no strict type checking for the Ray Serve configurations in `serveConfigV2` field.
@@ -106,7 +103,7 @@ the Ray Serve Multi-application API `PUT "/api/serve/applications/"`.
 * Unlike `serveConfig`, `serveConfigV2` adheres to the snake case naming convention. For example, `numReplicas` is used in `serveConfig`, while `num_replicas` is used in `serveConfigV2`. 
 
 (kuberay-raysvc-issue3-1)=
-### Issue 3-1: The Ray image does not include the required dependencies.
+### 问题 3-1: The Ray image does not include the required dependencies.
 
 You have two options to resolve this issue:
 
@@ -116,7 +113,7 @@ You have two options to resolve this issue:
 Therefore, the YAML file includes `python-multipart` in the runtime environment. For more details, refer to [the MobileNet example](kuberay-mobilenet-rayservice-example).
 
 (kuberay-raysvc-issue3-2)=
-### Issue 3-2: Examples for troubleshooting dependency issues.
+### 问题 3-2: Examples for troubleshooting dependency issues.
 
 > Note: We highly recommend testing your Ray Serve script locally or in a RayCluster before deploying it to a RayService. This helps identify any dependency issues in the early stages. Refer to [rayserve-dev-doc.md](kuberay-dev-serve) for more details.
 
@@ -124,7 +121,7 @@ In the [MobileNet example](kuberay-mobilenet-rayservice-example), the [mobilenet
 The function `__call__()` is only called when the Serve application receives a request.
 
 * Example 1: Remove `python-multipart` from the runtime environment in [the MobileNet YAML](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml).
-  * The `python-multipart` library is only required for the `__call__` method. Therefore, we can only observe the dependency issue when we send a request to the application.
+  * The `python-multipart` library is only required for the `__call__` 方法. Therefore, we can only observe the dependency issue when we send a request to the application.
   * Example error message:
     ```bash
     Unexpected error, traceback: ray::ServeReplica:mobilenet_ImageClassifier.handle_request() (pid=226, ip=10.244.0.9)
@@ -158,7 +155,7 @@ The function `__call__()` is only called when the Serve application receives a r
     ```
 
 (kuberay-raysvc-issue4)=
-### Issue 4: Incorrect `import_path`.
+### 问题 4: Incorrect `import_path`.
 
 You can refer to [the documentation](https://docs.ray.io/en/latest/serve/api/doc/ray.serve.schema.ServeApplicationSchema.html#ray.serve.schema.ServeApplicationSchema.import_path) for more details about the format of `import_path`.
 Taking [the MobileNet YAML file](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) as an example,
@@ -177,7 +174,7 @@ and `app` is the name of the variable representing Ray Serve application within 
 ```
 
 (kuberay-raysvc-issue5)=
-### Issue 5: Fail to create / update Serve applications.
+### 问题 5: Fail to create / update Serve applications.
 
 You may encounter the following error messages when KubeRay tries to create / update Serve applications:
 
@@ -203,7 +200,7 @@ Put "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:5
 One possible cause of this issue could be a Kubernetes NetworkPolicy blocking the traffic between the Ray Pods and the dashboard agent's port (i.e., 52365).
 
 (kuberay-raysvc-issue6)=
-### Issue 6: `runtime_env`
+### 问题 6: `runtime_env`
 
 In `serveConfigV2`, you can specify the runtime environment for the Ray Serve applications via `runtime_env`.
 Some common issues related to `runtime_env`:
@@ -213,7 +210,7 @@ Some common issues related to `runtime_env`:
 * The NetworkPolicy blocks the traffic between the Ray Pods and the external URLs specified in `runtime_env`.
 
 (kuberay-raysvc-issue7)=
-### Issue 7: Failed to get Serve application statuses.
+### 问题 7: Failed to get Serve application statuses.
 
 You may encounter the following error message when KubeRay tries to get Serve application statuses:
 
@@ -259,7 +256,7 @@ If you consistently encounter this issue, there are several possible causes:
   ```
 
 (kuberay-raysvc-issue8)=
-### Issue 8: A loop of restarting the RayCluster occurs when the Kubernetes cluster runs out of resources. (KubeRay v0.6.1 or earlier)
+### 问题 8: A loop of restarting the RayCluster occurs when the Kubernetes cluster runs out of resources. (KubeRay v0.6.1 or earlier)
 
 > Note: Currently, the KubeRay operator does not have a clear plan to handle situations where the Kubernetes cluster runs out of resources.
 Therefore, we recommend ensuring that the Kubernetes cluster has sufficient resources to accommodate the serve application.

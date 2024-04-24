@@ -22,7 +22,7 @@ kind create cluster --image=kindest/node:v1.23.0
 
 ### 步骤 2: 安装 KubeRay Operator
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+按照 [本文档](kuberay-operator-deploy) 过 Helm 存储库安装最新稳定的 KubeRay 操作员。
 
 ### 步骤 3: 安装启用 GCS FT 的 RayCluster
 
@@ -165,7 +165,7 @@ kubectl get pods -l=ray.io/is-ray-node=yes
 
 在 [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml)， `RAY_gcs_rpc_server_reconnect_timeout_s` 环境变量未设置到 RayCluster 的头节点或者 worker 节点 Pod。
 因此，KubeRay 自动将 `RAY_gcs_rpc_server_reconnect_timeout_s` 注入到 worker Pod 中并设置默认值 **600**，将头 Pod 设置为默认值 **60**。
-工作 Pod 的超时值必须长于头 Pod 的超时值，以便工作 Pod 在头 Pod 因故障重新启动之前不会终止。
+ worker Pod 的超时值必须长于头 Pod 的超时值，以便 worker Pod 在头 Pod 因故障重新启动之前不会终止。
 
 ### 步骤 8: 再次访问分离的 actor 
 
@@ -177,7 +177,7 @@ kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/increment_counter.py
 # 2
 ```
 
-```{admonition} 在此示例中，分离的 Actor 始终位于工作 Pod 上。
+```{admonition} 在此示例中，分离的 Actor 始终位于 worker Pod 上。
 头 Pod 的 `rayStartParams` 设置了 `num-cpus: "0"`。
 因此，不会在头 Pod 上安排任何任务或 actor 。
 ```

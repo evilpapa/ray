@@ -1,22 +1,22 @@
 .. _observability-key-concepts:
 
-Key Concepts
+关键概念
 ============
 
-This section covers key concepts for monitoring and debugging tools and features in Ray.
+本节介绍 Ray 中监视和调试工具和功能的关键概念。
 
-Dashboard (Web UI)
+仪表盘 （网络用户界面）
 ------------------
-Ray provides a web-based dashboard to help users monitor and debug Ray applications and Clusters.
+Ray 提供基于 Web 的仪表板来帮助用户监控和调试 Ray 应用程序和集群。
 
-See :ref:`Getting Started <observability-getting-started>` for more details about the Dashboard.
+请参阅 :ref:`入门 <observability-getting-started>` 查看有关仪表板的更多详细信息。
 
 
-Ray States
+Ray 状态
 ----------
-Ray States refer to the state of various Ray entities (e.g., Actor, Task, Object, etc.). Ray 2.0 and later versions support :ref:`querying the states of entities with the CLI and Python APIs <observability-programmatic>`
+Ray 状态是指各种 Ray 实体（例如，Actor、Task、Object 等）的状态。 Ray 2.0及以后版本支持:ref:`通过通过 CLI 和 Python API 查询实体的状态 <observability-programmatic>`
 
-The following command lists all the Actors from the Cluster:
+以下命令列出集群中的所有 Actor：
 
 .. code-block:: bash
 
@@ -35,84 +35,81 @@ The following command lists all the Actors from the Cluster:
     0  31405554844820381c2f0f8501000000  Actor                 96956  ALIVE
     1  f36758a9f8871a9ca993b1d201000000  Actor                 96955  ALIVE
 
-View :ref:`Monitoring with the CLI or SDK <state-api-overview-ref>` for more details.
+查看 :ref:`使用 CLI 或 SDK 进行监控 <state-api-overview-ref>` 以了解更多详细信息。
 
-Metrics
+指标
 -------
-Ray collects and exposes the physical stats (e.g., CPU, memory, GRAM, disk, and network usage of each node),
-internal stats (e.g., number of Actors in the cluster, number of Worker failures in the Cluster),
-and custom application metrics (e.g., metrics defined by users). All stats can be exported as time series data (to Prometheus by default) and used
-to monitor the Cluster over time.
+Ray 收集并公开物理统计信息（例如，每个节点的 CPU、内存、GRAM、磁盘和网络使用情况）、
+内部统计信息（例如，集群中的 Actor 数量、集群中的 Worker 故障数量）和自定义应用程序指标（例如，用户定义的指标）。所有统计数据都可以导出为时间序列数据（默认导出到 Prometheus），并用于随着时间的推移监控集群。
 
-View :ref:`Metrics View <dash-metrics-view>` for where to view the metrics in Ray Dashboard. View :ref:`collecting metrics <collect-metrics>` for how to collect metrics from Ray Clusters.
+查看 :ref:`指标视图 <dash-metrics-view>` 了解在 Ray Dashboard 中查看指标的位置。 查看 :ref:`指标收集 <collect-metrics>` ，了解如何从 Ray Cluster 收集的指标。
 
-Exceptions
+异常
 ----------
-Creating a new Task or submitting an Actor Task generates an object reference. When ``ray.get`` is called on the Object Reference,
-the API raises an exception if anything goes wrong with a related Task, Actor or Object. For example,
+创建新任务或提交 Actor 任务会生成对象引用。当 ``ray.get`` 在对象引用上调用 时，如果相关任务、Actor 或对象出现任何问题，API 会引发异常。例如，
 
-- :class:`RayTaskError <ray.exceptions.RayTaskError>` is raised when an error from user code throws an exception.
-- :class:`RayActorError <ray.exceptions.RayActorError>` is raised when an Actor is dead (by a system failure, such as a node failure, or a user-level failure, such as an exception from ``__init__`` method).
-- :class:`RuntimeEnvSetupError <ray.exceptions.RuntimeEnvSetupError>` is raised when the Actor or Task can't be started because :ref:`a runtime environment <runtime-environments>` failed to be created.
+- :class:`RayTaskError <ray.exceptions.RayTaskError>` 当用户代码的错误引发异常时引发。 
+- :class:`RayActorError <ray.exceptions.RayActorError>` 当 Actor 死亡时引发（由于系统故障，例如节点故障，或用户级故障，例如 ``__init__`` 方法引起的异常）。
+- :class:`RuntimeEnvSetupError <ray.exceptions.RuntimeEnvSetupError>` r当 Actor 或任务因:ref:`运行时环境 <runtime-environments>` 创建失败而无法启动时引发。
 
-See :ref:`Exceptions Reference <ray-core-exceptions>` for more details.
+有关更多详细信息，请参阅 :ref:`异常参考 <ray-core-exceptions>` 。
 
-Debugger
+调试器
 --------
-Ray has a built-in debugger for debugging your distributed applications.
-Set breakpoints in Ray Tasks and Actors, and when hitting the breakpoint,
-drop into a PDB session to:
+Ray 有一个内置的调试器，用于调试分布式应用程序。
+在 Ray Tasks 和 Actors 中设置断点，
+当遇到断点时，进入 PDB 会话以：
 
-- Inspect variables in that context
-- Step within a Task or Actor
-- Move up or down the stack
+- 检查该上下文中的变量
+- 进入任务或 Actor
+- 堆栈中向上或向下移动
 
-View :ref:`Ray Debugger <ray-debugger>` for more details.
+查看 :ref:`Ray Debugger <ray-debugger>` 了解更多详细信息。
 
 .. _profiling-concept:
 
-Profiling
+分析
 ---------
-Profiling is way of analyzing the performance of an application by sampling the resource usage of it. Ray supports various profiling tools:
+分析是通过对应用程序的资源使用情况进行采样来分析应用程序性能的方法。 Ray 支持各种分析工具：
 
-- CPU profiling for Driver and Worker processes, including integration with :ref:`py-spy <profiling-pyspy>` and :ref:`cProfile <profiling-cprofile>`
-- Memory profiling for Driver and Worker processes with :ref:`memray <profiling-memray>`
-- GPU profiling with :ref:`Pytorch Profiler <profiling-pytoch-profiler>`
-- Built in Task and Actor profiling tool called :ref:`Ray Timeline <profiling-timeline>`
+- 驱动程序和工作进程的 CPU 分析，包括与 :ref:`py-spy <profiling-pyspy>` 和 :ref:`cProfile <profiling-cprofile>`
+- 使用 :ref:`memray <profiling-memray>` 对驱动程序和工作进程进行内存分析
+- 使用 :ref:`Pytorch Profiler <profiling-pytoch-profiler>` 进行 GPU 分析
+- 内置 Task 和 Actor 分析工具 :ref:`Ray Timeline <profiling-timeline>`
 
-View :ref:`Profiling <profiling>` for more details. Note that this list isn't comprehensive and feel free to contribute to it if you find other useful tools.
+查看 :ref:`分析 <profiling>` 以了解更多详细信息。请注意，此列表并不全面，如果您发现其他有用的工具，请随时为其做出贡献。
 
 
-Tracing
+追踪
 -------
-To help debug and monitor Ray applications, Ray supports distributed tracing (integration with OpenTelemetry) across Tasks and Actors.
+为了帮助调试和监控 Ray 应用程序，Ray 支持跨任务和 Actor 的分布式跟踪（与 OpenTelemetry 集成）。
 
-See :ref:`Ray Tracing <ray-tracing>` for more details.
+有关更多详细信息，请参阅 :ref:`Ray 追踪 <ray-tracing>`。
 
-Application logs
+应用程序日志
 ----------------
-Logs are important for general monitoring and debugging. For distributed Ray applications, logs are even more important but more complicated at the same time. A Ray application runs both on Driver and Worker processes (or even across multiple machines) and the logs of these processes are the main sources of application logs.
+日志对于一般监控和调试很重要。对于分布式 Ray 应用程序来说，日志更加重要，但同时也更加复杂。 Ray应用程序同时运行在Driver和Worker进程上（甚至跨多台机器），这些进程的日志是应用程序日志的主要来源。
 
 .. image:: ./images/application-logging.png
     :alt: Application logging
 
-Driver logs
+驱动程序日志
 ~~~~~~~~~~~
-An entry point of Ray applications that calls ``ray.init()`` is called a **Driver**.
-All the Driver logs are handled in the same way as normal Python programs.
+Ray 应用程序调用 ``ray.init()`` 的入口点成为 **Driver**。
+所有 driver 程序日志的处理方式与普通 Python 程序相同。
 
 .. _ray-worker-logs:
 
-Worker logs (stdout and stderr)
+Worker l日志（stdout 和 stderr）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ray executes Tasks or Actors remotely within Ray's Worker processes. Task and Actor logs are captured in the Worker stdout and stderr.
+Ray 在 Ray 的工作进程中远程执行任务或 actor 。任务和 Actor 日志在 Worker stdout 和 stderr 中捕获。
 
-Ray has special support to improve the visibility of stdout and stderr produced by Worker processes so that the Ray program appears like a non-distributed program, also known as "Worker log redirection to driver".
+Ray 有专门的支持来提高 Worker 进程产生的 stdout 和 stderr 的可见性，使 Ray 程序看起来像一个非分布式程序，也称为“Worker 日志重定向到驱动程序”。
 
-- Ray directs stdout and stderr from all Tasks and Actors to the Worker log files, including any log messages generated by the Worker. See :ref:`logging directory and file structure <logging-directory-structure>` to understand the Ray logging structure.
-- The Driver reads the Worker log files (where the stdout and stderr of all Tasks and Actors sit) and sends the log records to its own stdout and stderr (also known as "Worker logs being redirected to Driver output").
+- Ray 将所有任务和 Actor 中的 stdout 和 stderr 定向到 Worker 日志文件，包括 Worker 生成的任何日志消息。请参阅 :ref:`日志记录目录和文件结构 <logging-directory-structure>` 以了解 Ray 日志记录结构。
+- Driver 读取 Worker 日志文件（所有任务和 Actor 的 stdout 和 stderr 所在的位置）并将日志记录发送到其自己的 stdout 和 stderr（也称为“将 Worker 日志重定向到 Driver 输出”）。
 
-For the following code:
+对于以下代码：
 
 .. testcode::
 
@@ -131,31 +128,31 @@ For the following code:
 
     (task_foo pid=12854) task!
 
-#. Ray Task ``task_foo`` runs on a Ray Worker process. String ``task!`` is saved into the corresponding Worker ``stdout`` log file.
-#. The Driver reads the Worker log file and sends it to its ``stdout`` (terminal) where you should be able to see the string ``task!``.
+#. Ray 任务 ``task_foo`` 在 Ray Worker 进程上运行。字符串 ``task!`` 被保存到相应的Workers ``stdout`` 日志文件中。
+#. 驱动程序读取 Worker 日志文件并将其发送到其 ``stdout``（终端），您应该能够在其中看到字符串 ``task!``。
 
-When logs are printed, the process id (pid) and an IP address of the node that executes Tasks or Actors are printed together. Here is the output:
+打印日志时，会同时打印进程 ID (pid) 和执行任务或 Actor 的节点的 IP 地址。这是输出：
 
 .. code-block:: bash
 
     (pid=45601) task!
 
-Actor log messages look like the following by default:
+默认情况下，Actor 日志消息如下所示：
 
 .. code-block:: bash
 
     (MyActor pid=480956) actor log message
 
 
-By default, all stdout and stderr of Tasks and Actors are redirected to the Driver output. View :ref:`Configuring Logging <log-redirection-to-driver>` for how to disable this feature.
+默认情况下，Tasks 和 Actors 的所有 stdout 和 stderr 都被重定向到 Driver 输出。查看 :ref:`配置日志记录 <log-redirection-to-driver>` 以了解如何禁用此功能。
 
 
 
-Job logs
+Job 日志
 ~~~~~~~~
-Ray applications are usually run as Ray Jobs. Worker logs of Ray Jobs are always captured in the :ref:`Ray logging directory <logging-directory-structure>` while Driver logs are not.
+Ray 应用程序通常作为 Ray 作业运行。 Ray 作业的工作日志始终捕获在:ref:`ay 日志记录目录 <logging-directory-structure>` ，而驱动程序日志则不然。
 
-Driver logs are captured only for Ray Jobs submitted via :ref:`Jobs API <jobs-quickstart>`. Find the captured Driver logs with the Dashboard UI, CLI (using the ``ray job logs`` :ref:`CLI command <ray-job-logs-doc>`), or the :ref:`Python SDK <ray-job-submission-sdk-ref>` (``JobSubmissionClient.get_logs()`` or ``JobSubmissionClient.tail_job_logs()``).
+只有通过 :ref:`Jobs API <jobs-quickstart>` 提交的日志才能捕获 Driver 日志。.使用仪表板 UI、CLI（使用 ``ray job logs`` :ref:`CLI command <ray-job-logs-doc>`）或 the :ref:`Python SDK <ray-job-submission-sdk-ref>` （``JobSubmissionClient.get_logs()`` 或 ``JobSubmissionClient.tail_job_logs()`` 查找捕获的驱动程序日志。
 
 .. note::
-   View the Driver logs in your terminal or Jupyter Notebooks if you run Ray Jobs by executing the Ray Driver on the Head node directly or connecting via Ray Client.
+   如果您通过直接在头节点上执行 Ray 驱动程序或通过 Ray 客户端连接来运行 Ray 作业，请查看终端或 Jupyter Notebook 中的驱动程序日志。

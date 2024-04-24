@@ -154,7 +154,7 @@ Ray 容器配置中指定的CPU、GPU 和内存 **限制** 将自动通告给 Ra
 `RayCluster` CR 的 Ray 容器镜像应与 CR 的 `spec.rayVersion` 版本一致。
 如果使用夜版或开发版 Ray 镜像，最好指定 `spec.rayVersion` 为最新发布版本。
 
-给定 Ray 任务或参与者的代码依赖项必须安装在可能运行该任务或参与者的每个 Ray 节点上。
+给定 Ray task 或 actor的代码依赖项必须安装在可能运行该task 或 actor的每个 Ray 节点上。
 要实现这一点，最简单的方法是对 Ray 头和所有工作组使用相同的 Ray 镜像。
 无论如何，请确保 CR 中的所有 Ray 图像都具有相同的 Ray 版本和 Python 版本。
 要在集群中分发自定义代码依赖项，您可以使用 [官方 Ray 镜像](https://hub.docker.com/r/rayproject/ray>) 作为基础镜像来构建自定义容器镜像。
