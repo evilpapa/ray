@@ -1,17 +1,17 @@
-Miscellaneous Topics
+杂项主题
 ====================
 
-This page will cover some miscellaneous topics in Ray.
+本页将介绍 Ray 中的一些杂项主题。
 
 .. contents::
   :local:
 
-Dynamic Remote Parameters
+动态远程参数
 -------------------------
 
-You can dynamically adjust resource requirements or return values of ``ray.remote`` during execution with ``.options``.
+你可以在执行过程中使用 ``.options`` 动态调整 ``ray.remote`` 的资源需求或返回值。
 
-For example, here we instantiate many copies of the same actor with varying resource requirements. Note that to create these actors successfully, Ray will need to be started with sufficient CPU resources and the relevant custom resources:
+例如，我们实例化了多个具有不同资源需求的相同 actor。请注意，要成功创建这些 actor，Ray 需要足够的 CPU 资源和相关的自定义资源：
 
 .. testcode::
 
@@ -30,7 +30,7 @@ For example, here we instantiate many copies of the same actor with varying reso
   a2 = Counter.options(num_cpus=2, resources={"Custom2": 1}).remote()
   a3 = Counter.options(num_cpus=3, resources={"Custom3": 1}).remote()
 
-You can specify different resource requirements for tasks (but not for actor methods):
+您可以为任务指定不同的资源需求（但不能为 actor 方法指定）：
 
 .. testcode::
   :hide:
@@ -51,7 +51,7 @@ You can specify different resource requirements for tasks (but not for actor met
     dynamic_object_gpu_ids = g.options(num_cpus=1, num_gpus=1).remote()
     assert ray.get(dynamic_object_gpu_ids) == [0]
 
-And vary the number of return values for tasks (and actor methods too):
+并改变任务（以及 actor 方法）的返回值的数量：
 
 .. testcode::
 
@@ -63,7 +63,7 @@ And vary the number of return values for tasks (and actor methods too):
     assert ray.get(id1) == 0
     assert ray.get(id2) == 1
 
-And specify a name for tasks (and actor methods too) at task submission time:
+并在提交任务时指定任务（以及 actor 方法）的名称：
 
 .. testcode::
 
@@ -77,18 +77,18 @@ And specify a name for tasks (and actor methods too) at task submission time:
    obj = f.options(name="special_f").remote(3)
    assert ray.get(obj) == 4
 
-This name will appear as the task name in the machine view of the dashboard, will appear
-as the worker process name when this task is executing (if a Python task), and will
-appear as the task name in the logs.
+该名称将出现在仪表板的机器视图中的任务名称中，
+将在执行此任务时作为工作进程名称出现（如果是 Python 任务），
+并将出现在日志中的任务名称中。
 
 .. image:: images/task_name_dashboard.png
 
 
-Overloaded Functions
+重载函数
 --------------------
-Ray Java API supports calling overloaded java functions remotely. However, due to the limitation of Java compiler type inference, one must explicitly cast the method reference to the correct function type. For example, consider the following.
+Ray Java API 支持远程调用重载的 Java 函数。但是，由于 Java 编译器类型推断的限制，必须将方法引用显式转换为正确的函数类型。例如，考虑以下内容。
 
-Overloaded normal task call:
+重载正常任务调用：
 
 .. code:: java
 
@@ -107,7 +107,7 @@ Overloaded normal task call:
     Assert.assertEquals((int) Ray.task((RayFunc0<Integer>) MyRayApp::overloadFunction).remote().get(), 1);
     Assert.assertEquals((int) Ray.task((RayFunc1<Integer, Integer>) MyRayApp::overloadFunction, 2).remote().get(), 2);
 
-Overloaded actor task call:
+重载 Actor 任务调用：
 
 .. code:: java
 
@@ -143,22 +143,22 @@ Overloaded actor task call:
     a.task((RayFunc3<CounterOverloaded, Integer, Integer, Integer>) CounterOverloaded::increment, 10, 10).remote();
     Assert.assertEquals((int) a.task(Counter::increment).remote().get(), 33);
 
-Inspecting Cluster State
+检查集群状态
 ------------------------
 
-Applications written on top of Ray will often want to have some information
-or diagnostics about the cluster. Some common questions include:
+在 Ray 上编写的应用程序通常需要获取有关集群的一些信息或诊断信息。
+一些常见问题包括：
 
-    1. How many nodes are in my autoscaling cluster?
-    2. What resources are currently available in my cluster, both used and total?
-    3. What are the objects currently in my cluster?
+    1. 我的自动扩展集群中有多少个节点？
+    2. 我的集群中当前可用的资源有哪些（已使用资源和总计资源）？
+    3. 我的集群中当前有哪些对象？
 
-For this, you can use the global state API.
+为此，您可以使用全局状态 API。
 
-Node Information
+节点信息
 ~~~~~~~~~~~~~~~~
 
-To get information about the current nodes in your cluster, you can use ``ray.nodes()``:
+要获取有关集群中当前节点的信息，您可以使用 ``ray.nodes()``：
 
 .. autofunction:: ray.nodes
     :noindex:
@@ -190,116 +190,111 @@ To get information about the current nodes in your cluster, you can use ``ray.no
       'alive': True,
       'Resources': {'CPU': 16.0, 'memory': 100.0, 'object_store_memory': 34.0, 'node:192.168.1.82': 1.0}}]
 
-The above information includes:
+上述信息包括：
 
-  - `NodeID`: A unique identifier for the raylet.
-  - `alive`: Whether the node is still alive.
-  - `NodeManagerAddress`: PrivateIP of the node that the raylet is on.
-  - `Resources`: The total resource capacity on the node.
-  - `MetricsExportPort`: The port number at which metrics are exposed to through a `Prometheus endpoint <ray-metrics.html>`_.
+  - `NodeID`: raylet 的唯一标识符。
+  - `alive`: 节点是否还存活。
+  - `NodeManagerAddress`: raylet 所在节点的私有 IP。
+  - `Resources`: 节点上资源总容量。
+  - `MetricsExportPort`: 通过 `Prometheus 端点 <ray-metrics.html>`_ 公开指标的端口号。
 
-Resource Information
+资源信息
 ~~~~~~~~~~~~~~~~~~~~
 
-To get information about the current total resource capacity of your cluster, you can use ``ray.cluster_resources()``.
+要获取有关集群当前总资源容量的信息，您可以使用 ``ray.cluster_resources()``。
 
 .. autofunction:: ray.cluster_resources
     :noindex:
 
 
-To get information about the current available resource capacity of your cluster, you can use ``ray.available_resources()``.
+要获取有关集群当前可用资源容量的信息，您可以使用 ``ray.available_resources()``。
 
 .. autofunction:: ray.available_resources
     :noindex:
 
-Running Large Ray Clusters
+运行大型 Ray 集群
 --------------------------
 
-Here are some tips to run Ray with more than 1k nodes. When running Ray with such
-a large number of nodes, several system settings may need to be tuned to enable
-communication between such a large number of machines.
+以下是运行超过 1000 个节点的 Ray 的一些技巧。
+当运行具有如此大量节点的 Ray 时，可能需要调整几个系统设置，
+以实现如此大量机器之间的通信。
 
-Tuning Operating System Settings
+调整操作系统设置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because all nodes and workers connect to the GCS, many network connections will
-be created and the operating system has to support that number of connections.
+由于所有节点和工作程序都连接到 GCS，因此将创建许多网络连接，并且操作系统必须支持该数量的连接。
 
-Maximum open files
+最大打开文件数
 ******************
 
-The OS has to be configured to support opening many TCP connections since every
-worker and raylet connects to the GCS. In POSIX systems, the current limit can
-be checked by ``ulimit -n`` and if it's small, it should be increased according to
-the OS manual.
+由于每个 worker 和 raylet 都连接到 GCS，因此必须配置 OS 以支持打开多个 TCP 连接。
+在 POSIX 系统中，可以通过 ``ulimit -n`` 检查当前限制，
+如果限制较小，则应根据 OS 手册增加限制。
 
-ARP cache
+ARP 缓存
 *********
 
-Another thing that needs to be configured is the ARP cache. In a large cluster,
-all the worker nodes connect to the head node, which adds a lot of entries to
-the ARP table. Ensure that the ARP cache size is large enough to handle this
-many nodes.
-Failure to do this will result in the head node hanging. When this happens,
-``dmesg`` will show errors like ``neighbor table overflow message``.
+需要配置的另一件事是 ARP 缓存。
+在大型集群中，所有工作节点都连接到头节点，这会向 ARP 表添加大量条目。
+确保 ARP 缓存大小足够大以处理这么多节点。不这样做将导致头节点挂起。
+发生这种情况时，
+``dmesg`` 将显示类似 ``neighbor table overflow message`` 的错误。
 
-In Ubuntu, the ARP cache size can be tuned in ``/etc/sysctl.conf`` by increasing
-the value of ``net.ipv4.neigh.default.gc_thresh1`` - ``net.ipv4.neigh.default.gc_thresh3``.
-For more details, please refer to the OS manual.
+在 Ubuntu 中，可以通过增加 ``/etc/sysctl.conf`` 中 ``net.ipv4.neigh.default.gc_thresh1`` - ``net.ipv4.neigh.default.gc_thresh3`` 的值来调整 ARP 缓存大小。
+有关更多详细信息，请参阅操作系统手册。
 
-Tuning Ray Settings
+调整 Ray 设置
 ~~~~~~~~~~~~~~~~~~~
 
 .. note::
-  There is an ongoing `project <https://github.com/ray-project/ray/projects/15>`_ focusing on
-  improving Ray's scalability and stability. Feel free to share your thoughts and use cases.
+  目前正在进行的 `project <https://github.com/ray-project/ray/projects/15>`_ 致力于
+  提高 Ray 的可扩展性和稳定性。欢迎分享您的想法和用例。
 
-To run a large cluster, several parameters need to be tuned in Ray.
+要运行大型集群，需要在 Ray 中调整几个参数。
 
-Resource broadcasting
+Resource 广播
 *********************
 
-In Ray 2.3+, lightweight resource broadcasting is supported as an experimental feature.
-Turning it on can significantly reduce GCS load and thus
-improve its overall stability and scalability. To turn it on, this OS environment
-should be set: ``RAY_use_ray_syncer=true``. This feature will be turned on by
-default in 2.4+.
+在 Ray 2.3+ 版本中，轻量级资源广播作为一项实验性功能被支持。
+开启该功能可以显著降低 GCS 负载，从而提高其整体稳定性和可扩展性。
+要开启该功能，需要设置以下 OS 环境： ``RAY_use_ray_syncer=true``。
+此功能将在 2.4+ 版本中默认开启。
 
-Benchmark
+基准
 ~~~~~~~~~
 
-The machine setup:
+机器设置：
 
-- 1 head node: m5.4xlarge (16 vCPUs/64GB mem)
-- 2000 worker nodes: m5.large (2 vCPUs/8GB mem)
+- 1 个头节点：m5.4xlarge（16 个 vCPU/64GB 内存）
+- 2000 个工作节点：m5.large（2 个 vCPU/8GB 内存）
 
-The OS setup:
+操作系统设置：
 
-- Set the maximum number of opening files to 1048576
-- Increase the ARP cache size:
+- 设置最大打开文件数为1048576
+- 增加 ARP 缓存大小：
     - ``net.ipv4.neigh.default.gc_thresh1=2048``
     - ``net.ipv4.neigh.default.gc_thresh2=4096``
     - ``net.ipv4.neigh.default.gc_thresh3=8192``
 
 
-The Ray setup:
+Ray 设置：
 
 - ``RAY_use_ray_syncer=true``
 - ``RAY_event_stats=false``
 
-Test workload:
+测试工作量：
 
-- Test script: `code <https://github.com/ray-project/ray/blob/master/release/benchmarks/distributed/many_nodes_tests/actor_test.py>`_
+- Test 脚本: `代码 <https://github.com/ray-project/ray/blob/master/release/benchmarks/distributed/many_nodes_tests/actor_test.py>`_
 
 
 
 .. list-table:: Benchmark result
    :header-rows: 1
 
-   * - Number of actors
-     - Actor launch time
-     - Actor ready time
-     - Total time
+   * - actor 数量
+     - Actor 上线时间
+     - Actor 准备时间
+     - 总时间
    * - 20k (10 actors / node)
      - 14.5s
      - 136.1s

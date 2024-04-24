@@ -1,14 +1,14 @@
 .. _cross_language:
 
-Cross-Language Programming
+跨语言编程
 ==========================
 
-This page will show you how to use Ray's cross-language programming feature.
+本页将向您展示如何使用 Ray 的跨语言编程功能。
 
-Setup the driver
+设置驱动
 -----------------
 
-We need to set :ref:`code_search_path` in your driver.
+我们需要在您的驱动程序中设置 :ref:`code_search_path`。
 
 .. tab-set::
 
@@ -28,7 +28,7 @@ We need to set :ref:`code_search_path` in your driver.
                 -Dray.job.code-search-path=/path/to/code/ \
                 <classname> <args>
 
-You may want to include multiple directories to load both Python and Java code for workers, if they are placed in different directories.
+如果工作程序的 Python 和 Java 代码位于不同的目录中，您可能需要包含多个目录来加载它们。
 
 .. tab-set::
 
@@ -48,10 +48,10 @@ You may want to include multiple directories to load both Python and Java code f
                 -Dray.job.code-search-path=/path/to/jars:/path/to/pys \
                 <classname> <args>
 
-Python calling Java
+Python 调用 Java
 -------------------
 
-Suppose we have a Java static method and a Java class as follows:
+假设我们有一个 Java 静态方法和一个 Java 类，如下所示：
 
 .. code-block:: java
 
@@ -79,18 +79,17 @@ Suppose we have a Java static method and a Java class as follows:
     }
   }
 
-Then, in Python, we can call the above Java remote function, or create an actor
-from the above Java class.
+然后，在 Python 中，我们可以调用上述 Java 远程函数，或者从上述 Java 类创建一个参与者。
 
 .. literalinclude:: ./doc_code/cross_language.py
   :language: python
   :start-after: __python_call_java_start__
   :end-before: __python_call_java_end__
 
-Java calling Python
+Java 调用 Python
 -------------------
 
-Suppose we have a Python module as follows:
+假设我们有一个如下的 Python 模块：
 
 .. literalinclude:: ./doc_code/cross_language.py
   :language: python
@@ -99,10 +98,9 @@ Suppose we have a Python module as follows:
 
 .. note::
 
-  * The function or class should be decorated by `@ray.remote`.
+  * 该函数或类应该被 `@ray.remote` 装饰。
 
-Then, in Java, we can call the above Python remote function, or create an actor
-from the above Python class.
+然后，在 Java 中，我们可以调用上述 Python 远程函数，或者从上述 Python 类创建一个参与者。
 
 .. code-block:: java
 
@@ -145,15 +143,14 @@ from the above Python class.
     }
   }
 
-Cross-language data serialization
+跨语言数据序列化
 ---------------------------------
 
-The arguments and return values of ray call can be serialized & deserialized
-automatically if their types are the following:
+以下类型 Ray 的参数及返回值的，可以被自动序列化和反序列化：
 
-  - Primitive data types
+  - 原始数据类型
       ===========   =======  =======
-      MessagePack   Python   Java
+      消息包   Python   Java
       ===========   =======  =======
       nil           None     null
       bool          bool     Boolean
@@ -163,37 +160,35 @@ automatically if their types are the following:
       bin           bytes    byte[]
       ===========   =======  =======
 
-  - Basic container types
+  - 基本容器类型
       ===========   =======  =======
-      MessagePack   Python   Java
+      消息包   Python   Java
       ===========   =======  =======
       array         list     Array
       ===========   =======  =======
 
-  - Ray builtin types
+  - Ray 内置类型
       - ActorHandle
 
 .. note::
 
-  * Be aware of float / double precision between Python and Java. If Java is using a
-    float type to receive the input argument, the double precision Python data
-    will be reduced to float precision in Java.
-  * BigInteger can support a max value of 2^64-1, please refer to:
-    https://github.com/msgpack/msgpack/blob/master/spec.md#int-format-family.
-    If the value is larger than 2^64-1, then sending the value to Python will raise an exception.
+  * 注意 Python 和 Java 之间的浮点/双精度。
+    如果 Java 使用浮点类型接收输入参数，
+    则 Python 的双精度数据将降低为 Java 中的浮点精度。
+  * BigInteger 最大支持 2^64-1 的值，具体请参考：
+    https://github.com/msgpack/msgpack/blob/master/spec.md#int-format-family。
+    如果大于 2^64-1 则将该值传递给 Python 会抛出异常。
 
-The following example shows how to pass these types as parameters and how to
-return these types.
+下面的示例展示了如何将这些类型作为参数传递以及如何返回这些类型
 
-You can write a Python function which returns the input data:
+您可以编写一个返回输入数据的 Python 函数：
 
 .. literalinclude:: ./doc_code/cross_language.py
   :language: python
   :start-after: __serialization_start__
   :end-before: __serialization_end__
 
-Then you can transfer the object from Java to Python, and back from Python
-to Java:
+然后，你可以将对象从 Java 传输到 Python，然后再从 Python 传输回 Java：
 
 .. code-block:: java
 
@@ -232,10 +227,10 @@ to Java:
     }
   }
 
-Cross-language exception stacks
+跨语言异常堆栈
 -------------------------------
 
-Suppose we have a Java package as follows:
+假设我们有一个如下的 Java 包：
 
 .. code-block:: java
 
@@ -255,21 +250,21 @@ Suppose we have a Java package as follows:
     }
   }
 
-and a Python module as follows:
+以及如下的 Python 模块：
 
 .. literalinclude:: ./doc_code/cross_language.py
   :language: python
   :start-after: __raise_exception_start__
   :end-before: __raise_exception_end__
 
-Then, run the following code:
+然后运行以下代码：
 
 .. literalinclude:: ./doc_code/cross_language.py
   :language: python
   :start-after: __raise_exception_demo_start__
   :end-before: __raise_exception_demo_end__
 
-The exception stack will be:
+异常堆栈将是：
 
 .. code-block:: text
 

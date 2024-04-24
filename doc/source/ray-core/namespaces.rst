@@ -1,13 +1,11 @@
 .. _namespaces-guide:
 
-Using Namespaces
+使用命名空间
 ================
 
-A namespace is a logical grouping of jobs and named actors. When an actor is
-named, its name must be unique within the namespace.
+命名空间是作业和命名 actor 的逻辑分组。当 actor 被命名时，其名称必须在命名空间内唯一。
 
-In order to set your applications namespace, it should be specified when you
-first connect to the cluster.
+为了设置应用程序的命名空间，应该在首次连接到集群时指定。
 
 .. tab-set::
 
@@ -33,9 +31,9 @@ first connect to the cluster.
           config.ray_namespace = "hello";
           ray::Init(config);
 
-Please refer to `Driver Options <configure.html#driver-options>`__ for ways of configuring a Java application.
+请参阅 `Driver Options <configure.html#driver-options>`__ 了解配置 Java 应用程序的方法。
 
-Named actors are only accessible within their namespaces.
+命名 actor 仅在其命名空间内可访问。
 
 .. tab-set::
 
@@ -125,11 +123,10 @@ Named actors are only accessible within their namespaces.
             ray::GetActor<Counter>("orange");
             ray::Shutdown();
 
-Specifying namespace for named actors
+为命名 actor 指定命名空间
 -------------------------------------
 
-You can specify a namespace for a named actor while creating it. The created actor belongs to
-the specified namespace, no matter what namespace of the current job is.
+你可以在创建命名 actor 时为其指定命名空间。创建的 actor 属于指定的命名空间，而不管当前作业的命名空间是什么。
 
 .. tab-set::
 
@@ -173,12 +170,11 @@ the specified namespace, no matter what namespace of the current job is.
             ray::Shutdown();`
 
 
-Anonymous namespaces
+匿名命名空间
 --------------------
 
-When a namespace is not specified, Ray will place your job in an anonymous
-namespace. In an anonymous namespace, your job will have its own namespace and
-will not have access to actors in other namespaces.
+当命名空间未指定时，Ray 会将作业放在匿名命名空间中。
+在匿名命名空间中，作业将拥有自己的命名空间，并且无法访问其他命名空间中的 actor。
 
 .. tab-set::
 
@@ -240,9 +236,9 @@ will not have access to actors in other namespaces.
      it is not recommended.
 
 
-Getting the current namespace
+获取当前命名空间
 -----------------------------
-You can access to the current namespace using :ref:`runtime_context APIs <runtime-context-apis>`.
+你可以使用 :ref:`runtime_context APIs <runtime-context-apis>` 访问当前命名空间。
 
 .. tab-set::
 

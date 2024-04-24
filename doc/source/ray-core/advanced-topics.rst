@@ -1,7 +1,7 @@
-Advanced Topics
+高级主题
 ===============
 
-This section covers extended topics on how to use Ray.
+本节介绍如何使用 Ray 的扩展主题。
 
 .. toctree::
     :maxdepth: -1

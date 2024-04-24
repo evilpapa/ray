@@ -1,58 +1,56 @@
-Tips for first-time users
+首次用户提示
 =========================
 
-Ray provides a highly flexible, yet minimalist and easy to use API.
-On this page, we describe several tips that can help first-time Ray users to avoid some
-common mistakes that can significantly hurt the performance of their programs.
-For an in-depth treatment of advanced design patterns, please read :ref:`core design patterns <core-patterns>`.
+Ray 提供了高度灵活、简约且易于使用的 API。
+在本页中，我们描述了一些技巧，可帮助首次使用 Ray 的用户避免一些常见错误，这些错误可能会严重损害其程序的性能。
+如需深入了解高级设计模式，请阅读 :ref:`核心设计模式 <core-patterns>`.
 
-.. list-table:: The core Ray API we use in this document.
+.. list-table:: 我们在本文档中使用的核心 Ray API。
    :header-rows: 1
 
    * - API
-     - Description
+     - 描述
    * - ``ray.init()``
-     - Initialize Ray context.
+     - 初始化 Ray 上下文。
    * - ``@ray.remote``
-     - | Function or class decorator specifying that the function will be
-       | executed as a task or the class as an actor in a different process.
+     - | 函数或类装饰器指定函数将作为任务执行，
+       | 或者作为不同进程中的 actor 执行。
    * - ``.remote()``
-     - | Postfix to every remote function, remote class declaration, or
-       | invocation of a remote class method.
-       | Remote operations are asynchronous.
+     - | 每个远程函数、远程类声明的后缀，或
+       | 调用远程类方法。
+       | 远程操作是异步的。
    * - ``ray.put()``
-     - | Store object in object store, and return its ID.
-       | This ID can be used to pass object as an argument
-       | to any remote function or method call.
-       | This is a synchronous operation.
+     - | 将对象存储在对象存储中，并返回其 ID。
+       | 此 ID 可用于将对象作为参数传递
+       | 任何远程函数或方法调用。
+       | 这是一个同步操作。
    * - ``ray.get()``
-     - | Return an object or list of objects from the object ID
-       | or list of object IDs.
-       | This is a synchronous (i.e., blocking) operation.
+     - | 根据对象 ID 返回对象或对象列表
+       | 或对象 ID 列表。
+       | 这是一个同步（即阻塞）操作。
    * - ``ray.wait()``
-     - | From a list of object IDs, returns
-       | (1) the list of IDs of the objects that are ready, and
-       | (2) the list of IDs of the objects that are not ready yet.
-       | By default, it returns one ready object ID at a time.
+     - | 从对象 ID 列表中返回
+       | （1）已就绪对象的 ID 列表，以及
+       | （2）尚未准备好的对象的ID列表。
+       | 默认情况下，它每次返回一个就绪对象 ID。
 
 
-All the results reported in this page were obtained on a 13-inch MacBook Pro with a 2.7 GHz Core i7 CPU and 16GB of RAM.
-While ``ray.init()`` automatically detects the number of cores when it runs on a single machine,
-to reduce the variability of the results you observe on your machine when running the code below,
-here we specify num_cpus = 4, i.e., a machine with 4 CPUs.
+本页报告的所有结果均在配备 2.7 GHz Core i7 CPU 和 16GB RAM 的 13 英寸 MacBook Pro 上获得。
+虽然 ``ray.init()`` 在单台机器上运行时会自动检测内核数量，
+但为了减少在运行以下代码时在您的机器上观察到的结果的差异，
+我们在此处指定 num_cpus = 4，即具有 4 个 CPU 的机器。
 
-Since each task requests by default one CPU, this setting allows us to execute up to four tasks in parallel.
-As a result, our Ray system consists of one driver executing the program,
-and up to four workers running remote tasks or actors.
+由于每个任务默认请求一个 CPU，因此此设置允许我们并行执行最多四个任务。
+因此，我们的 Ray 系统由一个执行程序的驱动程序和最多四个运行远程任务或 actor 的工作程序组成。
 
 .. _tip-delay-get:
 
-Tip 1: Delay ray.get()
+Tip 1: 延迟 ray.get()
 ----------------------
 
-With Ray, the invocation of every remote operation (e.g., task, actor method) is asynchronous. This means that the operation immediately returns a promise/future, which is essentially an identifier (ID) of the operation’s result. This is key to achieving parallelism, as it allows the driver program to launch multiple operations in parallel. To get the actual results, the programmer needs to call ``ray.get()`` on the IDs of the results. This call blocks until the results are available. As a side effect, this operation also blocks the driver program from invoking other operations, which can hurt parallelism.
+使用 Ray，每个远程操作（例如任务、参与者方法）的调用都是异步的。这意味着操作会立即返回一个 promise/future，这本质上是操作结果的标识符 (ID)。这是实现并行性的关键，因为它允许驱动程序并行启动多个操作。要获得实际结果，程序员需要使用 ``ray.get()`` 调用 ID 的结果。此调用会阻塞，直到结果可用。作为副作用，此操作还会阻止驱动程序调用其他操作，这可能会损害并行性。
 
-Unfortunately, it is quite natural for a new Ray user to inadvertently use ``ray.get()``. To illustrate this point, consider the following simple Python code which calls the ``do_some_work()`` function four times, where each invocation takes around 1 sec:
+不幸的是，对于新的 Ray 用户来说，无意中使用 ``ray.get()`` 是很自然的。为了说明这一点，请考虑以下简单的 Python 代码，它四次调用该函数 ``do_some_work()`` ，每次调用大约需要 1 秒：
 
 .. testcode::
 
@@ -69,7 +67,7 @@ Unfortunately, it is quite natural for a new Ray user to inadvertently use ``ray
     print("results =", results)
 
 
-The output of a program execution is below. As expected, the program takes around 4 seconds:
+程序执行的输出如下。正如预期的那样，该程序大约需要 4 秒：
 
 .. testoutput::
     :options: +MOCK
@@ -77,7 +75,7 @@ The output of a program execution is below. As expected, the program takes aroun
     duration = 4.0149290561676025
     results = [0, 1, 2, 3]
 
-Now, let’s parallelize the above program with Ray. Some first-time users will do this by just making the function remote, i.e.,
+现在，让我们用 Ray 将上述程序并行化。一些初次使用的用户只需将函数设为远程即可，即
 
 .. testcode::
     :hide:
@@ -102,7 +100,7 @@ Now, let’s parallelize the above program with Ray. Some first-time users will 
     print("duration =", time.time() - start)
     print("results =", results)
 
-However, when executing the above program one gets:
+然而，执行上述程序时会得到：
 
 .. testoutput::
     :options: +MOCK
@@ -110,15 +108,15 @@ However, when executing the above program one gets:
     duration = 0.0003619194030761719
     results = [ObjectRef(df5a1a828c9685d3ffffffff0100000001000000), ObjectRef(cb230a572350ff44ffffffff0100000001000000), ObjectRef(7bbd90284b71e599ffffffff0100000001000000), ObjectRef(bd37d2621480fc7dffffffff0100000001000000)]
 
-When looking at this output, two things jump out. First, the program finishes immediately, i.e., in less than 1 ms. Second, instead of the expected results (i.e., [0, 1, 2, 3]), we get a bunch of identifiers. Recall that remote operations are asynchronous and they return futures (i.e., object IDs) instead of the results themselves. This is exactly what we see here. We measure only the time it takes to invoke the tasks, not their running times, and we get the IDs of the results corresponding to the four tasks.
+查看此输出时，有两点值得注意。首先，程序立即完成，即在不到 1 毫秒的时间内完成。其次，我们得到的不是预期的结果（即 [0, 1, 2, 3]），而是一堆标识符。回想一下，远程操作是异步的，它们返回的是 Future（即对象 ID），而不是结果本身。这正是我们在这里看到的。我们只测量调用任务所需的时间，而不是它们的运行时间，并且我们得到了与四个任务相对应的结果的 ID。
 
-To get the actual results,  we need to use ray.get(), and here the first instinct is to just call ``ray.get()`` on the remote operation invocation, i.e., replace line 12 with:
+为了获得实际结果，我们需要使用 ray.get()，这里的第一直觉就是调用 ``ray.get()`` 远程操作调用，即将第 12 行替换为：
 
 .. testcode::
 
     results = [ray.get(do_some_work.remote(x)) for x in range(4)]
 
-By re-running the program after this change we get:
+更改后重新运行程序，我们得到：
 
 .. testoutput::
     :options: +MOCK
@@ -126,15 +124,15 @@ By re-running the program after this change we get:
     duration = 4.018050909042358
     results =  [0, 1, 2, 3]
 
-So now the results are correct, but it still takes 4 seconds, so no speedup! What’s going on? The observant reader will already have the answer: ``ray.get()`` is blocking so calling it after each remote operation means that we wait for that operation to complete, which essentially means that we execute one operation at a time, hence no parallelism!
+现在结果是正确的，但仍然需要 4 秒，因此没有加速！发生了什么？细心的读者肯定已经知道答案了：``ray.get()`` 是阻塞的，因此在每次远程操作后调用它意味着我们等待该操作完成，这实际上意味着我们一次执行一个操作，因此没有并行性！
 
-To enable parallelism, we need to call ``ray.get()`` after invoking all tasks. We can easily do so in our example by replacing line 12 with:
+为了实现并行性，我们需要在调用所有任务后调用 ``ray.get()`` 。在我们的示例中，我们可以轻松地做到这一点，只需将第 12 行替换为：
 
 .. testcode::
 
     results = ray.get([do_some_work.remote(x) for x in range(4)])
 
-By re-running the program after this change we now get:
+通过在更改后重新运行程序，我们现在得到：
 
 .. testoutput::
     :options: +MOCK
@@ -142,16 +140,16 @@ By re-running the program after this change we now get:
     duration = 1.0064549446105957
     results =  [0, 1, 2, 3]
 
-So finally, success! Our Ray program now runs in just 1 second which means that all invocations of ``do_some_work()`` are running in parallel.
+终于成功了！我们的 Ray 程序现在仅需 1 秒即可运行，这意味着所有 ``do_some_work()`` 调用在并行运行。
 
-In summary, always keep in mind that ``ray.get()`` is a blocking operation, and thus if called eagerly it can hurt the parallelism. Instead, you should try to write your program such that ``ray.get()`` is called as late as possible.
+总之，请始终记住， ``ray.get()`` 是一个阻塞操作，因此如果急切调用，可能会损害并行性。相反，您应该尝试编写程序， ``ray.get()`` 可能晚地被调用。
 
-Tip 2: Avoid tiny tasks
+Tip 2: 避免执行微小的任务
 -----------------------
 
-When a first-time developer wants to parallelize their code with Ray, the natural instinct is to make every function or class remote. Unfortunately, this can lead to undesirable consequences; if the tasks are very small, the Ray program can take longer than the equivalent Python program.
+当初次开发的人想要使用 Ray 并行化他们的代码时，自然的本能是让每个函数或类都远程运行。不幸的是，这可能会导致不良后果；如果任务非常小，Ray 程序可能比同等的 Python 程序花费的时间更长。
 
-Let’s consider again the above examples, but this time we make the tasks much shorter (i.e, each takes just 0.1ms), and dramatically increase the number of task invocations to 100,000.
+让我们再次考虑上述示例，但这次我们使任务变得更短（即每个任务仅需要 0.1 毫秒），并将任务调用次数大幅增加到 100,000 次。
 
 .. testcode::
 
@@ -165,16 +163,16 @@ Let’s consider again the above examples, but this time we make the tasks much 
     results = [tiny_work(x) for x in range(100000)]
     print("duration =", time.time() - start)
 
-By running this program we get:
+通过运行该程序我们得到：
 
 .. testoutput::
     :options: +MOCK
 
     duration = 13.36544418334961
 
-This result should be expected since the lower bound of executing 100,000 tasks that take 0.1ms each is 10s, to which we need to add other overheads such as function calls, etc.
+这个结果应该是可以预料到的，因为执行 100,000 个每个耗时 0.1 毫秒的任务的下限是 10 秒，我们还需要添加其他开销，例如函数调用等。
 
-Let’s now parallelize this code using Ray, by making every invocation of ``tiny_work()`` remote:
+现在让我们使用 Ray 并行化此代码，通过每次调用远程 ``tiny_work()`` :
 
 .. testcode::
 
@@ -191,16 +189,16 @@ Let’s now parallelize this code using Ray, by making every invocation of ``tin
     results = ray.get(result_ids)
     print("duration =", time.time() - start)
 
-The result of running this code is:
+运行该代码的结果是：
 
 .. testoutput::
     :options: +MOCK
 
     duration = 27.46447515487671
 
-Surprisingly, not only Ray didn’t improve the execution time, but the Ray program is actually slower than the sequential program! What’s going on? Well, the issue here is that every task invocation has a non-trivial overhead (e.g., scheduling, inter-process communication, updating the system state) and this overhead dominates the actual time it takes to execute the task.
+令人惊讶的是，Ray 不仅没有改善执行时间，而且 Ray 程序实际上比顺序程序更慢！发生了什么？嗯，这里的问题是每个任务调用都有不小的开销（例如，调度、进程间通信、更新系统状态），并且这些开销决定了执行任务所需的实际时间。
 
-One way to speed up this program is to make the remote tasks larger in order to amortize the invocation overhead. Here is one possible solution where we aggregate 1000 ``tiny_work()`` function calls in a single bigger remote function:
+加快此程序速度的一种方法是增大远程任务，以分摊调用开销。以下是一种可能的解决方案，我们将 1000 个 ``tiny_work()`` 远程调用聚合到一个更大的远程函数中：
 
 .. testcode::
 
@@ -221,14 +219,14 @@ One way to speed up this program is to make the remote tasks larger in order to 
     results = ray.get(result_ids)
     print("duration =", time.time() - start)
 
-Now, if we run the above program we get:
+现在，如果我们运行上述程序，我们会得到：
 
 .. testoutput::
     :options: +MOCK
 
     duration = 3.2539820671081543
 
-This is approximately one fourth of the sequential execution, in line with our expectations (recall, we can run four tasks in parallel). Of course, the natural question is how large is large enough for a task to amortize the remote invocation overhead. One way to find this is to run the following simple program to estimate the per-task invocation overhead:
+这大约是顺序执行的四分之一，符合我们的预期（回想一下，我们可以并行运行四个任务）。当然，自然而然的问题是，多大的任务才能足以分摊远程调用开销。找到这一点的一种方法是运行以下简单程序来估算每个任务的调用开销：
 
 .. testcode::
 
@@ -241,21 +239,21 @@ This is approximately one fourth of the sequential execution, in line with our e
     [ray.get(no_work.remote(x)) for x in range(num_calls)]
     print("per task overhead (ms) =", (time.time() - start)*1000/num_calls)
 
-Running the above program on a 2018 MacBook Pro notebook shows:
+在 2018 款 MacBook Pro 笔记本上运行上述程序显示：
 
 .. testoutput::
     :options: +MOCK
 
     per task overhead (ms) = 0.4739549160003662
 
-In other words, it takes almost half a millisecond to execute an empty task. This suggests that we will need to make sure a task takes at least a few milliseconds to amortize the invocation overhead. One caveat is that the per-task overhead will vary from machine to machine, and between tasks that run on the same machine versus remotely. This being said, making sure that tasks take at least a few milliseconds is a good rule of thumb when developing Ray programs.
+换句话说，执行一个空任务需要将近半毫秒的时间。这意味着我们需要确保任务至少需要几毫秒才能分摊调用开销。需要注意的是，每个任务的开销会因机器而异，并且在同一台机器上运行的任务与远程运行的任务之间也会有所不同。话虽如此，确保任务至少需要几毫秒是开发 Ray 程序时的一个好经验法则。
 
-Tip 3: Avoid passing same object repeatedly to remote tasks
+Tip 3: 避免将同一对象重复传递给远程任务
 -----------------------------------------------------------
 
-When we pass a large object as an argument to a remote function, Ray calls ``ray.put()`` under the hood to store that object in the local object store. This can significantly improve the performance of a remote task invocation when the remote task is executed locally, as all local tasks share the object store.
+当我们将大型对象作为参数传递给远程函数时，Ray 会在后台调用该函数 ``ray.put()`` 该对象存储在本地对象存储中。 当远程任务在本地执行时，这可以显著提高远程任务调用的性能，因为所有本地任务都共享对象存储。
 
-However, there are cases when automatically calling ``ray.put()`` on a task invocation leads to performance issues. One example is passing the same large object as an argument repeatedly, as illustrated by the program below:
+但是，有时任务自动调用 ``ray.put()`` 会导致性能问题。。一个例子是重复传递同一个大对象作为参数，如下面的程序所示：
 
 .. testcode::
 
@@ -273,7 +271,7 @@ However, there are cases when automatically calling ``ray.put()`` on a task invo
     results = ray.get(result_ids)
     print("duration =", time.time() - start)
 
-This program outputs:
+该程序输出：
 
 .. testoutput::
     :options: +MOCK
@@ -281,9 +279,9 @@ This program outputs:
     duration = 1.0837509632110596
 
 
-This running time is quite large for a program that calls just 10 remote tasks that do nothing. The reason for this unexpected high running time is that each time we invoke ``no_work(a)``, Ray calls ``ray.put(a)`` which results in copying array ``a`` to the object store. Since array ``a`` has 2.5 million entries, copying it takes a non-trivial time.
+对于一个只调用 10 个不执行任何操作的远程任务的程序来说，这个运行时间相当长。运行时间出乎意料地长的原因是，每次我们调用 ``no_work(a)`` 时，Ray 都会调用 ``ray.put(a)`` ，这会导致将数组复制 ``a`` 到对象存储中。由于数组 ``a`` 有 250 万个条目，因此复制它需要花费不少时间。
 
-To avoid copying array ``a`` every time ``no_work()`` is invoked, one simple solution is to explicitly call ``ray.put(a)``, and then pass ``a``’s ID to ``no_work()``, as illustrated below:
+为了避免每次 ``no_work()`` 调用时复制 ``a`` 数组，一个简单的解决方案是显式调用 ``ray.put(a)``，然后将 ``a`` 的 ID 传递给 ``no_work()``，如下所示：
 
 .. testcode::
     :hide:
@@ -309,24 +307,24 @@ To avoid copying array ``a`` every time ``no_work()`` is invoked, one simple sol
     results = ray.get(result_ids)
     print("duration =", time.time() - start)
 
-Running this program takes only:
+运行该程序仅需：
 
 .. testoutput::
     :options: +MOCK
 
     duration = 0.132796049118042
 
-This is 7 times faster than the original program which is to be expected since the main overhead of invoking ``no_work(a)`` was copying the array ``a`` to the object store, which now happens only once.
+这比原始程序快 7 倍，这是可以预料的，因为调用 ``no_work(a)`` 的主要开销是将数组 ``a`` 复制到对象存储中，现在只需要一次。
 
-Arguably a more important advantage of avoiding multiple copies of the same object to the object store is that it precludes the object store filling up prematurely and incur the cost of object eviction.
+可以说，避免将同一对象多次复制到对象存储的一个更重要的优点是，它可以防止对象存储过早填满并产生对象驱逐的成本。
 
 
-Tip 4: Pipeline data processing
+Tip 4: Pipeline 数据处理
 -------------------------------
 
-If we use ``ray.get()`` on the results of multiple tasks we will have to wait until the last one of these tasks finishes. This can be an issue if tasks take widely different amounts of time.
+如果我们使用 ``ray.get()`` 在多个任务的结果上，我们将不得不等到这些任务中的最后一个完成。如果任务花费的时间差异很大，这可能会成为一个问题。
 
-To illustrate this issue, consider the following example where we run four ``do_some_work()`` tasks in parallel, with each task taking a time uniformly distributed between 0 and 4 seconds. Next, assume the results of these tasks are processed by ``process_results()``, which takes 1 sec per result. The expected running time is then (1) the time it takes to execute the slowest of the ``do_some_work()`` tasks, plus (2) 4 seconds which is the time it takes to execute ``process_results()``.
+为了说明这个问题，请考虑以下示例，我们并行运行四个 ``do_some_work()`` 任务，每个任务花费的时间在 0 到 4 秒之间均匀分布。接下来，假设这些任务的结果由 ``process_results()`` 处理，每个结果需要 1 秒。预期的运行时间是（1）执行 ``do_some_work()`` 任务中最慢的任务所需的时间，加上（2）执行 ``process_results()`` 所需的 4 秒。
 
 .. testcode::
 
@@ -351,7 +349,7 @@ To illustrate this issue, consider the following example where we run four ``do_
     sum = process_results(data_list)
     print("duration =", time.time() - start, "\nresult = ", sum)
 
-The output of the program shows that it takes close to 8 sec to run:
+程序的输出显示运行需要接近 8 秒：
 
 .. testoutput::
     :options: +MOCK
@@ -359,8 +357,8 @@ The output of the program shows that it takes close to 8 sec to run:
     duration = 7.82636022567749
     result =  6
 
-Waiting for the last task to finish when the others tasks might have finished much earlier unnecessarily increases the program running time. A better solution would be to process the data as soon it becomes available.
-Fortunately, Ray allows you to do exactly this by calling ``ray.wait()`` on a list of object IDs. Without specifying any other parameters, this function returns as soon as an object in its argument list is ready. This call has two returns: (1) the ID of the ready object, and (2) the list containing the IDs of the objects not ready yet. The modified program is below. Note that one change we need to do is to replace ``process_results()`` with ``process_incremental()`` that processes one result at a time.
+当其他任务可能早已完成时，等待最后一个任务完成可能会增加程序运行时间。更好的解决方案是一旦数据可用就立即处理数据。
+幸运的是，Ray 允许您通过在对象 ID 列表上调用 ``ray.wait()`` 来实现这一点。在不指定任何其他参数的情况下，此函数会在其参数列表中的对象准备就绪时立即返回。此调用有两个返回值：（1）准备就绪的对象的 ID，以及（2）包含尚未准备好的对象的 ID 列表。修改后的程序如下。请注意，我们需要做的一个更改是将 ``process_results()`` 替换为 ``process_incremental()``，后者一次处理一个结果。
 
 .. testcode::
 
@@ -385,7 +383,7 @@ Fortunately, Ray allows you to do exactly this by calling ``ray.wait()`` on a li
         sum = process_incremental(sum, ray.get(done_id[0]))
     print("duration =", time.time() - start, "\nresult = ", sum)
 
-This program now takes just a bit over 4.8sec, a significant improvement:
+该程序现在仅需 4.8 秒多一点，这是一个显著的进步：
 
 .. testoutput::
     :options: +MOCK
@@ -393,8 +391,8 @@ This program now takes just a bit over 4.8sec, a significant improvement:
     duration = 4.852453231811523
     result =  6
 
-To aid the intuition, Figure 1 shows the execution timeline in both cases: when using ``ray.get()`` to wait for all results to become available before processing them, and using ``ray.wait()`` to start processing the results as soon as they become available.
+为了帮助直观理解，图 1 显示了两种情况下的执行时间线：在使用 ``ray.get()`` 等待所有结果可用之前处理它们，以及在使用 ``ray.wait()`` 在结果可用时立即开始处理结果。
 
 .. figure:: /images/pipeline.png
 
-    Figure 1: (a) Execution timeline when  using ray.get() to wait for all results from ``do_some_work()`` tasks before calling ``process_results()``. (b) Execution timeline when using ``ray.wait()`` to process results as soon as they become available.
+    图 1：（a）使用 ray.get() 等待所有结果从 ``do_some_work()`` 任务中调用 ``process_results()`` 之前的执行时间线。 （b）使用 ``ray.wait()`` 处理结果的执行时间线，一旦结果可用就立即处理。

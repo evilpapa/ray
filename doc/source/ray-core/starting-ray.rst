@@ -1,39 +1,39 @@
-Starting Ray
+启动 Ray
 ============
 
-This page covers how to start Ray on your single machine or cluster of machines.
+本页介绍如何在单台机器或机器集群上启动 Ray。
 
-.. tip:: Be sure to have :ref:`installed Ray <installation>` before following the instructions on this page.
+.. tip:: 在按照本页上的说明进行操作之前，请确保已 :ref:`安装 Ray <installation>` 。
 
 
-What is the Ray runtime?
+Ray 运行时是什么？
 ------------------------
 
-Ray programs are able to parallelize and distribute by leveraging an underlying *Ray runtime*.
-The Ray runtime consists of multiple services/processes started in the background for communication, data transfer, scheduling, and more. The Ray runtime can be started on a laptop, a single server, or multiple servers.
+Ray 程序通过利用底层的 *Ray 运行时* 来并行化和分发。
+Ray 运行时由在后台启动的多个服务/进程组成，用于通信、数据传输、调度等。Ray 运行时可以在笔记本电脑、单台服务器或多台服务器上启动。
 
-There are three ways of starting the Ray runtime:
+有三种方式启动 Ray 运行时：
 
-* Implicitly via ``ray.init()`` (:ref:`start-ray-init`)
-* Explicitly via CLI (:ref:`start-ray-cli`)
-* Explicitly via the cluster launcher (:ref:`start-ray-up`)
+* 隐式通过 ``ray.init()`` (:ref:`start-ray-init`)
+* 通过 CLI 明确启动 (:ref:`start-ray-cli`)
+* 通过集群启动器明确启动 (:ref:`start-ray-up`)
 
-In all cases, ``ray.init()`` will try to automatically find a Ray instance to
-connect to. It checks, in order:
-1. The ``RAY_ADDRESS`` OS environment variable.
-2. The concrete address passed to ``ray.init(address=<address>)``.
-3. If no address is provided, the latest Ray instance that was started on the same machine using ``ray start``.
+在所有情况下， ``ray.init()`` 都会尝试自动找到要连接的 Ray 实例。
+它会按顺序检查：
+1. ``RAY_ADDRESS`` 操作系统环境变量。
+2. 传递给 ``ray.init(address=<address>)`` 的具体地址。
+3. 如果没有提供地址，则使用 ``ray start`` 在同一台机器上启动的最新 Ray 实例。
 
 .. _start-ray-init:
 
-Starting Ray on a single machine
+在单台机器上启动 Ray
 --------------------------------
 
-Calling ``ray.init()`` starts a local Ray instance on your laptop/machine. This laptop/machine becomes the  "head node".
+调用 ``ray.init()`` 将在您的笔记本电脑/机器上启动本地 Ray 实例。此笔记本电脑/机器将成为“头节点”。
 
 .. note::
 
-  In recent versions of Ray (>=1.5), ``ray.init()`` will automatically be called on the first use of a Ray remote API.
+  在 Ray 的最新版本（>=1.5）中，第一次使用 Ray 远程 API 时 ``ray.init()`` 会自动调用。
 
 .. tab-set::
 
@@ -74,7 +74,7 @@ Calling ``ray.init()`` starts a local Ray instance on your laptop/machine. This 
             // Other Ray APIs will not work until `ray::Init()` is called.
             ray::Init()
 
-When the process calling ``ray.init()`` terminates, the Ray runtime will also terminate. To explicitly stop or restart Ray, use the shutdown API.
+当 ``ray.init()`` 进程调用终止时，Ray 运行时也将终止。要显式停止或重新启动 Ray，请使用 shutdown API。
 
 .. tab-set::
 
@@ -116,7 +116,7 @@ When the process calling ``ray.init()`` terminates, the Ray runtime will also te
             ... // ray program
             ray::Shutdown()
 
-To check if Ray is initialized, use the ``is_initialized`` API.
+要检查 Ray 是否已初始化，请使用 ``is_initialized`` API。
 
 .. tab-set::
 
@@ -161,14 +161,14 @@ To check if Ray is initialized, use the ``is_initialized`` API.
                 assert(!ray::IsInitialized());
             }
 
-See the `Configuration <configure.html>`__ documentation for the various ways to configure Ray.
+参考 `配置 <configure.html>`__ 文档了解配置 Ray 的各种方式。
 
 .. _start-ray-cli:
 
-Starting Ray via the CLI (``ray start``)
+通过 CLI 启动 Ray (``ray start``)
 ----------------------------------------
 
-Use ``ray start`` from the CLI to start a 1 node ray runtime on a machine. This machine becomes the "head node".
+在 CLI 中使用 ``ray start`` 启动一个 Ray 运行时节点。这个节点将成为“头节点”。
 
 .. code-block:: bash
 
@@ -184,8 +184,8 @@ Use ``ray start`` from the CLI to start a 1 node ray runtime on a machine. This 
   ...
 
 
-You can connect to this Ray instance by starting a driver process on the same node as where you ran ``ray start``.
-``ray.init()`` will now automatically connect to the latest Ray instance.
+你可以通过在与 ``ray start`` 同一节点上启动驱动程序进程来连接到此 Ray 实例。
+``ray.init()`` 会自动连接到最新的 Ray 实例。
 
 .. tab-set::
 
@@ -232,19 +232,19 @@ You can connect to this Ray instance by starting a driver process on the same no
           RAY_ADDRESS=<address> ./<binary> <args>
 
 
-You can connect other nodes to the head node, creating a Ray cluster by also calling ``ray start`` on those nodes. See :ref:`on-prem` for more details. Calling ``ray.init()`` on any of the cluster machines will connect to the same Ray cluster.
+你可以通过在其他节点上调用 ``ray start`` 来连接到头节点，从而创建一个 Ray 集群。在 :ref:`on-prem` 中查看更多细节。在集群中的任何一台机器上调用 ``ray.init()`` 将连接到同一个 Ray 集群。
 
 .. _start-ray-up:
 
-Launching a Ray cluster (``ray up``)
+启动 Ray 集群 (``ray up``)
 ------------------------------------
 
-Ray clusters can be launched with the :ref:`Cluster Launcher <cluster-index>`.
-The ``ray up`` command uses the Ray cluster launcher to start a cluster on the cloud, creating a designated "head node" and worker nodes. Underneath the hood, it automatically calls ``ray start`` to create a Ray cluster.
+Ray 集群可以通过 :ref:`集群启动器 <cluster-index>` 启动。
+``ray up`` 命令使用 Ray 集群启动器在云上启动集群，创建指定的“头节点”和工作节点。在底层，它会自动调用 ``ray start`` 来创建 Ray 集群。
 
-Your code **only** needs to execute on one machine in the cluster (usually the head node). Read more about :ref:`running programs on a Ray cluster <cluster-index>`.
+你的代码 **只需要** 在集群中的一台机器上执行（通常是头节点）。了解更多关于 :ref:`在 Ray 集群上运行程序 <cluster-index>` 的信息。
 
-To connect to the Ray cluster, call ``ray.init`` from one of the machines in the cluster. This will connect to the latest Ray cluster:
+要连接到 Ray 集群，请在集群中的一台机器上调用 ``ray.init``。这将连接到最新的 Ray 集群：
 
 .. testcode::
   :hide:
@@ -255,9 +255,9 @@ To connect to the Ray cluster, call ``ray.init`` from one of the machines in the
 
   ray.init()
 
-Note that the machine calling ``ray up`` will not be considered as part of the Ray cluster, and therefore calling ``ray.init`` on that same machine will not attach to the cluster.
+请注意，调用 ``ray up`` 的机器不会被视为 Ray 集群的一部分，因此在同一台机器上调用 ``ray.init`` 将不会连接到集群。
 
-What's next?
+接下来是什么？
 ------------
 
-Check out our `Deployment section <cluster/index.html>`_ for more information on deploying Ray in different settings, including Kubernetes, YARN, and SLURM.
+查看我们的 `部署部分 <cluster/index.html>`_ 了解有关在不同环境中部署 Ray 的更多信息，包括 Kubernetes、YARN 和 SLURM。
