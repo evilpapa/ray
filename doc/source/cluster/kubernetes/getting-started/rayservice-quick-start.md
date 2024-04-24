@@ -1,76 +1,76 @@
 (kuberay-rayservice-quickstart)=
 
-# RayService Quickstart
+# RayService 快速入门
 
-## Prerequisites
+## 先决条件
 
-This guide focuses solely on the Ray Serve multi-application API, which is available starting from Ray version 2.4.0.
+本指南仅重点介绍 Ray Serve 多应用程序 API，该 API 从 Ray 版本 2.4.0 开始提供。
 
-* Ray 2.4.0 or newer.
-* KubeRay 0.6.0, KubeRay nightly, or newer.
+* Ray 2.4.0 或更高版本。
+* KubeRay 0.6.0、KubeRay nightly 或更高版本。
 
-## What's a RayService?
+## 什么是 RayService？
 
-A RayService manages these components:
+RayService 管理这些组件：
 
-* **RayCluster**: Manages resources in a Kubernetes cluster.
-* **Ray Serve Applications**: Manages users' applications.
+* **RayCluster**: 管理 Kubernetes 集群中的资源。
+* **Ray Serve 应用程序**: 管理用户的应用程序。
 
-## What does the RayService provide?
+## RayService 提供什么？
 
-* **Kubernetes-native support for Ray clusters and Ray Serve applications:** After using a Kubernetes config to define a Ray cluster and its Ray Serve applications, you can use `kubectl` to create the cluster and its applications.
-* **In-place updating for Ray Serve applications:** See [RayService](kuberay-rayservice) for more details.
-* **Zero downtime upgrading for Ray clusters:** See [RayService](kuberay-rayservice) for more details.
-* **High-availabilable services:** See [RayService](kuberay-rayservice) for more details.
+* **对 Ray 集群和 Ray Serve 应用程序的 Kubernetes 原生支持:** 使用 Kubernetes 配置定义 Ray 集群及其 Ray Serve 应用程序后，您可以用 `kubectl` 创建集群及其应用程序。
+* **Ray Serve 应用程序就地更新** 请参阅 [RayService](kuberay-rayservice) 了解更多详细信息。
+* **Ray集群零停机升级:** 请参阅 [RayService](kuberay-rayservice) 了解更多详细信息。
+* **高可用服务:** 请参阅 [RayService](kuberay-rayservice) 了解更多详细信息。
 
-## Example: Serve two simple Ray Serve applications using RayService
+## 示例: 使用 RayService 为两个简单的 Ray Serve 应用程序提供服务
 
-## Step 1: Create a Kubernetes cluster with Kind
+## 步骤 1: 使用 Kind 创建 Kubernetes 集群
 
 ```sh
 kind create cluster --image=kindest/node:v1.23.0
 ```
 
-## Step 2: Install the KubeRay operator
+## 步骤 2: 安装 KubeRay Operator
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
-Please note that the YAML file in this example uses `serveConfigV2` to specify a multi-application Serve config, which is supported starting from KubeRay v0.6.0.
+按照 [本文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
+请注意，本示例中的 YAML 文件使用 `serveConfigV2` 指定多应用程序 Serve 配置，从 KubeRay v0.6.0 开始支持该配置。
 
-## Step 3: Install a RayService
+## 步骤 3: 安装 RayService
 
 ```sh
-# Step 3.1: Download `ray_v1alpha1_rayservice.yaml`
+# 步骤 3.1: Download `ray_v1alpha1_rayservice.yaml`
 curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray_v1alpha1_rayservice.yaml
 
-# Step 3.2: Create a RayService
+# 步骤 3.2: Create a RayService
 kubectl apply -f ray_v1alpha1_rayservice.yaml
 ```
 
-## Step 4: Verify the Kubernetes cluster status 
+## 步骤 4: 验证 Kubernetes 集群状态
 
 ```sh
-# Step 4.1: List all RayService custom resources in the `default` namespace.
+# 步骤 4.1: List all RayService custom resources in the `default` namespace.
 kubectl get rayservice
 
 # [Example output]
 # NAME                AGE
 # rayservice-sample   2m42s
 
-# Step 4.2: List all RayCluster custom resources in the `default` namespace.
+# 步骤 4.2: List all RayCluster custom resources in the `default` namespace.
 kubectl get raycluster
 
 # [Example output]
 # NAME                                 DESIRED WORKERS   AVAILABLE WORKERS   STATUS   AGE
 # rayservice-sample-raycluster-6mj28   1                 1                   ready    2m27s
 
-# Step 4.3: List all Ray Pods in the `default` namespace.
+# 步骤 4.3: List all Ray Pods in the `default` namespace.
 kubectl get pods -l=ray.io/is-ray-node=yes
 
 # [Example output]
 # ervice-sample-raycluster-6mj28-worker-small-group-kg4v5   1/1     Running   0          3m52s
 # rayservice-sample-raycluster-6mj28-head-x77h4             1/1     Running   0          3m52s
 
-# Step 4.4: List services in the `default` namespace.
+# 步骤 4.4: List services in the `default` namespace.
 kubectl get services
 
 # NAME                                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                   AGE
@@ -80,8 +80,9 @@ kubectl get services
 # rayservice-sample-serve-svc                   ClusterIP   10.96.161.84    <none>        8000/TCP                                                  4m58s
 ```
 
-When the Ray Serve applications are healthy and ready, KubeRay creates a head service and a Ray Serve service for the RayService custom resource. For example, `rayservice-sample-head-svc` and `rayservice-sample-serve-svc` in Step 4.4.
-## Step 5: Verify the status of the Serve applications
+当 Ray Serve 应用程序正常运行并准备就绪时，KubeRay 会为 RayService 自定义资源创建一个头服务和一个 Ray Serve 服务。例如步骤 4.4 中的 `rayservice-sample-head-svc` 和 `rayservice-sample-serve-svc`。
+
+## 步骤 5: 验证服务应用程序的状态
 
 ```sh
 # (1) Forward the dashboard port to localhost.
@@ -89,27 +90,27 @@ When the Ray Serve applications are healthy and ready, KubeRay creates a head se
 kubectl port-forward svc/rayservice-sample-head-svc --address 0.0.0.0 8265:8265
 ```
 
-* Refer to [rayservice-troubleshooting.md](kuberay-raysvc-troubleshoot) for more details on RayService observability.
-Below is a screenshot example of the Serve page in the Ray dashboard.
+* 参考 [rayservice-troubleshooting.md](kuberay-raysvc-troubleshoot) 了解更多 RayService 可观测性。
+下面是 Ray 仪表板中服务页面的屏幕截图示例。
   ![Ray Serve Dashboard](../images/dashboard_serve.png)
 
-## Step 6: Send requests to the Serve applications via the Kubernetes serve service
+## 步骤 6: Send requests to the Serve applications via the Kubernetes serve service
 
 ```sh
-# Step 6.1: Run a curl Pod.
+# 步骤 6.1: Run a curl Pod.
 # If you already have a curl Pod, you can use `kubectl exec -it <curl-pod> -- sh` to access the Pod.
 kubectl run curl --image=radial/busyboxplus:curl -i --tty
 
-# Step 6.2: Send a request to the fruit stand app.
+# 步骤 6.2: Send a request to the fruit stand app.
 curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:8000/fruit/ -d '["MANGO", 2]'
 # [Expected output]: 6
 
-# Step 6.3: Send a request to the calculator app.
+# 步骤 6.3: Send a request to the calculator app.
 curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:8000/calc/ -d '["MUL", 3]'
 # [Expected output]: "15 pizzas please!"
 ```
 
-## Step 7: Clean up the Kubernetes cluster
+## 步骤 7: Clean up the Kubernetes cluster
 
 ```sh
 # Delete the RayService.
@@ -122,9 +123,9 @@ helm uninstall kuberay-operator
 kubectl delete pod curl
 ```
 
-## Next steps
+## 接下来
 
-* See [RayService](kuberay-rayservice) document for the full list of RayService features, including in-place update, zero downtime upgrade, and high-availability.
-* See [RayService troubleshooting guide](kuberay-raysvc-troubleshoot) if you encounter any issues.
-* See [Examples](kuberay-examples) for more RayService examples.
-The [MobileNet example](kuberay-mobilenet-rayservice-example) is a good example to start with because it does not require GPUs and is easy to run on a local machine.
+* 参阅 [RayService](kuberay-rayservice) 文档，了解 RayService 功能的完整列表，包括就地更新、零停机升级和高可用性。
+* 如果遇到任何问题，请参阅 [RayService troubleshooting guide](kuberay-raysvc-troubleshoot) 。
+* 参阅 [Examples](kuberay-examples) 了解更多 RayService 示例。
+[MobileNet example](kuberay-mobilenet-rayservice-example) 是一个很好的入门示例，因为它不需要 GPU 并且很容易在本地计算机上运行。

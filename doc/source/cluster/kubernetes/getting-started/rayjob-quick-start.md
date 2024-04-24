@@ -1,83 +1,83 @@
 (kuberay-rayjob-quickstart)=
 
-# RayJob Quickstart
+# RayJob 快速入门
 
 :::{warning}
-RayJob support in KubeRay v0.x is in alpha.
+KubeRay v0.x 中的 RayJob 支持处于 alpha 阶段。
 :::
 
-## Prerequisites
+## 先决条件
 
-* Ray 1.10 or higher
-* KubeRay v0.3.0+. (v0.6.0+ is recommended)
+* Ray 1.10 或更高
+* KubeRay v0.3.0+。 (推荐 v0.6.0+ )
 
-## What is a RayJob?
+## 什么是 RayJob？
 
-A RayJob manages two aspects:
+RayJob 管理两个方面：
 
-* **RayCluster**: Manages resources in a Kubernetes cluster.
-* **Job**: A Kubernetes Job runs `ray job submit` to submit a Ray job to the RayCluster.
+* **RayCluster**: 管理 Kubernetes 集群中的资源。
+* **Job**: 运行 Kubernetes 作业 `ray job submit` 以将 Ray 作业提交到 RayCluster。
 
-## What does the RayJob provide?
+## RayJob 提供什么？
 
-* **Kubernetes-native support for Ray clusters and Ray jobs**: You can use a Kubernetes config to define a Ray cluster and job, and use `kubectl` to create them. The cluster can be deleted automatically once the job is finished.
+* **对 Ray Cluster和 Ray Job 的 Kubernetes 原生支持**: 您可以使用 Kubernetes 配置来定义 Ray 集群和作业，并用 `kubectl` 创建它们。作业完成后，集群可以自动删除。
 
-## RayJob Configuration
+## RayJob 配置
 
-* `entrypoint` - The shell command to run for this job.
-* `rayClusterSpec` - The spec for the **RayCluster** to run the job on.
-* `jobId` - _(Optional)_ Job ID to specify for the job. If not provided, one will be generated.
-* `metadata` - _(Optional)_ Arbitrary user-provided metadata for the job.
-* `runtimeEnvYAML` - _(Optional)_ The runtime environment configuration provided as a multi-line YAML string. _(New in KubeRay version 1.0.)_
-* `shutdownAfterJobFinishes` - _(Optional)_ whether to recycle the cluster after the job finishes. Defaults to false.
-* `ttlSecondsAfterFinished` - _(Optional)_ TTL to clean up the cluster. This only works if `shutdownAfterJobFinishes` is set.
-* `submitterPodTemplate` - _(Optional)_ Pod template spec for the pod that runs `ray job submit` against the Ray cluster.
-* `entrypointNumCpus` - _(Optional)_ Specifies the quantity of CPU cores to reserve for the entrypoint command. _(New in KubeRay version 1.0.)_
-* `entrypointNumGpus` - _(Optional)_ Specifies the number of GPUs to reserve for the entrypoint command. _(New in KubeRay version 1.0.)_
-* `entrypointResources` - _(Optional)_ A json formatted dictionary to specify custom resources and their quantity. _(New in KubeRay version 1.0.)_
-* `runtimeEnv` - [DEPRECATED] _(Optional)_ base64-encoded string of the runtime env json string.
+* `entrypoint` - 为此作业运行的 shell 命令。
+* `rayClusterSpec` - 用于运行 Job 的 **RayCluster** 配置。
+* `jobId` - _（可选）_ 为作业指定的作业 ID。如果未提供，则会生成一个。
+* `metadata` - _（可选）_ 用户为作业提供的任意元数据。
+* `runtimeEnvYAML` - _（可选）_ 以多行 YAML 字符串形式提供的运行时环境配置。 _（KubeRay 1.0 版中的新增功能。）_
+* `shutdownAfterJobFinishes` - _（可选）_ 作业完成后是否回收集群。默认为 false。
+* `ttlSecondsAfterFinished` - _（可选）_ 用于清理集群的 TTL。仅当`shutdownAfterJobFinishes`设置时才有效。
+* `submitterPodTemplate` - _（可选）_ 针对 Ray 集群运行 `ray job submit` 的 Pod 的 Pod 模板规范。
+* `entrypointNumCpus` - _（可选）_ 指定为入口点命令保留的 CPU 核心数量。 _（KubeRay 1.0 版中的新增功能。）_
+* `entrypointNumGpus` - _（可选）_ 指定为入口点命令保留的 GPU 数量。 _（KubeRay 1.0 版中的新增功能。）_
+* `entrypointResources` - _（可选）_ 一个 json 格式的字典，用于指定自定义资源及其数量。 _（KubeRay 1.0 版中的新增功能。）_
+* `runtimeEnv` - [已弃用] _（可选）_ 运行时环境 json 字符串的 base64 编码字符串。
 
-## Example: Run a simple Ray job with RayJob
+## 示例: 使用 RayJob 运行简单的 Ray 作业
 
-## Step 1: Create a Kubernetes cluster with Kind
+## 步骤 1: 使用 Kind 创建 Kubernetes 集群
 
 ```sh
 kind create cluster --image=kindest/node:v1.23.0
 ```
 
-## Step 2: Install the KubeRay operator
+## 步骤 2: 安装 KubeRay Operator
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
-Please note that the YAML file in this example uses `serveConfigV2` to specify a multi-application Serve config, which is supported starting from KubeRay v0.6.0.
+按照 [本文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
+请注意，本示例中的 YAML 文件使用 `serveConfigV2` 指定多应用程序 Serve 配置，从 KubeRay v0.6.0 开始支持该配置。
 
-## Step 3: Install a RayJob
+## 步骤 3: 安装 RayJob
 
 ```sh
-# Step 3.1: Download `ray_v1alpha1_rayjob.yaml`
+# 步骤 3.1: 下载 `ray_v1alpha1_rayjob.yaml`
 curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray_v1alpha1_rayjob.yaml
 
-# Step 3.2: Create a RayJob
+# 步骤 3.2: 创建 RayJob
 kubectl apply -f ray_v1alpha1_rayjob.yaml
 ```
 
-## Step 4: Verify the Kubernetes cluster status
+## 步骤 4: 验证 Kubernetes 集群状态
 
 ```shell
-# Step 4.1: List all RayJob custom resources in the `default` namespace.
+# 步骤 4.1: List all RayJob custom resources in the `default` namespace.
 kubectl get rayjob
 
 # [Example output]
 # NAME            AGE
 # rayjob-sample   7s
 
-# Step 4.2: List all RayCluster custom resources in the `default` namespace.
+# 步骤 4.2: List all RayCluster custom resources in the `default` namespace.
 kubectl get raycluster
 
 # [Example output]
 # NAME                                 DESIRED WORKERS   AVAILABLE WORKERS   STATUS   AGE
 # rayservice-sample-raycluster-6mj28   1                 1                   ready    2m27s
 
-# Step 4.3: List all Pods in the `default` namespace.
+# 步骤 4.3: List all Pods in the `default` namespace.
 # The Pod created by the Kubernetes Job will be terminated after the Kubernetes Job finishes.
 kubectl get pods
 
@@ -87,7 +87,7 @@ kubectl get pods
 # rayjob-sample-raycluster-9c546-head-gdxkg                 1/1     Running     0          3m46s
 # rayjob-sample-raycluster-9c546-worker-small-group-nfbxm   1/1     Running     0          3m46s
 
-# Step 4.4: Check the status of the RayJob.
+# 步骤 4.4: Check the status of the RayJob.
 # The field `jobStatus` in the RayJob custom resource will be updated to `SUCCEEDED` once the job finishes.
 kubectl get rayjobs.ray.io rayjob-sample -o json | jq '.status.jobStatus'
 
@@ -95,13 +95,13 @@ kubectl get rayjobs.ray.io rayjob-sample -o json | jq '.status.jobStatus'
 # "SUCCEEDED"
 ```
 
-The KubeRay operator will create a RayCluster as defined by the `rayClusterSpec` custom resource, as well as a Kubernetes Job to submit a Ray job to the RayCluster.
-The Ray job is defined in the `entrypoint` field of the RayJob custom resource.
-In this example, the `entrypoint` is `python /home/ray/samples/sample_code.py`,
-and `sample_code.py` is a Python script stored in a Kubernetes ConfigMap mounted to the head Pod of the RayCluster.
-Since the default value of `shutdownAfterJobFinishes` is false, the RayCluster will not be deleted after the job finishes.
+KubeRay operator 将创建由自定义资源定义的 RayCluster `rayClusterSpec` 指定，以及用于向 RayCluster 提交 Ray 作业的 Kubernetes 作业。 
+Ray job 在 RayJob 自定义资源的 `entrypoint` 字段定义。
+在此示例中， `entrypoint` 是 `python /home/ray/samples/sample_code.py`，
+`sample_code.py` 存储在 Kubernetes Config 并挂载在 RayCluster 头 Pod 的 Python 脚本。
+由于默认  `shutdownAfterJobFinishes` 值为false，因此作业完成后不会删除 RayCluster。
 
-## Step 5: Check the output of the Ray job
+## 步骤 5: 检查 Ray Job 的输出
 
 ```sh
 kubectl logs -l=job-name=rayjob-sample
@@ -132,18 +132,18 @@ kubectl logs -l=job-name=rayjob-sample
 # 2023-08-21 17:08:46,040 SUCC cli.py:35 -- -----------------------------------
 ```
 
-The Python script `sample_code.py` used by `entrypoint` is a simple Ray script that executes a counter's increment function 5 times.
+`entrypoint` 使用的 Python 脚本  `sample_code.py` 是一个简单的 Ray 脚本，它执行计数器的增量函数5次。
 
 
-## Step 6: Cleanup
+## 步骤 6: Cleanup
 
 ```sh
-# Step 6.1: Delete the RayJob
+# 步骤 6.1: 删除 RayJob
 kubectl delete -f ray_v1alpha1_rayjob.yaml
 
-# Step 6.2: Delete the KubeRay operator
+# 步骤 6.2: 删除 KubeRay operator
 helm uninstall kuberay-operator
 
-# Step 6.3: Delete the Kubernetes cluster
+# 步骤 6.3: 删除 Kubernetes cluster
 kind delete cluster
 ```
