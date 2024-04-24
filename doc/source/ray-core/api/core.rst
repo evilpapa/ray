@@ -9,7 +9,7 @@ Core API
     ray.is_initialized
     ray.job_config.JobConfig
 
-Tasks
+任务
 -----
 
 .. autosummary::
@@ -31,7 +31,7 @@ Actors
     ray.get_actor
     ray.kill
 
-Objects
+对象
 -------
 
 .. autosummary::
@@ -43,7 +43,7 @@ Objects
 
 .. _runtime-context-apis:
 
-Runtime Context
+运行时上下文
 ---------------
 .. autosummary::
     :toctree: doc/
@@ -52,7 +52,7 @@ Runtime Context
     ray.runtime_context.RuntimeContext
     ray.get_gpu_ids
 
-Cross Language
+跨语言
 --------------
 .. autosummary::
     :toctree: doc/

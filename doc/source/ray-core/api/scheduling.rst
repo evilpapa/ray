@@ -1,7 +1,7 @@
-Scheduling API
+调度 API
 ==============
 
-Scheduling Strategy
+调度策略
 -------------------
 
 .. autosummary::
@@ -12,7 +12,7 @@ Scheduling Strategy
 
 .. _ray-placement-group-ref:
 
-Placement Group
+占位组
 ---------------
 
 .. autosummary::

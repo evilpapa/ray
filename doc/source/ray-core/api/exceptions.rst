@@ -1,6 +1,6 @@
 .. _ray-core-exceptions:
 
-Exceptions
+异常
 ==========
 
 .. autosummary::

@@ -1,4 +1,4 @@
-Utility
+工具
 =======
 
 .. autosummary::
@@ -12,7 +12,7 @@ Utility
 
 .. _custom-metric-api-ref:
 
-Custom Metrics
+自定义指标
 --------------
 
 .. autosummary::
@@ -24,7 +24,7 @@ Custom Metrics
 
 .. _package-ref-debugging-apis:
 
-Debugging
+调试
 ---------
 
 .. autosummary::

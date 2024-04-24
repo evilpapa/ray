@@ -3,9 +3,9 @@ Ray Core CLI
 
 .. _ray-cli:
 
-Debugging applications
+应用调试
 ----------------------
-This section contains commands for inspecting and debugging the current cluster.
+本节包含用于检查和调试当前集群的命令。
 
 .. _ray-stack-doc:
 
@@ -36,9 +36,9 @@ This section contains commands for inspecting and debugging the current cluster.
    :show-nested:
 
 
-Usage Stats
+使用统计
 -----------
-This section contains commands to enable/disable :ref:`Ray usage stats <ref-usage-stats>`.
+本节包含用于启用/禁用 :ref:`Ray 使用统计 <ref-usage-stats>` 的命令。
 
 .. _ray-disable-usage-stats-doc:
 
