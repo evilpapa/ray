@@ -1,84 +1,80 @@
-Key Concepts
+关键概念
 ============
 
 .. _cluster-key-concepts:
 
-This page introduces key concepts for Ray clusters:
+本页介绍了 Ray 集群的关键概念：
 
 .. contents::
     :local:
 
-Ray Cluster
+Ray 集群
 -----------
-A Ray cluster consists of a single :ref:`head node <cluster-head-node>`
-and any number of connected :ref:`worker nodes <cluster-worker-nodes>`:
+Ray 集群由一个 :ref:`head node <cluster-head-node>` 和
+任意数量的连接的 :ref:`worker nodes <cluster-worker-nodes>` 组成：
 
 .. figure:: images/ray-cluster.svg
     :align: center
     :width: 600px
 
-    *A Ray cluster with two worker nodes. Each node runs Ray helper processes to
-    facilitate distributed scheduling and memory management. The head node runs
-    additional control processes (highlighted in blue).*
+    *具有两个工作节点的 Ray 集群。
+    每个节点都运行 Ray 辅助进程，以促进分布式调度和内存管理。
+    头节点运行额外的控制进程（以蓝色突出显示）。*
 
-The number of worker nodes may be *autoscaled* with application demand as specified
-by your Ray cluster configuration. The head node runs the :ref:`autoscaler <cluster-autoscaler>`.
+工作节点的数量可以根据 Ray 集群配置指定的应用程序需求 *自动缩放*。 :ref:`自动缩放程序 <cluster-autoscaler>` 运行在头节点。
 
 .. note::
-    Ray nodes are implemented as pods when :ref:`running on Kubernetes <kuberay-index>`.
+    :ref:`在 Kubernetes 运行 <kuberay-index>` 时，Ray 节点以 pod 形式实现。
 
-Users can submit jobs for execution on the Ray cluster, or can interactively use the
-cluster by connecting to the head node and running `ray.init`. See
-:ref:`Ray Jobs <jobs-quickstart>` for more information.
+用户可以提交作业在 Ray 集群上执行，或者可以通过连接到头节点并运行 `ray.init` 来以交互方式使用集群。
+有关更多信息，请参阅 :ref:`Ray Jobs <jobs-quickstart>`。
 
 .. _cluster-head-node:
 
-Head Node
+头节点
 ---------
-Every Ray cluster has one node which is designated as the *head node* of the cluster.
-The head node is identical to other worker nodes, except that it also runs singleton processes responsible for cluster management such as the
-:ref:`autoscaler <cluster-autoscaler>`, :term:`GCS <GCS / Global Control Service>` and the Ray driver processes
-:ref:`which run Ray jobs <cluster-clients-and-jobs>`. Ray may schedule
-tasks and actors on the head node just like any other worker node, which is not desired in large-scale clusters.
-See :ref:`vms-large-cluster-configure-head-node` for the best practice in large-scale clusters.
+每个 Ray 集群都有一个节点，该节点被指定为集群的 *头节点* 。
+头节点与其他工作节点相同，不同之处在于它还运行负责集群管理的单例进程，例如
+:ref:`自动缩放器 <cluster-autoscaler>`, :term:`GCS <GCS / Global Control Service>` 和运行 Ray 作业的
+:ref:`Ray 驱动程序进程 <cluster-clients-and-jobs>`。 
+Ray 可以像任何其他工作节点一样在头节点上调度任务和参与者，这在大型集群中是不可取的。
+请参阅 :ref:`vms-large-cluster-configure-head-node` 以了解大型集群中的最佳实践。
 
 .. _cluster-worker-nodes:
 
-Worker Node
+工作节点
 ------------
-*Worker nodes* do not run any head node management processes, and serve only to run user code in Ray tasks and actors. They participate in distributed scheduling, as well as the storage and distribution of Ray objects in :ref:`cluster memory <memory>`.
+*工作节点* 不运行任何头节点管理进程，仅用于运行 Ray 任务和 Actor 中的用户代码。它们参与分布式调度，以及 Ray 对象在 :ref:`集群内存` 中的存储和分发。
 
 .. _cluster-autoscaler:
 
-Autoscaling
+自动缩放
 -----------
 
-The *Ray autoscaler* is a process that runs on the :ref:`head node <cluster-head-node>` (or as a sidecar container in the head pod if :ref:`using Kubernetes <kuberay-index>`).
-When the resource demands of the Ray workload exceed the
-current capacity of the cluster, the autoscaler will try to increase the number of worker nodes. When worker nodes
-sit idle, the autoscaler will remove worker nodes from the cluster.
+*Ray 自动扩缩器* 是运行在 :ref:`头节点 <cluster-head-node>` 的一个进程（如果使用 :ref:`Kubernetes <kuberay-index>`，则作为头 pod 中的 sidecar 容器运行）。
+当 Ray 工作负载的资源需求超过集群的当前容量时，自动扩缩器将尝试增加工作节点的数量。当工作节点处于空闲状态时，自动扩缩器将从集群中删除工作节点。
 
-It is important to understand that the autoscaler only reacts to task and actor resource requests, and not application metrics or physical resource utilization.
-To learn more about autoscaling, refer to the user guides for Ray clusters on :ref:`VMs <cloud-vm-index>` and :ref:`Kubernetes <kuberay-index>`.
+重要的是要了解，自动缩放器仅对任务和 actor 资源请求做出反应，而不是应用程序指标或物理资源利用率。
+要了解有关自动缩放的更多信息，请参阅 :ref:`VMs <cloud-vm-index>` 和 :ref:`Kubernetes <kuberay-index>` 上的 Ray 集群的用户指南。
 
 
 .. _cluster-clients-and-jobs:
 
-Ray Jobs
+Ray 作业
 --------
 
-A Ray job is a single application: it is the collection of Ray tasks, objects, and actors that originate from the same script.
-The worker that runs the Python script is known as the *driver* of the job.
+Ray 作业是一个单一应用程序：它是来自同一脚本的 Ray 任务、对象和 actor 的集合。
+运行 Python 脚本的 worker 称为作业的 *驱动程序*。
 
-There are two ways to run a Ray job on a Ray cluster:
+有两种方法可以在 Ray 集群上运行 Ray 作业：
 
-1. (Recommended) Submit the job using the :ref:`Ray Jobs API <jobs-overview>`.
-2. Run the driver script directly on any node of the Ray cluster, for interactive development.
+1. （推荐） 使用 :ref:`Ray Jobs API <jobs-overview>` 提交作业
+2. 直接在 Ray 集群的任意节点上运行驱动程序脚本，进行交互式开发。
 
-For details on these workflows, refer to the :ref:`Ray Jobs API guide <jobs-overview>`.
+有关这些工作流程的详细信息，请参阅 :ref:`Ray Jobs API 指南 <jobs-overview>`。
 
 .. figure:: images/ray-job-diagram.svg
     :align: center
     :width: 650px
 
-    *Two ways of running a job on a Ray cluster.*
+    *在 Ray 集群上运行作业的两种方法。*

@@ -1,6 +1,6 @@
 .. _ref-usage-stats:
 
-Usage Stats Collection
+使用统计收集
 ======================
 
 Starting in Ray 1.13, Ray collects usage stats data by default (guarded by an opt-out prompt).

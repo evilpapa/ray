@@ -1,5 +1,5 @@
 (observability-configure-manage-dashboard)=
-# Configuring and Managing Ray Dashboard
+# 配置管理 Ray Dashboard
 {ref}`Ray Dashboard<observability-getting-started>` is one of the most important tools to monitor and debug Ray applications and Clusters. This page describes how to configure Ray Dashboard on your Clusters.
 
 Dashboard configurations may differ depending on how you launch Ray Clusters (e.g., local Ray Cluster v.s. KubeRay). Integrations with Prometheus and Grafana are optional for enhanced Dashboard experience.

@@ -1,34 +1,30 @@
 .. _cluster-index:
 
-Ray Clusters Overview
+Ray 集群概述
 =====================
 
-Ray enables seamless scaling of workloads from a laptop to a large cluster. While Ray
-works out of the box on single machines with just a call to ``ray.init``, to run Ray
-applications on multiple nodes you must first *deploy a Ray cluster*.
+Ray 可以将工作负载从笔记本电脑无缝扩展到大型集群。
+虽然 Ray 可以在单台机器上直接运行，只需调用 ``ray.init``，但要在多个节点上运行 Ray 应用程序，您必须首先 *部署 Ray 集群*。
 
-A Ray cluster is a set of worker nodes connected to a common :ref:`Ray head node <cluster-head-node>`.
-Ray clusters can be fixed-size, or they may :ref:`autoscale up and down <cluster-autoscaler>` according
-to the resources requested by applications running on the cluster.
+Ray 集群是一组连接到共同 :ref:`Ray head 节点 <cluster-head-node>` 的工作节点。
+Ray 集群可以是固定大小的，也可以根据集群上运行的应用程序请求的资源 :ref:`自动扩展和缩减 <cluster-autoscaler>`。
 
-Where can I deploy Ray clusters?
+我可以在哪里部署 Ray 集群？
 --------------------------------
 
-Ray provides native cluster deployment support on the following technology stacks:
+Ray 在以下技术栈上提供原生集群部署支持：
 
-* On :ref:`AWS and GCP <cloud-vm-index>`. Community-supported Azure, Aliyun and vSphere integrations also exist.
-* On :ref:`Kubernetes <kuberay-index>`, via the officially supported KubeRay project.
+* 在 :ref:`AWS 和 GCP <cloud-vm-index>`。还有社区支持的 Azure 、 Aliyun 和 vSphere 继承。
+* 在 :ref:`Kubernetes <kuberay-index>`，通过官方支持的 KubeRay 项目。
 
-Advanced users may want to :ref:`deploy Ray manually <on-prem>`
-or onto :ref:`platforms not listed here <ref-cluster-setup>`.
+高级用户可能希望 :ref:`手动部署 Ray <on-prem>` 或部署到 :ref:`这里未列出的平台 <ref-cluster-setup>`。
 
 .. note::
 
-    Multi-node Ray clusters are only supported on Linux. At your own risk, you
-    may deploy Windows and OSX clusters by setting the environment variable
-    ``RAY_ENABLE_WINDOWS_OR_OSX_CLUSTER=1`` during deployment.
+    多节点 Ray 集群仅支持 Linux。您可以在部署过程中设置
+    环境变量 ``RAY_ENABLE_WINDOWS_OR_OSX_CLUSTER=1`` 来自行部署 Windows 和 OSX 集群。
 
-What's next?
+接下来做什么？
 ------------
 
 .. grid:: 1 2 2 2
@@ -37,9 +33,9 @@ What's next?
 
     .. grid-item-card::
 
-        **I want to learn key Ray cluster concepts**
+        **我想学习 Ray 集群的关键概念**
         ^^^
-        Understand the key concepts and main ways of interacting with a Ray cluster.
+        了解与 Ray 集群交互的关键概念和主要方式。
 
         +++
         .. button-ref:: cluster-key-concepts
@@ -47,14 +43,13 @@ What's next?
             :outline:
             :expand:
 
-            Learn Key Concepts
+            学习关键概念
 
     .. grid-item-card::
 
-        **I want to run Ray on Kubernetes**
+        **我想在 Kubernetes 上运行 Ray**
         ^^^
-        Deploy a Ray application to a Kubernetes cluster. You can run the tutorial on a
-        Kubernetes cluster or on your laptop via Kind.
+        将 Ray 应用程序部署到 Kubernetes 集群。您可以通过 Kind 在 Kubernetes 集群或笔记本电脑上运行本教程。
 
         +++
         .. button-ref:: kuberay-quickstart
@@ -62,14 +57,14 @@ What's next?
             :outline:
             :expand:
 
-            Get Started with Ray on Kubernetes
+            在 Kubernetes 上开始使用 Ray
 
     .. grid-item-card::
 
-        **I want to run Ray on a cloud provider**
+        **我想在云提供商上运行 Ray**
         ^^^
-        Take a sample application designed to run on a laptop and scale it up in the
-        cloud. Access to an AWS or GCP account is required.
+        采用设计为在笔记本电脑上运行的示例应用程序，并在云中扩展它。
+        需要访问 AWS 或 GCP 帐户。
 
         +++
         .. button-ref:: vm-cluster-quick-start
@@ -77,13 +72,13 @@ What's next?
             :outline:
             :expand:
 
-            Get Started with Ray on VMs
+            在虚拟机上开始使用 Ray
 
     .. grid-item-card::
 
-        **I want to run my application on an existing Ray cluster**
+        **我想在现有的 Ray 集群上运行我的应用程序**
         ^^^
-        Guide to submitting applications as Jobs to existing Ray clusters.
+        将应用程序作为作业提交到现有 Ray 集群的指南。
 
         +++
         .. button-ref:: jobs-quickstart
@@ -91,4 +86,4 @@ What's next?
             :outline:
             :expand:
 
-            Job Submission
+            作业提交

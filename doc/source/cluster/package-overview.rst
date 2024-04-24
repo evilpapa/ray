@@ -1,6 +1,6 @@
 .. _cluster-api-ref:
 
-Ray Cluster Management API
+Ray Cluster 管理 API
 ==========================
 
 This section contains a reference for the cluster management API. If there is anything missing, please open an issue

@@ -1,5 +1,5 @@
 (collect-metrics)=
-# Collecting and monitoring metrics
+# 收集和监控 metrics
 Metrics are useful for monitoring and troubleshooting Ray applications and Clusters. For example, you may want to access a node's metrics if it terminates unexpectedly.
 
 Ray records and emits time-series metrics using the [Prometheus format](https://prometheus.io/docs/instrumenting/exposition_formats/). Ray does not provide a native storage solution for metrics. Users need to manage the lifecycle of the metrics by themselves. This page provides instructions on how to collect and monitor metrics from Ray Clusters.
