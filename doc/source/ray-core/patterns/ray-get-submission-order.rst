@@ -1,19 +1,19 @@
-Anti-pattern: Processing results in submission order using ray.get increases runtime
+反模式：使用 ray.get 按提交顺序处理结果会增加运行时间
 ====================================================================================
 
-**TLDR:** Avoid processing independent results in submission order using :func:`ray.get() <ray.get>` since results may be ready in a different order than the submission order.
+**TLDR:** 避免按照提交顺序使用 :func:`ray.get() <ray.get>` 处理独立的结果，因为结果可能以与提交顺序不同。
 
-A batch of tasks is submitted, and we need to process their results individually once they’re done.
-If each task takes a different amount of time to finish and we process results in submission order, we may waste time waiting for all of the slower (straggler) tasks that were submitted earlier to finish while later faster tasks have already finished.
+一批任务被提交，我们需要在它们完成后逐个处理它们的结果。
+如果每个任务完成所需的时间不同，并且我们按提交顺序处理结果，那么我们可能会浪费时间等待所有较慢（拖延者）的任务完成，而较快的任务已经完成。
 
-Instead, we want to process the tasks in the order that they finish using :func:`ray.wait() <ray.wait>` to speed up total time to completion.
+相反，我们希望使用 :func:`ray.wait() <ray.wait>` 按完成顺序处理任务，以加快完成时间。
 
 .. figure:: ../images/ray-get-submission-order.svg
 
-    Processing results in submission order vs completion order
+    按提交顺序和按完成顺序处理结果
 
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: ../doc_code/anti_pattern_ray_get_submission_order.py
@@ -21,7 +21,7 @@ Code example
     :start-after: __anti_pattern_start__
     :end-before: __anti_pattern_end__
 
-Other ``ray.get()`` related anti-patterns are:
+其他与 ``ray.get()`` 相关的反模式包括：
 
 - :doc:`unnecessary-ray-get`
 - :doc:`ray-get-loop`

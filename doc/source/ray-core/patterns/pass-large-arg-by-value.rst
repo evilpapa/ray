@@ -1,29 +1,29 @@
 .. _ray-pass-large-arg-by-value:
 
-Anti-pattern: Passing the same large argument by value repeatedly harms performance
+反模式：反复传递相同的大参数会损害性能
 ===================================================================================
 
-**TLDR:** Avoid passing the same large argument by value to multiple tasks, use :func:`ray.put() <ray.put>` and pass by reference instead.
+**TLDR:** 避免将相同的大参数通过值传递给多个任务，使用 :func:`ray.put() <ray.put>` 并通过引用传递。
 
-When passing a large argument (>100KB) by value to a task,
-Ray will implicitly store the argument in the object store and the worker process will fetch the argument to the local object store from the caller's object store before running the task.
-If we pass the same large argument to multiple tasks, Ray will end up storing multiple copies of the argument in the object store since Ray doesn't do deduplication.
+当将大型参数 (>100KB) 按值传递给任务时，
+Ray 会隐式地将参数存储在对象存储中，工作进程会在运行任务之前从调用方的对象存储中将参数提取到本地对象存储中。
+如果我们将同一个大型参数传递给多个任务，Ray 最终会在对象存储中存储该参数的多个副本，因为 Ray 不进行重复数据删除。
 
-Instead of passing the large argument by value to multiple tasks,
-we should use ``ray.put()`` to store the argument to the object store once and get an ``ObjectRef``,
-then pass the argument reference to tasks. This way, we make sure all tasks use the same copy of the argument, which is faster and uses less object store memory.
+我们不应该将大参数按值传递给多个任务，
+而应该使用 ``ray.put()`` 将参数存储到对象存储中一次并获取 ``ObjectRef``，
+然后将参数引用传递给任务。这样，我们确保所有任务都使用参数的同一份副本，这样速度更快，占用的对象存储内存更少。
 
-Code example
+代码示例
 ------------
 
-**Anti-pattern:**
+**反模式：**
 
 .. literalinclude:: ../doc_code/anti_pattern_pass_large_arg_by_value.py
     :language: python
     :start-after: __anti_pattern_start__
     :end-before: __anti_pattern_end__
 
-**Better approach:**
+**更好的方法：**
 
 .. literalinclude:: ../doc_code/anti_pattern_pass_large_arg_by_value.py
     :language: python

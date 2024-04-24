@@ -1,9 +1,9 @@
 .. _core-patterns:
 
-Design Patterns & Anti-patterns
+设计模型 及 反模式
 ===============================
 
-This section is a collection of common design patterns and anti-patterns for writing Ray applications.
+本节是关于编写 Ray 应用程序的常见设计模式和反模式的集合。
 
 .. toctree::
     :maxdepth: 1

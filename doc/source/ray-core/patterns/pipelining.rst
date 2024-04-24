@@ -1,27 +1,27 @@
-Pattern: Using pipelining to increase throughput
+模式：使用流水线增加吞吐量
 ================================================
 
-If you have multiple work items and each requires several steps to complete,
-you can use the `pipelining <https://en.wikipedia.org/wiki/Pipeline_(computing)>`__ technique to improve the cluster utilization and increase the throughput of your system.
+如果您有多个工作项，且每个工作项都需要多个步骤才能完成，
+则可以使用 `pipelining <https://en.wikipedia.org/wiki/Pipeline_(computing)>`__ 技术来提高集群利用率并增加系统的吞吐量。
 
 .. note::
 
-  Pipelining is an important technique to improve the performance and is heavily used by Ray libraries.
-  See :ref:`Ray Data <data>` as an example.
+  流水线是提高性能的重要技术，被 Ray 库广泛使用。
+  请参阅 :ref:`Ray Data <data>` 作为示例。
 
 .. figure:: ../images/pipelining.svg
 
-Example use case
+用例
 ----------------
 
-A component of your application needs to do both compute-intensive work and communicate with other processes.
-Ideally, you want to overlap computation and communication to saturate the CPU and increase the overall throughput.
+应用程序的组件需要同时执行计算密集型工作并与其他进程通信。
+理想情况下，您希望将计算和通信重叠以使 CPU 饱和并提高整体吞吐量。
 
-Code example
+代码
 ------------
 
 .. literalinclude:: ../doc_code/pattern_pipelining.py
 
-In the example above, a worker actor pulls work off of a queue and then does some computation on it.
-Without pipelining, we call :func:`ray.get() <ray.get>` immediately after requesting a work item, so we block while that RPC is in flight, causing idle CPU time.
-With pipelining, we instead preemptively request the next work item before processing the current one, so we can use the CPU while the RPC is in flight which increases the CPU utilization.
+在上面的例子中，一个工作 Actor 从队列中取出工作，然后对其进行一些计算。
+如果没有流水线，我们在请求工作项后立即使用 :func:`ray.get() <ray.get>`，这会在 RPC 调用期间阻塞，导致 CPU 空闲。
+使用流水线，我们会在处理当前工作项之前先请求下一个工作项，因此我们可以在 RPC 进行时使用 CPU，从而增加 CPU 利用率。

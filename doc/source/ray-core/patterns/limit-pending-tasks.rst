@@ -1,47 +1,47 @@
 .. _core-patterns-limit-pending-tasks:
 
-Pattern: Using ray.wait to limit the number of pending tasks
+模式：使用 ray.wait 限制待处理任务数量
 ============================================================
 
-In this pattern, we use :func:`ray.wait() <ray.wait>` to limit the number of pending tasks.
+在这种模式中，我们用 :func:`ray.wait() <ray.wait>` 来限制待处理任务的数量。
 
-If we continuously submit tasks faster than their process time, we will accumulate tasks in the pending task queue, which can eventually cause OOM.
-With ``ray.wait()``, we can apply backpressure and limit the number of pending tasks so that the pending task queue won't grow indefinitely and cause OOM.
-
-.. note::
-
-   If we submit a finite number of tasks, it's unlikely that we will hit the issue mentioned above since each task only uses a small amount of memory for bookkeeping in the queue.
-   It's more likely to happen when we have an infinite stream of tasks to run.
+如果我们持续提交比其处理时间更快的任务，我们将在待处理任务队列中积累任务，最终可能导致 OOM。
+使用 ``ray.wait()`` ，我们可以限制待处理任务的数量，以便待处理任务队列不会无限增长并导致 OOM。
 
 .. note::
 
-   This method is meant primarily to limit how many tasks should be in flight at the same time.
-   It can also be used to limit how many tasks can run *concurrently*, but it is not recommended, as it can hurt scheduling performance.
-   Ray automatically decides task parallelism based on resource availability, so the recommended method for adjusting how many tasks can run concurrently is to :ref:`modify each task's resource requirements <core-patterns-limit-running-tasks>` instead.
+   如果我们提交的任务数量有限，那么我们不太可能遇到上述问题，因为每个任务仅使用少量内存来记录队列中的任务。
+   当我们要运行的任务流无限时，这种情况更有可能发生。
 
-Example use case
+.. note::
+
+   此方法主要用于限制同时执行的任务数。
+   它还可用于限制可以并发运行的任务数，但不建议这样做，因为它可能会损害调度性能。
+   Ray 会根据资源可用性自动决定任务并行性，因此调整可以并发运行的任务数的推荐方法是修改 :ref:`每个任务的资源需求 <core-patterns-limit-running-tasks>`。
+
+用例
 ----------------
 
-You have a worker actor that process tasks at a rate of X tasks per second and you want to submit tasks to it at a rate lower than X to avoid OOM.
+您有一个工作 actor ，其以每秒 X 个任务的速率处理任务，并且您希望以低于 X 的速率向其提交任务以避免 OOM。
 
-For example, Ray Serve uses this pattern to limit the number of pending queries for each worker.
+例如，Ray Serve 使用此模式来限制每个工作者待处理的查询数量。
 
 .. figure:: ../images/limit-pending-tasks.svg
 
-    Limit number of pending tasks
+    限制待处理任务
 
 
-Code example
+代码
 ------------
 
-**Without backpressure:**
+**无 backpressure:**
 
 .. literalinclude:: ../doc_code/limit_pending_tasks.py
     :language: python
     :start-after: __without_backpressure_start__
     :end-before: __without_backpressure_end__
 
-**With backpressure:**
+**有 backpressure:**
 
 .. literalinclude:: ../doc_code/limit_pending_tasks.py
     :language: python

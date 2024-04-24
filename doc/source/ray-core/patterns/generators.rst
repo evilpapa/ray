@@ -1,32 +1,32 @@
 .. _generator-pattern:
 
-Pattern: Using generators to reduce heap memory usage
+模式：使用生成器减少堆内存使用量
 =====================================================
 
-In this pattern, we use **generators** in Python to reduce the total heap memory usage during a task. The key idea is that for tasks that return multiple objects, we can return them one at a time instead of all at once. This allows a worker to free the heap memory used by a previous return value before returning the next one.
+在此模式中，我们使用 Python 中的 **生成器** 来减少任务期间的总堆内存使用量。关键思想是，对于返回多个对象的任务，我们可以一次返回一个，而不是一次全部返回。这允许工作程序在返回下一个返回值之前释放上一个返回值使用的堆内存。
 
-Example use case
+用例
 ----------------
 
-You have a task that returns multiple large values. Another possibility is a task that returns a single large value, but you want to stream this value through Ray's object store by breaking it up into smaller chunks.
+您有一个返回多个大值的任务。另一种可能性是，该任务返回单个大值，但您希望通过将其分解为较小的块来通过 Ray 的对象存储流式传输该值。
 
-Using normal Python functions, we can write such a task like this. Here's an example that returns numpy arrays of size 100MB each:
+使用普通的 Python 函数，我们可以编写这样的任务。下面是一个返回每个大小为 100MB 的 numpy 数组的示例：
 
 .. literalinclude:: ../doc_code/pattern_generators.py
     :language: python
     :start-after: __large_values_start__
     :end-before: __large_values_end__
 
-However, this will require the task to hold all ``num_returns`` arrays in heap memory at the same time at the end of the task. If there are many return values, this can lead to high heap memory usage and potentially an out-of-memory error.
+但是，这将要求任务在结束时同时将所有 ``num_returns`` 数组保存在任务的堆内存中。如果有很多返回值，这可能会导致堆内存使用量过高，并且可能会导致内存不足错误。
 
-We can fix the above example by rewriting ``large_values`` as a **generator**. Instead of returning all values at once as a tuple or list, we can ``yield`` one value at a time.
+我们可以通过重写 ``large_values`` 为 **generator** 。而不是一次返回所有值作为元组或列表，我们可以一次返回一个值。
 
 .. literalinclude:: ../doc_code/pattern_generators.py
     :language: python
     :start-after: __large_values_generator_start__
     :end-before: __large_values_generator_end__
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: ../doc_code/pattern_generators.py

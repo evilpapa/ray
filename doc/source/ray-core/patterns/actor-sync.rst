@@ -1,16 +1,14 @@
-Pattern: Using an actor to synchronize other tasks and actors
+模式：使用 Actor 同步其他任务和 actor
 =============================================================
 
-When you have multiple tasks that need to wait on some condition or otherwise
-need to synchronize across tasks & actors on a cluster, you can use a central
-actor to coordinate among them.
+当您有多个任务需要等待某种条件或需要在集群上的任务和 actor 之间进行同步时，您可以使用中央 actor 来协调它们。
 
-Example use case
+用例
 ----------------
 
-You can use an actor to implement a distributed ``asyncio.Event`` that multiple tasks can wait on.
+您可以使用 ``asyncio.Event`` actor 来实现多个任务可以等待的分布式。
 
-Code example
+代码
 ------------
 
 .. literalinclude:: ../doc_code/actor-sync.py

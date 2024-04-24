@@ -1,40 +1,40 @@
 .. _core-patterns-limit-running-tasks:
 
-Pattern: Using resources to limit the number of concurrently running tasks
+模式：使用资源限制并发运行任务的数量
 ==========================================================================
 
-In this pattern, we use :ref:`resources <resource-requirements>` to limit the number of concurrently running tasks.
+在这种模式中，我们使用 :ref:`资源 <resource-requirements>` 来限制并发运行的任务数量。
 
-By default, Ray tasks require 1 CPU each and Ray actors require 0 CPU each, so the scheduler limits task concurrency to the available CPUs and actor concurrency to infinite.
-Tasks that use more than 1 CPU (e.g., via mutlithreading) may experience slowdown due to interference from concurrent ones, but otherwise are safe to run.
+默认情况下，每个 Ray 任务需要 1 个 CPU，每个 Ray Actor 需要 0 个 CPU，因此调度程序将任务并发限制为可用 CPU，将 Actor 并发限制为无限。
+使用 1 个以上 CPU（例如通过多线程）的任务可能会因并发任务的干扰而变慢，但除此之外可以安全运行。
 
-However, tasks or actors that use more than their proportionate share of memory may overload a node and cause issues like OOM.
-If that is the case, we can reduce the number of concurrently running tasks or actors on each node by increasing the amount of resources requested by them.
-This works because Ray makes sure that the sum of the resource requirements of all of the concurrently running tasks and actors on a given node does not exceed the node's total resources.
+但是，如果任务或 actor 使用的内存超过其应有的份额，则可能会使节点过载并导致 OOM 等问题。
+如果是这种情况，我们可以通过增加它们请求的资源量来减少每个节点上同时运行的任务或 actor 的数量。
+这是有效的，因为 Ray 确保给定节点上所有同时运行的任务和 actor 的资源需求总和不超过该节点的总资源。
 
 .. note::
 
-   For actor tasks, the number of running actors limits the number of concurrently running actor tasks we can have.
+   对于 actor 任务，正在运行的 actor 的数量限制了我们可以同时运行的 actor 任务的数量。
 
-Example use case
+用例
 ----------------
 
-You have a data processing workload that processes each input file independently using Ray :ref:`remote functions <ray-remote-functions>`.
-Since each task needs to load the input data into heap memory and do the processing, running too many of them can cause OOM.
-In this case, you can use the ``memory`` resource to limit the number of concurrently running tasks (usage of other resources like ``num_cpus`` can achieve the same goal as well).
-Note that similar to ``num_cpus``, the ``memory`` resource requirement is *logical*, meaning that Ray will not enforce the physical memory usage of each task if it exceeds this amount.
+您有一个数据处理工作负载，它使用 Ray :ref:`remote functions <ray-remote-functions>` 独立处理每个输入文件。
+由于每个任务都需要将输入数据加载到堆内存中并进行处理，因此运行过多的任务可能会导致 OOM。
+在这种情况下，您可以使用 ``memory`` 资源来限制并发运行的任务数量（使用其他资源如 ``num_cpus`` 也可以实现相同的目标）。
+请注意，与 ``num_cpus`` 类似， ``memory`` 资源请求是 *物理逻辑* 的，这意味着如果每个任务的物理内存使用量超过此数量，Ray 将不会强制执行。
 
-Code example
+代码
 ------------
 
-**Without limit:**
+**无限制：**
 
 .. literalinclude:: ../doc_code/limit_running_tasks.py
     :language: python
     :start-after: __without_limit_start__
     :end-before: __without_limit_end__
 
-**With limit:**
+**有限制：**
 
 .. literalinclude:: ../doc_code/limit_running_tasks.py
     :language: python

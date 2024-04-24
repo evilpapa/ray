@@ -1,18 +1,18 @@
 .. _unnecessary-ray-get:
 
-Anti-pattern: Calling ray.get unnecessarily harms performance
+反模式：不必要的调用 ray.get 会影响性能
 =============================================================
 
-**TLDR:** Avoid calling :func:`ray.get() <ray.get>` unnecessarily for intermediate steps. Work with object references directly, and only call ``ray.get()`` at the end to get the final result.
+**TLDR:** 避免在中间步骤中不必要地调用 :func:`ray.get() <ray.get>`。直接使用对象引用进行操作，只在最后一步调用 ``ray.get()`` 获取最终结果。
 
-When ``ray.get()`` is called, objects must be transferred to the worker/node that calls ``ray.get()``. If you don't need to manipulate the object, you probably don't need to call ``ray.get()`` on it!
+当调用 ``ray.get()`` 时，对象必须传输到调用 ``ray.get()`` 的 worker/node。如果你不需要操作对象，你可能不需要调用 ``ray.get()``！
 
-Typically, it’s best practice to wait as long as possible before calling ``ray.get()``, or even design your program to avoid having to call ``ray.get()`` at all.
+通常，最好在调用 ``ray.get()`` 之前等待尽可能长的时间，甚至设计程序以避免完全调用 ``ray.get()``。
 
-Code example
+代码示例
 ------------
 
-**Anti-pattern:**
+**反模式：**
 
 .. literalinclude:: ../doc_code/anti_pattern_unnecessary_ray_get.py
     :language: python
@@ -21,7 +21,7 @@ Code example
 
 .. figure:: ../images/unnecessary-ray-get-anti.svg
 
-**Better approach:**
+**更好的方法：**
 
 .. literalinclude:: ../doc_code/anti_pattern_unnecessary_ray_get.py
     :language: python
@@ -30,12 +30,12 @@ Code example
 
 .. figure:: ../images/unnecessary-ray-get-better.svg
 
-Notice in the anti-pattern example, we call ``ray.get()`` which forces us to transfer the large rollout to the driver, then again to the *reduce* worker.
+请注意，在反模式示例中，我们调用 ``ray.get()``，这迫使我们将大型 rollout 传输到 driver，然后再传输到 *reduce* worker。
 
-In the fixed version, we only pass the reference to the object to the *reduce* task.
-The ``reduce`` worker will implicitly call ``ray.get()`` to fetch the actual rollout data directly from the ``generate_rollout`` worker, avoiding the extra copy to the driver.
+在修复版本中，我们只传递对象的引用给 *reduce* 任务。
+``reduce`` worker 会隐式调用 ``ray.get()`` 从 ``generate_rollout`` worker 直接获取实际的 rollout 数据，避免了额外的拷贝到 driver。
 
-Other ``ray.get()`` related anti-patterns are:
+其他与 ``ray.get()`` 相关的反模式包括：
 
 - :doc:`ray-get-loop`
 - :doc:`ray-get-submission-order`

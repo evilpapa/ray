@@ -1,17 +1,17 @@
 .. _ray-get-loop:
 
-Anti-pattern: Calling ray.get in a loop harms parallelism
+反模式：循环中调用 ray.get 会损害并行性
 =========================================================
 
-**TLDR:** Avoid calling :func:`ray.get() <ray.get>` in a loop since it's a blocking call; use ``ray.get()`` only for the final result.
+**TLDR:** 避免在循环中调用 :func:`ray.get() <ray.get>`，因为它是一个阻塞调用；只在最终结果时使用 ``ray.get()``。
 
-A call to ``ray.get()`` fetches the results of remotely executed functions. However, it is a blocking call, which means that it always waits until the requested result is available.
-If you call ``ray.get()`` in a loop, the loop will not continue to run until the call to ``ray.get()`` is resolved.
+``ray.get()`` 调用可获取远程执行函数的结果。但是，它是一个阻塞调用，这意味着它总是等待直到请求的结果可用。
+如果在循环中调用 ``ray.get()``，则循环将不会继续运行，直到 ``ray.get()`` 调用解决为止。
 
-If you also spawn the remote function calls in the same loop, you end up with no parallelism at all, as you wait for the previous function call to finish (because of ``ray.get()``) and only spawn the next call in the next iteration of the loop.
-The solution here is to separate the call to ``ray.get()`` from the call to the remote functions. That way all remote functions are spawned before we wait for the results and can run in parallel in the background. Additionally, you can pass a list of object references to ``ray.get()`` instead of calling it one by one to wait for all of the tasks to finish.
+如果您还在同一循环中生成远程函数调用，那么您最终将没有任何并行性，因为您需要等待前一个函数调用完成（因为 ``ray.get()``），并且只在下一个循环迭代中生成下一个调用。
+解决方案是将对 ``ray.get()`` 的调用与对远程函数的调用分开。这样，我们在等待结果之前就可以生成所有远程函数，并且可以在后台并行运行。此外，您可以将对象引用列表传递给 ``ray.get()``，而不是逐个调用它，以等待所有任务完成。
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: ../doc_code/anti_pattern_ray_get_loop.py
@@ -23,10 +23,10 @@ Code example
 
     Calling ``ray.get()`` in a loop
 
-When calling ``ray.get()`` right after scheduling the remote work, the loop blocks until the result is received. We thus end up with sequential processing.
-Instead, we should first schedule all remote calls, which are then processed in parallel. After scheduling the work, we can then request all the results at once.
+在调度远程工作后立即调用 ``ray.get()`` 时，循环会阻塞，直到结果被接收。因此，我们最终会得到顺序处理。
+相反，我们应该首先调度所有远程调用，然后并行处理它们。调度工作后，我们可以一次请求所有结果。
 
-Other ``ray.get()`` related anti-patterns are:
+其他与 ``ray.get()`` 相关的反模式包括：
 
 - :doc:`unnecessary-ray-get`
 - :doc:`ray-get-submission-order`

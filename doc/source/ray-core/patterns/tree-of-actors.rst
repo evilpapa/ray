@@ -1,31 +1,31 @@
-Pattern: Using a supervisor actor to manage a tree of actors
+模式：使用 supervisor actor 来管理 actor 树
 ============================================================
 
-Actor supervision is a pattern in which a supervising actor manages a collection of worker actors.
-The supervisor delegates tasks to subordinates and handles their failures.
-This pattern simplifies the driver since it manages only a few supervisors and does not deal with failures from worker actors directly.
-Furthermore, multiple supervisors can act in parallel to parallelize more work.
+Actor 监督是一种模式，其中监督 Actor 管理一组工作 Actor。
+监督者将任务委托给下属并处理他们的失败。
+这种模式简化了驱动程序，因为它只管理几个监督者，而不直接处理工作 Actor 的失败。
+此外，多个监督者可以并行执行以并行处理更多工作。
 
 .. figure:: ../images/tree-of-actors.svg
 
-    Tree of actors
+    actor 树
 
 .. note::
 
-    - If the supervisor dies (or the driver), the worker actors are automatically terminated thanks to actor reference counting.
-    - Actors can be nested to multiple levels to form a tree.
+    - 如果 supervisor 死亡（或 driver 死亡），那么根据参与者引用计数，工作者参与者将自动终止。
+    - Actor 可以嵌套多层，形成一棵树。
 
-Example use case
+用例
 ----------------
 
-You want to do data parallel training and train the same model with different hyperparameters in parallel.
-For each hyperparameter, you can launch a supervisor actor to do the orchestration and it will create worker actors to do the actual training per data shard.
+您想要进行数据并行训练，并并行训练具有不同超参数的同一模型。
+对于每个超参数，您可以启动一个 supervisor 参与者来进行编排，它将创建工作者 actor 来对每个数据分片进行实际训练。
 
 .. note::
-    For data parallel training and hyperparameter tuning, it's recommended to use :ref:`Ray Train <train-key-concepts>` (:py:class:`~ray.train.data_parallel_trainer.DataParallelTrainer` and :ref:`Ray Tune's Tuner <tune-main>`)
-    which applies this pattern under the hood.
+    对于数据并行训练和超参数调整，建议使用:ref:`Ray Train <train-key-concepts>` (:py:class:`~ray.train.data_parallel_trainer.DataParallelTrainer` and :ref:`Ray Tune's Tuner <tune-main>`)
+    ，它在底层应用此模式。
 
-Code example
+代码
 ------------
 
 .. literalinclude:: ../doc_code/pattern_tree_of_actors.py
