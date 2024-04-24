@@ -31,7 +31,7 @@ __________________________________
 
 要使用 Nvidia GPU 需要在 `RayCluster` 的 `headGroupSpec` 及 `workerGroupSpecs` 的容器 `limits` 和 `requests` 字段指定 `nvidia.com/gpu` 资源。
 
-以下是最多包含 5 个 GPU 工作线程的 RayCluster 工作组的配置片段。
+以下是最多包含 5 个 GPU worker 线程的 RayCluster 工作组的配置片段。
 
 .. code-block:: yaml
 

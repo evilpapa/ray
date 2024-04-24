@@ -1,6 +1,6 @@
 .. _api-guide-for-users-from-other-data-libs:
 
-API Guide for Users from Other Data Libraries
+其他数据类库 API 指引
 =============================================
 
 Ray Data is a data loading and preprocessing library for ML. It shares certain

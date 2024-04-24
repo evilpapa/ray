@@ -17,11 +17,11 @@
 KubeRay operator 会将默认的 [init container](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) 入到每个 worker Pod 中。
 此 init 容器负责等待，直到头 Pod 上的全局控制服务 (GCS) 准备好，然后再建立与头的连接。 init 容器将 `ray health-check` 用于持续检查 GCS 服务器状态。
 
-默认的工作进程初始化容器可能不适用于所有用例，或者用户可能想要自定义初始化容器。
+默认的 worker 进程初始化容器可能不适用于所有用例，或者用户可能想要自定义初始化容器。
 
 ### 1. 初始化容器故障排除
 
-工作进程初始化容器陷入 `Init:0/1` 状态的一些常见原因是：
+worker 进程初始化容器陷入 `Init:0/1` 状态的一些常见原因是：
 
 * head Pod 中的 GCS 服务器进程失败。请检查 head Pod 中 `/tmp/ray/session_latest/logs/` 日志目录是否有与 GCS 服务器相关的错误。
 * `ray` 可执行文件不包含在 `$PATH` 镜像中，因此 init 容器将无法运行 `ray health-check`。
