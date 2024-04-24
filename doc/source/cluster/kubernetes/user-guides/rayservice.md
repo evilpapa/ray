@@ -1,42 +1,42 @@
 (kuberay-rayservice)=
 
-# Deploy Ray Serve Applications
+# 部署 Ray Serve 应用
 
-## Prerequisites
+## 先决条件
 
-This guide focuses solely on the Ray Serve multi-application API, which is available starting from Ray version 2.4.0.
+本指南仅重点介绍 Ray Serve 多应用程序 API，该 API 从 Ray 版本 2.4.0 开始提供。
 
-* Ray 2.4.0 or newer.
-* KubeRay 0.6.0, KubeRay nightly, or newer.
+* Ray 2.4.0 或更高版本。
+* KubeRay 0.6.0、KubeRay nightly 或更高版本。
 
-## What's a RayService?
+## 什么是 RayService？
 
-A RayService manages two components:
+RayService 管理这些组件：
 
-* **RayCluster**: Manages resources in a Kubernetes cluster.
-* **Ray Serve Applications**: Manages users' applications.
+* **RayCluster**: 管理 Kubernetes 集群中的资源。
+* **Ray Serve 应用程序**: 管理用户的应用程序。
 
-## What does the RayService provide?
+## RayService 提供什么？
 
-* **Kubernetes-native support for Ray clusters and Ray Serve applications:** After using a Kubernetes config to define a Ray cluster and its Ray Serve applications, you can use `kubectl` to create the cluster and its applications.
-* **In-place updates for Ray Serve applications:** Users can update the Ray Serve config in the RayService CR config and use `kubectl apply` to update the applications. See [Step 7](#step-7-in-place-update-for-ray-serve-applications) for more details.
-* **Zero downtime upgrades for Ray clusters:** Users can update the Ray cluster config in the RayService CR config and use `kubectl apply` to update the cluster. RayService temporarily creates a pending cluster and waits for it to be ready, then switches traffic to the new cluster and terminates the old one. See [Step 8](#step-8-zero-downtime-upgrade-for-ray-clusters) for more details.
-* **Services HA:** RayService monitors the Ray cluster and Serve deployments' health statuses. If RayService detects an unhealthy status for a period of time, RayService tries to create a new Ray cluster and switch traffic to the new cluster when it's ready.
+* **对 Ray 集群和 Ray Serve 应用程序的 Kubernetes 原生支持:** 使用 Kubernetes 配置定义 Ray 集群及其 Ray Serve 应用程序后，您可以用 `kubectl` 创建集群及其应用程序。
+* **Ray Serve 应用程序就地更新** 用户可以更新 RayService CR 配置中的 Ray Serve 配置并使用 `kubectl apply` [步骤 7](#step-7-in-place-update-for-ray-serve-applications) 。
+* **Zero downtime upgrades for Ray clusters:** 用户可以在RayService CR配置中更新Ray集群配置并用 `kubectl apply` 更新集群。RayService 临时创建一个待处理集群并等待其准备就绪，然后将流量切换到新集群并终止旧集群。有关详细信息，请参阅 [步骤 8](#step-8-zero-downtime-upgrade-for-ray-clusters) 。
+* **Services HA:** RayService监控Ray集群和Serve部署的健康状态。如果RayService在一段时间内检测到不健康状态，RayService会尝试创建新的Ray集群，并在新集群准备就绪时将流量切换到新集群。
 
-## Example: Serve two simple Ray Serve applications using RayService
+示例：使用 RayService 为两个简单的 Ray Serve 应用程序提供服务
 
-## Step 1: Create a Kubernetes cluster with Kind
+## Step 1: 使用 Kind 创建 Kubernetes 集群
 
 ```sh
 kind create cluster --image=kindest/node:v1.23.0
 ```
 
-## Step 2: Install the KubeRay operator
+## Step 2: 安装 KubeRay operator
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
-Note that the YAML file in this example uses `serveConfigV2` to specify a multi-application Serve config, which is supported starting from KubeRay v0.6.0.
+按照 [本文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
+请注意，本示例中的 YAML 文件使用 `serveConfigV2` 指定多应用程序 Serve 配置，从 KubeRay v0.6.0 开始支持该配置。
 
-## Step 3: Install a RayService
+## Step 3: 安装 RayService
 
 ```sh
 # Step 3.1: Download `ray_v1alpha1_rayservice.yaml`
@@ -46,12 +46,12 @@ curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-o
 kubectl apply -f ray_v1alpha1_rayservice.yaml
 ```
 
-* First look at the Ray Serve config (that is, `serveConfigV2`) embedded in the RayService YAML. Notice two high-level applications: a fruit stand app and a calculator app. Take note of some details about the fruit stand application:
-  * The fruit stand application is contained in the `deployment_graph` variable in `fruit.py` in the [test_dag](https://github.com/ray-project/test_dag/tree/41d09119cbdf8450599f993f51318e9e27c59098) repo, so `import_path` in the config points to this variable to tell Serve from where to import the application.
-  * The fruit app is hosted at the route prefix `/fruit`, meaning HTTP requests with routes that start with the prefix `/fruit` are sent to the fruit stand application.
-  * The working directory points to the [test_dag](https://github.com/ray-project/test_dag/tree/41d09119cbdf8450599f993f51318e9e27c59098) repo, which is downloaded at runtime, and RayService starts your application in this directory. See {ref}`Runtime Environments <runtime-environments>`. for more details.
-  * For more details on configuring Ray Serve deployments, see [Ray Serve Documentation](https://docs.ray.io/en/master/serve/configure-serve-deployment.html).
-  * Similarly, the calculator app is imported from the `conditional_dag.py` file in the same repo, and it's hosted at the route prefix `/calc`.
+* 首先查看RayService YAML 中嵌入的Ray Serve 配置 （即 `serveConfigV2`）。 请注意两个高级应用程序： 水果摊应用程序和计算器应用程序。请注意有关水果摊应用的一些细节：
+  * 水果摊应用程序包含在 [test_dag](https://github.com/ray-project/test_dag/tree/41d09119cbdf8450599f993f51318e9e27c59098) 中 `fruit.py` 脚本的 `deployment_graph` 变量中，所以配置 `import_path` 指向此变量以告诉 Serve 从何处导入应用程序。
+  * 水果应用程序托管在路由前缀 `/fruit`，这意味着以该前缀 `/fruit` 开头的路由的 HTTP 请求将发送到水果摊应用程序。
+  * 工作目录指向 [test_dag](https://github.com/ray-project/test_dag/tree/41d09119cbdf8450599f993f51318e9e27c59098)存储库，该存储库在运行时下载，RayService 在此目录中启动您的应用程序。 参阅 {ref}`Runtime Environments <runtime-environments>` 了解更多细节。
+  * 有关配置 Ray Serve 部署的更多详细信息，请参阅 [Ray Serve 文档](https://docs.ray.io/en/master/serve/configure-serve-deployment.html)。
+  * 同样，计算器应用程序是从 `conditional_dag.py` 导入的， 并且托管在路由前缀为 `/calc`。
   ```yaml
   serveConfigV2: |
     applications:
@@ -69,7 +69,7 @@ kubectl apply -f ray_v1alpha1_rayservice.yaml
         deployments: ...
   ```
 
-## Step 4: Verify the Kubernetes cluster status 
+## Step 4: 验证 Kubernetes 集群状态
 
 ```sh
 # Step 4.1: List all RayService custom resources in the `default` namespace.
@@ -103,19 +103,20 @@ kubectl get services
 # rayservice-sample-serve-svc                   ClusterIP   10.96.161.84    <none>        8000/TCP                                                  4m58s
 ```
 
-KubeRay creates a RayCluster based on `spec.rayClusterConfig` defined in the RayService YAML for a RayService custom resource.
-Next, after the head Pod is running and ready, KubeRay submits a request to the head's dashboard agent port (default: 52365) to create the Ray Serve applications defined in `spec.serveConfigV2`.
+KubeRay 根据 RayService YAML 中定义的 `spec.rayClusterConfig` 创建 自定义资源 RayService 。
+接下来，在 head Pod 运行并准备就绪后，KubeRay 向 head 的仪表板代理端口（默认：52365）提交请求，按照 `spec.serveConfigV2` 的定义创建 Ray Serve 应用程序。
 
-When the Ray Serve applications are healthy and ready, KubeRay creates a head service and a serve service for the RayService custom resource (e.g., `rayservice-sample-head-svc` and `rayservice-sample-serve-svc` in Step 4.4).
-Users can access the head Pod through both the head service managed by RayService (that is, `rayservice-sample-head-svc`) and the head service managed by RayCluster (that is, `rayservice-sample-raycluster-6mj28-head-svc`).
-However, during a zero downtime upgrade, a new RayCluster is created, and a new head service is created for the new RayCluster.
-If you don't use`rayservice-sample-head-svc`, you need to update the ingress configuration to point to the new head service.
-However, if you use `rayservice-sample-head-svc`, KubeRay automatically updates the selector to point to the new head Pod, eliminating the need to update the ingress configuration.
+当 Ray Serve 应用程序健康并准备就绪时，KubeRay 为 RayService 自定义资源创建一个头服务和一个服务服务（例如，在步骤 4.4 的 `rayservice-sample-head-svc` 和 `rayservice-sample-serve-svc` in Step 4.4）。
+用户可以通过RayService管理的头服务（即 `rayservice-sample-head-svc`）和RayCluster管理的头服务（即`rayservice-sample-raycluster-6mj28-head-svc`）管理头服务。
+
+但是，在零停机升级过程中，会创建一个新的 RayCluster，并为新的 RayCluster 创建一个新的头服务。
+如果不使用 `rayservice-sample-head-svc`，则需要更新入口配置以指向新的头服务。
+但是，如果您使用 `rayservice-sample-head-svc`，KubeRay 会自动更新选择器以指向新的头 Pod，从而无需更新入口配置。
 
 
-> Note: Default ports and their definitions. 
+> 注意: 默认端口及其定义。
 
-| Port  | Definition          |
+| Port  | 定义                  |
 |-------|---------------------|
 | 6379  | Ray GCS             |
 | 8265  | Ray Dashboard       |
@@ -123,7 +124,7 @@ However, if you use `rayservice-sample-head-svc`, KubeRay automatically updates 
 | 8000  | Ray Serve           |
 | 52365 | Ray Dashboard Agent |
 
-## Step 5: Verify the status of the Serve applications
+## 步骤 5: 验证服务应用程序的状态
 
 ```sh
 # Step 5.1: Check the status of the RayService.
@@ -160,11 +161,11 @@ kubectl describe rayservices rayservice-sample
 kubectl port-forward svc/rayservice-sample-head-svc --address 0.0.0.0 8265:8265
 ```
 
-* See [rayservice-troubleshooting.md](kuberay-raysvc-troubleshoot) for more details on RayService observability.
-Below is a screenshot example of the Serve page in the Ray dashboard.
+* 有关 RayService 可观测性的更多详细信息，请参阅 [rayservice-troubleshooting.md](kuberay-raysvc-troubleshoot) 。
+下面是 Ray 仪表板中服务页面的屏幕截图示例。
   ![Ray Serve Dashboard](../images/dashboard_serve.png)
 
-## Step 6: Send requests to the Serve applications via the Kubernetes serve service
+## 步骤 6: 通过 Kubernetes 服务向服务应用程序发送请求
 
 ```sh
 # Step 6.1: Run a curl Pod.
@@ -180,26 +181,26 @@ curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:800
 # [Expected output]: "15 pizzas please!"
 ```
 
-* `rayservice-sample-serve-svc` is HA in general. It does traffic routing among all the workers which have Serve deployments and always tries to point to the healthy cluster, even during upgrading or failing cases. 
+* `rayservice-sample-serve-svc` 一般是HA。 它在所有具有 Serve 部署的工作线程之间进行流量路由，并且始终尝试指向健康的集群，即使在升级或失败的情况下也是如此。
 
-## Step 7: In-place update for Ray Serve applications
+## 步骤 7: Ray Serve 应用程序就地更新
 
-You can update the configurations for the applications by modifying `serveConfigV2` in the RayService config file. Reapplying the modified config with `kubectl apply` reapplies the new configurations to the existing RayCluster instead of creating a new RayCluster.
+您可以通过修改 RayService 配置文件的 `serveConfigV2` 来更新应用程序的配置。 使用 `kubectl apply` 重新应用修改后的配置会将新配置重新应用到现有 RayCluster，而不是创建新的 RayCluster。
 
-Update the price of mangos from `3` to `4` for the fruit stand app in [ray_v1alpha1_rayservice.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray_v1alpha1_rayservice.yaml). This change reconfigures the existing MangoStand deployment, and future requests will use the updated Mango price.
+将 [ray_v1alpha1_rayservice.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray_v1alpha1_rayservice.yaml) 中水果摊应用的芒果价格从 `3` 修改为 `4` 。 此更改重新配置了现有的 MangoStand 部署，未来的请求将使用更新后的 Mango 价格。
 
 ```sh
-# Step 7.1: Update the price of mangos from 3 to 4.
+# 步骤 7.1: Update the price of mangos from 3 to 4.
 # [ray_v1alpha1_rayservice.yaml]
 # - name: MangoStand
 #   num_replicas: 1
 #   user_config:
 #     price: 4
 
-# Step 7.2: Apply the updated RayService config.
+# 步骤 7.2: Apply the updated RayService config.
 kubectl apply -f ray_v1alpha1_rayservice.yaml
 
-# Step 7.3: Check the status of the RayService.
+# 步骤 7.3: Check the status of the RayService.
 kubectl describe rayservices rayservice-sample
 # [Example output]
 # Serve Deployment Statuses:
@@ -208,49 +209,49 @@ kubectl describe rayservices rayservice-sample
 #   name: MangoStand
 #   status: UPDATING
 
-# Step 7.4: Send a request to the fruit stand app again after the Serve deployment status changes from UPDATING to HEALTHY.
-# (Execute the command in the curl Pod from Step 6)
+# 步骤 7.4: Send a request to the fruit stand app again after the Serve deployment status changes from UPDATING to HEALTHY.
+# (Execute the command in the curl Pod from 步骤 6)
 curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:8000/fruit/ -d '["MANGO", 2]'
 # [Expected output]: 8
 ```
 
-## Step 8: Zero downtime upgrade for Ray clusters
+## 步骤 8: Ray 集群零停机升级
 
-In Step 7, modifying `serveConfigV2` doesn't trigger a zero downtime upgrade for Ray clusters.
-Instead, it reapplies the new configurations to the existing RayCluster.
-However, if you modify `spec.rayClusterConfig` in the RayService YAML file, it triggers a zero downtime upgrade for Ray clusters.
-RayService temporarily creates a new RayCluster and waits for it to be ready, then switches traffic to the new RayCluster by updating the selector of the head service managed by RayService (that is, `rayservice-sample-head-svc`) and terminates the old one.
+在步骤 7， 修改 `serveConfigV2` 不会触发Ray集群的零停机升级。相反，它将新配置重新应用到现有 RayCluster。
+但是，他将新的配置应用于已有的集群。
+然而，如果你修改了 RayService YAML 配置文件的 `spec.rayClusterConfig` ，则会触发 Ray 集群的零停机升级。
+RayService 临时创建一个新的 RayCluster 并等待其准备就绪，然后通过更新 RayService 管理的头服务的选择器（即 `rayservice-sample-head-svc`）将流量切换到新的 RayCluster 并终止旧的 RayCluster。
 
-During the zero downtime upgrade process, RayService creates a new RayCluster temporarily and waits for it to become ready. 
-Once the new RayCluster is ready, RayService updates the selector of the head service managed by RayService (that is, `rayservice-sample-head-svc`) to point to the new RayCluster to switch the traffic to the new RayCluster. 
-Finally, the old RayCluster is terminated.
+在零停机升级过程中，RayService会临时创建一个新的RayCluster并等待其准备就绪。
+一旦新的RayCluster准备就绪，RayService会更新RayService管理的头部服务的选择器（即 `rayservice-sample-head-svc`），使其指向新的RayCluster，从而将流量切换到新的RayCluster。
+最后，旧的 RayCluster 被终止。
 
-Certain exceptions don't trigger a zero downtime upgrade.
-Only the fields managed by Ray Autoscaler, `replicas` and `scaleStrategy.workersToDelete`, don't trigger a zero downtime upgrade.
-When you update these fields, KubeRay doesn't propagate the update from RayService to RayCluster custom resources, so nothing happens.
+某些异常不会触发零停机升级。
+只有 Ray Autoscaler 管理的字段 `replicas` 和 `scaleStrategy.workersToDelete` 不会触发零停机升级。
+当您更新这些字段时，KubeRay 不会将更新从 RayService 传播到 RayCluster 自定义资源，因此不会发生任何情况。
 
 ```sh
-# Step 8.1: Update `spec.rayClusterConfig.workerGroupSpecs[0].replicas` in the RayService YAML file from 1 to 2.
+# 步骤 8.1: Update `spec.rayClusterConfig.workerGroupSpecs[0].replicas` in the RayService YAML file from 1 to 2.
 # This field is an exception that doesn't trigger a zero downtime upgrade, and nothing happens.
 kubectl apply -f ray_v1alpha1_rayservice.yaml
 
-# Step 8.2: Check RayService CR
+# 步骤 8.2: Check RayService CR
 kubectl describe rayservices rayservice-sample
 # Worker Group Specs:
 #   ...
 #   Replicas:  2
 
-# Step 8.3: Check RayCluster CR. The update doesn't propagate to the RayCluster CR.
+# 步骤 8.3: Check RayCluster CR. The update doesn't propagate to the RayCluster CR.
 kubectl describe rayclusters $YOUR_RAY_CLUSTER
 # Worker Group Specs:
 #   ...
 #   Replicas:  1
 
-# Step 8.4: Update `spec.rayClusterConfig.rayVersion` to `2.100.0`.
+# 步骤 8.4: Update `spec.rayClusterConfig.rayVersion` to `2.100.0`.
 # This field determines the Autoscaler sidecar image, and triggers a zero downtime upgrade.
 kubectl apply -f ray_v1alpha1_rayservice.yaml
 
-# Step 8.5: List all RayCluster custom resources in the `default` namespace.
+# 步骤 8.5: List all RayCluster custom resources in the `default` namespace.
 # Note that the new RayCluster is created based on the updated RayService config to have 2 workers.
 kubectl get raycluster
 
@@ -258,42 +259,42 @@ kubectl get raycluster
 # rayservice-sample-raycluster-6mj28   1                 1                   ready    142m
 # rayservice-sample-raycluster-sjj67   2                 2                   ready    44s
 
-# Step 8.6: Wait for the old RayCluster terminate.
+# 步骤 8.6: Wait for the old RayCluster terminate.
 
-# Step 8.7: Submit a request to the fruit stand app via the same serve service.
+# 步骤 8.7: Submit a request to the fruit stand app via the same serve service.
 curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:8000/fruit/ -d '["MANGO", 2]'
 # [Expected output]: 8
 ```
 
-### Other possible scenarios that trigger a new RayCluster preparation
+触发新 RayCluster 准备的其他可能场景
 
-> Note: The following behavior is for KubeRay v0.6.2 or newer.
-For older versions, see [kuberay#1293](https://github.com/ray-project/kuberay/pull/1293) for more details.
+> Note: 以下行为适用于 KubeRay v0.6.2 或更高版本。
+对于旧版本，请参阅 [kuberay#1293](https://github.com/ray-project/kuberay/pull/1293) 了解更多详细信息。
 
-KubeRay also triggers a new RayCluster preparation if it considers a RayCluster unhealthy.
-In the RayService, KubeRay can mark a RayCluster as unhealthy in two possible scenarios.
+如果 KubeRay 认为 RayCluster 不健康，它也会触发新的 RayCluster 准备。
+在 RayService 中，KubeRay 可以在两种可能的情况下将 RayCluster 标记为不健康。
 
-* Case 1: The KubeRay operator can't connect to the dashboard agent on the head Pod for more than the duration defined by the `deploymentUnhealthySecondThreshold` parameter. Both the default value and values in sample YAML files of `deploymentUnhealthySecondThreshold` are 300 seconds.
+* 情况 1: KubeRay operator 无法连接到头 Pod 上的仪表板代理的时间超过 `deploymentUnhealthySecondThreshold` 参数定义的持续时间。 默认值和示例 YAML 文件中 `deploymentUnhealthySecondThreshold` 的值均为 300 秒。
 
-* Case 2: The KubeRay operator marks a RayCluster as unhealthy if the status of a serve application is `DEPLOY_FAILED` or `UNHEALTHY` for a duration exceeding the `serviceUnhealthySecondThreshold` parameter. Both the default value and values in sample YAML files of `serviceUnhealthySecondThreshold` are 900 seconds.
+* 情况 2: 如果服务应用的状态 `DEPLOY_FAILED` 或 `UNHEALTHY` 的持续时间超过 `serviceUnhealthySecondThreshold` 参数，KubeRay operator 会将 RayCluster 标记为不健康。默认值和示例 YAML 文件中 `serviceUnhealthySecondThreshold` 的值均为 900 秒。
 
-After KubeRay marks a RayCluster as unhealthy, it initiates the creation of a new RayCluster. Once the new RayCluster is ready, KubeRay redirects network traffic to it, and subsequently deletes the old RayCluster.
+KubeRay 将 RayCluster 标记为不健康后，它会启动新 RayCluster 的创建。一旦新的 RayCluster 准备就绪，KubeRay 会将网络流量重定向到它，然后删除旧的 RayCluster。
 
-## Step 9: Clean up the Kubernetes cluster
+## 步骤 9: 清理 Kubernetes 集群
 
 ```sh
-# Delete the RayService.
+# 删除 RayService.
 kubectl delete -f ray_v1alpha1_rayservice.yaml
 
-# Uninstall the KubeRay operator.
+# 卸载 KubeRay operator。
 helm uninstall kuberay-operator
 
-# Delete the curl Pod.
+# 删除 curl Pod.
 kubectl delete pod curl
 ```
 
-## Next steps
+## 下一步
 
-* See [RayService troubleshooting guide](kuberay-raysvc-troubleshoot) if you encounter any issues.
-* See [Examples](kuberay-examples) for more RayService examples.
-The [MobileNet example](kuberay-mobilenet-rayservice-example) is a good example to start with because it doesn't require GPUs and is easy to run on a local machine.
+* 如果遇到任何问题，请参阅 [RayService 故障排除指南](kuberay-raysvc-troubleshoot) 。
+* 有关更多 RayService 示例，请参阅 [Examples](kuberay-examples) 。
+[MobileNet 示例](kuberay-mobilenet-rayservice-example) 是一个很好的入门示例，因为它不需要 GPU 并且很容易在本地计算机上运行。

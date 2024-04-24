@@ -1,73 +1,56 @@
 (ray-k8s-autoscaler-comparison)=
-# (Advanced) Understanding the Ray Autoscaler in the Context of Kubernetes
-We describe the relationship between the Ray autoscaler and other autoscalers in the Kubernetes
-ecosystem.
+# 高级）了解 Kubernetes 背景下的 Ray Autoscaler
+我们描述了 Ray 自动缩放器和 Kubernetes 生态系统中其他自动缩放器之间的关系。
 
-## Ray Autoscaler vs. Horizontal Pod Autoscaler
-The Ray autoscaler adjusts the number of Ray nodes in a Ray cluster.
-On Kubernetes, each Ray node is run as a Kubernetes Pod. Thus in the context of Kubernetes,
-the Ray autoscaler scales Ray **Pod quantities**. In this sense, the Ray autoscaler
-plays a role similar to that of the Kubernetes
-[Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-Pod-autoscale/) (HPA).
-However, the following features distinguish the Ray Autoscaler from the HPA.
+## Ray Autoscaler 与 Horizo​​ntal Pod Autoscaler
+Ray 自动缩放器调整 Ray 集群中的 Ray 节点数量。
+在 Kubernetes 上，每个 Ray 节点都作为 Kubernetes Pod 运行。
+因此，在 Kubernetes 的背景下，Ray 自动缩放器可缩放 Ray **Pod 数量**。
+从这个意义上说，Ray Autoscaler 扮演的角色类似于 Kubernetes (https://kubernetes.io/docs/tasks/run-application/horizontal-Pod-autoscale/) (HPA)。
+然而，Ray Autoscaler 与 HPA 的区别如下：
 
-### Load metrics are based on application semantics
-The Horizontal Pod Autoscaler determines scale based on physical usage metrics like CPU
-and memory. By contrast, the Ray autoscaler uses the logical resources expressed in
-task and actor annotations. For instance, if each Ray container spec in your RayCluster CR indicates
-a limit of 10 CPUs, and you submit twenty tasks annotated with `@ray.remote(num_cpus=5)`,
-10 Ray Pods are created to satisfy the 100-CPU resource demand.
-In this respect, the Ray autoscaler is similar to the
-[Kubernetes Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler),
-which makes scaling decisions based on the logical resources expressed in container
-resource requests.
+### 负载指标基于应用程序语义
+Horizo​​ntal Pod Autoscaler 根据 CPU 和内存等物理使用指标确定规模。
+相比之下，Ray 自动缩放器使用任务和 actor 注释中表达的逻辑资源。
+例如，如果 RayCluster CR 中的每个 Ray 容器规范指示 10 个 CPU 的限制，并且您提交 20 个带有 `@ray.remote(num_cpus=5)` 注解的任务，
+则将创建 10 个 Ray Pod 来满足 100 个 CPU 的资源需求。
+在这方面，Ray 自动缩放器与
+[Kubernetes Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)类似，
+后者根据容器资源请求中表达的逻辑资源做出缩放决策。
 
-### Fine-grained control of scale-down
-To accommodate the statefulness of Ray applications, the Ray autoscaler has more
-fine-grained control over scale-down than the Horizontal Pod Autoscaler. In addition to
-determining desired scale, the Ray Autoscaler is able to select precisely which Pods
-to scale down. The KubeRay operator then deletes that Pod.
-By contrast, the Horizontal Pod Autoscaler can only decrease a replica count, without much
-control over which Pods are deleted. For a Ray application, downscaling a random
-Pod could be dangerous.
+### 细粒度的缩容控制
+为了适应 Ray 应用程序的状态性，Ray 自动缩放器比 Horizo​​ntal Pod Autoscaler 对缩小规模具有更细粒度的控制。
+除了确定所需的比例之外，Ray Autoscaler 还能够精确选择要缩小的 Pod。然后 KubeRay operator 删除该 Pod。
+相比之下，Horizo​​ntal Pod Autoscaler 只能减少副本数量，而无法控制删除哪些 Pod。
+对于 Ray 应用程序来说，缩小随机 Pod 的规模可能是危险的。
 
-### Architecture: One Ray Autoscaler per Ray Cluster
-Horizontal Pod Autoscaling is centrally controlled by a manager in the Kubernetes control plane;
-the manager controls the scale of many Kubernetes objects.
-By contrast, each Ray cluster is managed by its own Ray autoscaler process,
-running as a sidecar container in the Ray head Pod. This design choice is motivated
-by the following considerations:
+### 架构：每个 Ray 集群一个 Ray Autoscaler
+Horizontal Pod Autoscaling 由 Kubernetes 控制平面中的管理器集中控制；
+管理器控制许多 Kubernetes 对象的规模。
+相比之下，每个 Ray 集群都由自己的 Ray 自动缩放器进程管理，
+作为 Ray head Pod 中的 sidecar 容器运行。这种设计选择是出于以下考虑：
 
-- **Scalability.** Autoscaling each Ray cluster requires processing a significant volume of resource
-  data from that Ray cluster.
-- **Simplified versioning and compatibility.** The autoscaler and Ray are both developed
-  as part of the Ray repository. The interface between the autoscaler and the Ray core is complex.
-  To support multiple Ray clusters running at different Ray versions, it is thus best to match
-  Ray and Autoscaler code versions. Running one autoscaler per Ray cluster and matching the code versions
-  ensures compatibility.
+- **可扩展性.** 自动缩放每个 Ray 集群需要处理来自该 Ray 集群的大量资源数据。
+- **简化的版本控制和兼容性.** 自动缩放器和 Ray 都是作为 Ray 存储库的一部分开发的。
+自动缩放器和 Ray 核心之间的接口很复杂。
+为了支持在不同 Ray 版本上运行的多个 Ray 集群，最好匹配 Ray 和 Autoscaler 代码版本。
+每个 Ray 集群运行一个自动缩放器并匹配代码版本可确保兼容性。
 
 (kuberay-autoscaler-with-ray-autoscaler)=
-## Ray Autoscaler with Kubernetes Cluster Autoscaler
-The Ray Autoscaler and the
-[Kubernetes Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler)
-complement each other.
-After the Ray autoscaler decides to create a Ray Pod, the Kubernetes Cluster Autoscaler
-can provision a Kubernetes node so that the Pod can be placed.
-Similarly, after the Ray autoscaler decides to delete an idle Pod, the Kubernetes
-Cluster Autoscaler can clean up the idle Kubernetes node that remains.
-It is recommended to configure your RayCluster so that only one Ray Pod fits per Kubernetes node.
-If you follow this pattern, Ray Autoscaler Pod scaling events correspond roughly one-to-one with cluster autoscaler
-node scaling events. (We say "roughly" because it is possible for a Ray Pod be deleted and replaced
-with a new Ray Pod before the underlying Kubernetes node is scaled down.)
+## Ray Autoscaler 与 Kubernetes Cluster Autoscaler
+The Ray Autoscaler 与 [Kubernetes Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler) 相辅相成。
+Ray Autoscaler 决定创建 Ray Pod 后，Kubernetes Cluster Autoscaler
+可以配置 Kubernetes 节点，以便放置 Pod。
+同样，当 Ray 自动缩放器决定删除空闲 Pod 后，
+Kubernetes Cluster Autoscaler 可以清理剩余的空闲 Kubernetes 节点。
+建议配置 RayCluster，以便每个 Kubernetes 节点仅适合一个 Ray Pod。
+如果遵循此模式，Ray Autoscaler Pod 缩放事件与集群​​自动缩放器节点缩放事件
+大致一一对应。（我们说“大致”是因为在底层 Kubernetes 节点缩小之前，Ray Pod 可能会被删除并替换为新的 Ray Pod。）
 
 
-## Vertical Pod Autoscaler
-There is no relationship between the Ray Autoscaler and the Kubernetes
-[Vertical Pod Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler) (VPA),
-which is meant to size individual Pods to the appropriate size based on current and past usage.
-If you find that the load on your individual Ray Pods is too high, there are a number
-of manual techniques to decrease the load
-One method is to schedule fewer tasks/actors per node by increasing the resource
-requirements specified in the `ray.remote` annotation.
-For example, changing `@ray.remote(num_cpus=2)` to `@ray.remote(num_cpus=4)`
-will halve the quantity of that task or actor that can fit in a given Ray Pod.
+## 垂直 Pod 自动缩放器
+Ray Autoscaler 和 Kubernetes [Vertical Pod Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler) (VPA) 之间没有关系，
+VPA 的目的是根据当前和过去的使用情况将各个 Pod 调整为适当的大小。
+如果您发现单个 Ray Pod 上的负载过高，可以使用多种手动技术来减少负载，其中一种方法是通过增加 `ray.remote` 注释中指定的资源需求来减少每个节点的任务/actor。
+例如，更改 `@ray.remote(num_cpus=2)` 为 `@ray.remote(num_cpus=4)`
+将使给定 Ray Pod 中可以容纳的任务或参与者的数量减半。

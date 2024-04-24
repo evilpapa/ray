@@ -1,32 +1,28 @@
 (kuberay-dev-serve)=
 
-# Developing Ray Serve Python scripts on a RayCluster
+# 在 RayCluster 上开发 Ray Serve Python 脚本
 
-In this tutorial, you will learn how to effectively debug your Ray Serve scripts against a RayCluster, enabling enhanced observability and faster iteration speed compared to developing the script directly with a RayService.
-Many RayService issues are related to the Ray Serve Python scripts, so it is important to ensure the correctness of the scripts before deploying them to a RayService.
-This tutorial will show you how to develop a Ray Serve Python script for a MobileNet image classifier on a RayCluster.
-You can deploy and serve the classifier on your local Kind cluster without requiring a GPU.
-Refer to [ray-service.mobilenet.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) and [mobilenet-rayservice.md](kuberay-mobilenet-rayservice-example) for more details.
+在本教程中，您将学习如何针对 RayCluster 有效调试 Ray Serve 脚本，与直接使用 RayService 开发脚本相比，实现增强的可观察性和更快的迭代速度。许多 RayService 问题都与 Ray Serve Python 脚本相关，因此在将脚本部署到 RayService 之前确保脚本的正确性非常重要。本教程将向您展示如何为 RayCluster 上的 MobileNet 图像分类器开发 Ray Serve Python 脚本。您可以在本地 Kind 集群上部署并提供分类器，而无需 GPU。有关更多详细信息，请参阅 [ray-service.mobilenet.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) 和 [mobilenet-rayservice.md](kuberay-mobilenet-rayservice-example) 。
 
 
-# Step 1: Install a KubeRay cluster
+# 步骤 1: 安装 KubeRay 集群
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+按照 [本文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
 
-# Step 2: Create a RayCluster CR
+# 步骤 2: 创建 RayCluster CR
 
 ```sh
 helm install raycluster kuberay/ray-cluster --version 1.0.0-rc.0
 ```
 
-# Step 3: Log in to the head Pod
+# 步骤 3: 登录head Pod
 
 ```sh
 export HEAD_POD=$(kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers)
 kubectl exec -it $HEAD_POD -- bash
 ```
 
-# Step 4: Prepare your Ray Serve Python scripts and run the Ray Serve application
+# 步骤 4: 准备 Ray Serve Python 脚本并运行 Ray Serve 应用程序
 
 ```sh
 # Execute the following command in the head Pod
@@ -40,10 +36,12 @@ serve run mobilenet.mobilenet:app
 # ModuleNotFoundError: No module named 'tensorflow'
 ```
 
-* `serve run mobilenet.mobilenet:app`: The first `mobilenet` is the name of the directory in the `serve_config_examples/`,
-the second `mobilenet` is the name of the Python file in the directory `mobilenet/`, and `app` is the name of the variable representing Ray Serve application within the Python file. See the section "import_path" in [rayservice-troubleshooting.md](kuberay-raysvc-troubleshoot) for more details.
+* `serve run mobilenet.mobilenet:app`: 第一个 `mobilenet` 是在目录 `serve_config_examples/` 中的名字，
+第二个 `mobilenet` 是目录 `mobilenet/` 中的 Python 文件的名称，
+`app` 是 Python 文件中代表 Ray Serve 应用程序的变量的名称。
+有关更多详细信息，请参阅 "import_path" [rayservice-troubleshooting.md](kuberay-raysvc-troubleshoot) 部分。
 
-# Step 5: Change the Ray image from `rayproject/ray:${RAY_VERSION}` to `rayproject/ray-ml:${RAY_VERSION}`
+# 步骤 5: 修改 Ray 镜像 `rayproject/ray:${RAY_VERSION}` 为 `rayproject/ray-ml:${RAY_VERSION}`
 
 ```sh
 # Uninstall RayCluster
@@ -53,14 +51,14 @@ helm uninstall raycluster
 helm install raycluster kuberay/ray-cluster --version 1.0.0-rc.0 --set image.repository=rayproject/ray-ml
 ```
 
-The error message in Step 4 indicates that the Ray image `rayproject/ray:${RAY_VERSION}` does not have the TensorFlow package.
-Due to the significant size of TensorFlow, we have opted to use an image with TensorFlow as the base instead of installing it within {ref}`Runtime Environments <runtime-environments>`.
-In this Step, we will change the Ray image from `rayproject/ray:${RAY_VERSION}` to `rayproject/ray-ml:${RAY_VERSION}`.
+步骤 4 的错误信息表明 Ray 镜像 `rayproject/ray:${RAY_VERSION}` 没有TensorFlow包。
+由于 TensorFlow 的规模很大，我们选择使用以 TensorFlow 为基础的映像，而不是将通过 {ref}`Runtime Environments <runtime-environments>` 安装。
+此步骤，我们将修改 Ray 镜像 `rayproject/ray:${RAY_VERSION}` 为 `rayproject/ray-ml:${RAY_VERSION}`。
 
-# Step 6: Repeat Step 3 and Step 4
+# 步骤 6: 重复步骤 3 和 4
 
 ```sh
-# Repeat Step 3 and Step 4 to log in to the new head Pod and run the Ray Serve application.
+# Repeat 步骤 3 and 步骤 4 to log in to the new head Pod and run the Ray Serve application.
 # You should successfully launch the Ray Serve application this time.
 serve run mobilenet.mobilenet:app
 
@@ -73,7 +71,7 @@ serve run mobilenet.mobilenet:app
 # 2023-07-17 14:04:43,737 SUCC scripts.py:424 -- Deployed Serve app successfully.
 ```
 
-# Step 7: Submit a request to the Ray Serve application
+# 步骤 7: 向 Ray Serve 应用程序提交请求
 
 ```sh
 # (On your local machine) Forward the serve port of the head Pod
@@ -102,9 +100,9 @@ python3 mobilenet_req.py
 # AssertionError: The `python-multipart` library must be installed to use form parsing..
 ```
 
-`python-multipart` is required for the request parsing function `starlette.requests.form()`, so the error message is reported when we send a request to the Ray Serve application.
+需要 `python-multipart` 来解析 `starlette.requests.form()` 函数，所以当我们向Ray Serve应用发送请求时，会报错信息。
 
-# Step 8: Restart the Ray Serve application with runtime environment.
+# 步骤 8: 使用运行时环境重新启动 Ray Serve 应用程序。
 
 ```sh
 # In the head Pod, stop the Ray Serve application
@@ -124,8 +122,8 @@ python3 mobilenet_req.py
 # {"prediction": ["n02123159", "tiger_cat", 0.2994779646396637]}
 ```
 
-# Step 9: Create a RayService YAML file
+# 步骤 9: 创建 RayService YAML 文件
 
-In the previous steps, we found that the Ray Serve application can be successfully launched using the Ray image `rayproject/ray-ml:${RAY_VERSION}` and the {ref}`runtime environments <runtime-environments>` `python-multipart==0.0.6`.
-Therefore, we can create a RayService YAML file with the same Ray image and runtime environment.
-For more details, please refer to [ray-service.mobilenet.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) and [mobilenet-rayservice.md](kuberay-mobilenet-rayservice-example).
+在前面的步骤中，我们发现使用 Ray 镜像 `rayproject/ray-ml:${RAY_VERSION}` 和 {ref}`runtime environments <runtime-environments>` `python-multipart==0.0.6`可以成功启动Ray Serve应用程序。
+因此，我们可以创建一个具有相同 Ray 镜像和运行环境的 RayService YAML 文件。
+更多详情请参考 [ray-service.mobilenet.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) 和 [mobilenet-rayservice.md](kuberay-mobilenet-rayservice-example)。

@@ -1,37 +1,37 @@
 (kuberay-observability)=
 
-# KubeRay Observability
+# KubeRay 可观测性
 
-## Ray Dashboard
+## Ray 仪表盘
 
-* To view the [Ray dashboard](observability-getting-started) running on the head Pod, follow [these instructions](kuberay-port-forward-dashboard).
-* To integrate the Ray dashboard with Prometheus and Grafana, see [Using Prometheus and Grafana](kuberay-prometheus-grafana) for more details.
-* To enable the "CPU Flame Graph" and "Stack Trace" features, see [Profiling with py-spy](kuberay-pyspy-integration).
+* 要查看在 head Pod 上运行的 [Ray dashboard](observability-getting-started) ，参考 [以下说明](kuberay-port-forward-dashboard)。
+* 要将 Ray 仪表板与 Prometheus 和 Grafana 集成，请参阅 [使用 Prometheus 和 Grafana](kuberay-prometheus-grafana) 了解更多详细信息。
+* 要启用“CPU Flame Graph”和“Stack Trace”功能，请参阅 [使用 py-spy 进行分析](kuberay-pyspy-integration)。
 
-## KubeRay Observability
+## KubeRay 可观测性
 
-Methods 1 and 2 address control plane observability, while methods 3, 4, and 5 focus on data plane observability.
+方法 1 和 2 解决控制平面的可观察性，而方法 3、4 和 5 则重点关注数据平面的可观察性。
 
-### Method 1: Check KubeRay operator's logs for errors
+### 方法 1: 检查 KubeRay operator 的日志是否有错误
 
 ```bash
 # Typically, the operator's Pod name is kuberay-operator-xxxxxxxxxx-yyyyy.
 kubectl logs $KUBERAY_OPERATOR_POD -n $YOUR_NAMESPACE | tee operator-log
 ```
 
-Use this command to redirect the operator's logs to a file called `operator-log`. Then search for errors in the file.
+使用此命令将操作员的日志重定向到名为 `operator-log`。然后在文件中查找错误。
 
-### Method 2: Check custom resource status
+### 方法 2: 检查自定义资源状态
 
 ```bash
 kubectl describe [raycluster|rayjob|rayservice] $CUSTOM_RESOURCE_NAME -n $YOUR_NAMESPACE
 ```
 
-After running this command, check the status and events of the custom resource for any errors.
+运行此命令后，检查自定义资源的状态和事件是否有任何错误。
 
-### Method 3: Check logs of Ray Pods
+### 方法 3: 查看 Ray Pod 的日志
 
-Check the Ray logs directly by accessing the log files on the Pods. See [Ray Logging](configure-logging) for more details.
+通过访问 Pod 上的日志文件直接检查 Ray 日志。有关更多详细信息，请参阅 [Ray 日志](configure-logging) 。
 
 ```bash
 kubectl exec -it $RAY_POD -n $YOUR_NAMESPACE -- bash
@@ -39,7 +39,7 @@ kubectl exec -it $RAY_POD -n $YOUR_NAMESPACE -- bash
 ```
 
 (kuberay-port-forward-dashboard)=
-### Method 4: Check Dashboard
+### 方法 4: 检查仪表盘
 
 ```bash
 export HEAD_POD=$(kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers)
@@ -48,9 +48,9 @@ kubectl port-forward $RAY_POD -n $YOUR_NAMESPACE --address 0.0.0.0 8265:8265
 # For most cases, 127.0.0.1:8265 or localhost:8265 should work.
 ```
 
-### Method 5: Ray State CLI
+### 方法 5: Ray 状态 CLI
 
-You can use the [Ray State CLI](state-api-cli-ref) on the head Pod to check the status of Ray Serve applications.
+您可以使用头 Pod 上的 [Ray State CLI](state-api-cli-ref) 检查 Ray Serve 应用程序的状态。
 
 ```bash
 # Log into the head Pod

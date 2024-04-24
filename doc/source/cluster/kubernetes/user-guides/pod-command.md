@@ -1,18 +1,18 @@
 (kuberay-pod-command)=
 
-# Specify container commands for Ray head/worker Pods
-You can execute commands on the head/worker pods at two timings:
+# 为 Ray head/worker Pod 指定容器命令
+您可以在两个时间点在 head/worker pod 上执行命令：
 
-* (1) **Before `ray start`**: As an example, you can set up some environment variables that will be used by `ray start`.
+* (1) **`ray start` 之前**: 作为示例，您可以设置一些将由 `ray start` 的环境变量
 
-* (2) **After `ray start` (RayCluster is ready)**: As an example, you can launch a Ray serve deployment when the RayCluster is ready.
+* (2) **`ray start` 之后 (RayCluster 已就绪)**: 例如，当 RayCluster 就绪时，您可以启动 Ray serve 部署。
 
-## Current KubeRay operator behavior for container commands
-* The current behavior for container commands is not finalized, and **may be updated in the future**.
-* See [code](https://github.com/ray-project/kuberay/blob/47148921c7d14813aea26a7974abda7cf22bbc52/ray-operator/controllers/ray/common/pod.go#L301-L326) for more details.
+## 当前容器命令的 KubeRay operator 行为
+* 容器命令的当前行为尚未最终确定， **将来可能会更新**。
+* 查看 [code](https://github.com/ray-project/kuberay/blob/47148921c7d14813aea26a7974abda7cf22bbc52/ray-operator/controllers/ray/common/pod.go#L301-L326) 了解更多信息。
 
-## Timing 1: Before `ray start`
-Currently, for timing (1), we can set the container's `Command` and `Args` in RayCluster specification to reach the goal.
+## Timing 1: `ray start` 之前
+目前，对于 timing (1)，我们可以在RayCluster规范中设置容器的 `Command` 和 `Args` 来达到目标。
 
 ```yaml
 # https://github.com/ray-project/kuberay/ray-operator/config/samples/ray-cluster.head-command.yaml
@@ -33,14 +33,14 @@ Currently, for timing (1), we can set the container's `Command` and `Args` in Ra
           args: ["456"]
 ```
 
-* Ray head Pod
-    * `spec.containers.0.command` is hardcoded with `["/bin/bash", "-lc", "--"]`.
-    * `spec.containers.0.args` contains two parts:
-        * (Part 1) **user-specified command**: A string concatenates `headGroupSpec.template.spec.containers.0.command` from RayCluster and `headGroupSpec.template.spec.containers.0.args` from RayCluster together.
-        * (Part 2) **ray start command**: The command is created based on `rayStartParams` specified in RayCluster. The command will look like `ulimit -n 65536; ray start ...`.
-        * To summarize, `spec.containers.0.args` will be `$(user-specified command) && $(ray start command)`.
+* Ray 头 Pod
+    * `spec.containers.0.command` 硬编码为 `["/bin/bash", "-lc", "--"]`.
+    * `spec.containers.0.args` 包含两部分：
+        * (第 1 部分) **用户指定命令**: 将来自 RayCluster 的 `headGroupSpec.template.spec.containers.0.command` 和  `headGroupSpec.template.spec.containers.0.args` 用字符串串联。
+        * (第2部分) **ray start 命令**: 命令根据 RayCluster 中 `rayStartParams` 定义创建。命令看起来像 `ulimit -n 65536; ray start ...`。
+        * 总而言之， `spec.containers.0.args` 将是 `$(user-specified command) && $(ray start command)`。
 
-* Example
+* 示例
     ```sh
     # Prerequisite: There is a KubeRay operator in the Kubernetes cluster.
 
@@ -65,11 +65,11 @@ Currently, for timing (1), we can set the container's `Command` and `Args` in Ra
     ```
 
 
-## Timing 2: After `ray start` (RayCluster is ready)
-We have two solutions to execute commands after the RayCluster is ready. The main difference between these two solutions is users can check the logs via `kubectl logs` with Solution 1.
+## Timing 2: `ray start` 之后 (RayCluster 已就绪)
+我们有两种解决方案来在 RayCluster 准备就绪后执行命令。这两种解决方案之间的主要区别是解决方案 1 中用户可以通过 `kubectl logs` 检查日志。
 
-### Solution 1: Container command (Recommended)
-As we mentioned in the section "Timing 1: Before `ray start`", user-specified command will be executed before the `ray start` command. Hence, we can execute the `ray_cluster_resources.sh` in background by updating `headGroupSpec.template.spec.containers.0.command` in `ray-cluster.head-command.yaml`.
+### 解决方案 1: 容器命令 (推荐)
+正如我们在“时序1：`ray start` 之前”一节中提到的，用户指定的命令将在 `ray start` 命令之前执行。因此，我们可以通过更新 `ray-cluster.head-command.yaml` 的 `headGroupSpec.template.spec.containers.0.command` 来在后台执行`ray_cluster_resources.sh`。
 
 ```yaml
 # https://github.com/ray-project/kuberay/ray-operator/config/samples/ray-cluster.head-command.yaml
@@ -102,7 +102,7 @@ data:
     echo "INFO: Print Ray cluster resources"
 ```
 
-* Example
+* 示例
     ```sh
     # (1) Update `command` to ["(/home/ray/samples/ray_cluster_resources.sh&)"]
     # (2) Comment out `postStart` and `args`.
@@ -125,7 +125,7 @@ data:
     # INFO: Print Ray cluster resources
     ```
 
-### Solution 2: postStart hook
+### 解决方案 2：postStart 挂钩
 ```yaml
 # https://github.com/ray-project/kuberay/ray-operator/config/samples/ray-cluster.head-command.yaml
 lifecycle:
@@ -134,9 +134,9 @@ lifecycle:
       command: ["/bin/sh","-c","/home/ray/samples/ray_cluster_resources.sh"]
 ```
 
-* We execute the script `ray_cluster_resources.sh` via the postStart hook. Based on [this document](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks), there is no guarantee that the hook will execute before the container ENTRYPOINT. Hence, we need to wait for RayCluster to finish initialization in `ray_cluster_resources.sh`.
+* 我们通过 postStart 挂钩执行 `ray_cluster_resources.sh` 脚本。根据 [本文档](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks)，无法保证挂钩将在容器 ENTRYPOINT 之前执行。因此，我们需要在  `ray_cluster_resources.sh` 中等待RayCluster完成初始化完成。
 
-* Example
+* 示例
     ```sh
     kubectl apply -f ray-cluster.head-command.yaml
 

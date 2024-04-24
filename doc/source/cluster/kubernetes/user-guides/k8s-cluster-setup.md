@@ -1,26 +1,26 @@
 (kuberay-k8s-setup)=
 
-# Managed Kubernetes services
+# 托管 Kubernetes 服务
 
-The KubeRay operator and Ray can run on any cloud or on-prem Kubernetes cluster.
-The simplest way to provision a remote Kubernetes cluster is to use a cloud-based managed service.
-We collect a few helpful links for users who are getting started with a managed Kubernetes service.
+KubeRay Operator 和 Ray 可以在任何云或本地 Kubernetes 集群上运行。
+配置远程 Kubernetes 集群的最简单方法是使用基于云的托管服务。
+我们为开始使用托管 Kubernetes 服务的用户收集了一些有用的链接。
 
 (gke-setup)=
-# Setting up a GKE cluster (Google Cloud)
+# 设置 GKE 集群 (Google Cloud)
 
 - {ref}`kuberay-gke-gpu-cluster-setup`
 
 (eks-setup)=
-# Setting up an EKS cluster (AWS)
+# 设置 EKS 集群 (AWS)
 
 - {ref}`kuberay-eks-gpu-cluster-setup`
 
 (aks-setup)=
-# Setting up an AKS (Microsoft Azure)
-You can find the landing page for AKS [here](https://azure.microsoft.com/en-us/services/kubernetes-service/).
-If you have an account set up, you can immediately start experimenting with Kubernetes clusters in the provider's console.
-Alternatively, check out the [documentation](https://docs.microsoft.com/en-us/azure/aks/) and
-[quickstart guides](https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-portal?tabs=azure-cli). To successfully deploy Ray on Kubernetes,
-you will need to configure pools of Kubernetes nodes;
-find guidance [here](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools).
+# 设置 AKS (Microsoft Azure) 
+你可以在 [此处](https://azure.microsoft.com/en-us/services/kubernetes-service/) 找到 AKS 的登录页面。
+如果您设置了帐户，则可以立即开始在提供商的控制台中尝试 Kubernetes 集群。
+或者，查看 [文档](https://docs.microsoft.com/en-us/azure/aks/) 和
+[快速入门指南](https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-portal?tabs=azure-cli)。要在 Kubernetes 上成功部署 Ray，
+您需要配置 Kubernetes 节点池；
+在 [这里](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) 找到指导。

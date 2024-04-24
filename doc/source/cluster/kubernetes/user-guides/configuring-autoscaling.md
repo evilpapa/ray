@@ -1,93 +1,93 @@
 (kuberay-autoscaling)=
 
-# KubeRay Autoscaling
+# KubeRay 自动缩放
 
-This guide explains how to configure the Ray Autoscaler on Kubernetes.
-The Ray Autoscaler is a Ray cluster process that automatically scales a cluster up and down based on resource demand.
-The Autoscaler does this by adjusting the number of nodes (Ray Pods) in the cluster based on the resources required by tasks, actors, or placement groups.
+本指南介绍了如何在 Kubernetes 上配置 Ray Autoscaler。 
+Ray Autoscaler 是一个 Ray 集群进程，可根据资源需求自动扩展和缩小集群。 
+Autoscaler 通过根据任务、actor 或置放组所需的资源调整集群中的节点 (Ray Pod) 数量来实现此目的。
 
-The Autoscaler utilizes logical resource requests, indicated in `@ray.remote` and shown in `ray status`, not the physical machine utilization, to scale.
-If you launch an actor, task, or placement group and resources are insufficient, the Autoscaler queues the request.
-It adjusts the number of nodes to meet queue demands and removes idle nodes that have no tasks, actors, or objects over time.
+Autoscaler 利用逻辑资源请求（如 `@ray.remote` 和 `ray status` 的展示）而不是物理机利用率来进行扩展。
+如果您启动的 actor、任务或置放群组并且资源不足，则自动缩放器会将请求排队。
+它会调整节点数量以满足队列需求，并随着时间的推移删除没有任务、参与者或对象的空闲节点。
 
 <!-- TODO(ekl): probably should change the default kuberay examples to not use autoscaling -->
-```{admonition} When to use Autoscaling?
-Autoscaling can reduce workload costs, but adds node launch overheads and can be tricky to configure.
-We recommend starting with non-autoscaling clusters if you're new to Ray.
+```{admonition} 何时使用自动缩放？
+自动缩放可以降低工作负载成本，但会增加节点启动开销，并且配置起来可能很棘手。
+如果您是 Ray 新手，我们建议您从非自动缩放集群开始。
 ```
 
-## Overview
+## 概述
 
-The following diagram illustrates the integration of the Ray Autoscaler with the KubeRay operator.
-Although depicted as a separate entity for clarity, the Ray Autoscaler is actually a sidecar container within the Ray head Pod in the actual implementation.
+下图说明了 Ray Autoscaler 与 KubeRay operator 的集成。
+尽管为了清楚起见将 Ray Autoscaler 描述为单独的实体，但在实际实现中，Ray Autoscaler 实际上是 Ray head Pod 内的一个 sidecar 容器。
 
 ```{eval-rst}
 .. image:: ../images/AutoscalerOperator.svg
     :align: center
 ..
-    Find the source document here (https://docs.google.com/drawings/d/1LdOg9JQuN5AOII-vDpSaFBsTeg0JGWcsbyNNLP1yovg/edit)
+    这里是源文档 (https://docs.google.com/drawings/d/1LdOg9JQuN5AOII-vDpSaFBsTeg0JGWcsbyNNLP1yovg/edit)
 ```
 
-```{admonition} 3 levels of autoscaling in KubeRay
-  * **Ray actor/task**: Some Ray libraries, like Ray Serve, can automatically adjust the number of Serve replicas (i.e., Ray actors) based on the incoming request volume.
-  * **Ray node**: Ray Autoscaler automatically adjusts the number of Ray nodes (i.e., Ray Pods) based on the resource demand of Ray actors/tasks.
-  * **Kubernetes node**: If the Kubernetes cluster lacks sufficient resources for the new Ray Pods that the Ray Autoscaler creates, the Kubernetes Autoscaler can provision a new Kubernetes node. ***You must configure the Kubernetes Autoscaler yourself.***
+```{admonition} 3 KubeRay 中的 3 个级别的自动缩放
+  * **Ray actor/task**: 一些 Ray 库，如 Ray Serve，可以根据传入的请求量自动调整 Serve 副本（即 Ray Actor）的数量。
+  * **Ray node**: Ray Autoscaler 根据 Ray Actor/任务的资源需求自动调整 Ray 节点（即 Ray Pod）的数量。
+  * **Kubernetes node**: 如果 Kubernetes 集群缺乏足够的资源来容纳 Ray Autoscaler 创建的新 Ray Pod，Kubernetes Autoscaler 可以配置新的 Kubernetes 节点。 ***您必须自行配置 Kubernetes Autoscaler。***
 ```
 
-* The Autoscaler scales up the cluster through the following sequence of events:
-  1. A user submits a Ray workload.
-  2. The Ray head container aggregates the workload resource requirements and communicates them to the Ray Autoscaler sidecar.
-  3. The Autoscaler decides to add a Ray worker Pod to satisfy the workload's resource requirement.
-  4. The Autoscaler requests an additional worker Pod by incrementing the RayCluster CR's `replicas` field.
-  5. The KubeRay operator creates a Ray worker Pod to match the new `replicas` specification.
-  6. The Ray scheduler places the user's workload on the new worker Pod.
+* 自动缩放器通过以下事件序列扩展集群：
+  1. 用户提交 Ray 工作负载。
+  2. Ray head 容器聚合工作负载资源需求并将其传达给 Ray Autoscaler sidecar。
+  3. Autoscaler 决定添加 Ray Worker Pod 来满足工作负载的资源需求。
+  4. Autoscaler 通过增加 RayCluster CR 的 `replicas` 字段来请求额外的工作 Pod。
+  5. KubeRay operator 创建 Ray Worker Pod 来匹配新 `replicas` 规范。
+  6. Ray 调度程序将用户的工作负载放置在新的工作 Pod 上。
 
-* The Autoscaler also scales down the cluster by removing idle worker Pods.
-If it finds an idle worker Pod, it reduces the count in the RayCluster CR's `replicas` field and adds the identified Pods to the CR's `workersToDelete` field.
-Then, the KubeRay operator deletes the Pods in the `workersToDelete` field.
+* Autoscaler 还通过删除空闲工作 Pod 来缩小集群规模。
+如果它找到空闲工作 Pod，它会减少 RayCluster CR 字段中 `replicas` 的计数，并将识别出的 Pod 添加到 CR  字段。
+然后，KubeRay 操作员删除`workersToDelete` 字段中的 Pod。
 
-## Quickstart
+## 快速开始
 
-### Step 1: Create a Kubernetes cluster with Kind
+### 步骤 1: 使用 Kind 创建 Kubernetes 集群
 
 ```bash
 kind create cluster --image=kindest/node:v1.23.0
 ```
 
-### Step 2: Install the KubeRay operator
+### 步骤 2: 安装 KubeRay Operator 
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
+按照 [本文档](kuberay-operator-deploy) 通过 Helm 存储库安装最新的稳定 KubeRay Operator。
 
-### Step 3: Create a RayCluster custom resource with autoscaling enabled
+### 步骤 3: 创建启用自动缩放功能的 RayCluster 自定义资源
 
 ```bash
 curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml
 kubectl apply -f ray-cluster.autoscaler.yaml
 ```
 
-### Step 4: Verify the Kubernetes cluster status
+### 步骤 4: 验证 Kubernetes 集群状态
 
 ```bash
-# Step 4.1: List all Ray Pods in the `default` namespace.
+# 步骤 4.1: List all Ray Pods in the `default` namespace.
 kubectl get pods -l=ray.io/is-ray-node=yes
 
-# [Example output]
+# [输出示例]
 # NAME                               READY   STATUS    RESTARTS   AGE
 # raycluster-autoscaler-head-6zc2t   2/2     Running   0          107s
 
-# Step 4.2: Check the ConfigMap in the `default` namespace.
+# 步骤 4.2: Check the ConfigMap in the `default` namespace.
 kubectl get configmaps
 
-# [Example output]
+# [输出示例]
 # NAME                  DATA   AGE
 # ray-example           2      21s
 # ...
 ```
 
-The RayCluster has one head Pod and zero worker Pods. The head Pod has two containers: a Ray head container and a Ray Autoscaler sidecar container.
-Additionally, the [ray-cluster.autoscaler.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml) includes a ConfigMap named `ray-example` that houses two Python scripts: `detached_actor.py` and `terminate_detached_actor`.py.
+RayCluster 有一个头 Pod 和零个工作 Pod。 head Pod 有两个容器：Ray head 容器和 Ray Autoscaler sidecar 容器。
+此外， [ray-cluster.autoscaler.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml) 包含一个名为 `ray-example` 的 ConfigMap，其中包含两个 Python 脚本：`detached_actor.py` 和 `terminate_detached_actor.py`。
 
-* `detached_actor.py` is a Python script that creates a detached actor which requires 1 CPU.
+* `detached_actor.py` 是一个 Python 脚本，用于创建需要 1 个 CPU 的独立 Actor。
   ```py
   import ray
   import sys
@@ -100,7 +100,7 @@ Additionally, the [ray-cluster.autoscaler.yaml](https://github.com/ray-project/k
   Actor.options(name=sys.argv[1], lifetime="detached").remote()
   ```
 
-* `terminate_detached_actor.py` is a Python script that terminates a detached actor.
+* `terminate_detached_actor.py` 是一个终止独立 Actor 的 Python 脚本。
   ```py
   import ray
   import sys
@@ -110,32 +110,32 @@ Additionally, the [ray-cluster.autoscaler.yaml](https://github.com/ray-project/k
   ray.kill(detached_actor)
   ```
 
-### Step 5: Trigger RayCluster scale-up by creating detached actors
+### 步骤 5: 通过创建分离的 actor 来触发 RayCluster 扩展
 
 ```bash
-# Step 5.1: Create a detached actor "actor1" which requires 1 CPU.
+# 步骤 5.1: Create a detached actor "actor1" which requires 1 CPU.
 export HEAD_POD=$(kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers)
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/detached_actor.py actor1
 
-# Step 5.2: The Ray Autoscaler creates a new worker Pod.
+# 步骤 5.2: The Ray Autoscaler creates a new worker Pod.
 kubectl get pods -l=ray.io/is-ray-node=yes
 
-# [Example output]
+# [输出示例]
 # NAME                                             READY   STATUS    RESTARTS   AGE
 # raycluster-autoscaler-head-xxxxx                 2/2     Running   0          xxm
 # raycluster-autoscaler-worker-small-group-yyyyy   1/1     Running   0          xxm
 
-# Step 5.3: Create a detached actor which requires 1 CPU.
+# 步骤 5.3: Create a detached actor which requires 1 CPU.
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/detached_actor.py actor2
 kubectl get pods -l=ray.io/is-ray-node=yes
 
-# [Example output]
+# [输出示例]
 # NAME                                             READY   STATUS    RESTARTS   AGE
 # raycluster-autoscaler-head-xxxxx                 2/2     Running   0          xxm
 # raycluster-autoscaler-worker-small-group-yyyyy   1/1     Running   0          xxm
 # raycluster-autoscaler-worker-small-group-zzzzz   1/1     Running   0          xxm
 
-# Step 5.4: List all actors in the Ray cluster.
+# 步骤 5.4: List all actors in the Ray cluster.
 kubectl exec -it $HEAD_POD -- ray list actors
 
 
@@ -151,51 +151,51 @@ kubectl exec -it $HEAD_POD -- ray list actors
 #  1  xxxxxxxx  Actor         ALIVE    03000000  actor2  ...
 ```
 
-The Ray Autoscaler generates a new worker Pod for each new detached actor.
-This is because the `rayStartParams` field in the Ray head specifies `num-cpus: "0"`, preventing the Ray scheduler from scheduling any Ray actors or tasks on the Ray head Pod.
-In addition, each Ray worker Pod has a capacity of 1 CPU, so the Autoscaler creates a new worker Pod to satisfy the resource requirement of the detached actor which requires 1 CPU.
+Ray Autoscaler 为每个新的独立 Actor 生成一个新的工作 Pod。
+这是因为Ray head 中的字段 `rayStartParams` 指定了 `num-cpus: "0"`，从而阻止 Ray 调度程序在 Ray head Pod 上调度任何 Ray actor 或任务。
+此外，每个 Ray Worker Pod 的容量为 1 个 CPU，因此 Autoscaler 创建一个新的 Worker Pod 来满足需要 1 个 CPU 的分离 Actor 的资源需求。
 
-* Using detached actors isn't necessary to trigger cluster scale-up.
-Normal actors and tasks can also initiate it.
-[Detached actors](actor-lifetimes) remain persistent even after the job's driver process exits, which is why the Autoscaler doesn't scale down the cluster automatically when the `detached_actor.py` process exits, making it more convenient for this tutorial.
+* 不需要使用分离的 actor 来触发集群扩展。
+普通的参与者和任务也可以启动它。
+[游离 actors](actor-lifetimes) 即使作业的驱动程序进程退出后，也会保持持久状态，这就是为什么 Autoscaler 不会 `detached_actor.py` 在进程退出时自动缩小集群规模，从而使本教程更加方便。
 
-* In this RayCluster custom resource, each Ray worker Pod possesses only 1 logical CPU from the perspective of the Ray Autoscaler.
-Therefore, if you create a detached actor with `@ray.remote(num_cpus=2)`, the Autoscaler doesn't initiate the creation of a new worker Pod because the capacity of the existing Pod is limited to 1 CPU.
+* 在此 RayCluster 自定义资源中，从 Ray Autoscaler 的角度来看，每个 Ray Worker Pod 仅拥有 1 个逻辑 CPU。
+因此，如果您使用 `@ray.remote(num_cpus=2)` 来创建分离的 Actor，则 Autoscaler 不会启动新工作 Pod 的创建，因为现有 Pod 的容量仅限于 1 个 CPU。
 
-* (Advanced) The Ray Autoscaler also offers a [Python SDK](ref-autoscaler-sdk), enabling advanced users, like Ray maintainers, to request resources directly from the Autoscaler. Generally, most users don't need to use the SDK.
+* 高级）Ray Autoscaler 还提供 [Python SDK](ref-autoscaler-sdk)，使高级用户（如 Ray 维护人员）能够直接从 Autoscaler 请求资源。一般来说，大多数用户不需要使用SDK。
 
-### Step 6: Trigger RayCluster scale-down by terminating detached actors
+### 步骤 6: 通过终止分离的 Actor 来触发 RayCluster 缩容
 
 ```bash
-# Step 6.1: Terminate the detached actor "actor1".
+# 步骤 6.1: Terminate the detached actor "actor1".
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/terminate_detached_actor.py actor1
 
-# Step 6.2: A worker Pod will be deleted after `idleTimeoutSeconds` (default 60s) seconds.
+# 步骤 6.2: A worker Pod will be deleted after `idleTimeoutSeconds` (default 60s) seconds.
 kubectl get pods -l=ray.io/is-ray-node=yes
 
-# [Example output]
+# [输出示例]
 # NAME                                             READY   STATUS    RESTARTS   AGE
 # raycluster-autoscaler-head-xxxxx                 2/2     Running   0          xxm
 # raycluster-autoscaler-worker-small-group-zzzzz   1/1     Running   0          xxm
 
-# Step 6.3: Terminate the detached actor "actor1".
+# 步骤 6.3: Terminate the detached actor "actor1".
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/terminate_detached_actor.py actor2
 
-# Step 6.4: A worker Pod will be deleted after `idleTimeoutSeconds` (default 60s) seconds.
+# 步骤 6.4: A worker Pod will be deleted after `idleTimeoutSeconds` (default 60s) seconds.
 kubectl get pods -l=ray.io/is-ray-node=yes
 
-# [Example output]
+# [输出示例]
 # NAME                                             READY   STATUS    RESTARTS   AGE
 # raycluster-autoscaler-head-xxxxx                 2/2     Running   0          xxm
 ```
 
-### Step 7: Ray Autoscaler observability
+### 步骤 7: Ray Autoscaler 可观测性
 
 ```bash
 # Method 1: "ray status"
 kubectl exec $HEAD_POD -it -c ray-head -- ray status
 
-# [Example output]:
+# [输出示例]:
 # ======== Autoscaler status: 2023-09-06 13:42:46.372683 ========
 # Node status
 # ---------------------------------------------------------------
@@ -218,7 +218,7 @@ kubectl exec $HEAD_POD -it -c ray-head -- ray status
 # Method 2: "kubectl logs"
 kubectl logs $HEAD_POD -c autoscaler | tail -n 20
 
-# [Example output]:
+# [输出示例]:
 # 2023-09-06 13:43:22,029 INFO autoscaler.py:421 --
 # ======== Autoscaler status: 2023-09-06 13:43:22.028870 ========
 # Node status
@@ -241,7 +241,7 @@ kubectl logs $HEAD_POD -c autoscaler | tail -n 20
 # 2023-09-06 13:43:22,029 INFO autoscaler.py:464 -- The autoscaler took 0.036 seconds to complete the update iteration.
 ```
 
-### Step 8: Clean up the Kubernetes cluster
+### 步骤 8: 清理 Kubernetes 集群
 
 ```bash
 # Delete RayCluster and ConfigMap
@@ -252,44 +252,43 @@ helm uninstall kuberay-operator
 ```
 
 (kuberay-autoscaling-config)=
-## KubeRay Autoscaling Configurations
+## KubeRay 自动缩放配置
 
-The [ray-cluster.autoscaler.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml) used in the quickstart example contains detailed comments about the configuration options.
-***It's recommended to read this section in conjunction with the YAML file.***
+快速入门示例中使用的 [ray-cluster.autoscaler.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml) 包含有关配置选项的详细注释。
+***建议结合 YAML 文件阅读本节。***
 
-### 1. Enabling autoscaling
+### 1. 启用自动缩放
 
-* **`enableInTreeAutoscaling`**: By setting `enableInTreeAutoscaling: true`, the KubeRay operator automatically configures an autoscaling sidecar container for the Ray head Pod.
+* **`enableInTreeAutoscaling`**: 通过设置 `enableInTreeAutoscaling: true`，KubeRay operator 会自动为 Ray head Pod 配置自动缩放 sidecar 容器。
 * **`minReplicas` / `maxReplicas` / `replicas`**: 
-Set the `minReplicas` and `maxReplicas` fields to define the range for `replicas` in an autoscaling `workerGroup`.
-Typically, you would initialize both `replicas` and `minReplicas` with the same value during the deployment of an autoscaling cluster.
-Subsequently, the Ray Autoscaler adjusts the `replicas` field as it adds or removes Pods from the cluster.
+设置 `minReplicas` 和 `maxReplicas` 字段来定义 `workerGroup` 自动缩放 `replicas` 的范围。
+通常，您可以在部署自动扩展集群期间使用相同的值初始化 `replicas` 和 `minReplicas` 。
+随后，Ray Autoscaler在从集群中添加或删除 Pod 时调整该字段。
 
-### 2. Scale-up and scale-down speed
+### 2. 放大和缩小速度
 
-If necessary, you can regulate the pace of adding or removing nodes from the cluster.
-For applications with numerous short-lived tasks, considering a more conservative approach to adjusting the upscaling and downscaling speeds might be beneficial.
+如有必要，您可以调节在集群中添加或删除节点的速度。
+对于具有大量短期任务的应用程序，考虑采用更保守的方法来调整放大和缩小速度可能是有益的。
 
-Utilize the `RayCluster` CR's `autoscalerOptions` field to accomplish this. This field encompasses the following sub-fields:
+利用 `RayCluster` CR 的 `autoscalerOptions` 字段来实现这一点。该字段包含以下子字段：
 
-* **`upscalingMode`**: This controls the rate of scale-up process. The valid values are:
-  - `Conservative`: Upscaling is rate-limited; the number of pending worker Pods is at most the number of worker pods connected to the Ray cluster.
-  - `Default`: Upscaling isn't rate-limited.
-  - `Aggressive`: An alias for Default; upscaling isn't rate-limited.
+* **`upscalingMode`**: 这控制放大过程的速率。有效值为：
+  - `Conservative`: 升级是有速率限制的；待处理的工作 Pod 数量最多为连接到 Ray 集群的工作 Pod 数量。
+  - `Default`: 升级不受速率限制。
+  - `Aggressive`:Default 的别名；升级不受速率限制。
 
-* **`idleTimeoutSeconds`** (default 60s):
-This denotes the waiting time in seconds before scaling down an idle worker pod.
-A worker node is idle when it has no active tasks, actors, or referenced objects, either stored in-memory or spilled to disk.
+* **`idleTimeoutSeconds`** (默认 60s):
+这表示缩小空闲工作 Pod 之前的等待时间（以秒为单位）。
+当工作节点没有活动任务、参与者或引用的对象（存储在内存中或溢出到磁盘）时，它处于空闲状态。
 
-### 3. Autoscaler sidecar container
+### 3. Autoscaler sidecar 容器
 
-The `autoscalerOptions` field also provides options for configuring the Autoscaler container. Usually, it's not necessary to specify these options.
+`autoscalerOptions` 字段还提供用于配置自动缩放器容器的选项。通常，没有必要指定这些选项。
 
 * **`resources`**:
-The `resources` sub-field of `autoscalerOptions` sets optional resource overrides for the Autoscaler sidecar container.
-These overrides should be specified in the standard [container resource
-spec format](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/Pod-v1/#resources).
-The default values are indicated below:
+`autoscalerOptions` 的`resources` 字段为 Autoscaler sidecar 容器设置可选资源覆盖。
+这些覆盖应该以标准 [容器资源规范格式](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/Pod-v1/#resources) 指定。
+默认值如下所示：
   ```yaml
   resources:
     limits:
@@ -301,18 +300,17 @@ The default values are indicated below:
   ```
 
 * **`image`**:
-This field overrides the Autoscaler container image.
-The container uses the same **image** as the Ray container by default. 
+此字段会覆盖 Autoscaler 容器镜像。
+默认情况下，容器使用与 Ray 容器相同的 **镜像**。
 
 * **`imagePullPolicy`**:
-This field overrides the Autoscaler container's image pull policy.
-The default is `IfNotPresent`.
+该字段会覆盖 Autoscaler 容器的镜像拉取策略。
+默认是 `IfNotPresent`。
 
-* **`env`** and **`envFrom`**:
-These fields specify Autoscaler container environment variables.
-These fields should be formatted following the [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/Pod-v1/#environment-variables)
-for container environment variables.
+* **`env`** 和 **`envFrom`**:
+这些字段指定 Autoscaler 容器环境变量。
+这些字段的格式应遵循容器环境变量的 [Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/Pod-v1/#environment-variables)。
 
-## Next steps
+## 下一步
 
-See [(Advanced) Understanding the Ray Autoscaler in the Context of Kubernetes](ray-k8s-autoscaler-comparison) for more details about the relationship between the Ray Autoscaler and Kubernetes autoscalers.
+参阅 [（高级）了解 Kubernetes 上下文中的 Ray Autoscaler ](ray-k8s-autoscaler-comparison) 获取跟多有关 Ray Autoscaler 和 Kubernetes 自动缩放器之间关系的详细信息。

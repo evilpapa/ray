@@ -1,134 +1,124 @@
 (kuberay-logging)=
 
-# Log Persistence
+# 日志持久化
 
-Logs (both system and application logs) are useful for troubleshooting Ray applications and Clusters. For example, you may want to access system logs if a node terminates unexpectedly.
+日志（系统日志和应用程序日志）对于 Ray 应用程序和集群的故障排除非常有用。例如，如果节点意外终止，您可能想要访问系统日志。
 
-Similar to Kubernetes, Ray does not provide a native storage solution for log data. Users need to manage the lifecycle of the logs by themselves. This page provides instructions on how to collect logs from Ray Clusters that are running on Kubernetes.
+与 Kubernetes 类似，Ray 不提供日志数据的原生存储解决方案。用户需要自行管理日志的生命周期。本页面提供有关如何从 Kubernetes 上运行的 Ray 集群收集日志的说明。
 
 :::{tip}
-Skip to {ref}`the deployment instructions <kuberay-logging-tldr>`
-for a sample configuration showing how to extract logs from a Ray pod.
+跳至示例配置的 {ref}`部署说明 <kuberay-logging-tldr>`，
+了解如何从 Ray pod 中提取日志。
 :::
 
-## Ray log directory
-By default, Ray writes logs to files in the directory `/tmp/ray/session_*/logs` on each Ray pod's file system, including application and system logs. Learn more about the {ref}`log directory and log files <logging-directory>` and the {ref}`log rotation configuration <log-rotation>` before you start to collect the logs.
+## Ray 日志目录
+默认的，Ray 将日志文件写入到每个 Ray Pod 的文件系统路径 `/tmp/ray/session_*/logs`，包括应用程序日志和系统日志。在开始收集日志之前，请详细了解 {ref}`日志目录和日志文件 <logging-directory>` 和 {ref}`日志轮换配置 <log-rotation>`。
 
-## Log processing tools
-There are a number of open source log processing tools available within the Kubernetes ecosystem. This page shows how to extract Ray logs using [Fluent Bit][FluentBit].
-Other popular tools include [Vector][Vector], [Fluentd][Fluentd], [Filebeat][Filebeat], and [Promtail][Promtail].
+## 日志处理工具
+Kubernetes 生态系统中有许多可用的开源日志处理工具。本页展示如何使用 [Fluent Bit][FluentBit] 提取 Ray 日志。
+其他流行的工具包括 [Vector][Vector]、 [Fluentd][Fluentd]、 [Filebeat][Filebeat] 以及 [Promtail][Promtail]。
 
-## Log collection strategies
-Collect logs written to a pod's filesystem using one of two logging strategies:
-**sidecar containers** or **daemonsets**. Read more about these logging
-patterns in the [Kubernetes documentation][KubDoc].
+## 日志收集策略
+使用以下两种日志记录策略之一收集写入 pod 文件系统的日志：
+**sidecar 容器** 或 **daemonsets**。
+在 [Kubernetes 文档][KubDoc] 中阅读有关这些日志记录模式的更多信息。
 
-### Sidecar containers
-We provide an {ref}`example <kuberay-fluentbit>` of the sidecar strategy in this guide.
-You can process logs by configuring a log-processing sidecar
-for each Ray pod. Ray containers should be configured to share the `/tmp/ray`
-directory with the logging sidecar via a volume mount.
+### Sidecar 容器
+我们在本指南中提供了 sidecar 策略的 {ref}`示例 <kuberay-fluentbit>`。
+您可以通过为每个 Ray pod 配置日志处理 sidecar 来处理日志。
+ Ray 容器应配置为通过卷挂载与日志记录 sidecar 共享目录 `/tmp/ray`。
 
-You can configure the sidecar to do either of the following:
-* Stream Ray logs to the sidecar's stdout.
-* Export logs to an external service.
+可以将 sidecar 配置为执行以下任一操作：
+* 将 Ray 日志流式传输到 sidecar 的标准输出。
+* 将日志导出到外部服务。
 
-### Daemonset
-Alternatively, it is possible to collect logs at the Kubernetes node level.
-To do this, one deploys a log-processing daemonset onto the Kubernetes cluster's
-nodes. With this strategy, it is key to mount
-the Ray container's `/tmp/ray` directory to the relevant `hostPath`.
+### 守护进程
+或者，可以在 Kubernetes 节点级别收集日志。
+为此，需要将日志处理守护进程集部署到 Kubernetes 集群的节点上。
+使用此策略，关键是将 Ray 容器的 `/tmp/ray` 目录挂载到相关的 `hostPath`。
 
 (kuberay-fluentbit)=
-## Setting up logging sidecars with Fluent Bit
-In this section, we give an example of how to set up log-emitting
-[Fluent Bit][FluentBit] sidecars for Ray pods.
+## 使用 Fluent Bit 设置日志记录 sidecar
+在本节中，我们将举例说明如何为 Ray pod设置发送日志的 [Fluent Bit][FluentBit] sidecar 。
 
-See the full config for a single-pod RayCluster with a logging sidecar [here][ConfigLink].
-We now discuss this configuration and show how to deploy it.
+[这里][ConfigLink] 查看具有日志记录 sidecar 的单 Pod RayCluster 的完整配置。
+我们现在讨论此配置并展示如何部署它。
 
-### Configuring log processing
-The first step is to create a ConfigMap with configuration
-for Fluent Bit.
+### 配置日志处理
+第一步是创建一个包含 Fluent Bit 配置的 ConfigMap。
 
-Here is a minimal ConfigMap which tells a Fluent Bit sidecar to
-* Tail Ray logs.
-* Output the logs to the container's stdout.
+这是一个最小的 ConfigMap，它告诉 Fluent Bit sidecar
+* Tail Ray 日志。
+* 将日志输出到容器的标准输出。
 ```{literalinclude} ../configs/ray-cluster.log.yaml
 :language: yaml
 :start-after: Fluent Bit ConfigMap
 :end-before: ---
 ```
-A few notes on the above config:
-- In addition to streaming logs to stdout, you can use an [OUTPUT] clause to export logs to any
-  [storage backend][FluentBitStorage] supported by Fluent Bit.
-- The `Path_Key true` line above ensures that file names are included in the log records
-  emitted by Fluent Bit.
-- The `Refresh_Interval 5` line asks Fluent Bit to refresh the list of files
-  in the log directory once per 5 seconds, rather than the default 60.
-  The reason is that the directory `/tmp/ray/session_latest/logs/` does not exist
-  initially (Ray must create it first). Setting the `Refresh_Interval` low allows us to see logs
-  in the Fluent Bit container's stdout sooner.
+对上述配置的一些注意事项：
+- 除了将日志流式传输到 stdout 之外，您还可以使用 [OUTPUT] 子句将日志导出
+  到Fluent Bit 支持的任何[后端存储][FluentBitStorage]。
+- 上面的 `Path_Key true` 行确保了文件名包含在 Fluent Bit 发出的日志记录中。
+- `Refresh_Interval 5` 行要求 Fluent Bit 每 5 秒刷新一次日志目录中的文件列表，而不是默认的 60 次。
+  原因是该 `/tmp/ray/session_latest/logs/` 目录最初不存在（Ray 必须先创建它）。
+  设置 `Refresh_Interval` 较低的值可以让我们更快地看到 Fluent Bit 容器的标准输出中的日志。
 
 
-### Adding logging sidecars to RayCluster Custom Resource (CR)
+### 将日志记录 sidecar 添加到 RayCluster 自定义资源 (CR) 
 
-#### Adding log and config volumes
-For each pod template in our RayCluster CR, we
-need to add two volumes: One volume for Ray's logs
-and another volume to store Fluent Bit configuration from the ConfigMap
-applied above.
+#### 添加日志和配置卷
+对于 RayCluster CR 中的每个 pod 模板，
+我们需要添加两个卷：一个用于 Ray 日志的卷，
+另一个用于存储上面应用的 ConfigMap 中的 Fluent Bit 配置的卷。
 ```{literalinclude} ../configs/ray-cluster.log.yaml
 :language: yaml
 :start-after: Log and config volumes
 ```
 
-#### Mounting the Ray log directory
-Add the following volume mount to the Ray container's configuration.
+#### 挂载 Ray 日志目录
+将以下卷安装添加到 Ray 容器的配置中。
 ```{literalinclude} ../configs/ray-cluster.log.yaml
 :language: yaml
 :start-after: Share logs with Fluent Bit
 :end-before: Fluent Bit sidecar
 ```
 
-#### Adding the Fluent Bit sidecar
-Finally, add the Fluent Bit sidecar container to each Ray pod config
-in your RayCluster CR.
+#### 添加 Fluent Bit sidecar 
+最后，将 Fluent Bit sidecar 容器添加到 RayCluster CR 中的每个 Ray pod 配置中。
 ```{literalinclude} ../configs/ray-cluster.log.yaml
 :language: yaml
 :start-after: Fluent Bit sidecar
 :end-before: Log and config volumes
 ```
-Mounting the `ray-logs` volume gives the sidecar container access to Ray's logs.
-The <nobr>`fluentbit-config`</nobr> volume gives the sidecar access to logging configuration.
+安装该 `ray-logs` 卷使 sidecar 容器可以访问 Ray 的日志。
+<nobr>`fluentbit-config`</nobr> 卷使 sidecar 能够访问日志记录配置。
 
-#### Putting everything together
-Putting all of the above elements together, we have the following yaml configuration
-for a single-pod RayCluster will a log-processing sidecar.
+#### 将所有内容放在一起
+将上述所有元素放在一起，我们为单 Pod RayCluster 提供了以下 yaml 配置，
+该配置将成为日志处理 sidecar。
 ```{literalinclude} ../configs/ray-cluster.log.yaml
 :language: yaml
 ```
 
 (kuberay-logging-tldr)=
-### Deploying a RayCluster with logging sidecar
+### 部署带有日志记录 sidecar 的 RayCluster 
 
 
-To deploy the configuration described above, deploy the KubeRay Operator if you haven't yet:
-Refer to the {ref}`Getting Started guide <kuberay-operator-deploy>`
-for instructions on this step.
+要部署上述配置，请部署 KubeRay Operator（如果尚未部署）：
+参阅 {ref}`入门指南 <kuberay-operator-deploy>`
+以获取有关此步骤的说明。
 
-Now, run the following commands to deploy the Fluent Bit ConfigMap and a single-pod RayCluster with
-a Fluent Bit sidecar.
+现在，运行以下命令来部署 Fluent Bit ConfigMap 和带有 Fluent Bit sidecar 的单 Pod RayCluster。
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/ray-project/ray/releases/2.4.0/doc/source/cluster/kubernetes/configs/ray-cluster.log.yaml
 ```
 
-Determine the Ray pod's name with
+确定 Ray pod 的名称
 ```shell
 kubectl get pod | grep raycluster-complete-logs
 ```
 
-Examine the FluentBit sidecar's STDOUT to see logs for Ray's component processes.
+检查 FluentBit sidecar 的 STDOUT 以查看 Ray 组件进程的日志。
 ```shell
 # Substitute the name of your Ray pod.
 kubectl logs raycluster-complete-logs-head-xxxxx -c fluentbit
@@ -145,18 +135,18 @@ kubectl logs raycluster-complete-logs-head-xxxxx -c fluentbit
 
 
 (redirect-to-stderr)=
-## Redirecting Ray logs to stderr
+## 将 Ray 日志重定向到 stderr
 
-By default, Ray writes logs to files under the ``/tmp/ray/session_*/logs`` directory. If you prefer to redirect logs to stderr of the host pods instead, set the environment variable ``RAY_LOG_TO_STDERR=1`` on all Ray nodes. This practice is not recommended but may be useful if your log processing tool only captures log records written to stderr.
+默认情况下，Ray 将日志写入该 ``/tmp/ray/session_*/logs`` 目录中的文件。如果您希望将日志重定向到主机 Pod 的 stderr，请在所有 Ray 节点上设置环境变量 ``RAY_LOG_TO_STDERR=1``。推荐这种做法，但如果您的日志处理工具仅捕获写入 stderr 的日志记录，这种做法可能会很有用。
 
 ```{admonition} Alert
 :class: caution
-There are known issues with this feature. For example, it may break features like {ref}`Worker log redirection to Driver <log-redirection-to-driver>`. If those features are wanted, use the {ref}`Fluent Bit solution <kuberay-fluentbit>` above.
+此功能存在已知问题。例如，它可能会破坏 {ref}`Worker 日志重定向到 Driver <log-redirection-to-driver>`等功能。如果需要这些功能，请使用上面的 {ref}`Fluent Bit solution <kuberay-fluentbit>` 方案。
 
-For Clusters on VMs, do not redirect logs to stderr. Follow {ref}`this guide <vm-logging>` to persist logs.
+对于虚拟机上的集群，不要将日志重定向到 stderr。请按照 {ref}`本指南 <vm-logging>` 保存日志。
 ```
 
-Redirecting logging to stderr also prepends a ``({component})`` prefix, for example ``(raylet)``, to each log record messages.
+将日志记录重定向到 stderr 还会在每个日志记录消息前面添加一个 ``({component})`` 前缀，例如 ``(raylet)``。
 
 ```bash
 [2022-01-24 19:42:02,978 I 1829336 1829336] (gcs_server) grpc_server.cc:103: GcsServer server started, listening on port 50009.
@@ -165,9 +155,9 @@ Redirecting logging to stderr also prepends a ``({component})`` prefix, for exam
 2022-01-24 19:42:07,500 INFO (dashboard_agent) agent.py:105 -- Dashboard agent grpc address: 0.0.0.0:49228
 ```
 
-These prefixes allow you to filter the stderr stream of logs down to the component of interest. Note that multi-line log records do **not** have this component marker at the beginning of each line.
+这些前缀允许您将日志的 stderr 流过滤到感兴趣的组件。 请注意，多行日志记录在每行的开头 **没有** 此组件标记。
 
-Follow the steps below to set the environment variable ``RAY_LOG_TO_STDERR=1`` on all Ray nodes
+按照以下步骤在所有Ray节点上设置环境变量 ``RAY_LOG_TO_STDERR=1``
 
   ::::{tab-set}
 

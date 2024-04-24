@@ -1,15 +1,15 @@
 (kuberay-gke-bucket)=
-# Configuring KubeRay to use Google Cloud Storage Buckets in GKE
+# 配置 KubeRay 以在 GKE 中使用 Google Cloud Storage Bucket 
 
-If you are already familiar with Workload Identity in GKE, you can skip this document. The gist is that you need to specify a service account in each of the Ray pods after linking your Kubernetes service account to your Google Cloud service account. Otherwise, read on.
+如果您已经熟悉 GKE 中的 Workload Identity，则可以跳过本文档。要点是，将 Kubernetes 服务帐户链接到 Google Cloud 服务帐户后，您需要在每个 Ray pod 中指定一个服务帐户。否则，请继续阅读。
 
-This example is an abridged version of the documentation at <https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity>. The full documentation is worth reading if you are interested in the details.
+此示例是 <https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity> 文档的删节版本。如果您对详细信息感兴趣，完整的文档值得阅读。
 
-## Create a Kubernetes cluster on GKE
+## 在 GKE 上创建 Kubernetes 集群
 
-This example creates a minimal KubeRay cluster using GKE.
+此示例使用 GKE 创建一个最小的 KubeRay 集群。
 
-Run this and all following commands on your local machine or on the [Google Cloud Shell](https://cloud.google.com/shell). If running from your local machine, install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
+在本地计算机或 [Google Cloud Shell](https://cloud.google.com/shell)上运行此命令以及以下所有命令。如果从本地计算机运行，请安装 [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)。
 
 ```bash
 gcloud container clusters create cloud-bucket-cluster \
@@ -19,31 +19,31 @@ gcloud container clusters create cloud-bucket-cluster \
 ```
 
 
-This command creates a Kubernetes cluster named `cloud-bucket-cluster` with one node in the `us-west1-b` zone. This example uses the `e2-standard-8` machine type, which has 8 vCPUs and 32 GB RAM.
+此命令在 `us-west1-b` 区域中的一个节点创建了一个 `cloud-bucket-cluster` Kubernetes 集群。示例使用 `e2-standard-8` 机型，具有 8 个 vCPU 和 32 GB 内存。
 
-For more information on how to find your project ID, see <https://support.google.com/googleapi/answer/7014113?hl=en> or <https://cloud.google.com/resource-manager/docs/creating-managing-projects>.
+有关如何查找项目 ID 的详细信息，请参阅 <https://support.google.com/googleapi/answer/7014113?hl=en> or <https://cloud.google.com/resource-manager/docs/creating-managing-projects>。
 
-Now get credentials for the cluster to use with `kubectl`:
+现在获取集群的凭据以用于 `kubectl`:
 
 ```bash
 gcloud container clusters get-credentials cloud-bucket-cluster --zone us-west1-b --project my-project-id
 ```
 
-## Create an IAM Service Account
+## 创建 IAM 服务帐户
 
 ```bash
 gcloud iam service-accounts create my-iam-sa
 ```
 
-## Create a Kubernetes Service Account
+## 创建 Kubernetes 服务帐户
 
 ```bash
 kubectl create serviceaccount my-ksa
 ```
 
-## Link the Kubernetes Service Account to the IAM Service Account and vice versa
+## 将 Kubernetes 服务帐户链接到 IAM 服务帐户，反之亦然
 
-In the following two commands, replace `default` with your namespace if you are not using the default namespace.
+如果您不使用默认命名空间，请在以下两个命令中替换 `default` 为您的命名空间。
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding my-iam-sa@my-project-id.iam.gserviceaccount.com \
@@ -57,25 +57,25 @@ kubectl annotate serviceaccount my-ksa \
     iam.gke.io/gcp-service-account=my-iam-sa@my-project-id.iam.gserviceaccount.com
 ```
 
-## Create a Google Cloud Storage Bucket and allow the Google Cloud Service Account to access it
+## 创建一个 Google Cloud Storage Bucket 并允许 Google Cloud Service 帐户访问它
 
-Please follow the documentation at <https://cloud.google.com/storage/docs/creating-buckets> to create a bucket using the Google Cloud Console or the `gsutil` command line tool.  
+请按照 <https://cloud.google.com/storage/docs/creating-buckets>  上的文档使用 Google Cloud Console 或命令行工具 `gsutil` 创建存储桶。 
 
-This example gives the principal `my-iam-sa@my-project-id.iam.gserviceaccount.com` "Storage Admin" permissions on the bucket. Enable the permissions in the Google Cloud Console ("Permissions" tab under "Buckets" > "Bucket Details") or with the following command:
+此示例授予主体 `my-iam-sa@my-project-id.iam.gserviceaccount.com` 对存储桶的“存储管理员”权限。 在 Google Cloud Console 中（“存储桶”>“存储桶详细信息”下的“权限”选项卡）或使用以下命令启用权限：
 
 ```bash
 gsutil iam ch serviceAccount:my-iam-sa@my-project-id.iam.gserviceaccount.com:roles/storage.admin gs://my-bucket
 ```
 
-## Create a minimal RayCluster YAML manifest
+## 创建最小的 RayCluster YAML 清单
 
-You can download the RayCluster YAML manifest for this tutorial with `curl` as follows:
+您可以通过 `curl` 下载本教程的 RayCluster YAML 清单，如下：
 
 ```bash
 curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.gke-bucket.yaml
 ```
 
-The key parts are the following lines:
+关键部分是以下几行：
 
 ```yaml
       spec:
@@ -84,27 +84,27 @@ The key parts are the following lines:
           iam.gke.io/gke-metadata-server-enabled: "true"
 ```
 
-Include these lines in every pod spec of your Ray cluster. This example uses a single-node cluster (1 head node and 0 worker nodes) for simplicity.
+将这些行包含在 Ray 集群的每个 pod 规范中。为了简单起见，本示例使用单节点集群（1 个头节点和 0 个工作节点）。
 
-## Create the RayCluster
+## 创建 RayCluster
 
 ```bash
 kubectl apply -f ray-cluster.gke-bucket.yaml
 ```
 
-## Test GCS bucket access from the RayCluster
+## 测试来自 RayCluster 的 GCS 存储桶访问
 
-Use `kubectl get pod` to get the name of the Ray head pod.  Then run the following command to get a shell in the Ray head pod:
+使用 `kubectl get pod` 获取 Ray 头 Pod 的名称。然后运行以下命令以在 Ray head pod 中执行 shell：
 
 ```bash
 kubectl exec -it raycluster-mini-head-xxxx -- /bin/bash
 ```
 
-In the shell, run `pip install google-cloud-storage` to install the Google Cloud Storage Python client library. 
+在 shell 中，运行 `pip install google-cloud-storage` 安装 Google Cloud Storage Python 客户端库。
 
-(For production use cases, you will need to make sure `google-cloud-storage` is installed on every node of your cluster, or use `ray.init(runtime_env={"pip": ["google-cloud-storage"]})` to have the package installed as needed at runtime -- see <https://docs.ray.io/en/latest/ray-core/handling-dependencies.html#runtime-environments> for more details.)
+（对于生产用例，您需要确保 `google-cloud-storage` 安装在集群的每个节点上，或者使用 `ray.init(runtime_env={"pip": ["google-cloud-storage"]})` 在运行时根据需要安装软件包 - 请参阅 <https://docs.ray.io/en/latest/ray-core/handling-dependencies.html#runtime-environments> 了解更多详细信息。）
 
-Then run the following Python code to test access to the bucket:
+然后运行以下Python代码来测试对存储桶的访问：
 
 ```python
 import ray

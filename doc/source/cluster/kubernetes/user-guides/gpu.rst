@@ -1,40 +1,37 @@
 .. _kuberay-gpu:
 
-Using GPUs
+使用 GPU
 ==========
-This document provides tips on GPU usage with KubeRay.
+本文档提供有关 KubeRay 的 GPU 使用技巧。
 
-To use GPUs on Kubernetes, configure both your Kubernetes setup and add additional values to your Ray cluster configuration.
+要在 Kubernetes 上使用 GPU，请配置 Kubernetes 设置并向 Ray 集群配置添加其他值。
 
-To learn about GPU usage on different clouds, see instructions for `GKE`_, for `EKS`_, and for `AKS`_.
+要了解不同云上的 GPU 使用情况，请参阅 `GKE`_、 `EKS`_、 `AKS`_的说明。
 
-Quickstart: Serve a GPU-based StableDiffusion model
+快速入门：提供基于 GPU 的 StableDiffusion 模型
 ___________________________________________________
 
-You can find several GPU workload examples in the :ref:`examples <kuberay-examples>` section of the docs.
-The :ref:`StableDiffusion example <kuberay-stable-diffusion-rayservice-example>` is a good place to start.
+您可以在文档的 :ref:`示例 <kuberay-examples>` 部分找到几个 GPU 工作负载示例。
+:ref:`StableDiffusion 示例 <kuberay-stable-diffusion-rayservice-example>` 是一个很好的起点。
 
-Dependencies for GPU-based machine learning
+基于 GPU 的机器学习的依赖项
 ___________________________________________
 
-The `Ray Docker Hub <https://hub.docker.com/r/rayproject/>`_ hosts CUDA-based container images packaged
-with Ray and certain machine learning libraries.
-For example, the image ``rayproject/ray-ml:2.6.3-gpu`` is ideal for running GPU-based ML workloads with Ray 2.6.3.
-The Ray ML images are packaged with dependencies (such as TensorFlow and PyTorch) needed for the Ray Libraries that are used in these docs.
-To add custom dependencies, use one, or both, of the following methods:
+`Ray Docker Hub <https://hub.docker.com/r/rayproject/>`_ 托管与 Ray 和某些机器学习库打包的基于 CUDA 的容器映像。
+例如，镜像 ``rayproject/ray-ml:2.6.3-gpu`` 非常适合使用 Ray 2.6.3 运行基于 GPU 的 ML 工作负载。
+Ray ML 镜像与这些文档中使用的 Ray 库所需的依赖项（例如 TensorFlow 和 PyTorch）一起打包。
+要添加自定义依赖项，请使用以下一种或两种方法：
 
-* Building a docker image using one of the official :ref:`Ray docker images <docker-images>` as base.
-* Using :ref:`Ray Runtime environments <runtime-environments>`.
+* 使用官方 :ref:`Ray docker 镜像 <docker-images>` 作为基础构建 docker 镜像。
+* 使用 :ref:`Ray 运行时环境 <runtime-environments>`。
 
 
-Configuring Ray pods for GPU usage
+配置 Ray pod 以使用 GPU
 __________________________________
 
-Using Nvidia GPUs requires specifying `nvidia.com/gpu` resource `limits` and `requests` in the container fields of your `RayCluster`'s
-`headGroupSpec` and/or `workerGroupSpecs`.
+要使用 Nvidia GPU 需要在 `RayCluster` 的 `headGroupSpec` 及 `workerGroupSpecs` 的容器 `limits` 和 `requests` 字段指定 `nvidia.com/gpu` 资源。
 
-Here is a config snippet for a RayCluster workerGroup of up
-to 5 GPU workers.
+以下是最多包含 5 个 GPU 工作线程的 RayCluster 工作组的配置片段。
 
 .. code-block:: yaml
 
@@ -60,59 +57,57 @@ to 5 GPU workers.
             memory: 50Gi
             ...
 
-Each of the Ray pods in the group can be scheduled on an AWS `p2.xlarge` instance (1 GPU, 4vCPU, 61Gi RAM).
+组中的每个 Ray Pod 都可以在 AWS `p2.xlarge` 示例 (1 GPU、4vCPU、61Gi RAM) 上进行调度。
 
 .. tip::
 
-    GPU instances are expensive -- consider setting up autoscaling for your GPU Ray workers,
-    as demonstrated with the `minReplicas:0` and `maxReplicas:5` settings above.
-    To enable autoscaling, remember also to set `enableInTreeAutoscaling:True` in your RayCluster's `spec`
-    Finally, make sure you configured the group or pool of GPU Kubernetes nodes, to autoscale.
-    Refer to your :ref:`cloud provider's documentation <kuberay-k8s-setup>` for details on autoscaling node pools.
+    GPU 实例非常昂贵 - 请考虑为 GPU Ray 工作线程设置自动缩放，
+    如上面的 `minReplicas:0` 和 `maxReplicas:5` 。
+    要启用自动缩放，还请记住需要为 RayCluster 的 `spec` 设置 `enableInTreeAutoscaling:True` 。
+    最后，确保将 GPU Kubernetes 节点组或池配置为自动缩放。
+    有关自动缩放节点池的详细信息，请参阅 :ref:`云提供商的文档 <kuberay-k8s-setup>` 。
 
-GPU multi-tenancy
+GPU 多租户
 _________________
 
-If a Pod doesn't include `nvidia.com/gpu` in its resource configurations, users typically expect the Pod to be unaware of any GPU devices, even if it's scheduled on a GPU node.
-However, when `nvidia.com/gpu` isn't specified, the default value for `NVIDIA_VISIBLE_DEVICES` becomes `all`, giving the Pod awareness of all GPU devices on the node.
-This behavior isn't unique to KubeRay, but is a known issue for NVIDIA.
-A workaround is to set the `NVIDIA_VISIBLE_DEVICES` environment variable to `void` in the Pods which don't require GPU devices.
+如果 Pod 在其资源配置中未包含 `nvidia.com/gpu` ，用户通常会期望 Pod 不知道任何 GPU 设备，即使它调度在 GPU 节点上。
+但是，如果 `nvidia.com/gpu` 未指定，则默认值 `NVIDIA_VISIBLE_DEVICES` 为 `all`，使 Pod 能够感知节点上的所有 GPU 设备。
+这种行为并非 KubeRay 所独有，而是 NVIDIA 的一个已知问题。
+解决方法是在不需要 GPU 设备的 Pod 中设置 `NVIDIA_VISIBLE_DEVICES` 环境变量为 `void` 。
 
-Some useful links:
+一些有用的链接：
 
 - `NVIDIA/k8s-device-plugin#61`_
 - `NVIDIA/k8s-device-plugin#87`_
-- `[NVIDIA] Preventing unprivileged access to GPUs in Kubernetes`_
+- `[NVIDIA] 防止对 Kubernetes 中的 GPU 进行非特权访问`_
 - `ray-project/ray#29753`_
 
-GPUs and Ray
+GPU 和 Ray
 ____________
 
-This section discuss GPU usage for Ray applications running on Kubernetes.
-For general guidance on GPU usage with Ray, see also :ref:`gpu-support`.
+节讨论在 Kubernetes 上运行的 Ray 应用程序的 GPU 使用情况。
+有关 Ray 的 GPU 使用的一般指南，另请参阅 :ref:`gpu-support`。
 
-The KubeRay operator advertises container GPU resource limits to
-the Ray scheduler and the Ray autoscaler. In particular, the Ray container's
-`ray start` entrypoint will be automatically configured with the appropriate `--num-gpus` option.
 
-GPU workload scheduling
+KubeRay operator 将容器 GPU 资源限制通告给 Ray 调度器和 Ray 自动缩放器。
+通常，Ray 容器的入口点 `ray start` 使用 `--num-gpus` 选项会自动配置。
+
+GPU 工作负载调度
 ~~~~~~~~~~~~~~~~~~~~~~~
-After a Ray pod with access to GPU is deployed, it will
-be able to execute tasks and actors annotated with gpu requests.
-For example, the decorator `@ray.remote(num_gpus=1)` annotates a task or actor
-requiring 1 GPU.
+部署可访问 GPU 的 Ray Pod 后，它将能够执行使用 GPU 请求注释的任务和 Actor。
+例如，装饰器 `@ray.remote(num_gpus=1)` 注释了需要 1 个 GPU 的任务或 Actor。
 
 
-GPU autoscaling
+GPU 自动缩放
 ~~~~~~~~~~~~~~~
-The Ray autoscaler is aware of each Ray worker group's GPU capacity.
-Say we have a RayCluster configured as in the config snippet above:
+Ray 自动缩放器知道每个 Ray 工作组的 GPU 容量。
+假设我们配置了一个 RayCluster，如上面的配置片段所示：
 
-- There is a worker group of Ray pods with 1 unit of GPU capacity each.
-- The Ray cluster does not currently have any workers from that group.
-- `maxReplicas` for the group is at least 2.
+- 有一个由 Ray pod 组成的工作组，每个工作组有 1 个单位的 GPU 容量。
+- Ray 集群当前没有来自该组的任何 worker。
+- 改组的 `maxReplicas` 至少为 2 。
 
-Then the following Ray program will trigger upscaling of 2 GPU workers.
+然后下面的 Ray 程序将触发 2 个 GPU 工作线程的升级。
 
 .. code-block:: python
 
@@ -131,14 +126,13 @@ Then the following Ray program will trigger upscaling of 2 GPU workers.
     # up and the actors are placed.
     ray.get([actor.say_hello.remote() for actor in gpu_actors])
 
-After the program exits, the actors will be garbage collected.
-The GPU worker pods will be scaled down after the idle timeout (60 seconds by default).
-If the GPU worker pods were running on an autoscaling pool of Kubernetes nodes, the Kubernetes
-nodes will be scaled down as well.
+程序退出后，actor 将会被垃圾回收。
+GPU Worker Pod 将在空闲超时（默认为 60 秒）后缩容。
+如果 GPU Worker Pod 在 Kubernetes 节点的自动缩放池上运行，则 Kubernetes 节点也将缩小。
 
-Requesting GPUs
+请求 GPU
 ~~~~~~~~~~~~~~~
-You can also make a :ref:`direct request to the autoscaler <ref-autoscaler-sdk-request-resources>` to scale up GPU resources.
+您还可以 :ref:`直接向自动缩放器发出请求 <ref-autoscaler-sdk-request-resources>` 以扩展 GPU 资源。
 
 .. code-block:: python
 
@@ -147,8 +141,8 @@ You can also make a :ref:`direct request to the autoscaler <ref-autoscaler-sdk-r
     ray.init()
     ray.autoscaler.sdk.request_resources(bundles=[{"GPU": 1}] * 2)
 
-After the nodes are scaled up, they will persist until the request is explicitly overridden.
-The following program will remove the resource request.
+节点扩展后，它们将持续存在，直到请求被显式覆盖。
+以下程序将删除资源请求。
 
 .. code-block:: python
 
@@ -157,15 +151,15 @@ The following program will remove the resource request.
     ray.init()
     ray.autoscaler.sdk.request_resources(bundles=[])
 
-The GPU workers can then scale down.
+然后 GPU 工作线程就可以缩小规模。
 
 .. _kuberay-gpu-override:
 
-Overriding Ray GPU capacity (advanced)
+覆盖 Ray GPU 容量（高级）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-For specialized use-cases, it is possible to override the Ray pod GPU capacities advertised to Ray.
-To do so, set a value for the `num-gpus` key of the head or worker group's `rayStartParams`.
-For example,
+对于专门的用例，可以覆盖向 Ray 公布的 Ray pod GPU 容量。
+为此，请在头或者工作组的 `rayStartParams` 中设置 `num-gpus` 键的值。
+如，
 
 .. code-block:: yaml
 
@@ -173,24 +167,22 @@ For example,
         # Note that all rayStartParam values must be supplied as strings.
         num-gpus: "2"
 
-The Ray scheduler and autoscaler will then account 2 units of GPU capacity for each
-Ray pod in the group, even if the container limits do not indicate the presence of GPU.
+Ray 调度器和自动缩放器将为组中的每个 Ray pod 分配 2 个 GPU 容量单位，即使容器限制不指示 GPU 的存在。
 
-GPU pod scheduling (advanced)
+GPU Pod 调度（高级）
 _____________________________
 
-GPU taints and tolerations
+GPU 污染和容忍
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. note::
 
-  Managed Kubernetes services typically take care of GPU-related taints and tolerations
-  for you. If you are using a managed Kubernetes service, you might not need to worry
-  about this section.
+  托管 Kubernetes 服务通常会为您处理与 GPU 相关的污染和容忍问题。
+  如果您使用的是托管 Kubernetes 服务，则可能不需要担心此部分。
 
-The `Nvidia gpu plugin`_ for Kubernetes applies `taints`_ to GPU nodes; these taints prevent non-GPU pods from being scheduled on GPU nodes.
-Managed Kubernetes services like GKE, EKS, and AKS automatically apply matching `tolerations`_
-to pods requesting GPU resources. Tolerations are applied by means of Kubernetes's `ExtendedResourceToleration`_ `admission controller`_.
-If this admission controller is not enabled for your Kubernetes cluster, you may need to manually add a GPU toleration to each of your GPU pod configurations. For example,
+Kubernetes 的 `Nvidia gpu plugin`_ 将 `taints`_ 应用于 GPU 节点；这些污点会阻止非 GPU pod 在 GPU 节点上进行调度。 
+GKE、EKS 和 AKS 等托管 Kubernetes 服务会自动将匹配的 `tolerations`_ 应用于请求 GPU 资源的 Pod。
+容忍是通过 Kubernetes 的 `ExtendedResourceToleration`_ `admission controller`_ 准入控制器来应用的。
+如果您的 Kubernetes 集群未启用此准入控制器，您可能需要手动向每个 GPU Pod 配置添加 GPU 容忍。例如，
 
 .. code-block:: yaml
 
@@ -210,19 +202,17 @@ If this admission controller is not enabled for your Kubernetes cluster, you may
      image: rayproject/ray:nightly-gpu
      ...
 
-Node selectors and node labels
+节点选择器和节点标签
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To ensure Ray pods are bound to Kubernetes nodes satisfying specific
-conditions (such as the presence of GPU hardware), you may wish to use
-the `nodeSelector` field of your `workerGroup`'s pod template `spec`.
-See the `Kubernetes docs`_ for more about Pod-to-Node assignment.
+为了确保 Ray Pod 绑定到满足特定条件（例如存在 GPU 硬件）的 Kubernetes 节点，您可能希望使用`workerGroup` 的 `pod`` 模板 `nodeSelector` 字段。
+有关 Pod 到节点分配的更多信息，请参阅 `Kubernetes docs`_。
 
 
-Further reference and discussion
+进一步参考和讨论
 --------------------------------
-Read about Kubernetes device plugins `here <https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/>`__,
-about Kubernetes GPU plugins `here <https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus>`__,
-and about Nvidia's GPU plugin for Kubernetes `here <https://github.com/NVIDIA/k8s-device-plugin>`__.
+`这里 <https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/>`__ 阅读有关 Kubernetes 设备插件的信息，
+`这里 <https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus>`__ 阅读有关 Kubernetes GPU 插件的信息，
+`这里 <https://github.com/NVIDIA/k8s-device-plugin>`__ 阅读有关 Nvidia 的 Kubernetes GPU 插件的信息。
 
 .. _`GKE`: https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 .. _`EKS`: https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html

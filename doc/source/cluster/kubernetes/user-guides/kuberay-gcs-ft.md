@@ -1,44 +1,44 @@
 (kuberay-gcs-ft)=
-# GCS fault tolerance in KubeRay
+# KubeRay 中的 GCS 容错
 
-Global Control Service (GCS) manages cluster-level metadata.
-By default, the GCS lacks fault tolerance as it stores all data in-memory, and a failure can cause the entire Ray cluster to fail.
-To make the GCS fault tolerant, you must have a high-availability Redis.
-This way, in the event of a GCS restart, it retrieves all the data from the Redis instance and resumes its regular functions.
+全局控制服务 (GCS) 管理集群级元数据。
+默认情况下，GCS 缺乏容错能力，因为它将所有数据存储在内存中，出现故障可能会导致整个 Ray 集群失败。
+为了使GCS具有容错能力，您必须拥有高可用的Redis。
+这样，当 GCS 重新启动时，它会从 Redis 实例中检索所有数据并恢复其常规功能。
 
-## Prerequisites
+## 先决条件
 
 * Ray 2.0.0+
 * KubeRay 0.6.0+
-* Redis: single shard, one or multiple replicas
+* Redis: 单个分片、一个或多个副本
 
-## Quickstart
+## 快速开始
 
-### Step 1: Create a Kubernetes cluster with Kind
+### 步骤 1: 使用 Kind 创建 Kubernetes 集群
 
 ```sh
 kind create cluster --image=kindest/node:v1.23.0
 ```
 
-### Step 2: Install the KubeRay operator
+### 步骤 2: 安装 KubeRay Operator
 
 Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator via Helm repository.
 
-### Step 3: Install a RayCluster with GCS FT enabled
+### 步骤 3: 安装启用 GCS FT 的 RayCluster
 
 ```sh
 curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml
 kubectl apply -f ray-cluster.external-redis.yaml
 ```
 
-### Step 4: Verify the Kubernetes cluster status 
+### 步骤 4: 验证 Kubernetes 集群状态
 
 ```sh
-# Step 4.1: List all Pods in the `default` namespace.
+# 步骤 4.1: List all Pods in the `default` namespace.
 # The expected output should be 4 Pods: 1 head, 1 worker, 1 KubeRay, and 1 Redis.
 kubectl get pods
 
-# Step 4.2: List all ConfigMaps in the `default` namespace.
+# 步骤 4.2: List all ConfigMaps in the `default` namespace.
 kubectl get configmaps
 
 # [Example output]
@@ -48,11 +48,11 @@ kubectl get configmaps
 # ...
 ```
 
-The [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml) file defines Kubernetes resources for RayCluster, Redis, and ConfigMaps.
-There are two ConfigMaps in this example: `ray-example` and `redis-config`.
-The `ray-example` ConfigMap houses two Python scripts: `detached_actor.py` and `increment_counter.py`.
+[ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml) 文件定义 RayCluster、Redis 和 ConfigMap 的 Kubernetes 资源。
+此示例中有两个 ConfigMap： `ray-example` 和 `redis-config`。
+`ray-example` ConfigMap 包含两个 Python 脚本： `detached_actor.py` 和 `increment_counter.py`。
 
-* `detached_actor.py` is a Python script that creates a detached actor with the name, `counter_actor`.
+* `detached_actor.py` 是一个 Python 脚本，用于创建一个名为 `counter_actor` 的独立 Actor。
     ```python
     import ray
 
@@ -69,7 +69,7 @@ The `ray-example` ConfigMap houses two Python scripts: `detached_actor.py` and `
     Counter.options(name="counter_actor", lifetime="detached").remote()
     ```
 
-* `increment_counter.py` is a Python script that increments the counter.
+* `increment_counter.py` 是一个递增计数器的 Python 脚本。
     ```python
     import ray
 
@@ -78,14 +78,14 @@ The `ray-example` ConfigMap houses two Python scripts: `detached_actor.py` and `
     print(ray.get(counter.increment.remote()))
     ```
 
-### Step 5: Create a detached actor
+### 步骤 5: 创建一个独立的 actor
 
 ```sh
-# Step 4.1: Create a detached actor with the name, `counter_actor`.
+# 步骤 4.1: Create a detached actor with the name, `counter_actor`.
 export HEAD_POD=$(kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers)
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/detached_actor.py
 
-# Step 4.2: Increment the counter.
+# 步骤 4.2: Increment the counter.
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/increment_counter.py
 
 # 2023-09-07 16:01:41,925 INFO worker.py:1313 -- Using address 127.0.0.1:6379 set in the environment variable RAY_ADDRESS
@@ -95,14 +95,14 @@ kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/increment_counter.py
 ```
 
 (kuberay-external-storage-namespace-example)=
-### Step 6: Check the data in Redis
+### 步骤 6: 检查Redis中的数据
 
 ```sh
-# Step 6.1: Check the RayCluster's UID.
+# 步骤 6.1: Check the RayCluster's UID.
 kubectl get rayclusters.ray.io raycluster-external-redis -o=jsonpath='{.metadata.uid}'
 # [Example output]: 864b004c-6305-42e3-ac46-adfa8eb6f752
 
-# Step 6.2: Check the head Pod's environment variable `RAY_external_storage_namespace`.
+# 步骤 6.2: Check the head Pod's environment variable `RAY_external_storage_namespace`.
 kubectl get pods $HEAD_POD -o=jsonpath='{.spec.containers[0].env}' | jq
 # [Example output]:
 # [
@@ -113,28 +113,29 @@ kubectl get pods $HEAD_POD -o=jsonpath='{.spec.containers[0].env}' | jq
 #   ...
 # ]
 
-# Step 6.3: Log into the Redis Pod.
+# 步骤 6.3: Log into the Redis Pod.
 export REDIS_POD=$(kubectl get pods --selector=app=redis -o custom-columns=POD:metadata.name --no-headers)
 # The password `5241590000000000` is defined in the `redis-config` ConfigMap.
 kubectl exec -it $REDIS_POD -- redis-cli -a "5241590000000000"
 
-# Step 6.4: Check the keys in Redis.
+# 步骤 6.4: Check the keys in Redis.
 KEYS *
 # [Example output]:
 # 1) "864b004c-6305-42e3-ac46-adfa8eb6f752"
 
-# Step 6.5: Check the value of the key.
+# 步骤 6.5: Check the value of the key.
 HGETALL 864b004c-6305-42e3-ac46-adfa8eb6f752
 ```
 
-In [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml), the `ray.io/external-storage-namespace` annotation isn't set for the RayCluster.
-Therefore, KubeRay automatically injects the environment variable `RAY_external_storage_namespace` to all Ray Pods managed by the RayCluster with the RayCluster's UID as the external storage namespace by default.
-See [this section](kuberay-external-storage-namespace) to learn more about the annotation.
+在 [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml) 中，`ray.io/external-storage-namespace` 注解未设置到 RayCluster。
+因此，默认情况下，KubeRay 会自动将环境变量 `RAY_external_storage_namespace` 注入到 RayCluster 管理的所有以 RayCluster 的 UID 作为外部存储命名空间的 Ray Pod 中。
 
-### Step 7: Kill the GCS process in the head Pod
+参考 [本节](kuberay-external-storage-namespace) 以了解有关注释的更多信息。
+
+### 步骤 7: 杀死head Pod中的GCS进程
 
 ```sh
-# Step 7.1: Check the `RAY_gcs_rpc_server_reconnect_timeout_s` environment variable in both the head Pod and worker Pod.
+# 步骤 7.1: Check the `RAY_gcs_rpc_server_reconnect_timeout_s` environment variable in both the head Pod and worker Pod.
 kubectl get pods $HEAD_POD -o=jsonpath='{.spec.containers[0].env}' | jq
 # [Expected result]:
 # No `RAY_gcs_rpc_server_reconnect_timeout_s` environment variable is set. Hence, the Ray head uses its default value of `60`.
@@ -149,10 +150,10 @@ kubectl get pods $YOUR_WORKER_POD -o=jsonpath='{.spec.containers[0].env}' | jq
 #   ...
 # ]
 
-# Step 7.2: Kill the GCS process in the head Pod.
+# 步骤 7.2: Kill the GCS process in the head Pod.
 kubectl exec -it $HEAD_POD -- pkill gcs_server
 
-# Step 7.3: The head Pod fails and restarts after `RAY_gcs_rpc_server_reconnect_timeout_s` (60) seconds.
+# 步骤 7.3: The head Pod fails and restarts after `RAY_gcs_rpc_server_reconnect_timeout_s` (60) seconds.
 # In addition, the worker Pod isn't terminated by the new head after reconnecting because GCS fault
 # tolerance is enabled.
 kubectl get pods -l=ray.io/is-ray-node=yes
@@ -162,11 +163,11 @@ kubectl get pods -l=ray.io/is-ray-node=yes
 # raycluster-external-redis-worker-small-group-yyyyy   1/1     Running   0             xxm
 ```
 
-In [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml), the `RAY_gcs_rpc_server_reconnect_timeout_s` environment variable isn't set in the specifications for either the head Pod or the worker Pod within the RayCluster.
-Therefore, KubeRay automatically injects the `RAY_gcs_rpc_server_reconnect_timeout_s` environment variable with the value **600** to the worker Pod and uses the default value **60** for the head Pod.
-The timeout value for worker Pods must be longer than the timeout value for the head Pod so that the worker Pods don't terminate before the head Pod restarts from a failure.
+在 [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml)， `RAY_gcs_rpc_server_reconnect_timeout_s` 环境变量未设置到 RayCluster 的头节点或者 worker 节点 Pod。
+因此，KubeRay 自动将 `RAY_gcs_rpc_server_reconnect_timeout_s` 注入到 worker Pod 中并设置默认值 **600**，将头 Pod 设置为默认值 **60**。
+工作 Pod 的超时值必须长于头 Pod 的超时值，以便工作 Pod 在头 Pod 因故障重新启动之前不会终止。
 
-### Step 8: Access the detached actor again
+### 步骤 8: 再次访问分离的 actor 
 
 ```sh
 kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/increment_counter.py
@@ -176,30 +177,30 @@ kubectl exec -it $HEAD_POD -- python3 /home/ray/samples/increment_counter.py
 # 2
 ```
 
-```{admonition} The detached actor is always on the worker Pod in this example.
-The head Pod's `rayStartParams` is set to `num-cpus: "0"`.
-Hence, no tasks or actors will be scheduled on the head Pod.
+```{admonition} 在此示例中，分离的 Actor 始终位于工作 Pod 上。
+头 Pod 的 `rayStartParams` 设置了 `num-cpus: "0"`。
+因此，不会在头 Pod 上安排任何任务或 actor 。
 ```
 
-With GCS fault tolerance enabled, you can still access the detached actor after the GCS process is dead and restarted.
-Note that the fault tolerance doesn't persist the actor's state.
-The reason why the result is 2 instead of 1 is that the detached actor is on the worker Pod which is always running.
-On the other hand, if the head Pod hosts the detached actor, the `increment_counter.py` script yields a result of 1 in this step.
+启用 GCS 容错后，在 GCS 进程终止并重新启动后，您仍然可以访问分离的 Actor。
+请注意，容错不会保留 actor 的状态。
+结果是 2 而不是 1 的原因是 游离 actor 始终在 worker pod 上运行。
+另一方面，如果头 Pod 托管分离的 actor，则  `increment_counter.py` 脚本在此步骤中生成的结果为 1。
 
-### Step 9: Delete the Kubernetes cluster
+### 步骤 9: 删除Kubernetes集群
 
 ```sh
 kind delete cluster
 ```
 
-## KubeRay GCS fault tolerance configurations
+## KubeRay GCS 容错配置
 
-The [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml) used in the quickstart example contains detailed comments about the configuration options.
-***Read this section in conjunction with the YAML file.***
+快速入门示例中使用的 [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml) 包含有关配置选项的详细注释。
+***请结合 YAML 文件阅读本节。***
 
-### 1. Enable GCS fault tolerance
+### 1. 启用GCS容错
 
-* **`ray.io/ft-enabled`**: Add `ray.io/ft-enabled: "true"` annotation to the RayCluster custom resource to enable GCS fault tolerance.
+* **`ray.io/ft-enabled`**: 添加 `ray.io/ft-enabled: "true"` 注解到 RayCluster 自定义资源，以启用GCS容错。
     ```yaml
     kind: RayCluster
     metadata:
@@ -207,11 +208,11 @@ The [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blo
         ray.io/ft-enabled: "true" # <- Add this annotation to enable GCS fault tolerance
     ```
 
-### 2. Connect to an external Redis
+### 2. 连接到外部 Redis
 
-* **`redis-password`** in head's `rayStartParams`:
-Use this option to specify the password for the Redis service, thus allowing the Ray head to connect to it.
-In the [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml), the RayCluster custom resource uses an environment variable `REDIS_PASSWORD` to store the password from a Kubernetes secret.
+* **`redis-password`** 在头配置 `rayStartParams`:
+使用此选项指定 Redis 服务的密码，从而允许 Ray head 连接到它。
+在 [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml)，RayCluster 自定义资源使用环境变量 `REDIS_PASSWORD` 来存储 Kubernetes 密钥中的密码。
     ```yaml
     rayStartParams:
       redis-password: $REDIS_PASSWORD
@@ -228,9 +229,9 @@ In the [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/
                     key: password
     ```
 
-* **`RAY_REDIS_ADDRESS`** environment variable in head's Pod:
-Ray reads the `RAY_REDIS_ADDRESS` environment variable to establish a connection with the Redis server.
-In the [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml), the RayCluster custom resource uses the `redis` Kubernetes ClusterIP service name as the connection point to the Redis server. The ClusterIP service is also created by the YAML file.
+* **`RAY_REDIS_ADDRESS`** head Pod中的环境变量：
+Ray读取 `RAY_REDIS_ADDRESS` 环境变量来与Redis服务器建立连接。
+在 [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.external-redis.yaml)中，RayCluster 自定义资源使用 `redis` Kubernetes ClusterIP 服务名称作为与 Redis 服务器的连接点。 ClusterIP 服务也是由 YAML 文件创建的。
     ```yaml
     template:
       spec:
@@ -242,12 +243,12 @@ In the [ray-cluster.external-redis.yaml](https://github.com/ray-project/kuberay/
     ```
 
 (kuberay-external-storage-namespace)=
-### 3. Use an external storage namespace
+### 3. 使用外部存储命名空间
 
-* **`ray.io/external-storage-namespace`** annotation (**optional**):
-In most cases, ***you don't need to set `ray.io/external-storage-namespace`*** because KubeRay automatically sets it to the UID of RayCluster.
-Only modify this annotation if you fully understand the behaviors of the GCS fault tolerance and RayService to avoid misconfiguration.
-Refer to [this section](kuberay-external-storage-namespace-example) in the earlier quickstart example for more details.
+* **`ray.io/external-storage-namespace`** 注解 (**可选**):
+大多数情况下， ***不需要设置 `ray.io/external-storage-namespace`*** 因为KubeRay会自动将其设置为 RayCluster 的 UID 。
+仅当您完全了解 GCS 容错和 RayService 的行为时才修改此注释，以避免配置错误。
+有关更多详细信息，请参阅前面的快速入门示例中的 [章节](kuberay-external-storage-namespace-example) 。
     ```yaml
     kind: RayCluster
     metadata:
@@ -255,7 +256,7 @@ Refer to [this section](kuberay-external-storage-namespace-example) in the earli
         ray.io/external-storage-namespace: "my-raycluster-storage" # <- Add this annotation to specify a storage namespace
     ```
 
-## Next steps
+## 下一步
 
-* See {ref}`Ray Serve end-to-end fault tolerance documentation <serve-e2e-ft-guide-gcs>` for more information.
-* See `Ray Core GCS fault tolerance documentation <fault-tolerance-gcs>` for more information.
+* 有关更多信息，请参阅 {ref}`Ray Serve 端到端容错文档 <serve-e2e-ft-guide-gcs>` 。
+* 参阅 `Ray Core GCS fault tolerance documentation <fault-tolerance-gcs>` 获取更多信息。

@@ -1,47 +1,46 @@
 (kuberay-pod-security)=
 
-# Pod Security
+# Pod 安全
 
-Kubernetes defines three different Pod Security Standards, including `privileged`, `baseline`, and `restricted`, to broadly
-cover the security spectrum. The `privileged` standard allows users to do known privilege escalations, and thus it is not 
-safe enough for security-critical applications.
+Kubernetes 定义了三种不同的 Pod 安全标准，包括 `privileged`、 `baseline` 和 `restricted`，以广泛覆盖安全范围。
+`privileged` 标准允许用户进行已知的权限升级，因此对于安全关键型应用程序来说不够安全。
 
-This document describes how to configure RayCluster YAML file to apply `restricted` Pod security standard. The following 
-references can help you understand this document better:
+文档介绍如何配置 RayCluster YAML 文件以应用 `restricted` Pod 安全标准。
+以下参考资料可以帮助您更好地理解本文档：
 
-* [Kubernetes - Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted)
-* [Kubernetes - Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
-* [Kubernetes - Auditing](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
-* [Kind - Auditing](https://kind.sigs.k8s.io/docs/user/auditing/)
+* [Kubernetes - Pod Pod 安全标准](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted)
+* [Kubernetes - Pod 安全准入](https://kubernetes.io/docs/concepts/security/pod-security-admission/)
+* [Kubernetes - 审计](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
+* [Kind - 审计](https://kind.sigs.k8s.io/docs/user/auditing/)
 
-# Preparation
+# 准备
 
-Please clone the [KubeRay repository](https://github.com/ray-project/kuberay) and checkout the `master` branch.
-This tutorial requires several files in the repository.
+克隆 [KubeRay 仓库](https://github.com/ray-project/kuberay) 并签出 `master` 分支。
+本教程需要存储库中的多个文件。
 
-# Step 1: Create a Kind cluster
+# 步骤 1: 创建 Kind 集群
 
 ```bash
 # Path: kuberay/
 kind create cluster --config ray-operator/config/security/kind-config.yaml --image=kindest/node:v1.24.0
 ```
 
-The `kind-config.yaml` enables audit logging with the audit policy defined in `audit-policy.yaml`. The `audit-policy.yaml`
-defines an auditing policy to listen to the Pod events in the namespace `pod-security`. With this policy, we can check
-whether our Pods violate the policies in `restricted` standard or not.
+`kind-config.yaml` 使用 `audit-policy.yaml` 中定义的审核策略启用审核日志记录。
+`audit-policy.yaml` 定义了一个审计策略来监听 `pod-security` 命名空间中的 Pod 事件。
+通过这个策略，我们可以检查我们的 Pod 是否违反了标准的 `restricted` 策略。
 
-The feature [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/) is firstly 
-introduced in Kubernetes v1.22 (alpha) and becomes stable in Kubernetes v1.25. In addition, KubeRay currently supports 
-Kubernetes from v1.19 to v1.24. (At the time of writing, we have not tested KubeRay with Kubernetes v1.25). Hence, I use **Kubernetes v1.24** in this step.
+[Pod 安全准入](https://kubernetes.io/docs/concepts/security/pod-security-admission/) 功能首次在 Kubernetes v1.22（alpha）中引入，
+并在 Kubernetes v1.25 中变得稳定。
+此外，KubeRay目前支持Kubernetes v1.19到v1.24。（在撰写本文时，我们尚未使用 Kubernetes v1.25 测试 KubeRay）。 因此，我在此步骤中使用 **Kubernetes v1.24** 。
 
-# Step 2: Check the audit logs
+# 步骤 2: 检查审核日志
 
 ```bash
 docker exec kind-control-plane cat /var/log/kubernetes/kube-apiserver-audit.log
 ```
-The log should be empty because the namespace `pod-security` does not exist.
+日志应该为空，因为命名空间 `pod-security` 不存在。
 
-# Step 3: Create the `pod-security` namespace
+# 步骤 3: 创建 `pod-security` 空间
 
 ```bash
 kubectl create ns pod-security
@@ -54,12 +53,12 @@ kubectl label --overwrite ns pod-security \
   pod-security.kubernetes.io/enforce-version=latest
 ```
 
-With the `pod-security.kubernetes.io` labels, the built-in Kubernetes Pod security admission controller will apply the 
-`restricted` Pod security standard to all Pods in the namespace `pod-security`. The label
-`pod-security.kubernetes.io/enforce=restricted` means that the Pod will be rejected if it violate the policies defined in 
-`restricted` security standard. See [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/) for more details about the labels.
+通过 `pod-security.kubernetes.io` 标签，内置的 Kubernetes Pod 安全准入控制器会将
+`restricted` Pod 安全标准应用到 `pod-security` 命名空间中的所有 Pod。
+`pod-security.kubernetes.io/enforce=restricted` 标签意味着如果 Pod 违反 `restricted` 安全标准中定义的策略，它将被拒绝。
+请参阅 [Pod 安全准入](https://kubernetes.io/docs/concepts/security/pod-security-admission/) 了解更多详细信息。
 
-# Step 4: Install the KubeRay operator
+# 步骤 4: 安装 KubeRay operator
 
 ```bash
 # Update the field securityContext in helm-chart/kuberay-operator/values.yaml
@@ -75,12 +74,12 @@ securityContext:
 helm install -n pod-security kuberay-operator .
 ```
 
-# Step 5: Create a RayCluster (Choose either Step 5.1 or Step 5.2)
+# 步骤 5: 创建 RayCluster (选择步骤 5.1 或 5.2)
 
-* If you choose Step 5.1, no Pod will be created in the namespace `pod-security`.
-* If you choose Step 5.2, Pods can be created successfully.
+* 如果选择步骤 5.1， `pod-security` 空间下不会创建任何 Pod
+* 如果选择步骤 5.2， Pod 可以成功创建。
 
-## Step 5.1: Create a RayCluster without proper `securityContext` configurations
+## 步骤 5.1: 在没有正确配置 `securityContext` 的情况下创建 RayCluster
 
 ```bash
 # Path: kuberay/ray-operator/config/samples
@@ -101,9 +100,9 @@ kubectl delete rayclusters.ray.io -n pod-security raycluster-complete
 # raycluster.ray.io "raycluster-complete" deleted
 ```
 
-No Pod will be created in the namespace `pod-security`, and check audit logs for error messages.
+命名空间 `pod-security` 中不会创建任何 Pod，并检查审核日志中是否有错误消息。
 
-## Step 5.2: Create a RayCluster with proper `securityContext` configurations
+## 步骤 5.2: 使用正确的 `securityContext` 配置创建 RayCluster 
 
 ```bash
 # Path: kuberay/ray-operator/config/security
@@ -134,6 +133,6 @@ kubectl delete -n pod-security -f ray-cluster.pod-security.yaml
 # configmap "xgboost-example" deleted
 ```
 
-One head Pod and one worker Pod will be created as specified in `ray-cluster.pod-security.yaml`.
-First, we log in to the head Pod, run a XGBoost example script, and check the job
-status in the dashboard. Next, we use `pip` to install a Python dependency (i.e. `jsonpatch`), and the exit code of the `pip` command should be 0.
+头 Pod 和 worker Pod 将按照 `ray-cluster.pod-security.yaml` 创建。
+首先，我们登录 head Pod，运行 XGBoost 示例脚本，并在仪表板中检查作业状态。
+ 接下来，我们用来 `pip` 安装 Python 依赖项（即 `jsonpatch`），`pip` 命令的退出代码应该为 0。
