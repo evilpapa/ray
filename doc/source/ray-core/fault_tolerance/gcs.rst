@@ -1,38 +1,37 @@
 .. _fault-tolerance-gcs:
 
-GCS Fault Tolerance
+GCS 容错
 ===================
 
-Global Control Service (GCS) is a server that manages cluster-level metadata.
-It also provides a handful of cluster-level operations including :ref:`actor <ray-remote-classes>`, :ref:`placement groups <ray-placement-group-doc-ref>` and node management.
-By default, the GCS is not fault tolerant since all the data is stored in-memory and its failure means that the entire Ray cluster fails.
-To make the GCS fault tolerant, HA Redis is required.
-Then, when the GCS restarts, it loads all the data from the Redis instance and resumes regular functions.
+全局控制服务 (GCS) 是管理集群级元数据的服务器。
+它还提供一些集群级操作，包括 :ref:`actor <ray-remote-classes>`，:ref:`placement groups <ray-placement-group-doc-ref>` 和节点管理。
+。默认情况下，GCS 不具备容错能力，因为所有数据都存储在内存中，它的故障意味着整个 Ray 集群都发生故障。为了使 GCS 具有容错能力，需要 HA Redis。
+然后，当 GCS 重新启动时，它会从 Redis 实例加载所有数据并恢复常规功能。
 
-During the recovery period, the following functions are not available:
+恢复期间，以下功能不可用：
 
-- Actor creation, deletion and reconstruction.
-- Placement group creation, deletion and reconstruction.
-- Resource management.
-- Worker node registration.
-- Worker process creation.
+- Actor 的创建、删除和重建。
+- Placement group 的创建、删除和重建。
+- 资源管理。
+- 工作节点注册。
+- 工作进程创建。
 
-However, running Ray tasks and actors remain alive and any existing objects will continue to be available.
+但是，正在运行的 Ray 任务和参与者仍然有效，并且任何现有对象将继续可用。
 
-Setting up Redis
+设置 Redis
 ----------------
 
 .. tab-set::
 
     .. tab-item:: KubeRay (officially supported)
 
-        If you are using :ref:`KubeRay <kuberay-index>`, refer to :ref:`KubeRay docs on GCS Fault Tolerance <kuberay-gcs-ft>`.
+        如果你正在使用 :ref:`KubeRay <kuberay-index>`，参考 :ref:`KubeRay 文档关于 GCS Fault Tolerance <kuberay-gcs-ft>`。
 
     .. tab-item:: ray start
 
-        If you are using :ref:`ray start <ray-start-doc>` to start the Ray head node,
-        set the OS environment ``RAY_REDIS_ADDRESS`` to
-        the Redis address, and supply the ``--redis-password`` flag with the password when calling ``ray start``:
+        如果你使用 :ref:`ray start <ray-start-doc>` 启动 Ray 头节点，
+        设置系统环境变量 ``RAY_REDIS_ADDRESS`` 为 Redis 地址，
+        并且在 ``ray start`` 使用 ``--redis-password`` 指定密码：
 
         .. code-block:: shell
 
@@ -40,7 +39,7 @@ Setting up Redis
 
     .. tab-item:: ray up
 
-        If you are using :ref:`ray up <ray-up-doc>` to start the Ray cluster, change :ref:`head_start_ray_commands <cluster-configuration-head-start-ray-commands>` field to add ``RAY_REDIS_ADDRESS`` and ``--redis-password`` to the ``ray start`` command:
+        如果使用 :ref:`ray up <ray-up-doc>` 启动 Ray 集群，修改 ``ray start`` 命令的 :ref:`head_start_ray_commands <cluster-configuration-head-start-ray-commands>` 字段并添加 ``RAY_REDIS_ADDRESS`` 和 ``--redis-password``：
 
         .. code-block:: yaml
 
@@ -50,27 +49,22 @@ Setting up Redis
 
     .. tab-item:: Kubernetes
 
-        If you are using Kubernetes but not :ref:`KubeRay <kuberay-index>`, please refer to :ref:`this doc <deploy-a-static-ray-cluster-without-kuberay>`.
+        如果运行在非 :ref:`KubeRay <kuberay-index>` 方式的 Kubernetes，请参考 :ref:`文档 <deploy-a-static-ray-cluster-without-kuberay>`。
 
 
-Once the GCS is backed by Redis, when it restarts, it'll recover the
-state by reading from Redis. When the GCS is recovering from its failed state, the raylet
-will try to reconnect to the GCS.
-If the raylet fails to reconnect to the GCS for more than 60 seconds,
-the raylet will exit and the corresponding node fails.
-This timeout threshold can be tuned by the OS environment variable ``RAY_gcs_rpc_server_reconnect_timeout_s``.
+一旦 GCS 由 Redis 支持，当它重新启动时，它将通过从 Redis 读取来恢复状态。
+当 GCS 从故障状态恢复时，raylet 将尝试重新连接到 GCS。
+如果 raylet 超过 60 秒无法重新连接到 GCS，则 raylet 将退出并且相应的节点将失败。此超时阈值可以通过 OS 环境变量 ``RAY_gcs_rpc_server_reconnect_timeout_s`` 进行调整。
 
-You can also set the OS environment variable ``RAY_external_storage_namespace`` to isolate the data stored in Redis.
-This makes sure that there is no data conflicts if multiple Ray clusters share the same Redis instance.
+您还可以设置 OS 环境变量 ``RAY_external_storage_namespace`` 来隔离存储在 Redis 中的数据。
+这可确保如果多个 Ray 集群共享同一个 Redis 实例，则不会发生数据冲突。
 
-If the IP address of GCS will change after restarts, it's better to use a qualified domain name
-and pass it to all raylets at start time. Raylet will resolve the domain name and connect to
-the correct GCS. You need to ensure that at any time, only one GCS is alive.
+如果 GCS 的 IP 地址在重启后会发生变化，最好使用合格的域名并在启动时将其传递给所有 raylet。
+Raylet 将解析域名并连接到正确的 GCS。
+您需要确保在任何时候都只有一个 GCS 处于活动状态。
 
 .. note::
 
-  GCS fault tolerance with external Redis is officially supported
-  ONLY if you are using :ref:`KubeRay <kuberay-index>` for :ref:`Ray serve fault tolerance <serve-e2e-ft>`.
-  For other cases, you can use it at your own risk and
-  you need to implement additional mechanisms to detect the failure of GCS or the head node
-  and restart it.
+  仅当您使用 :ref:`KubeRay <kuberay-index>` 实现 :ref:`Ray 服务容错 <serve-e2e-ft>` 时，
+  官方才支持使用外部 Redis 的 GCS 容错。
+  对于其他情况，您可以自行承担风险，并且需要实施其他机制来检测 GCS 或头节点的故障并重新启动它。

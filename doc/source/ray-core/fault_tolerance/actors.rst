@@ -1,93 +1,70 @@
 .. _fault-tolerance-actors:
 .. _actor-fault-tolerance:
 
-Actor Fault Tolerance
+Actor 容错
 =====================
 
-Actors can fail if the actor process dies, or if the **owner** of the actor
-dies. The owner of an actor is the worker that originally created the actor by
-calling ``ActorClass.remote()``. :ref:`Detached actors <actor-lifetimes>` do
-not have an owner process and are cleaned up when the Ray cluster is destroyed.
+如果 Actor 进程失败，或者 Actor 的 owner 进程失败，Actor 可能会失败。
+Actor 的所有者是通过调用 ``ActorClass.remote()`` 创建 Actor 的 worker。
+:ref:`Detached actors <actor-lifetimes>` 没有 owner 进程，当 Ray 集群被销毁时，它们会被清理。
 
 
-Actor process failure
+Actor 进程失败
 ---------------------
 
-Ray can automatically restart actors that crash unexpectedly.
-This behavior is controlled using ``max_restarts``,
-which sets the maximum number of times that an actor will be restarted.
-The default value of ``max_restarts`` is 0, meaning that the actor won't be
-restarted. If set to -1, the actor will be restarted infinitely many times.
-When an actor is restarted, its state will be recreated by rerunning its
-constructor.
-After the specified number of restarts, subsequent actor methods will
-raise a ``RayActorError``.
+Ray 可能在 actor 进程失败后自动重启 actor。
+这个行为由 ``max_restarts`` 控制，它设置了 actor 可以重启的最大次数。
+``max_restarts`` 的默认值是 0，意味着 actor 不会被重启。如果设置为 -1，actor 将无限次重启。
+当 actor 重启时，它的状态将通过重新运行其构造函数来重新创建。
+在指定的重启次数之后，后续的 actor 方法将引发 ``RayActorError``。
 
-By default, actor tasks execute with at-most-once semantics
-(``max_task_retries=0`` in the ``@ray.remote`` :func:`decorator <ray.remote>`). This means that if an
-actor task is submitted to an actor that is unreachable, Ray will report the
-error with ``RayActorError``, a Python-level exception that is thrown when
-``ray.get`` is called on the future returned by the task. Note that this
-exception may be thrown even though the task did indeed execute successfully.
-For example, this can happen if the actor dies immediately after executing the
-task.
+默认的，actor 任务以最多一次的语义执行（``@ray.remote`` 中 :func:``decorator <ray.remote>`` 的 ``max_task_retries=0``）。
+这意味着如果一个 actor 任务被提交到一个不可达的 actor，Ray 将会报告错误，抛出 ``RayActorError``，这是一个 Python 级别的异常，当调用 ``ray.get`` 时，会抛出这个异常。
+请注意，即使任务确实成功执行，也可能抛出这个异常。例如，如果 actor 在执行任务后立即死亡，就会发生这种情况。
 
-Ray also offers at-least-once execution semantics for actor tasks
-(``max_task_retries=-1`` or ``max_task_retries > 0``). This means that if an
-actor task is submitted to an actor that is unreachable, the system will
-automatically retry the task. With this option, the system will only throw a
-``RayActorError`` to the application if one of the following occurs: (1) the
-actor’s ``max_restarts`` limit has been exceeded and the actor cannot be
-restarted anymore, or (2) the ``max_task_retries`` limit has been exceeded for
-this particular task. Note that if the actor is currently restarting when a
-task is submitted, this will count for one retry. The retry limit can be set to
-infinity with ``max_task_retries = -1``.
+Ray 还为 actor 任务提供了至少一次的执行语义（ ``max_task_retries=-1`` 或 ``max_task_retries > 0``）。
+这意味着如果一个 actor 任务被提交到一个不可达的 actor，系统将自动重试任务。
+使用此选项，系统只会在发生以下情况之一时向应用程序抛出 ``RayActorError``：(1) actor 的 ``max_restarts`` 限制已经超过，actor 不能再重启，
+或者 (2) 此特定任务的 ``max_task_retries`` 限制已经超过。
+请注意，如果 actor 在提交任务时正在重启，这将计为一次重试。
+重试限制可以通过 ``max_task_retries = -1`` 设置为无限。
 
-You can experiment with this behavior by running the following code.
+你可以通过运行以下代码来尝试这个行为。
 
 .. literalinclude:: ../doc_code/actor_restart.py
   :language: python
   :start-after: __actor_restart_begin__
   :end-before: __actor_restart_end__
 
-For at-least-once actors, the system will still guarantee execution ordering
-according to the initial submission order. For example, any tasks submitted
-after a failed actor task will not execute on the actor until the failed actor
-task has been successfully retried. The system will not attempt to re-execute
-any tasks that executed successfully before the failure
-(unless ``max_task_retries`` is nonzero and the task is needed for :ref:`object
-reconstruction <fault-tolerance-objects-reconstruction>`).
+对于至少一次执行的 actor，系统仍然会根据初始提交顺序保证执行顺序。
+例如，任何在失败的 actor 任务之后提交的任务都不会在 actor 上执行，直到失败的 actor 任务成功重试。
+系统不会尝试重新执行任何在失败之前成功执行的任务（除非 ``max_task_retries`` 不为零且任务对于 :ref:`对象重建 <fault-tolerance-objects-reconstruction>` 是必要的）。
 
 .. note::
 
-  For :ref:`async or threaded actors <async-actors>`, :ref:`tasks might be
-  executed out of order <actor-task-order>`. Upon actor restart, the system
-  will only retry *incomplete* tasks. Previously completed tasks will not be
-  re-executed.
+  对于 :ref:`异步或线程 actor <async-actors>`，:ref:`任务可能会无序执行 <actor-task-order>`。
+  Actor 重启后，系统只会重试 *未完成* 的任务。之前已完成的任务不会被重新执行。
+  之前已完成的任务不会被重新执行。
 
 
-At-least-once execution is best suited for read-only actors or actors with
-ephemeral state that does not need to be rebuilt after a failure. For actors
-that have critical state, the application is responsible for recovering the
-state, e.g., by taking periodic checkpoints and recovering from the checkpoint
-upon actor restart.
+至少一次执行最适合只读 actor 或具有不需要在失败后重建的临时状态的 actor。
+对于具有关键状态的 actor，应用程序负责恢复状态，例如，通过定期检查点并在 actor 重启时从检查点恢复。
 
 
-Actor checkpointing
+Actor 检查点
 ~~~~~~~~~~~~~~~~~~~
 
-``max_restarts`` automatically restarts the crashed actor,
-but it doesn't automatically restore application level state in your actor.
-Instead, you should manually checkpoint your actor's state and recover upon actor restart.
+``max_restarts`` 会自动重启崩溃的 actor，但不会自动恢复 actor 的应用程序级状态。
+相反，您应该手动检查点 actor 的状态，并在 actor 重启时恢复。
 
-For actors that are restarted manually, the actor's creator should manage the checkpoint and manually restart and recover the actor upon failure. This is recommended if you want the creator to decide when the actor should be restarted and/or if the creator is coordinating actor checkpoints with other execution:
+对于手动重启的 actor，actor 的创建者应该管理检查点，并在失败时手动重启和恢复 actor。如果你希望创建者决定何时重启 actor，或者如果创建者正在协调 actor 检查点与其他执行，这是推荐的做法：
 
 .. literalinclude:: ../doc_code/actor_checkpointing.py
   :language: python
   :start-after: __actor_checkpointing_manual_restart_begin__
   :end-before: __actor_checkpointing_manual_restart_end__
 
-Alternatively, if you are using Ray's automatic actor restart, the actor can checkpoint itself manually and restore from a checkpoint in the constructor:
+或者，如果你使用 Ray 的自动 actor 重启，actor 可以手动检查点自己，并在构造函数中从检查点恢复：
 
 .. literalinclude:: ../doc_code/actor_checkpointing.py
   :language: python
@@ -96,41 +73,34 @@ Alternatively, if you are using Ray's automatic actor restart, the actor can che
 
 .. note::
 
-  If the checkpoint is saved to external storage, make sure
-  it's accessible to the entire cluster since the actor can be restarted
-  on a different node.
-  For example, save the checkpoint to cloud storage (e.g., S3) or a shared directory (e.g., via NFS).
+  如果检查点保存在外部存储中，请确保整个集群都可以访问它，因为 actor 可能会在不同的节点上重启。
+  例如，将检查点保存到云存储（例如 S3）或共享目录（例如通过 NFS）。
 
 
-Actor creator failure
+Actor 创建者失败
 ---------------------
 
-For :ref:`non-detached actors <actor-lifetimes>`, the owner of an actor is the
-worker that created it, i.e. the worker that called ``ActorClass.remote()``. Similar to
-:ref:`objects <fault-tolerance-objects>`, if the owner of an actor dies, then
-the actor will also fate-share with the owner.  Ray will not automatically
-recover an actor whose owner is dead, even if it has a nonzero
-``max_restarts``.
+对于 :ref:`non-detached actors <actor-lifetimes>`，actor 的所有者是创建它的 worker，即调用 ``ActorClass.remote()`` 的 worker。
+类似于 :ref:`objects <fault-tolerance-objects>`，如果 actor 的所有者死亡，actor 也会与所有者共享命运。
+Ray 不会自动恢复其所有者已死亡的 actor，即使它有非零的 ``max_restarts``。
 
-Since :ref:`detached actors <actor-lifetimes>` do not have an owner, they will still be restarted by Ray
-even if their original creator dies. Detached actors will continue to be
-automatically restarted until the maximum restarts is exceeded, the actor is
-destroyed, or until the Ray cluster is destroyed.
+由于 :ref:`detached actors <actor-lifetimes>` 没有所有者，即使它们的原始创建者死亡，Ray 仍会重启它们。
+直到达到最大重启次数、actor 被销毁，或者 Ray 集群被销毁，detached actors 仍会被自动重启。
 
-You can try out this behavior in the following code.
+你可以在以下代码中尝试这个行为。
 
 .. literalinclude:: ../doc_code/actor_creator_failure.py
   :language: python
   :start-after: __actor_creator_failure_begin__
   :end-before: __actor_creator_failure_end__
 
-Force-killing a misbehaving actor
+强制杀死行为不端的 actor
+
 ---------------------------------
 
-Sometimes application-level code can cause an actor to hang or leak resources.
-In these cases, Ray allows you to recover from the failure by :ref:`manually
-terminating <ray-kill-actors>` the actor. You can do this by calling
-``ray.kill`` on any handle to the actor. Note that it does not need to be the
-original handle to the actor.
+有时，应用程序级代码可能会导致 actor 挂起或泄漏资源。
+这种情况下，Ray 允许您通过 :ref:`手动终止 <ray-kill-actors>` actor 来从失败中恢复。
+你可以通过在 actor 的任何句柄上调用 ``ray.kill`` 来做到这一点。请注意，它不需要是 actor 的原始句柄。
+请注意，它不需要是 actor 的原始句柄。
 
-If ``max_restarts`` is set, you can also allow Ray to automatically restart the actor by passing ``no_restart=False`` to ``ray.kill``.
+如果 ``max_restarts`` 被设置，你也可以通过将 ``no_restart=False`` 传递给 ``ray.kill`` 来允许 Ray 自动重启 actor。

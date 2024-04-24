@@ -1,16 +1,14 @@
 .. _fault-tolerance-objects:
 .. _object-fault-tolerance:
 
-Object Fault Tolerance
+对象容错
 ======================
 
-A Ray object has both data (the value returned when calling ``ray.get``) and
-metadata (e.g., the location of the value). Data is stored in the Ray object
-store while the metadata is stored at the object's **owner**. The owner of an
-object is the worker process that creates the original ``ObjectRef``, e.g., by
-calling ``f.remote()`` or ``ray.put()``. Note that this worker is usually a
-distinct process from the worker that creates the **value** of the object,
-except in cases of ``ray.put``.
+Ray 对象既有数据（调用 ``ray.get`` 时返回的值）也有元数据（例如，值的位置）。
+数据存储在 Ray 对象存储中，而元数据存储在对象的 **所有者** 处。
+对象的所有者是创建原始 ``ObjectRef`` 的 worker 进程，
+例如，通过调用 ``f.remote()`` 或 ``ray.put()``。
+请注意，这个 worker 通常是一个与创建对象 **值** 的 worker 进程不同的进程，除了 ``ray.put`` 的情况。
 
 .. literalinclude:: ../doc_code/owners.py
   :language: python
@@ -18,87 +16,61 @@ except in cases of ``ray.put``.
   :end-before: __owners_end__
 
 
-Ray can automatically recover from data loss but not owner failure.
+Ray 可以自动恢复数据丢失，但不能恢复所有者失败。
 
 .. _fault-tolerance-objects-reconstruction:
 
-Recovering from data loss
+从数据丢失中恢复
 -------------------------
 
-When an object value is lost from the object store, such as during node
-failures, Ray will use *lineage reconstruction* to recover the object.
-Ray will first automatically attempt to recover the value by looking
-for copies of the same object on other nodes. If none are found, then Ray will
-automatically recover the value by :ref:`re-executing <fault-tolerance-tasks>`
-the task that previously created the value.  Arguments to the task are
-recursively reconstructed through the same mechanism.
+当对象值从对象存储中丢失时（例如在节点故障期间），Ray 将使用 *lineage reconstruction* 来恢复对象。
+Ray 将首先通过其他节点上的相同对象的副本来自动尝试恢复值。 如果没有找到，
+则 Ray 将通过 :ref:`重新执行 <fault-tolerance-tasks>` 先前创建值的任务来自动恢复值。
+任务的参数通过相同的机制递归重建。
 
-Lineage reconstruction currently has the following limitations:
+谱系重建目前有以下限制：
 
-* The object, and any of its transitive dependencies, must have been generated
-  by a task (actor or non-actor). This means that **objects created by
-  ray.put are not recoverable**.
-* Tasks are assumed to be deterministic and idempotent. Thus,
-  **by default, objects created by actor tasks are not reconstructable**. To allow
-  reconstruction of actor task results, set the ``max_task_retries`` parameter
-  to a non-zero value (see :ref:`actor
-  fault tolerance <fault-tolerance-actors>` for more details).
-* Tasks will only be re-executed up to their maximum number of retries. By
-  default, a non-actor task can be retried up to 3 times and an actor task
-  cannot be retried.  This can be overridden with the ``max_retries`` parameter
-  for :ref:`remote functions <fault-tolerance-tasks>` and the
-  ``max_task_retries`` parameter for :ref:`actors <fault-tolerance-actors>`.
-* The owner of the object must still be alive (see :ref:`below
-  <fault-tolerance-ownership>`).
+* 该对象以及其传递依赖项必须有任务（actor 或 非 actor）生成。
+  这意味着 **ray.put 创建的对象不可恢复**。
+* 任务假定为幂等的。因此， **默认情况下，actor 任务生成的对象不可重建**。
+  要允许重建 actor 任务的结果，
+  请将 ``max_task_retries`` 参数设置为非零值（有关更多详细信息，请参见 :ref:`actor 容错 <fault-tolerance-actors>`）。
+* 任务只会被重新执行到其最大重试次数。默认情况下，非 actor 任务最多可以重试 3 次，actor 任务不可重试。
+  可以通过 ``max_retries`` 参数（用于 :ref:`远程函数 <fault-tolerance-tasks>`）和 ``max_task_retries`` 
+  参数（用于 :ref:`actors <fault-tolerance-actors>`）来覆盖这一点。
+* 该对象的所有者必须仍然存活（请参见 :ref:`下文 <fault-tolerance-ownership>`）。
 
-Lineage reconstruction can cause higher than usual driver memory
-usage because the driver keeps the descriptions of any tasks that may be
-re-executed in case of failure. To limit the amount of memory used by
-lineage, set the environment variable ``RAY_max_lineage_bytes`` (default 1GB)
-to evict lineage if the threshold is exceeded.
+Lineage 重建可能会导致驱动程序内存使用量高于正常水平，因为驱动程序会保留在发生故障时可能重新执行的任何任务的描述。
+要限制 Lineage 使用的内存量，请将环境变量 ``RAY_max_lineage_bytes``（默认为 1GB）设置为在超过阈值时驱逐 Lineage。
 
-To disable lineage reconstruction entirely, set the environment variable
-``RAY_TASK_MAX_RETRIES=0`` during ``ray start`` or ``ray.init``.  With this
-setting, if there are no copies of an object left, an ``ObjectLostError`` will
-be raised.
+要完全禁用 Lineage 重建，请在 ``ray start`` 或 ``ray.init`` 期间设置环境变量 ``RAY_TASK_MAX_RETRIES=0``。
+通过此设置，如果没有副本剩余，则会引发 ``ObjectLostError``。
 
 .. _fault-tolerance-ownership:
 
-Recovering from owner failure
+从所有者故障中恢复
 -----------------------------
 
-The owner of an object can die because of node or worker process failure.
-Currently, **Ray does not support recovery from owner failure**. In this case, Ray
-will clean up any remaining copies of the object's value to prevent a memory
-leak. Any workers that subsequently try to get the object's value will receive
-an ``OwnerDiedError`` exception, which can be handled manually.
+对象的所有者会因节点或 worker 进程故障而死亡。
+目前，**Ray 不支持从所有者故障中恢复**。
+在这种情况下，Ray 将清理对象值的任何剩余副本，以防止内存泄漏。
+随后尝试获取对象值的任何 worker 将收到 ``OwnerDiedError`` 异常，可以手动处理。
 
-Understanding `ObjectLostErrors`
+理解 `ObjectLostErrors`
 --------------------------------
 
-Ray throws an ``ObjectLostError`` to the application when an object cannot be
-retrieved due to application or system error. This can occur during a
-``ray.get()`` call or when fetching a task's arguments, and can happen for a
-number of reasons. Here is a guide to understanding the root cause for
-different error types:
+Ray 抛出 ``ObjectLostError`` 异常给应用程序，当对象由于应用程序或系统错误而无法检索时。
+这可能发生在 ``ray.get()`` 调用期间或在获取任务参数时，并且可能发生多种原因。
+这里是一个指南，用于理解不同错误类型的根本原因：
 
-- ``OwnerDiedError``: The owner of an object, i.e., the Python worker that
-  first created the ``ObjectRef`` via ``.remote()`` or ``ray.put()``, has died.
-  The owner stores critical object metadata and an object cannot be retrieved
-  if this process is lost.
-- ``ObjectReconstructionFailedError``: This error is thrown if an object, or
-  another object that this object depends on, cannot be reconstructed due to
-  one of the limitations described :ref:`above
-  <fault-tolerance-objects-reconstruction>`.
-- ``ReferenceCountingAssertionError``: The object has already been deleted,
-  so it cannot be retrieved. Ray implements automatic memory management through
-  distributed reference counting, so this error should not happen in general.
-  However, there is a `known edge case <https://github.com/ray-project/ray/issues/18456>`_ that can produce this error.
-- ``ObjectFetchTimedOutError``: A node timed out while trying to retrieve a
-  copy of the object from a remote node. This error usually indicates a
-  system-level bug. The timeout period can be configured using the
-  ``RAY_fetch_fail_timeout_milliseconds`` environment variable (default 10
-  minutes).
-- ``ObjectLostError``: The object was successfully created, but no copy is
-  reachable.  This is a generic error thrown when lineage reconstruction is
-  disabled and all copies of the object are lost from the cluster.
+- ``OwnerDiedError``: 对象的所有者，即通过 ``.remote()`` 或 ``ray.put()`` 创建 ``ObjectRef`` 的 Python worker 已经死亡。
+  所有者存储关键对象元数据，如果此进程丢失，则无法检索对象。
+- ``ObjectReconstructionFailedError``: 如果一个对象，或者另一个对象依赖于此对象，
+  由于 :ref:`上述限制 <fault-tolerance-objects-reconstruction>` 之一而无法重建，则会抛出此错误。
+- ``ReferenceCountingAssertionError``: 该对象已被删除，因此无法检索。Ray 通过分布式引用计数实现自动内存管理，因此一般不会发生此错误。
+  但是，有一种 `已知的极端情况 <https://github.com/ray-project/ray/issues/18456>`_ 可能会产生此错误。
+- ``ObjectFetchTimedOutError``: 尝试从远程节点检索对象副本时节点超时。
+  此错误通常表示系统级错误。
+  可以使用环境 ``RAY_fetch_fail_timeout_milliseconds`` 变量配置超时时间（默认为 10 分钟）。
+- ``ObjectLostError``: 对象已成功创建，但无法访问任何副本。
+   这是在禁用沿袭重建且对象的所有副本从集群中丢失时抛出的一般错误。
