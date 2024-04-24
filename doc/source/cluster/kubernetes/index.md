@@ -48,7 +48,7 @@ Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所�
             :outline:
             :expand:
 
-            Get Started with Ray on Kubernetes
+            在 Kubernetes 上使用 Ray
 
     .. grid-item-card::
 
@@ -63,7 +63,7 @@ Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所�
             :outline:
             :expand:
 
-            Read the User Guides
+            阅读用户手册
 
     .. grid-item-card::
 
@@ -78,7 +78,7 @@ Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所�
             :outline:
             :expand:
 
-            Try example workloads
+            尝试示例工作负载
 
     .. grid-item-card::
 
@@ -93,7 +93,7 @@ Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所�
             :outline:
             :expand:
 
-            Ecosystem Guides
+            生态指引
 
     .. grid-item-card::
 
@@ -108,7 +108,7 @@ Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所�
             :outline:
             :expand:
 
-            Benchmark results
+            基准结果
     
     .. grid-item-card::
 
@@ -123,7 +123,7 @@ Ray 文档提供了开始在 Kubernetes 上运行 Ray 工作负载所需的所�
             :outline:
             :expand:
 
-            Troubleshooting guides
+            问题引导
 ```
 ## 关于 KubeRay
 
