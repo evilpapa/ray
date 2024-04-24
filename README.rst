@@ -66,16 +66,16 @@ Ray 是一种将 Python 和 AI 应用程序从笔记本电脑扩展到集群的�
 
 - `文档`_
 - `Ray 架构白皮书`_
-- `Exoshuffle: large-scale data shuffle in Ray`_
-- `Ownership: a distributed futures system for fine-grained tasks`_
+- `Exoshuffle: Ray 中的大规模数据 shuffle`_
+- `Ownership: 用于细粒度任务的分布式期货系统`_
 - `RLlib 论文`_
 - `Tune 论文`_
 
 *老文档：*
 
-- `Ray paper`_
-- `Ray HotOS paper`_
-- `Ray Architecture v1 whitepaper`_
+- `Ray 论文`_
+- `Ray HotOS 论文`_
+- `Ray v1 架构白皮书`_
 
 .. _`Ray AI Libraries`: https://docs.ray.io/en/latest/ray-air/getting-started.html
 .. _`Ray Core`: https://docs.ray.io/en/latest/ray-core/walkthrough.html
@@ -99,39 +99,39 @@ Ray 是一种将 Python 和 AI 应用程序从笔记本电脑扩展到集群的�
    :widths: 25 50 25 25
    :header-rows: 1
 
-   * - Platform
-     - Purpose
-     - Estimated Response Time
-     - Support Level
-   * - `Discourse Forum`_
-     - For discussions about development and questions about usage.
+   * - 平台
+     - 目的
+     - 预计响应时间
+     - 支持水平
+   * - `Discourse 论坛`_
+     - 用于有关开发的讨论和有关使用的问题。
      - < 1 day
      - Community
    * - `GitHub Issues`_
-     - For reporting bugs and filing feature requests.
+     - 用于报告错误和提交功能请求。
      - < 2 days
      - Ray OSS Team
    * - `Slack`_
-     - For collaborating with other Ray users.
+     - 用于与其他 Ray 用户协作。
      - < 2 days
      - Community
    * - `StackOverflow`_
-     - For asking questions about how to use Ray.
+     - 用于询问有关如何使用 Ray 的问题。
      - 3-5 days
      - Community
-   * - `Meetup Group`_
-     - For learning about Ray projects and best practices.
+   * - `聚会小组`_
+     - 用于了解 Ray 项目和最佳实践。
      - Monthly
      - Ray DevRel
    * - `Twitter`_
-     - For staying up-to-date on new features.
+     - 用于及时了解新功能。
      - Daily
      - Ray DevRel
 
-.. _`Discourse Forum`: https://discuss.ray.io/
+.. _`Discourse 论坛`: https://discuss.ray.io/
 .. _`GitHub 讨论`: https://github.com/ray-project/ray/issues
 .. _`StackOverflow`: https://stackoverflow.com/questions/tagged/ray
-.. _`Meetup Group`: https://www.meetup.com/Bay-Area-Ray-Meetup/
+.. _`聚会小组`: https://www.meetup.com/Bay-Area-Ray-Meetup/
 .. _`Twitter`: https://twitter.com/raydistributed
 .. _`Slack`: https://forms.gle/9TSdDYUgxYs8SA9e8
 
