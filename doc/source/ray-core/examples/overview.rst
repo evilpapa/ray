@@ -1,10 +1,10 @@
 .. _ray-core-examples-tutorial:
 
-Ray Tutorials and Examples
+Ray 教程和示例
 ==========================
 
 
-Machine Learning Examples
+机器学习示例
 -------------------------
 
 .. grid:: 1 2 3 4
@@ -17,7 +17,7 @@ Machine Learning Examples
 
         .. button-ref:: automl_for_time_series
 
-            Build Simple AutoML for Time Series Using Ray
+            使用 Ray 构建简单的时间序列 AutoML
 
     .. grid-item-card::
         :img-top: /ray-overview/images/ray_svg_logo.svg
@@ -25,7 +25,7 @@ Machine Learning Examples
 
         .. button-ref:: batch_prediction
 
-            Build Batch Prediction Using Ray
+            使用 Ray 构建批量预测
 
     .. grid-item-card::
         :img-top: /ray-overview/images/ray_svg_logo.svg
@@ -33,7 +33,7 @@ Machine Learning Examples
 
         .. button-ref:: batch_training
 
-            Build Batch Training Using Ray
+            使用 Ray 构建批量训练
 
     .. grid-item-card::
         :img-top: images/param_actor.png
@@ -41,7 +41,7 @@ Machine Learning Examples
 
         .. button-ref:: plot_parameter_server
 
-            Build a Simple Parameter Server Using Ray
+            使用 Ray 构建简单的参数服务器
 
     .. grid-item-card::
         :img-top: images/hyperparameter.png
@@ -49,7 +49,7 @@ Machine Learning Examples
 
         .. button-ref:: plot_hyperparameter
 
-            Simple Parallel Model Selection
+            简单的并行模型选择
 
     .. grid-item-card::
         :img-top: /ray-overview/images/ray_svg_logo.svg
@@ -57,14 +57,13 @@ Machine Learning Examples
 
         .. button-ref:: plot_example-lm
 
-            Fault-Tolerant Fairseq Training
+            Fairseq 容错训练
 
 
-Reinforcement Learning Examples
+强化学习示例
 -------------------------------
 
-These are simple examples that show you how to leverage Ray Core.
-For Ray's production-grade reinforcement learning library, see `RLlib <http://docs.ray.io/en/latest/rllib.html>`__.
+这些是向您展示如何利用 Ray Core 的简单示例。有关 Ray 的生产级强化学习库，请参阅 `RLlib <http://docs.ray.io/en/latest/rllib.html>`__。
 
 
 .. grid:: 1 2 3 4
@@ -77,7 +76,7 @@ For Ray's production-grade reinforcement learning library, see `RLlib <http://do
 
         .. button-ref:: plot_pong_example
 
-            Learning to Play Pong
+            学打乒乓球
 
     .. grid-item-card::
         :img-top: images/a3c.png
@@ -85,10 +84,10 @@ For Ray's production-grade reinforcement learning library, see `RLlib <http://do
 
         .. button-ref:: plot_example-a3c
 
-            Asynchronous Advantage Actor Critic (A3C)
+            异步高级 Actor Critic (A3C)
 
 
-Basic Examples
+基础示例
 --------------
 
 .. grid:: 1 2 3 4
@@ -101,7 +100,7 @@ Basic Examples
 
         .. button-ref:: gentle_walkthrough
 
-            A Gentle Introduction to Ray Core by Example
+            通过示例温和地介绍 Ray Core
 
     .. grid-item-card::
         :img-top: /ray-overview/images/ray_svg_logo.svg
@@ -109,7 +108,7 @@ Basic Examples
 
         .. button-ref:: highly_parallel
 
-            Using Ray for Highly Parallelizable Tasks
+            使用 Ray 处理高度可并行化的任务
 
     .. grid-item-card::
         :img-top: /ray-overview/images/ray_svg_logo.svg
@@ -117,4 +116,4 @@ Basic Examples
 
         .. button-ref:: map_reduce
 
-            Running a Simple MapReduce Example with Ray Core
+            使用 Ray Core 运行简单的 MapReduce 示例
