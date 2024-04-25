@@ -94,7 +94,7 @@ kubectl apply -f ray-cluster.gke-bucket.yaml
 
 ## 测试来自 RayCluster 的 GCS 存储桶访问
 
-使用 `kubectl get pod` 获取 Ray 头 Pod 的名称。然后运行以下命令以在 Ray head pod 中执行 shell：
+使用 `kubectl get pod` 获取 Ray  Head Pod 的名称。然后运行以下命令以在 Ray head pod 中执行 shell：
 
 ```bash
 kubectl exec -it raycluster-mini-head-xxxx -- /bin/bash

@@ -40,7 +40,6 @@ Actor 将 Ray API 从函数（任务）扩展到类。Actor 本质上是一个�
 环境依赖
 ------------------------
 
-When Ray executes tasks and actors on remote machines, their environment dependencies (e.g., Python packages, local files, environment variables) must be available for the code to run. To address this problem, you can (1) prepare your dependencies on the cluster in advance using the Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`, or (2) use Ray's :ref:`runtime environments <runtime-environments>` to install them on the fly.
 当 Ray 在远程机器上执行task 和 actor时，它们的环境依赖项（例如 Python 包、本地文件、环境变量）必须可用才能运行代码。为了解决这个问题，您可以 (1) 使用 Ray :ref:`Cluster Launcher <vm-cluster-quick-start>`，或者 (2) 使用 Ray 的 :ref:`运行时环境 <runtime-environments>` 动态安装它们。
 
 请参阅 :ref:`环境依赖关系的用户指南 <handling_dependencies>`。

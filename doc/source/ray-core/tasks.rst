@@ -263,22 +263,16 @@ Ray 允许在单独的 Python worker 上异步执行任意函数。此类函数�
 调度
 ----------
 
-For each task, Ray will choose a node to run it
-and the scheduling decision is based on a few factors like
+对于每个任务，Ray 将选择一个节点来运行它，并且调度决策基于一些因素，如 
 
-:ref:`the specified scheduling strategy <ray-scheduling-strategies>`
-and :ref:`locations of task arguments <ray-scheduling-locality>`.
-See :ref:`Ray scheduling <ray-scheduling>` for more details.
-
-对于每个任务，Ray 将选择一个节点来运行它，并且调度决策基于一些因素，例如 
-:ref:`任务的资源需求 <ray-scheduling-resources>`，
 :ref:`指定的调度策略 <ray-scheduling-strategies>`
-和 :ref:`任务参数的位置 <ray-scheduling-locality>`。有关更多详细信息，请参阅 :ref:`Ray 调度 <ray-scheduling>`。
+和 :ref:`任务参数的位置 <ray-scheduling-locality>`。
+
+有关更多详细信息，请参阅 :ref:`Ray 调度 <ray-scheduling>`。
 
 容错
 ---------------
 
-due to system failures and specified application-level failures. 
 默认情况下，Ray 将 :ref:`重试 <task-retries>` 由于系统故障和指定的应用程序级故障而失败的任务。
 你可以通过在 :func:`ray.remote() <ray.remote>` 和 :meth:`.options() <ray.remote_function.RemoteFunction.options>` 中设置 ``max_retries`` 和 ``retry_exceptions`` 选项来更改此行为。
 参考 :ref:`Ray 容错 <fault-tolerance>` 以获取更多详细信息。

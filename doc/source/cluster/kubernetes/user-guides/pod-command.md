@@ -33,7 +33,7 @@
           args: ["456"]
 ```
 
-* Ray 头 Pod
+* Ray  Head Pod
     * `spec.containers.0.command` 硬编码为 `["/bin/bash", "-lc", "--"]`.
     * `spec.containers.0.args` 包含两部分：
         * (第 1 部分) **用户指定命令**: 将来自 RayCluster 的 `headGroupSpec.template.spec.containers.0.command` 和  `headGroupSpec.template.spec.containers.0.args` 用字符串串联。

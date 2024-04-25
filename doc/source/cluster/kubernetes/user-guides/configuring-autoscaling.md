@@ -44,7 +44,7 @@ Autoscaler 利用逻辑资源请求（如 `@ray.remote` 和 `ray status` 的展�
 
 * Autoscaler 还通过删除空闲 worker Pod 来缩小集群规模。
 如果它找到空闲 worker Pod，它会减少 RayCluster CR 字段中 `replicas` 的计数，并将识别出的 Pod 添加到 CR  字段。
-然后，KubeRay 操作员删除`workersToDelete` 字段中的 Pod。
+然后，KubeRay Operator 删除`workersToDelete` 字段中的 Pod。
 
 ## 快速开始
 
@@ -84,7 +84,7 @@ kubectl get configmaps
 # ...
 ```
 
-RayCluster 有一个头 Pod 和零个 worker Pod。 head Pod 有两个容器：Ray head 容器和 Ray Autoscaler sidecar 容器。
+RayCluster 有一个 Head Pod 和零个 worker Pod。 head Pod 有两个容器：Ray head 容器和 Ray Autoscaler sidecar 容器。
 此外， [ray-cluster.autoscaler.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.autoscaler.yaml) 包含一个名为 `ray-example` 的 ConfigMap，其中包含两个 Python 脚本：`detached_actor.py` 和 `terminate_detached_actor.py`。
 
 * `detached_actor.py` 是一个 Python 脚本，用于创建需要 1 个 CPU 的独立 Actor。

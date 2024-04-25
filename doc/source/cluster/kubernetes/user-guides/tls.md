@@ -96,8 +96,8 @@ Ray 头和 worker Pod生成私钥和自签名证书文件 (`tls.key` 和 `tls.cr
 3. 使用证书颁发机构 ( `ca.key` ) 的私钥和之前生成的 CSR 生成自签名证书 ( `tls.crt`)。
 
 `gencert_head.sh` 和 `gencert_worker.sh` 的唯一不同是在 `csr.conf` 和 `cert.conf` 的 `[ alt_names ]` 部分。
-Worker Pod 使用头 Kubernetes Service 的完全限定域名 (FQDN) 与头 Pod 建立连接。
-因此，头 Pod 的 `[alt_names]` 部分需要包含头 Kubernetes Service 的 FQDN。顺便说一句，头 Pod 用 `$POD_IP` 来与 worker Pod 进行通信。
+Worker Pod 使用头 Kubernetes Service 的完全限定域名 (FQDN) 与 Head Pod 建立连接。
+因此， Head Pod 的 `[alt_names]` 部分需要包含头 Kubernetes Service 的 FQDN。顺便说一句， Head Pod 用 `$POD_IP` 来与 worker Pod 进行通信。
 
 ```sh
 # gencert_head.sh

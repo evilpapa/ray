@@ -19,7 +19,7 @@
 kubectl logs $KUBERAY_OPERATOR_POD -n $YOUR_NAMESPACE | tee operator-log
 ```
 
-使用此命令将操作员的日志重定向到名为 `operator-log`。然后在文件中查找错误。
+使用此命令将Operator 的日志重定向到名为 `operator-log`。然后在文件中查找错误。
 
 ### 方法 2: 检查自定义资源状态
 
@@ -50,7 +50,7 @@ kubectl port-forward $RAY_POD -n $YOUR_NAMESPACE --address 0.0.0.0 8265:8265
 
 ### 方法 5: Ray 状态 CLI
 
-您可以使用头 Pod 上的 [Ray State CLI](state-api-cli-ref) 检查 Ray Serve 应用程序的状态。
+您可以使用 Head Pod 上的 [Ray State CLI](state-api-cli-ref) 检查 Ray Serve 应用程序的状态。
 
 ```bash
 # Log into the head Pod

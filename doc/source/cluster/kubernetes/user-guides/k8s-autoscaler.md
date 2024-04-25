@@ -1,5 +1,5 @@
 (ray-k8s-autoscaler-comparison)=
-# 高级）了解 Kubernetes 背景下的 Ray Autoscaler
+# （高级）了解 Kubernetes 背景下的 Ray Autoscaler
 我们描述了 Ray 自动缩放器和 Kubernetes 生态系统中其他自动缩放器之间的关系。
 
 ## Ray Autoscaler 与 Horizo​​ntal Pod Autoscaler

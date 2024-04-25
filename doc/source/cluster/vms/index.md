@@ -37,7 +37,7 @@ The Ray docs present all the information you need to start running Ray workloads
             :outline:
             :expand:
 
-            Get Started with Ray on Cloud VMs
+            在虚拟机安装 Ray
     
     .. grid-item-card::
 

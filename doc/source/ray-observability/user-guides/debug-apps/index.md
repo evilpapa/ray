@@ -1,8 +1,8 @@
 (observability-debug-apps)=
 
-# Debugging Applications
+# 调试应用
 
-These guides help you perform common debugging or optimization tasks for your distributed application on Ray:
+南可帮助您在 Ray 上对分布式应用程序执行常见的调试或优化任务：
 * {ref}`observability-general-debugging`
 * {ref}`ray-core-mem-profiling`
 * {ref}`observability-debug-hangs`

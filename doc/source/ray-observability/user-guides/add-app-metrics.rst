@@ -1,18 +1,18 @@
 .. _application-level-metrics:
 
-Adding Application-Level Metrics
+添加应用级指标
 --------------------------------
 
-Ray provides a convenient API in :ref:`ray.util.metrics <custom-metric-api-ref>` for defining and exporting custom metrics for visibility into your applications.
-Three metrics are supported: Counter, Gauge, and Histogram.
-These metrics correspond to the same `Prometheus metric types <https://prometheus.io/docs/concepts/metric_types/>`_.
-Below is a simple example of an Actor that exports metrics using these APIs:
+Ray 在 :ref:`ray.util.metrics <custom-metric-api-ref>` 中提供了一个方便的 API ，用于定义和导出自定义指标，以便了解您的应用程序。
+支持三种指标：计数器、仪表和直方图。
+这些指标对应相同的 `Prometheus metric types <https://prometheus.io/docs/concepts/metric_types/>`_ 。
+下面是一个使用这些 API 导出指标的 Actor 的简单示例：
 
 .. literalinclude:: ../doc_code/metrics_example.py
    :language: python
 
-While the script is running, the metrics are exported to ``localhost:8080`` (this is the endpoint that Prometheus would be configured to scrape).
-Open this in the browser. You should see the following output:
+脚本运行时，指标将导出到 ``localhost:8080`` （这是 Prometheus 配置为抓取的端点）。
+在浏览器中打开它。您应该看到以下输出：
 
 .. code-block:: none
 
@@ -30,4 +30,4 @@ Open this in the browser. You should see the following output:
   # TYPE ray_num_requests_total counter
   ray_num_requests_total{Component="core_worker",Version="3.0.0.dev0",actor_name="my_actor"} 2.0
 
-Please see :ref:`ray.util.metrics <custom-metric-api-ref>` for more details.
+参阅 :ref:`ray.util.metrics <custom-metric-api-ref>` 了解更多详细信息。

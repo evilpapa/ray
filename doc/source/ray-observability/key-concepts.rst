@@ -14,7 +14,7 @@ Ray 提供基于 Web 的仪表板来帮助用户监控和调试 Ray 应用程序
 
 Ray 状态
 ----------
-Ray 状态是指各种 Ray 实体（例如，Actor、Task、Object 等）的状态。 Ray 2.0及以后版本支持:ref:`通过通过 CLI 和 Python API 查询实体的状态 <observability-programmatic>`
+Ray 状态是指各种 Ray 实体（例如，Actor、Task、Object 等）的状态。 Ray 2.0及以后版本支持 :ref:`通过通过 CLI 和 Python API 查询实体的状态 <observability-programmatic>`
 
 以下命令列出集群中的所有 Actor：
 

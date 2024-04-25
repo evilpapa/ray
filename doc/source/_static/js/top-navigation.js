@@ -49,7 +49,7 @@ topNavContentLeft.append(linkRay)
 
 //-- The Get started link
 getStartedLink = document.createElement("a")
-getStartedLink.innerText = "Get started"
+getStartedLink.innerText = "开始"
 getStartedLink.setAttribute("href", getNavURL("ray-overview/getting-started.html"))
 if (is_get_started) {
     getStartedLink.style.borderBottom = "2px solid #007bff"
@@ -64,7 +64,7 @@ topNavContentLeft.append(getStartedLink)
 
 //-- The Use Cases link
 useCasesLink = document.createElement("a")
-useCasesLink.innerText = "Use cases"
+useCasesLink.innerText = "使用示例"
 useCasesLink.setAttribute("href", getNavURL("ray-overview/use-cases.html"))
 if (is_use_cases) {
     useCasesLink.style.borderBottom = "2px solid #007bff"
@@ -73,7 +73,7 @@ topNavContentLeft.append(useCasesLink)
 
 //-- Example gallery link
 let examplesLink = document.createElement("a")
-examplesLink.innerText = "Examples"
+examplesLink.innerText = "示例"
 // since we surgically remove the nav bar for the examples, we need to resort to a trick.
 let examplesURL = getNavURL("ray-overview/use-cases.html").replace("use-cases.html", "examples.html").replace(/#$/, "")
 examplesLink.setAttribute("href", examplesURL)
@@ -101,7 +101,7 @@ topNavContentLeft.append(librariesMenu)
 
 //-- The Documentation link
 documentationLink = document.createElement("a")
-documentationLink.innerText = "Docs"
+documentationLink.innerText = "文档"
 documentationLink.setAttribute("href", getNavURL("ray-overview/index.html").replace("ray-overview/index.html", "index.html"))
 if (is_documentation) {
     documentationLink.style.borderBottom = "2px solid #007bff"
@@ -111,7 +111,7 @@ topNavContentLeft.append(documentationLink)
 //-- The Resources menu
 learnMenu = document.createElement("div")
 learnMenu.setAttribute("class", "menu")
-learnMenu.innerHTML = "<a href='#'>Resources" + downCaret + "</a>"
+learnMenu.innerHTML = "<a href='#'>资源" + downCaret + "</a>"
 learnList = document.createElement("ul")
 learnList.innerHTML += "<li><a href='https://discuss.ray.io/'><span class='primary'>Discussion Forum</span><span class='secondary'>Get your Ray questions answered</span></a></li>"
 learnList.innerHTML += "<li><a href='https://github.com/ray-project/ray-educational-materials'><span class='primary'>Training</span><span class='secondary'>Hands-on learning</span></a></li>"

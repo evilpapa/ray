@@ -27,7 +27,7 @@ kind create cluster
 
 ### 步骤 2: 安装 KubeRay operator
 
-按照 [本文档](kuberay-operator-deploy) 过 Helm 存储库安装最新稳定的 KubeRay 操作员。
+按照 [本文档](kuberay-operator-deploy) 过 Helm 存储库安装最新稳定的 KubeRay Operator 。
 
 ### 步骤 3: 创建具有 `SYS_PTRACE` 功能的 RayCluster
 

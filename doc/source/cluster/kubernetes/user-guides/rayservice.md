@@ -111,7 +111,7 @@ KubeRay 根据 RayService YAML 中定义的 `spec.rayClusterConfig` 创建 自�
 
 但是，在零停机升级过程中，会创建一个新的 RayCluster，并为新的 RayCluster 创建一个新的头服务。
 如果不使用 `rayservice-sample-head-svc`，则需要更新入口配置以指向新的头服务。
-但是，如果您使用 `rayservice-sample-head-svc`，KubeRay 会自动更新选择器以指向新的头 Pod，从而无需更新入口配置。
+但是，如果您使用 `rayservice-sample-head-svc`，KubeRay 会自动更新选择器以指向新的 Head Pod，从而无需更新入口配置。
 
 
 > 注意: 默认端口及其定义。
@@ -274,7 +274,7 @@ curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:800
 如果 KubeRay 认为 RayCluster 不健康，它也会触发新的 RayCluster 准备。
 在 RayService 中，KubeRay 可以在两种可能的情况下将 RayCluster 标记为不健康。
 
-* 情况 1: KubeRay operator 无法连接到头 Pod 上的仪表板代理的时间超过 `deploymentUnhealthySecondThreshold` 参数定义的持续时间。 默认值和示例 YAML 文件中 `deploymentUnhealthySecondThreshold` 的值均为 300 秒。
+* 情况 1: KubeRay operator 无法连接到 Head Pod 上的仪表板代理的时间超过 `deploymentUnhealthySecondThreshold` 参数定义的持续时间。 默认值和示例 YAML 文件中 `deploymentUnhealthySecondThreshold` 的值均为 300 秒。
 
 * 情况 2: 如果服务应用的状态 `DEPLOY_FAILED` 或 `UNHEALTHY` 的持续时间超过 `serviceUnhealthySecondThreshold` 参数，KubeRay operator 会将 RayCluster 标记为不健康。默认值和示例 YAML 文件中 `serviceUnhealthySecondThreshold` 的值均为 900 秒。
 

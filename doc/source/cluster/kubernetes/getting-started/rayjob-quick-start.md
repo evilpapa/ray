@@ -98,7 +98,7 @@ kubectl get rayjobs.ray.io rayjob-sample -o json | jq '.status.jobStatus'
 KubeRay operator 将创建由自定义资源定义的 RayCluster `rayClusterSpec` 指定，以及用于向 RayCluster 提交 Ray 作业的 Kubernetes 作业。 
 Ray job 在 RayJob 自定义资源的 `entrypoint` 字段定义。
 在此示例中， `entrypoint` 是 `python /home/ray/samples/sample_code.py`，
-`sample_code.py` 存储在 Kubernetes Config 并挂载在 RayCluster 头 Pod 的 Python 脚本。
+`sample_code.py` 存储在 Kubernetes Config 并挂载在 RayCluster  Head Pod 的 Python 脚本。
 由于默认  `shutdownAfterJobFinishes` 值为false，因此作业完成后不会删除 RayCluster。
 
 ## 步骤 5: 检查 Ray Job 的输出

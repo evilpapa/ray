@@ -52,7 +52,7 @@ kubectl get rayclusters
 # raycluster-kuberay   1                 1                   ready    72s
 ```
 
-KubeRay operator 将检测 RayCluster 对象。然后，操作员将通过创建头 Pod 和 worker Pod 来启动 Ray 集群。要查看 Ray 集群的 pod，请运行以下命令：
+KubeRay operator 将检测 RayCluster 对象。然后，Operator 将通过创建 Head Pod 和 worker Pod 来启动 Ray 集群。要查看 Ray 集群的 pod，请运行以下命令：
 
 ```sh
 # View the pods in the RayCluster named "raycluster-kuberay"
@@ -74,7 +74,7 @@ kubectl get pods --selector=ray.io/cluster=raycluster-kuberay
 ### 方法1：在 head Pod 中执行 Ray 作业
 
 试验 RayCluster 最直接的方法是直接在 head pod 中执行。
-首先，识别 RayCluster 的头 pod：
+首先，识别 RayCluster 的 Head Pod：
 
 ```sh
 export HEAD_POD=$(kubectl get pods --selector=ray.io/node-type=head -o custom-columns=POD:metadata.name --no-headers)

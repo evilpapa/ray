@@ -138,7 +138,7 @@ Ray 还可以将此元数据写入外部 Redis，以实现可靠性和高可用�
 # deployment-ray-head-xxxxx                        1/1     Running   0          XXs
 ```
 
-我们现在可以在之前识别的头 Pod 上执行 Ray 程序。以下命令连接到 Ray Cluster，然后终止 Ray 程序。
+我们现在可以在之前识别的 Head Pod 上执行 Ray 程序。以下命令连接到 Ray Cluster，然后终止 Ray 程序。
 
 ```
 # Substitute your output from the last cell in place of "deployment-ray-head-xxxxx"

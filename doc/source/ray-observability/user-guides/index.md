@@ -2,9 +2,9 @@
 
 # 用户指引
 
-These guides help you monitor and debug your Ray applications and clusters.
+这些指南可帮助您监控和调试 Ray 应用程序和集群。
 
-The guides include:
+指南包括：
 * {ref}`observability-debug-apps`
 * {ref}`observability-programmatic`
 * {ref}`configure-logging`

@@ -42,7 +42,7 @@ kubectl port-forward $RAY_POD -n $YOUR_NAMESPACE --address 0.0.0.0 8265:8265
 
 ### 方法 5: Ray State CLI
 
-您可以使用头 Pod 上的 [Ray State CLI](state-api-cli-ref) 检查 Ray Serve 应用程序的状态。
+您可以使用 Head Pod 上的 [Ray State CLI](state-api-cli-ref) 检查 Ray Serve 应用程序的状态。
 
 ```bash
 # Log into the head Pod

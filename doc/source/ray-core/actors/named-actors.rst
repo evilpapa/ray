@@ -1,4 +1,4 @@
-命名的 Actor
+具名 Actor
 ============
 
 一个 Actor 可以在它的 :ref:`namespace <namespaces-guide>` 赋予一个唯一的名字。

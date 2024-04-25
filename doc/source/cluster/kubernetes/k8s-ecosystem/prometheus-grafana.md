@@ -342,7 +342,7 @@ kubectl port-forward --address 0.0.0.0 deployment/prometheus-grafana -n promethe
   * 点击 "Upload JSON file".
   * 创建 JSON 文件。
     * 情况 1: 如果您使用的是 Ray 2.5.0，则可以使用 [config/grafana/default_grafana_dashboard.json](https://github.com/ray-project/kuberay/blob/master/config/grafana/default_grafana_dashboard.json)。
-    * 情况 2: 否则，您应该从头 Pod 的 `/tmp/ray/session_latest/metrics/grafana/dashboards/` 路径导入 `default_grafana_dashboard.json` 文件。你可以使用 `kubectl cp` 拷贝头 Pod 的文件到本地机器。
+    * 情况 2: 否则，您应该从 Head Pod 的 `/tmp/ray/session_latest/metrics/grafana/dashboards/` 路径导入 `default_grafana_dashboard.json` 文件。你可以使用 `kubectl cp` 拷贝 Head Pod 的文件到本地机器。
   * 点击 "Import".
 
 * TODO: 请注意，手动导入仪表板并不理想。我们应该找到一种自动导入仪表板的方法。

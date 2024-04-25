@@ -51,7 +51,7 @@ Ray 可以像任何其他 worker 节点一样在头节点上调度task 和 actor
 自动缩放
 -----------
 
-*Ray 自动扩缩器* 是运行在 :ref:`头节点 <cluster-head-node>` 的一个进程（如果使用 :ref:`Kubernetes <kuberay-index>`，则作为头 pod 中的 sidecar 容器运行）。
+*Ray 自动扩缩器* 是运行在 :ref:`头节点 <cluster-head-node>` 的一个进程（如果使用 :ref:`Kubernetes <kuberay-index>`，则作为 Head Pod 中的 sidecar 容器运行）。
 当 Ray 工作负载的资源需求超过集群的当前容量时，自动扩缩器将尝试增加 worker 节点的数量。当 worker 节点处于空闲状态时，自动扩缩器将从集群中删除 worker 节点。
 
 重要的是要了解，自动缩放器仅对任务和 actor 资源请求做出反应，而不是应用程序指标或物理资源利用率。

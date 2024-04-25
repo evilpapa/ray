@@ -133,6 +133,6 @@ kubectl delete -n pod-security -f ray-cluster.pod-security.yaml
 # configmap "xgboost-example" deleted
 ```
 
-头 Pod 和 worker Pod 将按照 `ray-cluster.pod-security.yaml` 创建。
+ Head Pod 和 worker Pod 将按照 `ray-cluster.pod-security.yaml` 创建。
 首先，我们登录 head Pod，运行 XGBoost 示例脚本，并在仪表板中检查作业状态。
  接下来，我们用来 `pip` 安装 Python 依赖项（即 `jsonpatch`），`pip` 命令的退出代码应该为 0。

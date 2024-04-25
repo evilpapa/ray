@@ -5,7 +5,7 @@
 
 本页介绍了 Ray 中的内存管理工作原理。
 
-另请参阅 :ref:`Debugging Out of Memory <troubleshooting-out-of-memory>` 以了解如何排除内存不足问题。
+另请参阅 :ref:`OOM 调试 <troubleshooting-out-of-memory>` 以了解如何排除内存不足问题。
 
 概念
 ~~~~~~~~
@@ -24,7 +24,6 @@ Ray 系统内存：Ray 内部使用的内存
 应用内存：这是应用程序使用的内存
   - **工作堆**：内存用于你的应用（如，Python 代码或 TensorFlow），最好通过 ``top`` 等命令中的应用程序的 *驻留集大小 (RSS)* 减去其 *共享内存使用 (SHR)* 来测量。你需要减去 *SHR* 的原因是，对象存储共享内存由操作系统报告为与每个 worker 共享。不减去 *SHR* 会导致内存使用量重复计数。
   - **对象存储内存**：当你的程序通过 ``ray.put`` 创建对象并通过远程函数返回值时使用的内存。对象是引用计数的，当它们超出范围时会被驱逐。每个节点上都运行一个对象存储服务器。默认情况下，Ray 在启动实例时会保留可用内存的 30%。对象存储的大小可以通过 `--object-store-memory <https://docs.ray.io/en/master/cluster/cli.html#cmdoption-ray-start-object-store-memory>`_ 控制。默认情况下，内存分配给 Linux 的 ``/dev/shm``（共享内存）。对于 MacOS，Ray 使用 ``/tmp``（磁盘），这可能会影响性能。在 Ray 1.3+ 中，如果对象存储填满，对象会被 :ref:`溢出到磁盘 <object-spilling>`。
-  - **Object store shared memory**: memory used when your application reads objects via ``ray.get``. Note that if an object is already present on the node, this does not cause additional allocations. This allows large objects to be efficiently shared among many actors and tasks.
   - **对象存储共享内存**：当你的程序通过 ``ray.get`` 读取对象时使用的内存。请注意，如果对象已经存在于节点上，则不会导致额外的分配。这允许大对象在许多 actor 和任务之间高效共享。
 
 ObjectRef 对象引用

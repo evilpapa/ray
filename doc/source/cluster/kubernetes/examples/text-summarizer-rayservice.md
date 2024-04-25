@@ -10,7 +10,7 @@ Follow [aws-eks-gpu-cluster.md](kuberay-eks-gpu-cluster-setup) or [gcp-gke-gpu-c
 
 ## Step 2: Install KubeRay operator
 
-按照 [本文档](kuberay-operator-deploy) 过 Helm 存储库安装最新稳定的 KubeRay 操作员。
+按照 [本文档](kuberay-operator-deploy) 过 Helm 存储库安装最新稳定的 KubeRay Operator 。
 Please note that the YAML file in this example uses `serveConfigV2`, which is supported starting from KubeRay v0.6.0.
 
 ## Step 3: Install a RayService

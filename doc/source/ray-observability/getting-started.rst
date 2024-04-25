@@ -167,30 +167,30 @@ Ray 状态
         <iframe width="560" height="315" src="https://www.youtube.com/embed/eqXfwM641a4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
 
-查看您的常规 Serve 配置、Serve 应用程序列表，如果您配置了 :ref:`Grafana 和 Prometheus <observability-visualization-setup>`， 还可以查看 Serve 应用程序的高级指标。单击服务应用程序名称，进入服务应用程序详细信息页面。
+查看您的常规 Serve 配置、Serve 应用程序列表，如果您配置了 :ref:`Grafana 和 Prometheus <observability-visualization-setup>` ， 还可以查看 Serve 应用程序的高级指标。单击服务应用程序名称，进入服务应用程序详细信息页面。
 
 提供应用程序详细信息页面
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-查看 Serve 应用程序的配置和元数据以及 :ref:`Serve 部署和副本 <serve-key-concepts-deployment>`的列表。
+查看 Serve 应用程序的配置和元数据以及 :ref:`Serve 部署和副本 <serve-key-concepts-deployment>` 的列表。
 单击部署的展开按钮以查看副本。
 
-每个部署都有两个可用的操作。您可以查看部署配置，如果您配置了 :ref:`Grafana 和 Prometheus <observability-configure-manage-dashboard>`，则可以打开 Grafana 仪表板，其中包含有关该部署的详细指标。
+每个部署都有两个可用的操作。您可以查看部署配置，如果您配置了 :ref:`Grafana 和 Prometheus <observability-configure-manage-dashboard>` ，则可以打开 Grafana 仪表板，其中包含有关该部署的详细指标。
 
-对于每个副本，有两个可用的操作。您可以查看该副本的日志，如果您配置了 :ref:`Grafana 和 Prometheus <observability-visualization-setup>`，则可以打开 Grafana 仪表板，其中包含有关该副本的详细指标。单击副本名称，进入服务副本详细信息页面。
+对于每个副本，有两个可用的操作。您可以查看该副本的日志，如果您配置了 :ref:`Grafana 和 Prometheus <observability-visualization-setup>` ，则可以打开 Grafana 仪表板，其中包含有关该副本的详细指标。单击副本名称，进入服务副本详细信息页面。
 
 
 服务副本详细信息页面
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-此页面显示有关服务副本的元数据、有关副本的高级指标，如果您配置了 :ref:`Grafana 和 Prometheus <observability-visualization-setup>`，以及该副本已完成 :ref:`Tasks <core-key-concepts>` 的历史记录。
+此页面显示有关服务副本的元数据、有关副本的高级指标，如果您配置了 :ref:`Grafana 和 Prometheus <observability-visualization-setup>` ，以及该副本已完成 :ref:`Tasks <core-key-concepts>` 的历史记录。
 
 
 Serve 指标
 ~~~~~~~~~~~~~
 
-Ray Serve 导出各种时间序列指标，以帮助您了解 Serve 应用程序随时间变化的状态。 在 :ref:`此处 <serve-production-monitoring-metrics>`查找有关这些指标的更多详细信息。
-要存储和可视化这些指标，请按照 :ref:`这里 <observability-visualization-setup>`说明设置 Prometheus 和 Grafana 。
+Ray Serve 导出各种时间序列指标，以帮助您了解 Serve 应用程序随时间变化的状态。 在 :ref:`此处 <serve-production-monitoring-metrics>` 查找有关这些指标的更多详细信息。
+要存储和可视化这些指标，请按照 :ref:`这里 <observability-visualization-setup>` 说明设置 Prometheus 和 Grafana 。
 
 这些指标可在 Ray Dashboard 的“服务”页面和“服务副本详细信息”页面中找到。
 它们也可以作为 Grafana 仪表板进行访问。
@@ -236,7 +236,7 @@ Ray 启动时覆盖该 `RAY_DASHBOARD_MAX_ACTORS_TO_CACHE` 环境变量。
 Actor 性能
 ~~~~~~~~~~~~~~~
 
-在正在运行的 Actor 上运行分析器。有关更多详细信息，请参阅 :ref:`Dashboard Profiling <dashboard-profiling>` 。
+在正在运行的 Actor 上运行分析器。有关更多详细信息，请参阅 :ref:`Dashboard Profiling <dashboard-profiling>`  。
 
 Actor 详情页
 ~~~~~~~~~~~~~~~~~
@@ -297,7 +297,7 @@ Metrics 视图提供 Ray 发出的时间序列指标的可视化。
 .. image:: https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/cluster_page.png
     :align: center
 
-此外，用户还可以从 :ref:`集群视图 <dash-node-view>`中查看硬件利用率的快照，，该视图提供了整个 Ray 集群的资源使用情况概览。
+此外，用户还可以从 :ref:`集群视图 <dash-node-view>` 中查看硬件利用率的快照，，该视图提供了整个 Ray 集群的资源使用情况概览。
 
 .. _dash-workflow-resource-utilization:
 
@@ -308,7 +308,7 @@ Ray 要求用指定 :ref:`资源 <logical-resources>` 数量，以及 Tasks 和 
 这些值用于调度，但可能并不总是与实际资源利用率（物理资源利用率）匹配。
 
 - 从 :ref:`指标视图 <dash-metrics-view>`中查看一段时间内逻辑和物理资源的利用率。
-- 物理资源利用率（CPU、GPU、内存、磁盘、网络）的快照也可以从 :ref:`集群视图 <dash-node-view>`获得。
+- 物理资源利用率（CPU、GPU、内存、磁盘、网络）的快照也可以从 :ref:`集群视图 <dash-node-view>` 获得。
 
 .. image:: https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/logical_resource.png
     :align: center
