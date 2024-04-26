@@ -1,19 +1,19 @@
 .. _observability-programmatic:
 
-Monitoring with the CLI or SDK
+使用 CLI 或 SDK 进行监控
 ===============================
 
-Monitoring and debugging capabilities in Ray are available through a CLI or SDK.
+Ray 中的监控和调试功能可通过 CLI 或 SDK 获得。
 
 
-CLI command ``ray status`` 
+CLI 命令 ``ray status`` 
 ----------------------------
-You can monitor node status and resource usage by running the CLI command, ``ray status``, on the head node. It displays
+您可以通过在头节点上运行 CLI 命令 ``ray status``来监控节点状态和资源使用情况。它显示了
 
-- **Node Status**: Nodes that are running and autoscaling up or down. Addresses of running nodes. Information about pending nodes and failed nodes.
-- **Resource Usage**: The Ray resource usage of the cluster. For example, requested CPUs from all Ray Tasks and Actors. Number of GPUs that are used.
+- **节点状态**: 正在运行并自动向上或向下扩展的节点。运行节点的地址。有关待处理节点和失败节点的信息。
+- **资源使用情况**: Ray 集群的资源使用情况。例如，从所有 Ray 任务和 Actor 请求的 CPU。使用的 GPU 数量。
 
-Following is an example output:
+以下是示例输出：
 
 .. code-block:: shell
 
@@ -39,31 +39,31 @@ Following is an example output:
    Demands:
     (no resource demands)
 
-When you need more verbose info about each node, run ``ray status -v``. This is helpful when you need to investigate why particular nodes don't autoscale down.
+当您需要有关每个节点的更多详细信息时，请运行 ``ray status -v``。 当您需要调查为什么特定节点不自动缩小规模时，这非常有用。
 
 
 .. _state-api-overview-ref:
 
-Ray State CLI and SDK
+Ray 状态 CLI 和 SDK
 ----------------------------
 
-.. tip:: Provide feedback on using Ray state APIs - `feedback form <https://forms.gle/gh77mwjEskjhN8G46>`_!
+.. tip:: 提供有关使用 Ray state API 的反馈 - `反馈表 <https://forms.gle/gh77mwjEskjhN8G46>`_!
 
-Use Ray State APIs to access the current state (snapshot) of Ray through the CLI or Python SDK (developer APIs).
-
-.. note::
-
-    This feature requires a full installation of Ray using ``pip install "ray[default]"``. This feature also requires that the dashboard component is available. The dashboard component needs to be included when starting the Ray Cluster, which is the default behavior for ``ray start`` and ``ray.init()``.
+使用 Ray State API 通过 CLI 或 Python SDK（开发人员 API）访问 Ray 的当前状态（快照）。
 
 .. note::
 
-    State API CLI commands are :ref:`stable <api-stability-stable>`, while Python SDKs are :ref:`DeveloperAPI <developer-api-def>`. CLI usage is recommended over Python SDKs.
+    此功能需要使用 ``pip install "ray[default]"``. 完整安装 Ray 。此功能还要求仪表板组件可用。启动 Ray Cluster 时需要包含仪表板组件，这是 `ray start`` 和 ``ray.init()`` 的默认行为。
+
+.. note::
+
+    State API CLI 命令是 :ref:`stable <api-stability-stable>`，而 Python SDK 是 :ref:`DeveloperAPI <developer-api-def>`。建议使用 CLI 而不是 Python SDK。
 
 
-Get started
+开始
 ~~~~~~~~~~~
 
-This example uses the following script that runs two Tasks and creates two Actors.
+此示例使用以下脚本运行两个任务并创建两个 Actor。
 
 .. testcode::
     :hide:
@@ -100,7 +100,7 @@ This example uses the following script that runs two Tasks and creates two Actor
     # Wait for the tasks to be submitted.
     time.sleep(2)
 
-See the summarized states of tasks. If it doesn't return the output immediately, retry the command.
+查看任务的汇总状态。如果它没有立即返回输出，请重试该命令。
 
 .. tabs::
 
@@ -137,7 +137,7 @@ See the summarized states of tasks. If it doesn't return the output immediately,
 
             {'cluster': {'summary': {'task_running_300_seconds': {'func_or_class_name': 'task_running_300_seconds', 'type': 'NORMAL_TASK', 'state_counts': {'RUNNING': 2}}, 'Actor.__init__': {'func_or_class_name': 'Actor.__init__', 'type': 'ACTOR_CREATION_TASK', 'state_counts': {'FINISHED': 2}}}, 'total_tasks': 2, 'total_actor_tasks': 0, 'total_actor_scheduled': 2, 'summary_by': 'func_name'}}
 
-List all Actors.
+列出所有 Actors。
 
 .. tabs::
 
@@ -172,7 +172,7 @@ List all Actors.
             [ActorState(actor_id='...', class_name='Actor', state='ALIVE', job_id='01000000', name='', node_id='...', pid=..., ray_namespace='...', serialized_runtime_env=None, required_resources=None, death_cause=None, is_detached=None, placement_group_id=None, repr_name=None), ActorState(actor_id='...', class_name='Actor', state='ALIVE', job_id='01000000', name='', node_id='...', pid=..., ray_namespace='...', serialized_runtime_env=None, required_resources=None, death_cause=None, is_detached=None, placement_group_id=None, repr_name=None)]
 
 
-Get the state of a single Task using the get API.
+使用 get API 获取单个任务的状态。
 
 .. tabs::
 
@@ -205,7 +205,7 @@ Get the state of a single Task using the get API.
             # In this case, 31405554844820381c2f0f8501000000
             print(get_actor(id=<ACTOR_ID>))
 
-Access logs through the ``ray logs`` API.
+通过 ``ray logs``  API 访问日志。
 
 .. tabs::
 
@@ -235,30 +235,30 @@ Access logs through the ``ray logs`` API.
             for line in get_log(actor_id=<ACTOR_ID>):
                 print(line)
 
-Key Concepts
+关键概念
 ~~~~~~~~~~~~~
-Ray State APIs allow you to access **states** of **resources** through **summary**, **list**, and **get** APIs. It also supports **logs** API to access logs.
+Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **资源** 的 **状态**。 它还支持 **logs** API 来访问日志。
 
-- **states**: The state of the cluster of corresponding resources. States consist of immutable metadata (e.g., Actor's name) and mutable states (e.g., Actor's scheduling state or pid).
-- **resources**: Resources created by Ray. E.g., actors, tasks, objects, placement groups, and etc.
-- **summary**: API to return the summarized view of resources.
-- **list**: API to return every individual entity of resources.
-- **get**: API to return a single entity of resources in detail.
-- **logs**: API to access the log of Actors, Tasks, Workers, or system log files.
+- **states**: 对应资源的集群状态。状态由不可变元数据（例如，Actor 的名称）和可变状态（例如，Actor 的调度状态或 pid）组成。
+- **resources**: Ray 创建的资源。例如，actor、任务、对象、占位组等。
+- **summary**: 返回资源汇总视图的 API。
+- **list**: 返回每个资源实体的 API。
+- **get**: 返回单个资源实体详细信息的 API。
+- **logs**: 用于访问 Actor、任务、Workers 日志或系统日志文件的 API。
 
 
 
-User guides
+用户指南
 ~~~~~~~~~~~~~
 
-Getting a summary of states of entities by type
+按类型获取实体状态的摘要
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Return the summarized information of the given Ray entity (Objects, Actors, Tasks).
-It is recommended to start monitoring states through summary APIs first. When you find anomalies
-(e.g., Actors running for a long time, Tasks that are not scheduled for a long time),
-you can use ``list`` or ``get`` APIs to get more details for an individual abnormal entity.
+返回给定 Ray 实体（对象、Actor、任务）的汇总信息。
+建议首先通过摘要 API 开始监控状态。
+当您发现异常情况时（例如，长时间运行的Actor、长时间未调度的任务），
+您可以使用 ``list`` 或 ``get`` API 来获取单个异常实体的更多详细信息。
 
-**Summarize all actors**
+**汇总所有 actor**
 
 .. tabs::
 
@@ -279,7 +279,7 @@ you can use ``list`` or ``get`` APIs to get more details for an individual abnor
 
             {'cluster': {'summary': {'Actor': {'class_name': 'Actor', 'state_counts': {'ALIVE': 2}}}, 'total_actors': 2, 'summary_by': 'class'}}
 
-**Summarize all tasks**
+**汇总所有 task**
 
 .. tabs::
 
@@ -300,12 +300,11 @@ you can use ``list`` or ``get`` APIs to get more details for an individual abnor
 
             {'cluster': {'summary': {'task_running_300_seconds': {'func_or_class_name': 'task_running_300_seconds', 'type': 'NORMAL_TASK', 'state_counts': {'RUNNING': 2}}, 'Actor.__init__': {'func_or_class_name': 'Actor.__init__', 'type': 'ACTOR_CREATION_TASK', 'state_counts': {'FINISHED': 2}}}, 'total_tasks': 2, 'total_actor_tasks': 0, 'total_actor_scheduled': 2, 'summary_by': 'func_name'}}
 
-**Summarize all objects**
+**汇总所有对象**
 
 .. note::
 
-    By default, objects are summarized by callsite. However, callsite is not recorded by Ray by default.
-    To get callsite info, set env variable `RAY_record_ref_creation_sites=1` when starting the Ray Cluster
+    默认情况下，对象按调用点进行汇总。但是，Ray 默认情况下不记录调用点。要获取调用点信息，请在启动 Ray 集群时设置环境变量 `RAY_record_ref_creation_sites=1` 
     RAY_record_ref_creation_sites=1 ray start --head
 
 .. tabs::
@@ -327,24 +326,24 @@ you can use ``list`` or ``get`` APIs to get more details for an individual abnor
 
             {'cluster': {'summary': {'disabled': {'total_objects': 6, 'total_size_mb': 0.0, 'total_num_workers': 3, 'total_num_nodes': 1, 'task_state_counts': {'SUBMITTED_TO_WORKER': 2, 'FINISHED': 2, 'NIL': 2}, 'ref_type_counts': {'LOCAL_REFERENCE': 2, 'ACTOR_HANDLE': 4}}}, 'total_objects': 6, 'total_size_mb': 0.0, 'callsite_enabled': False, 'summary_by': 'callsite'}}
 
-See :ref:`state CLI reference <state-api-cli-ref>` for more details about ``ray summary`` command.
+有关命令的更多详细信息，请参阅 :ref:`state CLI 参考 <state-api-cli-ref>` 关于 ``ray summary`` 命令。
 
 
-List the states of all entities of certain type
+列出某种类型的所有实体的状态
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Get a list of resources. Possible resources include:
+获取资源列表。可能的资源包括：
 
-- :ref:`Actors <actor-guide>`, e.g., Actor ID, State, PID, death_cause (:class:`output schema <ray.util.state.common.ActorState>`)
-- :ref:`Tasks <ray-remote-functions>`, e.g., name, scheduling state, type, runtime env info (:class:`output schema <ray.util.state.common.TaskState>`)
-- :ref:`Objects <objects-in-ray>`, e.g., object ID, callsites, reference types (:class:`output schema <ray.util.state.common.ObjectState>`)
-- :ref:`Jobs <jobs-overview>`, e.g., start/end time, entrypoint, status (:class:`output schema <ray.util.state.common.JobState>`)
-- :ref:`Placement Groups <ray-placement-group-doc-ref>`, e.g., name, bundles, stats (:class:`output schema <ray.util.state.common.PlacementGroupState>`)
-- Nodes (Ray worker nodes), e.g., node ID, node IP, node state (:class:`output schema <ray.util.state.common.NodeState>`)
-- Workers (Ray worker processes), e.g., worker ID, type, exit type and details (:class:`output schema <ray.util.state.common.WorkerState>`)
-- :ref:`Runtime environments <runtime-environments>`, e.g., runtime envs, creation time, nodes (:class:`output schema <ray.util.state.common.RuntimeEnvState>`)
+- :ref:`Actors <actor-guide>` 例如 Actor ID、状态、PID、death_cause ( :class:`output schema <ray.util.state.common.ActorState>`）
+- :ref:`Tasks <ray-remote-functions>` 例如名称、调度状态、类型、运行时环境信息 (:class:`output schema <ray.util.state.common.TaskState>`)
+- :ref:`Objects <objects-in-ray>`, 例如对象 ID、调用点、引用类型 ( (:class:`output schema <ray.util.state.common.ObjectState>`)
+- :ref:`Jobs <jobs-overview>`,例如开始/结束时间、入口点、状态 (:class:`output schema <ray.util.state.common.JobState>`)
+- :ref:`Placement Groups <ray-placement-group-doc-ref>`, 例如名称、捆绑包、统计信息 (:class:`output schema <ray.util.state.common.PlacementGroupState>`)
+- 节点（Ray 工作节点），例如节点 ID、节点 IP、节点状态 (:class:`output schema <ray.util.state.common.NodeState>`)
+- Workers（Ray 工作进程），例如工作 ID、类型、退出类型和详细信息 (:class:`output schema <ray.util.state.common.WorkerState>`)
+- :ref:`运行时环境 <runtime-environments>`, 例如运行时环境、创建时间、节点 (:class:`output schema <ray.util.state.common.RuntimeEnvState>`)
 
-**List all nodes**
+**列出所有节点**
 
 .. tabs::
 
@@ -361,7 +360,7 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_nodes
             list_nodes()
 
-**List all placement groups**
+**列出所有归置组**
 
 .. tabs::
 
@@ -379,9 +378,9 @@ Get a list of resources. Possible resources include:
             list_placement_groups()
 
 
-**List local referenced objects created by a process**
+**列出进程创建的本地引用对象**
 
-.. tip:: You can list resources with one or multiple filters: using `--filter` or `-f`
+.. tip:: 您可以使用一个或多个过滤器列出资源：使用 `--filter` 或 `-f`
 
 .. tabs::
 
@@ -398,7 +397,7 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_objects
             list_objects(filters=[("pid", "=", 1234), ("reference_type", "=", "LOCAL_REFERENCE")])
 
-**List alive actors**
+**列出存活的 actor**
 
 .. tabs::
 
@@ -415,7 +414,7 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_actors
             list_actors(filters=[("state", "=", "ALIVE")])
 
-**List running tasks**
+**列出运行中的 task**
 
 .. tabs::
 
@@ -432,7 +431,7 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_tasks
             list_tasks(filters=[("state", "=", "RUNNING")])
 
-**List non-running tasks**
+**列出非运行 task**
 
 .. tabs::
 
@@ -449,7 +448,7 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_tasks
             list_tasks(filters=[("state", "!=", "RUNNING")])
 
-**List running tasks that have a name func**
+**列出具有名称的正在运行的任务**
 
 .. tabs::
 
@@ -466,9 +465,9 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_tasks
             list_tasks(filters=[("state", "=", "RUNNING"), ("name", "=", "task_running_300_seconds()")])
 
-**List tasks with more details**
+**列出包含更多详细信息的任务**
 
-.. tip:: When ``--detail`` is specified, the API can query more data sources to obtain state information in details.
+.. tip:: 当指定 ``--detail``时，API可以查询更多数据源以获取详细的状态信息。
 
 .. tabs::
 
@@ -485,10 +484,10 @@ Get a list of resources. Possible resources include:
             from ray.util.state import list_tasks
             list_tasks(detail=True)
 
-See :ref:`state CLI reference <state-api-cli-ref>` for more details about ``ray list`` command.
+有关命令的更多详细信息，请参阅 :ref:`state CLI 参考 <state-api-cli-ref>` 的 ``ray list`` 命令。
 
 
-Get the states of a particular entity (task, actor, etc.)
+获取特定实体（任务、actor 等）的状态
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Get a task's states**

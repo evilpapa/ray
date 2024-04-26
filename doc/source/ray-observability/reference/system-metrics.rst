@@ -1,19 +1,19 @@
 .. _system-metrics:
 
-System Metrics
+系统指标
 --------------
-Ray exports a number of system metrics, which provide introspection into the state of Ray workloads, as well as hardware utilization statistics. The following table describes the officially supported metrics:
+Ray 导出许多系统指标，这些指标可以对 Ray 工作负载的状态以及硬件利用率统计数据进行内省。下表描述了官方支持的指标：
 
 .. note::
 
-   Certain labels are common across all metrics, such as `SessionName` (uniquely identifies a Ray cluster instance), `instance` (per-node label applied by Prometheus, and `JobId` (Ray job id, as applicable).
+些标签在所有指标中都是通用的，例如 `SessionName`（唯一标识 Ray 集群实例）、`instance` （Prometheus 应用的每个节点标签，以及 `JobId`（Ray 作业 ID，如适用）。
 
-.. list-table:: Ray System Metrics
+.. list-table:: Ray 系统指标
    :header-rows: 1
 
-   * - Prometheus Metric
-     - Labels
-     - Description
+   * - Prometheus 指标
+     - 标签
+     - 描述
    * - `ray_tasks`
      - `Name`, `State`, `IsRetry`
      - Current number of tasks (both remote functions and actor calls) by state. The State label (e.g., RUNNING, FINISHED, FAILED) describes the state of the task. See `rpc::TaskState <https://github.com/ray-project/ray/blob/e85355b9b593742b4f5cb72cab92051980fa73d3/src/ray/protobuf/common.proto#L583>`_ for more information. The function/method name is available as the Name label. If the task was retried due to failure or reconstruction, the IsRetry label will be set to "1", otherwise "0".
@@ -70,21 +70,21 @@ Ray exports a number of system metrics, which provide introspection into the sta
      - The amount of GPU memory used per GPU, in bytes.
    * - `ray_node_network_receive_speed`
      - `InstanceId`
-     - The network receive throughput per node, in bytes per second.
+     - 每个节点的网络发送吞吐量（以字节/秒为单位）。
    * - `ray_node_network_send_speed`
      - `InstanceId`
-     - The network send throughput per node, in bytes per second.
+     - 集群中健康节点的数量，按自动缩放程序节点类型细分。
    * - `ray_cluster_active_nodes`
      - `node_type`
-     - The number of healthy nodes in the cluster, broken down by autoscaler node type.
+     - 自动缩放程序报告的失败节点数，按节点类型细分。
    * - `ray_cluster_failed_nodes`
      - `node_type`
      - The number of failed nodes reported by the autoscaler, broken down by node type.
    * - `ray_cluster_pending_nodes`
      - `node_type`
-     - The number of pending nodes reported by the autoscaler, broken down by node type.
+     - 自动缩放程序报告的待处理节点数，按节点类型细分。
 
-Metrics Semantics and Consistency
+指标语义和一致性
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ray guarantees all its internal state metrics are *eventually* consistent even in the presence of failures--- should any worker fail, eventually the right state will be reflected in the Prometheus time-series output. However, any particular metrics query is not guaranteed to reflect an exact snapshot of the cluster state.

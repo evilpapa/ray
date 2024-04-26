@@ -1,10 +1,10 @@
 (observability-reference)=
 
-# Reference
+# 参考
 
-Monitor and debug your Ray applications and clusters using the API and CLI documented in these references.
+使用这些参考文献中记录的 API 和 CLI 监视和调试 Ray 应用程序和集群。
 
-The guides include:
+指南包括：
 * {ref}`state-api-ref`
 * {ref}`state-api-cli-ref`
 * {ref}`system-metrics`

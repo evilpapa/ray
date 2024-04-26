@@ -1,32 +1,31 @@
 .. _observability-debug-hangs:
 
-Debugging Hangs
+调试挂起
 ===============
-View stack traces in Ray Dashboard
+在 Ray Dashboard 中查看堆栈跟踪
 -----------------------------------
-The :ref:`Ray dashboard <observability-getting-started>`  lets you profile Ray Driver or Worker processes, by clicking on the "CPU profiling" or "Stack Trace" actions for active Worker processes, Tasks, Actors, and Job's driver process.
+:ref:`Ray dashboard <observability-getting-started>`  可让您通过单击活动工作进程、任务、参与者和作业驱动进程的“CPU 分析”或“堆栈跟踪”操作来分析 Ray 驱动程序或工作进程。
 
 .. image:: /images/profile.png
    :align: center
    :width: 80%
 
-Clicking "Stack Trace" will return the current stack trace sample using ``py-spy``. By default, only the Python stack
-trace is shown. To show native code frames, set the URL parameter ``native=1`` (only supported on Linux).
+单击“Stack Trace”将使用 ``py-spy``返回当前堆栈跟踪示例. 。默认情况下，仅显示 Python 堆栈跟踪。要显示本机代码帧，请设置 URL 参数 ``native=1`` （仅在 Linux 上支持）。
 
 .. image:: /images/stack.png
    :align: center
    :width: 60%
 
 .. note::
-   You may run into permission errors when using py-spy in the docker containers. To fix the issue:
+   在 docker 容器中使用 py-spy 时，您可能会遇到权限错误。要解决此问题：
    
-   * if you start Ray manually in a Docker container, follow the `py-spy documentation`_ to resolve it. 
-   * if you are a KubeRay user, follow the :ref:`guide to configure KubeRay <kuberay-pyspy-integration>` and resolve it.
+   * 如果您在 Docker 容器中手动启动 Ray，请按照 `py-spy 文档`_ 来解决。
+   * 如果您是 KubeRay 用户，请按照 :ref:`KubeRay 配置指南 <kuberay-pyspy-integration>` 解决该问题。
    
-.. _`py-spy documentation`: https://github.com/benfred/py-spy#how-do-i-run-py-spy-in-docker
+.. _`py-spy 文档`: https://github.com/benfred/py-spy#how-do-i-run-py-spy-in-docker
 
 
-Use ``ray stack`` CLI command
+使用 ``ray stack`` CLI 命令
 ------------------------------
 
 Once ``py-spy`` is installed (it is automatically installed if "Ray Dashboard" component is included when :ref:`installing Ray <installation>`), you can run ``ray stack`` to dump the stack traces of all Ray Worker processes on

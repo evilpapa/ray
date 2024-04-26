@@ -1,22 +1,22 @@
 .. _state-api-ref:
 
-State API
+状态 API
 =========
 
 .. note::
 
-    APIs are :ref:`alpha <api-stability-alpha>`. This feature requires a full installation of Ray using ``pip install "ray[default]"``.
+    API 是 :ref:`alpha <api-stability-alpha>` 版本。 此功能需要使用 ``pip install "ray[default]"`` 完整安装 Ray 。
 
-For an overview with examples see :ref:`Monitoring Ray States <state-api-overview-ref>`.
+有关示例的概述，请参阅 :ref:`监控 Ray 状态 <state-api-overview-ref>`。
 
-For the CLI reference see :ref:`Ray State CLI Reference <state-api-cli-ref>` or :ref:`Ray Log CLI Reference <ray-logs-api-cli-ref>`.
+有关 CLI 参考，请参阅 :ref:`Ray State CLI 参考 <state-api-cli-ref>` 或者 :ref:`Ray 日志 CLI 参考 <ray-logs-api-cli-ref>`。
 
-State Python SDK
+状态 Python SDK
 -----------------
 
-State APIs are also exported as functions.
+状态 API 也导出为函数。
 
-Summary APIs
+API 摘要
 ~~~~~~~~~~~~
 
 .. autosummary::
@@ -26,7 +26,7 @@ Summary APIs
     ray.util.state.summarize_objects
     ray.util.state.summarize_tasks
 
-List APIs
+API 列表
 ~~~~~~~~~~
 
 .. autosummary::
@@ -41,7 +41,7 @@ List APIs
     ray.util.state.list_objects
     ray.util.state.list_runtime_envs
 
-Get APIs
+获取 API
 ~~~~~~~~~
 
 .. autosummary::
@@ -54,7 +54,7 @@ Get APIs
     ray.util.state.get_task
     ray.util.state.get_objects
 
-Log APIs
+日志 API
 ~~~~~~~~
 
 .. autosummary::
@@ -65,7 +65,7 @@ Log APIs
 
 .. _state-api-schema:
 
-State APIs Schema
+状态 APIs 架构
 -----------------
 
 .. autosummary::
@@ -88,7 +88,7 @@ State APIs Schema
     ray.util.state.common.ObjectSummaries
     ray.util.state.common.ObjectSummaryPerKey
 
-State APIs Exceptions
+状态异常 API 
 ---------------------
 
 .. autosummary::

@@ -1,17 +1,17 @@
 .. _observability-debug-failures:
 
-Debugging Failures
+调试失败
 ==================
 
-What Kind of Failures Exist in Ray?
+Ray 存在哪些类型的故障？
 -----------------------------------
 
-Ray consists of two major APIs. ``.remote()`` to create a Task or Actor, and :func:`ray.get <ray.get>` to get the result.
-Debugging Ray means identifying and fixing failures from remote processes that run functions and classes (Tasks and Actors) created by the ``.remote`` API.
+Ray 由两个主要 API 组成。 ``.remote()`` 来创建任务或 Actor，以及 :func:`ray.get <ray.get>` 获取结果。
+调试 Ray 意味着识别并修复运行通过 ``.remote`` API 创建的函数和类（任务和 Actor）的远程进程的故障
 
-Ray APIs are future APIs (indeed, it is :ref:`possible to convert Ray object references to standard Python future APIs <async-ref-to-futures>`),
-and the error handling model is the same. When any remote Tasks or Actors fail, the returned object ref contains an exception.
-When you call ``get`` API to the object ref, it raises an exception.
+Ray API 是未来的 API（事实上，可以 :ref:`将 Ray 对象引用转换为标准的 Python 未来 API <async-ref-to-futures>`），
+并且错误处理模型是相同的。 当任何远程任务或 Actors失败时，返回的对象引用包含异常。
+当您调用对象引用的 ``get`` API 时，它会引发异常。
 
 .. testcode::
 
@@ -31,9 +31,9 @@ When you call ``get`` API to the object ref, it raises an exception.
   ...
   ValueError: it's an application error
 
-In Ray, there are three types of failures. See exception APIs for more details.
+在 Ray 中，失败分为三种类型。有关更多详细信息，请参阅异常 API。
 
-- **Application failures**: This means the remote task/actor fails by the user code. In this case, ``get`` API will raise the :func:`RayTaskError <ray.exceptions.RayTaskError>` which includes the exception raised from the remote process.
+- **应用程序失败**: This means the remote task/actor fails by the user code. In this case, ``get`` API will raise the :func:`RayTaskError <ray.exceptions.RayTaskError>` which includes the exception raised from the remote process.
 - **Intentional system failures**: This means Ray is failed, but the failure is intended. For example, when you call cancellation APIs like ``ray.cancel`` (for task) or ``ray.kill`` (for actors), the system fails remote tasks and actors, but it is intentional.
 - **Unintended system failures**: This means the remote tasks and actors failed due to unexpected system failures such as processes crashing (for example, by out-of-memory error) or nodes failing.
 

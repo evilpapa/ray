@@ -2,16 +2,16 @@
 
 追踪
 =======
-To help debug and monitor Ray applications, Ray integrates with OpenTelemetry to facilitate exporting traces to external tracing stacks such as Jaeger.
+为了帮助调试和监控 Ray 应用程序，Ray 与 OpenTelemetry 集成，以便于将跟踪导出到 Jaeger 等外部跟踪堆栈。
 
 
 .. note::
 
-    Tracing is an experimental feature and under active development. APIs are subject to change.
+    跟踪是一项实验性功能，正在积极开发中。 API 可能会发生变化。
 
-Installation
+安装
 ------------
-First, install OpenTelemetry:
+首先，安装 OpenTelemetry：
 
 .. code-block:: shell
 
@@ -19,11 +19,11 @@ First, install OpenTelemetry:
     pip install opentelemetry-sdk==1.1.0
     pip install opentelemetry-exporter-otlp==1.1.0
 
-Tracing startup hook
+启动追踪钩子
 --------------------
-To enable tracing, you must provide a tracing startup hook with a function that sets up the :ref:`Tracer Provider <tracer-provider>`, :ref:`Remote Span Processors <remote-span-processors>`, and :ref:`Additional Instruments <additional-instruments>`. The tracing startup hook is expected to be a function that is called with no args or kwargs. This hook needs to be available in the Python environment of all the worker processes.
+要启用跟踪，您必须提供一个跟踪启动挂钩，其中包含:ref:`Tracer Provider <tracer-provider>`\ :ref:`Remote Span Processors <remote-span-processors>` 以及 :ref:`Additional Instruments <additional-instruments>` 设置. 跟踪启动挂钩应该是一个不带 args 或 kwargs 调用的函数。该钩子需要在所有工作进程的 Python 环境中可用。
 
-Below is an example tracing startup hook that sets up the default tracing provider, exports spans to files in ``/tmp/spans``, and does not have any additional instruments.
+下面是一个示例跟踪启动挂钩，它设置默认跟踪提供程序，将 spans 文件导出到 ``/tmp/spans`` ，并且没有任何其他工具。
 
 .. testcode::
 
@@ -52,7 +52,7 @@ Below is an example tracing startup hook that sets up the default tracing provid
       )
 
 
-For open-source users who want to experiment with tracing, Ray has a default tracing startup hook that exports spans to the folder ``/tmp/spans``. To run using this default hook, run the following code sample to set up tracing and trace a simple Ray Task.
+对于想要尝试跟踪的开源用户，Ray 有一个默认的跟踪启动挂钩，可将 span 导出到文件夹/ ``/tmp/spans``。要使用此默认挂钩运行，请运行以下代码示例来设置跟踪并跟踪简单的 Ray 任务。
 
 .. tab-set::
 
@@ -81,19 +81,19 @@ For open-source users who want to experiment with tracing, Ray has a default tra
 
             obj_ref = my_function.remote()
 
-If you want to provide your own custom tracing startup hook, provide it in the format of ``module:attribute`` where the attribute is the ``setup_tracing`` function to be run.
+如果您想提供自己的自定义跟踪启动挂钩，请在要运行的 ``setup_tracing`` 函数的 ``module:attribute`` 提供你的设置。
 
 .. _tracer-provider:
 
-Tracer provider
+Tracer 提供者
 ~~~~~~~~~~~~~~~
-This configures how to collect traces. View the TracerProvider API `here <https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html#opentelemetry.sdk.trace.TracerProvider>`__.
+这配置了如何收集跟踪。参考 TracerProvider API `here <https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html#opentelemetry.sdk.trace.TracerProvider>`__。
 
 .. _remote-span-processors:
 
 Remote span processors
 ~~~~~~~~~~~~~~~~~~~~~~
-This configures where to export traces to. View the SpanProcessor API `here <https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html#opentelemetry.sdk.trace.SpanProcessor>`__.
+这配置了将跟踪导出到的位置。参考 `此处的 <https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html#opentelemetry.sdk.trace.SpanProcessor>`__  SpanProcessor API。
 
 Users who want to experiment with tracing can configure their remote span processors to export spans to a local JSON file. Serious users developing locally can push their traces to Jaeger containers via the `Jaeger exporter <https://opentelemetry-python.readthedocs.io/en/latest/exporter/jaeger/jaeger.html#module-opentelemetry.exporter.jaeger>`_.
 
