@@ -28,11 +28,8 @@
 使用 ``ray stack`` CLI 命令
 ------------------------------
 
-Once ``py-spy`` is installed (it is automatically installed if "Ray Dashboard" component is included when :ref:`installing Ray <installation>`), you can run ``ray stack`` to dump the stack traces of all Ray Worker processes on
-the current node.
+安装完 ``py-spy`` 后（当 :ref:`安装 Ray <installation>` 的 “Ray Dashboard” 组件之后，也会自动的安装进来），你可以执行 ``ray stack`` 转储当前节点上所有 Ray Worker 进程的堆栈跟踪。
 
-This document discusses some common problems that people run into when using Ray
-as well as some known problems. If you encounter other problems, please
-`let us know`_.
+本文档讨论了人们在使用 Ray 时遇到的一些常见问题以及一些已知问题。如果您遇到其他问题，请 `告知我们`_ 。
 
 .. _`let us know`: https://github.com/ray-project/ray/issues

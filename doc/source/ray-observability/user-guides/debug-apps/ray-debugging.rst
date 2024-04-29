@@ -1,29 +1,29 @@
 .. _ray-debugger:
 
-Using the Ray Debugger
+使用 Ray 调试器
 ======================
 
-Ray has a built in debugger that allows you to debug your distributed applications. It allows
-to set breakpoints in your Ray tasks and actors and when hitting the breakpoint you can
-drop into a PDB session that you can then use to:
+Ray 有一个内置的调试器，允许您调试分布式应用程序。
+它允许在 Ray 任务和 actor 中设置断点，当遇到断点时，
+您可以放入 PDB 会话，然后可以使用该会话：
 
-- Inspect variables in that context
-- Step within that task or actor
-- Move up or down the stack
+- 检查该上下文中的变量 
+- 步入该任务或 actor
+- 在堆栈中向上或向下移动
 
 .. warning::
 
-    The Ray Debugger is an experimental feature and is currently unstable. Interfaces are subject to change.
+    Ray 调试器是一项实验性功能，目前不稳定。接口可能会发生变化。
 
-Getting Started
+入门
 ---------------
 
 .. note::
 
-    On Python 3.6, the ``breakpoint()`` function is not supported and you need to use
-    ``ray.util.pdb.set_trace()`` instead.
+    在 Python 3.6 上， ``breakpoint()`` 不支持该函数，您需要使用
+    ``ray.util.pdb.set_trace()`` 替代它。
 
-Take the following example:
+举个例子：
 
 .. testcode::
     :skipif: True
@@ -38,22 +38,21 @@ Take the following example:
     futures = [f.remote(i) for i in range(2)]
     print(ray.get(futures))
 
-Put the program into a file named ``debugging.py`` and execute it using:
+将程序放入名为 ``debugging.py`` 的文件中，并使用以下命令执行它：
 
 .. code-block:: bash
 
     python debugging.py
 
 
-Each of the 2 executed tasks will drop into a breakpoint when the line
-``breakpoint()`` is executed. You can attach to the debugger by running
-the following command on the head node of the cluster:
+当执行该行 ``breakpoint()`` 时，2 个执行的任务中的每一个都会落入断点。
+您可以通过在集群的头节点上运行以下命令来附加到调试器：
 
 .. code-block:: bash
 
     ray debug
 
-The ``ray debug`` command will print an output like this:
+``ray debug`` 命令将打印如下输出：
 
 .. code-block:: text
 
@@ -66,9 +65,8 @@ The ``ray debug`` command will print an output like this:
     Enter breakpoint index or press enter to refresh:
 
 
-You can now enter ``0`` and hit Enter to jump to the first breakpoint. You will be dropped into PDB
-at the break point and can use the ``help`` to see the available actions. Run ``bt`` to see a backtrace
-of the execution:
+您现在可按 ``0`` 并按 Enter 键跳转到第一个断点。您将在断点处进入 PDB，并可以使用
+``help`` 查看可用的操作。运行 ``bt`` 以查看执行的回溯：
 
 .. code-block:: text
 
@@ -80,38 +78,36 @@ of the execution:
     > /home/ubuntu/tmp/debugging.py(7)f()
     -> return x * x
 
-You can inspect the value of ``x`` with ``print(x)``. You can see the current source code with ``ll``
-and change stack frames with ``up`` and ``down``. For now let us continue the execution with ``c``.
+您可以通过 ``print(x)`` 检查 ``x`` 的值。 您可以使用 ``ll`` 查看上下文，
+并使用 ``up`` 和 ``down`` 更改堆栈帧。 现在让我们继续执行，使用 ``c``。
 
-After the execution is continued, hit ``Control + D`` to get back to the list of break points. Select
-the other break point and hit ``c`` again to continue the execution.
+继续执行后，使用 ``Control + D`` 返回到断点列表。选择另一个断点，然后再次按 ``c`` 继续执行。
 
-The Ray program ``debugging.py`` now finished and should have printed ``[0, 1]``. Congratulations, you
-have finished your first Ray debugging session!
+Ray 程序 ``debugging.py`` 现在已经完成，应该已经打印了 ``[0, 1]``。
+恭喜，您已经完成了第一个 Ray 调试会话！
 
-Running on a Cluster
+在集群上运行
 --------------------
 
-The Ray debugger supports setting breakpoints inside of tasks and actors that are running across your
-Ray cluster. In order to attach to these from the head node of the cluster using ``ray debug``, you'll
-need to make sure to pass in the ``--ray-debugger-external`` flag to ``ray start`` when starting the
-cluster (likely in your ``cluster.yaml`` file or k8s Ray cluster spec).
+Ray 调试器支持在运行在 Ray 集群上的任务和 actor 中设置断点。
+要使用 ``ray debug`` 从集群的头节点附加到这些任务和 actor，
+您需要确保在启动集群时使用 ``ray start`` 传递 ``--ray-debugger-external`` 标志（可能在您的 ``cluster.yaml`` 文件或 k8s Ray 集群规范中）。
 
-Note that this flag will cause the workers to listen for PDB commands on an external-facing IP address,
-so this should *only* be used if your cluster is behind a firewall.
+注意，这个标志会导致 worker 在外部 IP 地址上监听 PDB 命令，
+所以 *只有* 在您的集群在防火墙后面时才应该使用。
 
-Debugger Commands
+调试命令
 -----------------
 
-The Ray debugger supports the
-`same commands as PDB
-<https://docs.python.org/3/library/pdb.html#debugger-commands>`_.
+Ray 调试器支持
+`与 PDB 相同的命令
+<https://docs.python.org/3/library/pdb.html#debugger-commands>`_。
 
-Stepping between Ray tasks
+在 Ray 任务之间步进
 --------------------------
 
-You can use the debugger to step between Ray tasks. Let's take the
-following recursive function as an example:
+您可以使用调试器在 Ray 任务之间进行单步执行。
+我们以下面的递归函数为例：
 
 .. testcode::
     :skipif: True
@@ -135,9 +131,9 @@ following recursive function as an example:
     ray.get(compute.remote())
 
 
-After running the program by executing the Python file and calling
-``ray debug``, you can select the breakpoint by pressing ``0`` and
-enter. This will result in the following output:
+执行Python文件并调用 
+``ray debug``运行程序后，可以通过 ``0`` 和 回车 选择断点。
+这将产生以下输出：
 
 .. code-block:: shell
 
@@ -146,9 +142,8 @@ enter. This will result in the following output:
     -> result_ref = fact.remote(5)
     (Pdb)
 
-You can jump into the call with the ``remote`` command in Ray's debugger.
-Inside the function, print the value of `n` with ``p(n)``, resulting in
-the following output:
+您可以使用Ray 调试器中的命令 ``remote`` 跳入调用。
+在函数内部，打印 ``p(n)`` 的 `n` 值，产生以下输出：
 
 .. code-block:: shell
 
@@ -171,12 +166,9 @@ the following output:
     5
     (Pdb)
 
-Now step into the next remote call again with
-``remote`` and print `n`. You an now either continue recursing into
-the function by calling ``remote`` a few more times, or you can jump
-to the location where ``ray.get`` is called on the result by using the
-``get`` debugger comand. Use ``get`` again to jump back to the original
-call site and use ``p(result)`` to print the result:
+现在使用 ``remote`` 步入下一个远程调用并打印 `n` 。
+你现在可以通多多次调用 ``remote`` 继续递归进入函数，或者通过使用 ``get`` 调试器命令跳转到调用 ``ray.get`` 的位置。
+使用 ``get`` 再次跳转到原始调用位置，并使用 ``p(result)`` 打印结果：
 
 .. code-block:: shell
 
@@ -216,19 +208,19 @@ call site and use ``p(result)`` to print the result:
     (Pdb)
 
 
-Post Mortem Debugging
+事后调试
 ---------------------
 
-Often we do not know in advance where an error happens, so we cannot set a breakpoint. In these cases,
-we can automatically drop into the debugger when an error occurs or an exception is thrown. This is called *post-mortem debugging*.
+通常我们事先并不知道错误发生在哪里，因此无法设置断点。
+在这些情况下，当发生错误或抛出异常时，我们可以自动进入调试器。这称为 *事后调试*。
 
-We will show how this works using a Ray serve application. To get started, install the required dependencies:
+我们将使用 Ray 服务应用程序展示其工作原理。首先，安装所需的依赖项：
 
 .. code-block:: bash
 
     pip install "ray[serve]" scikit-learn
 
-Next, copy the following code into a file called ``serve_debugging.py``:
+接下来，将以下代码复制到名为 ``serve_debugging.py`` 的文件中:
 
 .. testcode::
     :skipif: True
@@ -269,22 +261,22 @@ Next, copy the following code into a file called ``serve_debugging.py``:
 
     time.sleep(3600.0)
 
-Let's start the program with the post-mortem debugging activated (``RAY_PDB=1``):
+让我们在激活事后调试  (``RAY_PDB=1``) 的情况下启动程序:
 
 .. code-block:: bash
 
     RAY_PDB=1 python serve_debugging.py
 
-The flag ``RAY_PDB=1`` will have the effect that if an exception happens, Ray will
-drop into the debugger instead of propagating it further. Let's see how this works!
-First query the model with an invalid request using
+``RAY_PDB=1`` 标志的作用是，如果发生异常，Ray 将进入调试器而不是进一步传播它。
+让我们看看这是如何工作的！
+首先使用无效请求查询模型
 
 .. code-block:: bash
 
     python -c 'import requests; response = requests.get("http://localhost:8000/iris", json={"vector": [1.2, 1.0, 1.1, "a"]})'
 
-When the ``serve_debugging.py`` driver hits the breakpoint, it will tell you to run
-``ray debug``. After we do that, we see an output like the following:
+当 ``serve_debugging.py`` 驱动到达断点时，它会告诉你运行 ``ray debug``。
+执行此操作后，我们会看到如下输出：
 
 .. code-block:: text
 
@@ -318,13 +310,12 @@ When the ``serve_debugging.py`` driver hits the breakpoint, it will tell you to 
 
     Enter breakpoint index or press enter to refresh:
 
-We now press ``0`` and then Enter to enter the debugger. With ``ll`` we can see the context and with
-``print(a)`` we an print the array that causes the problem. As we see, it contains a string (``'a'``)
-instead of a number as the last element.
+现在按 ``0`` 然后按 Enter 来进入调试器。使用 ``ll`` 可以看到上下文，
+``print(a)`` 打印导致问题的数组。 正如我们所看到的，它包含一个字符串 ( ``'a'`` ) 而不是数字作为最后一个元素。
 
-In a similar manner as above, you can also debug Ray actors. Happy debugging!
+与上面类似的方式，您也可以调试 Ray actor。调试愉快！
 
-Debugging APIs
+调试 API
 --------------
 
-See :ref:`package-ref-debugging-apis`.
+参阅 :ref:`package-ref-debugging-apis`。

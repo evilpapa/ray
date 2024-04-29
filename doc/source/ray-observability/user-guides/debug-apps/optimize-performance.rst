@@ -1,68 +1,56 @@
 .. _observability-optimize-performance:
 
-Optimizing Performance
+优化性能
 ======================
 
-No speedup
+无加速
 ----------
 
-You just ran an application using Ray, but it wasn't as fast as you expected it
-to be. Or worse, perhaps it was slower than the serial version of the
-application! The most common reasons are the following.
+您刚刚使用 Ray 运行了一个应用程序，但它没有您预期的那么快。
+或者更糟糕的是，它可能比应用程序的串行版本慢！
+最常见的原因如下。
 
-- **Number of cores:** How many cores is Ray using? When you start Ray, it will
-  determine the number of CPUs on each machine with ``psutil.cpu_count()``. Ray
-  usually will not schedule more tasks in parallel than the number of CPUs. So
-  if the number of CPUs is 4, the most you should expect is a 4x speedup.
+- **核心数:** Ray 使用多少个核心？当您启动 Ray 时，它将通过 ``psutil.cpu_count()`` 确定每台机器上的 CPU 数量。
+  Ray 通常不会调度比 CPU 数量更多的并行任务。因此，如果 CPU 数量为 4 个，则您最多应该期待 4 倍的加速。
 
-- **Physical versus logical CPUs:** Do the machines you're running on have fewer
-  **physical** cores than **logical** cores? You can check the number of logical
-  cores with ``psutil.cpu_count()`` and the number of physical cores with
-  ``psutil.cpu_count(logical=False)``. This is common on a lot of machines and
-  especially on EC2. For many workloads (especially numerical workloads), you
-  often cannot expect a greater speedup than the number of physical CPUs.
+- **物理 CPU 与逻辑 CPU：** 您所运行的机器的
+  **物理** 核心是否少于 **逻辑** 核心？你可以使用  ``psutil.cpu_count()`` 来检查逻辑核心数，
+  使用 ``psutil.cpu_count(logical=False)`` 来检查物理核心数。这在很多机器上很常见，尤其是在 EC2 上。
+  对于许多工作负载（尤其是数值工作负载），您通常无法期望比物理 CPU 数量更大的加速。
 
-- **Small tasks:** Are your tasks very small? Ray introduces some overhead for
-  each task (the amount of overhead depends on the arguments that are passed
-  in). You will be unlikely to see speedups if your tasks take less than ten
-  milliseconds. For many workloads, you can easily increase the sizes of your
-  tasks by batching them together.
+- **小任务：** 你的任务很小吗？Ray 为每个任务引入了一些开销（开销量取决于传递的参数）。
+  如果你的任务小于十毫秒，你将不太可能看到加速。
+  对于许多工作负载，你可以通过将它们批量在一起来轻松增加任务的大小。
 
-- **Variable durations:** Do your tasks have variable duration? If you run 10
-  tasks with variable duration in parallel, you shouldn't expect an N-fold
-  speedup (because you'll end up waiting for the slowest task). In this case,
-  consider using ``ray.wait`` to begin processing tasks that finish first.
+- **周期变量:** 您的任务是否有周期变量？如果您并行运行 10 个持续时间可变的任务，
+  则不应期望获得 N 倍的加速（因为您最终将等待最慢的任务）。
+  在这种情况下，请考虑使用 ``ray.wait`` 开始处理先完成的任务。
 
-- **Multi-threaded libraries:** Are all of your tasks attempting to use all of
-  the cores on the machine? If so, they are likely to experience contention and
-  prevent your application from achieving a speedup.
-  This is common with some versions of ``numpy``. To avoid contention, set an
-  environment variable like ``MKL_NUM_THREADS`` (or the equivalent depending on
-  your installation) to ``1``.
+- **多线程库:** 您的所有任务是否都尝试使用计算机上的所有内核？如果是这样，他们可能会遇到争用并阻止您的应用程序实现加速。
+  这对于某些版本的 ``numpy``。 To avoid contention, set an
+  为了避免争用，请将环境变量 ``MKL_NUM_THREADS`` （或等效的环境变量，取决于您的安装）设置为 ``1``。
 
-  For many - but not all - libraries, you can diagnose this by opening ``top``
-  while your application is running. If one process is using most of the CPUs,
-  and the others are using a small amount, this may be the problem. The most
-  common exception is PyTorch, which will appear to be using all the cores
-  despite needing ``torch.set_num_threads(1)`` to be called to avoid contention.
+  对于许多（但不是全部）库，您可以通过 ``top``
+  在应用程序运行时打开来诊断此问题。如果一个进程正在使用大部分 CPU，而其他进程正在使用少量 CPU，
+  则这可能就是问题所在。最常见的例外是 PyTorch，尽管它似乎正在使用所有核心，但仍需要设置
+  ``torch.set_num_threads(1)`` 来避免争用。
 
-If you are still experiencing a slowdown, but none of the above problems apply,
-we'd really like to know! Create a `GitHub issue`_ and Submit a minimal code example that demonstrates the problem.
+如果您仍然遇到速度变慢的情况，但上述问题均不适用，我们真的很想知道！
+创建 `GitHub issue`_ 并提交演示该问题的最小代码示例。
 
 .. _`Github issue`: https://github.com/ray-project/ray/issues
 
-This document discusses some common problems that people run into when using Ray
-as well as some known problems. If you encounter other problems, `let us know`_.
+本文档讨论了人们在使用 Ray 时遇到的一些常见问题以及一些已知问题。如果您遇到其他问题， `请告诉我们`_。
 
 .. _`let us know`: https://github.com/ray-project/ray/issues
 
 .. _ray-core-timeline:
 
-Visualizing Tasks with Ray Timeline
+使用 Ray 时间线可视化任务
 -------------------------------------
-View :ref:`how to use Ray Timeline in the Dashboard <dashboard-timeline>` for more details.
+查看 :ref:`如何在仪表板中使用 Ray Timeline <dashboard-timeline>` 了解更多详细信息。
 
-Instead of using Dashboard UI to download the tracing file, you can also export the tracing file as a JSON file by running ``ray timeline`` from the command line or ``ray.timeline`` from the Python API.
+您还可以通过从命令行或Python API运行 ``ray timeline`` 而不是使用仪表板 UI 下载跟踪文件。
 
 .. testcode::
 
@@ -75,34 +63,29 @@ Instead of using Dashboard UI to download the tracing file, you can also export 
 
 .. _dashboard-profiling:
 
-Python CPU profiling in the Dashboard
+仪表板中的 Python CPU 分析
 -------------------------------------
 
-The :ref:`Ray dashboard <observability-getting-started>`  lets you profile Ray worker processes by clicking on the "Stack Trace" or "CPU Flame Graph"
-actions for active workers, actors, and jobs.
+:ref:`Ray dashboard <observability-getting-started>`  可让您通过单击活动 worker、actor 和作业的 “堆栈跟踪” 或 “CPU 火焰图” 操作来分析 Ray 工作人员进程。
 
 .. image:: /images/profile.png
    :align: center
    :width: 80%
 
-Clicking "Stack Trace" returns the current stack trace sample using ``py-spy``. By default, only the Python stack
-trace is shown. To show native code frames, set the URL parameter ``native=1`` (only supported on Linux).
+单击“堆栈跟踪”可使用返回 ``py-spy`` 当前堆栈跟踪示例 . 默认情况下，仅显示 Python 堆栈跟踪。要显示本机代码帧，请设置 URL 参数 ``native=1`` （仅在 Linux 上支持）。
 
 .. image:: /images/stack.png
    :align: center
    :width: 60%
 
-Clicking "CPU Flame Graph" takes a number of stack trace samples and combine them into a flame graph visualization.
-This flame graph can be useful for understanding the CPU activity of the particular process. To adjust the duration
-of the flame graph, you can change the ``duration`` parameter in the URL. Similarly, you can change the ``native``
-parameter to enable native profiling.
+单击“CPU Flame Graph”会获取许多堆栈跟踪样本，并将它们组合成火焰图可视化。此火焰图对于了解特定进程的 CPU 活动很有用。要调整火焰图的持续时间，您可以更改 URL 中的 ``duration`` 同样，您可以更改 ``native`` 参数以启用本机分析。
 
 .. image:: /images/flamegraph.png
    :align: center
    :width: 80%
 
-The profiling feature requires ``py-spy`` to be installed. If it is not installed, or if the ``py-spy`` binary does
-not have root permissions, the Dashboard prompts with instructions on how to setup ``py-spy`` correctly:
+分析功能需要安装 ``py-spy`` 。 如果未安装，或者二进制 ``py-spy`` 文件没有 root 权限，
+仪表板会提示如何正确设置 ``py-spy`` ：
 
 .. code-block::
 
@@ -115,10 +98,10 @@ not have root permissions, the Dashboard prompts with instructions on how to set
     Alternatively, you can start Ray with passwordless sudo / root permissions.
 
 .. note::
-   You may run into permission errors when using py-spy in the docker containers. To fix the issue:
+   在 docker 容器中使用 py-spy 时，您可能会遇到权限错误。要解决该问题：
    
-   * If you start Ray manually in a Docker container, follow the `py-spy documentation`_ to resolve it. 
-   * if you are a KubeRay user, follow the :ref:`guide to configure KubeRay <kuberay-pyspy-integration>` and resolve it.
+   * 如果您在 Docker 容器中手动启动 Ray，请按照 `py-spy 文档`_ 来解决。
+   * 如果您是 KubeRay 用户，请按照 :ref:`KubeRay 配置指引 <kuberay-pyspy-integration>` 来解决。
    
 .. _`py-spy documentation`: https://github.com/benfred/py-spy#how-do-i-run-py-spy-in-docker
 
@@ -126,23 +109,20 @@ not have root permissions, the Dashboard prompts with instructions on how to set
 
 .. _dashboard-cprofile:
 
-Profiling using Python's cProfile
+使用 Python 的 cProfile 进行分析
 ---------------------------------
 
-You can use Python's native cProfile `profiling module`_ to profile the performance of your Ray application. Rather than tracking
-line-by-line of your application code, cProfile can give the total runtime
-of each loop function, as well as list the number of calls made and
-execution time of all function calls made within the profiled code.
+你可以使用 Python 的原生 cProfile `profiling module`_ 来分析 Ray 应用程序的性能。
+与跟踪应用程序代码的每一行不同，cProfile 可以给出每个循环函数的总运行时间，
+以及列出在受监视代码中进行的所有函数调用的调用次数和执行时间。
 
 .. _`profiling module`: https://docs.python.org/3/library/profile.html#module-cProfile
 
-Unlike ``line_profiler`` above, this detailed list of profiled function calls
-**includes** internal function calls and function calls made within Ray.
+与上面的 ``line_profiler`` 不同的是，这个分析函数调用的详细列表
+**包括** 内部函数调用和 Ray 内进行的函数调用。
 
-However, similar to ``line_profiler``, cProfile can be enabled with minimal
-changes to your application code (given that each section of the code you want
-to profile is defined as its own function). To use cProfile, add an import
-statement, then replace calls to the loop functions as follows:
+然而，与 ``line_profiler``，只需对应用程序代码进行最少的更改即可启用 cProfile（假设您要分析的代码的每个部分都定义为其自己的函数）。
+要使用 cProfile，请添加导入语句，然后替换对循环函数的调用，如下所示：
 
 .. testcode::
   :skipif: True
@@ -163,18 +143,15 @@ statement, then replace calls to the loop functions as follows:
   if __name__ == "__main__":
       main()
 
-Now, when you execute your Python script, a cProfile list of profiled function
-calls are printed on the terminal for each call made to ``cProfile.run()``.
-At the very top of cProfile's output gives the total execution time for
-``'ex1()'``:
+现在，当您执行 Python 脚本时，每次对 ``cProfile.run()`` 的调用都会在终端上打印出一份经过分析的函数调用列表。
+cProfile 输出的最顶部给出了 ``'ex1()'`` 的总执行时间：
 
 .. code-block:: bash
 
   601 function calls (595 primitive calls) in 2.509 seconds
 
-Following is a snippet of profiled function calls for ``'ex1()'``. Most of
-these calls are quick and take around 0.000 seconds, so the functions of
-interest are the ones with non-zero execution times:
+以下是 ``'ex1()'`` 的函数调用的片段。大多数这些调用都很快，大约需要 0.000 秒，
+因此感兴趣的函数是执行时间不为零的函数：
 
 .. code-block:: bash
 
@@ -192,25 +169,19 @@ interest are the ones with non-zero execution times:
       5    0.000    0.000    0.000    0.000 worker.py:514(submit_task)
   ...
 
-The 5 separate calls to Ray's ``get``, taking the full 0.502 seconds each call,
-can be noticed at ``worker.py:2535(get)``. Meanwhile, the act of calling the
-remote function itself at ``remote_function.py:103(remote)`` only takes 0.001
-seconds over 5 calls, and thus is not the source of the slow performance of
-``ex1()``.
+可以在 ``worker.py:2535(get)`` 处注意到 5 次对 Ray 的 ``get`` 的单独调用，每次调用都需要 0.502 秒。
+同时，调用远程函数本身在 ``remote_function.py:103(remote)`` 处只需要 0.001 秒，因此不是 ``ex1()`` 的性能慢的原因。
 
 
-Profiling Ray Actors with cProfile
+使用 cProfile 分析 Ray Actor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Considering that the detailed output of cProfile can be quite different depending
-on what Ray functionalities we use, let us see what cProfile's output might look
-like if our example involved Actors (for an introduction to Ray actors, see our
-:ref:`Actor documentation <actor-guide>`).
+考虑到根据我们使用的 Ray 功能，cProfile 的详细输出可能会有很大不同，
+让我们看看如果我们的示例涉及 Actor，cProfile 的输出可能会是什么样子（有关 Ray Actor 的介绍，请参阅我们的
+:ref:`Actor 文档 <actor-guide>`)。
 
-Now, instead of looping over five calls to a remote function like in ``ex1``,
-let's create a new example and loop over five calls to a remote function
-**inside an actor**. Our actor's remote function again just sleeps for 0.5
-seconds:
+现在，我们不是在 ``ex1`` 中 5 次循环调用远程函数，而是创建一个示例，**在 Actor 中** 循环调用 5 次远程函数。
+我们的 Actor 的远程函数再次只是休眠 0.5 秒：
 
 .. testcode::
 
@@ -224,8 +195,7 @@ seconds:
       def actor_func(self):
           time.sleep(self.sleepValue)
 
-Recalling the suboptimality of ``ex1``, let's first see what happens if we
-attempt to perform all five ``actor_func()`` calls within a single actor:
+回顾 ``ex1`` 的次优性，让我们首先看看如果我们尝试在单个 actor 中执行所有 五次 ``actor_func()`` 调用会发生什么：
 
 .. testcode::
 
@@ -240,7 +210,7 @@ attempt to perform all five ``actor_func()`` calls within a single actor:
       # Wait until the end to call ray.get()
       ray.get(five_results)
 
-We enable cProfile on this example as follows:
+我们在此示例中启用 cProfile，如下所示：
 
 .. testcode::
   :skipif: True
@@ -252,7 +222,7 @@ We enable cProfile on this example as follows:
   if __name__ == "__main__":
       main()
 
-Running our new Actor example, cProfile's abbreviated output is as follows:
+运行我们的新 Actor 示例，cProfile 的缩写输出如下：
 
 .. code-block:: bash
 
@@ -274,23 +244,16 @@ Running our new Actor example, cProfile's abbreviated output is as follows:
   8    0.000    0.000    0.001    0.000 worker.py:514(submit_task)
   ...
 
-It turns out that the entire example still took 2.5 seconds to execute, or the
-time for five calls to ``actor_func()`` to run in serial. If you recall ``ex1``,
-this behavior was because we did not wait until after submitting all five
-remote function tasks to call ``ray.get()``, but we can verify on cProfile's
-output line ``worker.py:2535(get)`` that ``ray.get()`` was only called once at
-the end, for 2.509 seconds. What happened?
+实时证明，整个示例仍然需要 2.5 秒才能执行，或者说五次对 ``actor_func()`` 的调用在串行中运行的时间。
+如果您回想一下 ``ex1``，这种行为是因为我们在提交所有五个远程函数任务之后没有等待调用 ``ray.get()``，
+但是我们可以在 cProfile 的输出行 ``worker.py:2535(get)`` 上验证， ``ray.get()`` 只在最后调用了一次，用时 2.509 秒。
+发生了什么？
 
-It turns out Ray cannot parallelize this example, because we have only
-initialized a single ``Sleeper`` actor. Because each actor is a single,
-stateful worker, our entire code is submitted and ran on a single worker the
-whole time.
+事实证明，Ray 无法并行化这个示例，因为我们只初始化了一个 ``Sleeper`` actor。
+因为每个 actor 都是一个有状态的 worker ，所以我们的整个代码始终在单个 worker 上提交和运行。
 
-To better parallelize the actors in ``ex4``, we can take advantage
-that each call to ``actor_func()`` is independent, and instead
-create five ``Sleeper`` actors. That way, we are creating five workers
-that can run in parallel, instead of creating a single worker that
-can only handle one call to ``actor_func()`` at a time.
+为了在 ``ext4`` 更好的并行化，我们可以利用每次对 ``actor_func()`` 的调用是独立的有时，创建五个 ``Sleeper`` actors。
+这样，我们创建了五个可以并行运行的 workers，而不是创建一个只能一次处理一个 ``actor_func()`` 调用的单个 worker。
 
 .. testcode::
 
@@ -305,7 +268,7 @@ can only handle one call to ``actor_func()`` at a time.
 
       ray.get(five_results)
 
-Our example in total now takes only 1.5 seconds to run:
+现在，我们的示例总共只需 1.5 秒即可运行：
 
 .. code-block:: bash
 
@@ -330,24 +293,24 @@ Our example in total now takes only 1.5 seconds to run:
 
 .. _performance-debugging-gpu-profiling:
 
-GPU Profiling with PyTorch Profiler
+使用 PyTorch Profiler 进行 GPU 分析
 -----------------------------------
-Here are the steps to use PyTorch Profiler during training with Ray Train or batch inference with Ray Data:
+以下是在使用 Ray Train 进行训练或使用 Ray Data 进行批量推理期间使用 PyTorch Profiler 的步骤：
 
-* Follow the `PyTorch Profiler documentation <https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html>`_ to record events in your PyTorch code.
+* 按照 `PyTorch Profiler 文档 <https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html>`_ 记录 PyTorch 代码中的事件。
 
-* Convert your PyTorch script to a :ref:`Ray Train training script <train-pytorch>` or a :ref:`Ray Data batch inference script <batch_inference_home>`. (no change to your profiler-related code)
+* 将 PyTorch 脚本转换为 :ref:`Ray Train 训练脚本 <train-pytorch>` 或 :ref:`Ray Data 批量预估脚本 <batch_inference_home>`。 （与分析器相关的代码没有变化）
 
-* Run your training or batch inference script.
+* 运行您的训练或批量推理脚本。
 
-* Collect the profiling results from all the nodes (compared to 1 node in a non-distributed setting).
+* 收集所有节点的分析结果（与非分布式设置中的 1 个节点相比）。
 
-  * You may want to upload results on each Node to NFS or object storage like S3 so that you don't have to fetch results from each Node respectively.
+  * 您可能希望将每个节点上的结果上传到 NFS 或 S3 等对象存储，这样您就不必分别从每个节点获取结果。
 
-* Visualize the results with tools like Tensorboard.
+* 使用 Tensorboard 等工具可视化结果。
 
 
-Profiling for Developers
+开发人员分析
 ------------------------
-If you are developing Ray Core or debugging some system level failures, profiling the Ray Core could help. In this case, see :ref:`Profiling for Ray developers <ray-core-internal-profiling>`.
+如果您正在开发 Ray Core 或调试某些系统级故障，分析 Ray Core 可能会有所帮助。在这种情况下，请参阅 :ref:`Ray 开发人员分析 <ray-core-internal-profiling>`。
 

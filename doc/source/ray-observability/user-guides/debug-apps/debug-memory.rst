@@ -1,42 +1,37 @@
 .. _ray-core-mem-profiling:
 
-Debugging Memory Issues
+调试内存问题
 =======================
 
 
 .. _troubleshooting-out-of-memory:
 
-Debugging Out of Memory
+调试 OOM
 -----------------------
 
-Before reading this section, familiarize yourself with the Ray :ref:`Memory Management <memory>` model.
+在阅读本节之前，请先熟悉 Ray :ref:`内存管理 <memory>` 模型。
 
-- If your cluster has out-of-memory problems, view :ref:`How to Detect Out-of-Memory Errors <troubleshooting-out-of-memory-how-to-detect>`.
-- To locate the source of the memory leak, view :ref:`Find per Task and Actor Memory Usage <troubleshooting-out-of-memory-task-actor-mem-usage>`.
-- If your head node has high memory usage, view :ref:`Head Node Out-of-Memory Error <troubleshooting-out-of-memory-head>`.
-- If your memory usage is high due to high parallelism, view :ref:`Reduce Parallelism <troubleshooting-out-of-memory-reduce-parallelism>`.
-- If you want to profile per Task and Actor memory usage, view :ref:`Profile Task and Actor Memory Usage <troubleshooting-out-of-memory-profile>`.
+- 如果您的集群存在内存不足问题，请查看 :ref:`如何检测内存不足错误 <troubleshooting-out-of-memory-how-to-detect>`。
+- 要查找内存泄漏的来源，请查看 :ref:`查找每个 Task 和 Actor 内存使用 <troubleshooting-out-of-memory-task-actor-mem-usage>`。
+- 如果您的头节点内存使用率较高，请查看 :ref:`Head Node Out-of-Memory Error <troubleshooting-out-of-memory-head>`。
+- 如果您的内存使用率由于高并行度而较高，请查看 :ref:`减少并行度 <troubleshooting-out-of-memory-reduce-parallelism>`。
+- 如果您想要分析每个任务和 Actor 的内存使用情况，请查看 :ref:`分析任务和 Actor 的内存使用情况 <troubleshooting-out-of-memory-profile>`。
 
-What's the Out-of-Memory Error?
+什么是内存不足错误？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Memory is a limited resource. When a process requests memory and the OS fails to allocate it, the OS executes a routine to free up memory
-by killing a process that has high memory usage (via SIGKILL) to avoid the OS becoming unstable. This routine is called the `Linux Out of Memory killer <https://www.kernel.org/doc/gorman/html/understand/understand016.html>`_.
+内存是一种有限的资源。当进程请求内存而操作系统无法分配内存时，操作系统会执行一个例程，通过杀死内存使用率较高的进程（通过 SIGKILL）来释放内存，
+以避免操作系统变得不稳定。该例程称为 `Linux OOM killer <https://www.kernel.org/doc/gorman/html/understand/understand016.html>`_ 。
 
-One of the common problems of the Linux out-of-memory killer is that SIGKILL kills processes without Ray noticing it. 
-Since SIGKILL cannot be handled by processes, Ray has difficulty raising a proper error message
-and taking proper actions for fault tolerance.
-To solve this problem, Ray has (from Ray 2.2) an application-level :ref:`memory monitor <ray-oom-monitor>`,
-which continually monitors the memory usage of the host and kills the Ray Workers before the Linux out-of-memory killer executes. 
+Linux 内存不足杀手的常见问题之一是 SIGKILL 在 Ray 没有注意到的情况下杀死进程。由于 SIGKILL 无法由进程处理，Ray 很难发出正确的错误消息并采取正确的容错措施。为了解决这个问题，Ray（从 Ray 2.2 开始）有一个应用程序级 :ref:`内存监控器 <ray-oom-monitor>`，
+它持续监视主机的内存使用情况，并在 Linux 内存不足杀手执行之前杀死 Ray Workers。
 
 .. _troubleshooting-out-of-memory-how-to-detect:
 
-Detecting Out-of-Memory errors
+检测内存不足错误
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If the Linux out-of-memory killer terminates Tasks or Actors, Ray Worker processes are unable to catch and display an exact root cause
-because SIGKILL cannot be handled by processes. If you call ``ray.get`` into the Tasks and Actors that were executed from the dead worker,
-it raises an exception with one of the following error messages (which indicates the worker is killed unexpectedly).
+如果 Linux 内存不足终止程序终止任务或 Actor，Ray Worker 进程将无法捕获并显示确切的根本原因，因为进程无法处理 SIGKILL。如果您从已死亡的工作线程执行的任务和 actor 调用 ``ray.get``，它会引发异常并显示以下错误消息之一（这表明工作线程被意外终止）。
 
 .. code-block:: bash
 
@@ -46,14 +41,13 @@ it raises an exception with one of the following error messages (which indicates
 
   Worker exit type: SYSTEM_ERROR Worker exit detail: The leased worker has unrecoverable failure. Worker is requested to be destroyed when it is returned.
 
-You can also use the `dmesg <https://phoenixnap.com/kb/dmesg-linux#:~:text=The%20dmesg%20command%20is%20a,take%20place%20during%20system%20startup.>`_ CLI command to verify the processes are killed by the Linux out-of-memory killer.
+您还可以使用 `dmesg <https://phoenixnap.com/kb/dmesg-linux#:~:text=The%20dmesg%20command%20is%20a,take%20place%20during%20system%20startup.>`_ CLI 命令来验证进程是否被 Linux 内存不足杀手终止。
 
 .. image:: ../../images/dmsg.png
     :align: center
 
-If Ray's memory monitor kills the worker, it is automatically retried (see the :ref:`link <ray-oom-retry-policy>` for details).
-If Tasks or Actors cannot be retried, they raise an exception with 
-a much cleaner error message when you call ``ray.get`` to it.
+如果 Ray 的内存监视器杀死了该工作线程，则会自动重试（有关详细信息，请参阅 :ref:`链接 <ray-oom-retry-policy>` ）。
+如果任务或参与者无法重试，当您调用 ``ray.get`` 时，它们会引发异常并带有更清晰的错误消息
 
 .. code-block:: bash
 
@@ -72,7 +66,7 @@ a much cleaner error message when you call ``ray.get`` to it.
 
   Refer to the documentation on how to address the out of memory issue: https://docs.ray.io/en/latest/ray-core/scheduling/ray-oom-prevention.html.
 
-Ray memory monitor also periodically prints the aggregated out-of-memory killer summary to Ray drivers.
+Ray 内存监视器还定期向 Ray 驱动程序打印聚合的内存不足杀手摘要。
 
 .. code-block:: bash
 
@@ -80,7 +74,7 @@ Ray memory monitor also periodically prints the aggregated out-of-memory killer 
   (raylet) 
   (raylet) Refer to the documentation on how to address the out of memory issue: https://docs.ray.io/en/latest/ray-core/scheduling/ray-oom-prevention.html. Consider provisioning more memory on this node or reducing task parallelism by requesting more CPUs per task. To adjust the kill threshold, set the environment variable `RAY_memory_usage_threshold` when starting Ray. To disable worker killing, set the environment variable `RAY_memory_monitor_refresh_ms` to zero.
 
-Ray Dashboard's :ref:`metrics page <dash-metrics-view>` and :ref:`event page <dash-event>` also provides the out-of-memory killer-specific events and metrics.
+Ray 仪表盘的 :ref:`指标页 <dash-metrics-view>` 和 :ref:`事件 <dash-event>` 也提供内存不足杀手特定的事件和指标。
 
 .. image:: ../../images/oom-metrics.png
     :align: center
@@ -90,68 +84,65 @@ Ray Dashboard's :ref:`metrics page <dash-metrics-view>` and :ref:`event page <da
 
 .. _troubleshooting-out-of-memory-task-actor-mem-usage:
 
-Find per Task and Actor Memory Usage
+查找每个任务和 Actor 的内存使用情况
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If Tasks or Actors fail because of out-of-memory errors, they are retried based on :ref:`retry policies <ray-oom-retry-policy>`. 
-However, it is often preferred to find the root causes of memory issues and fix them instead of relying on fault tolerance mechanisms.
-This section explains how to debug out-of-memory errors in Ray.
+如果任务或 actor 由于内存不足错误而失败，则会根据 :ref:`重试策略 <ray-oom-retry-policy>` 进行重试。
+然而，通常更愿意找到内存问题的根本原因并修复它们，而不是依赖容错机制。
+本节介绍如何调试 Ray 中的内存不足错误。
 
-First, find the Tasks and Actors that have high memory usage. View the :ref:`per Task and Actor memory usage graph <dash-workflow-cpu-memory-analysis>` for more details.
-The memory usage from the per component graph uses RSS - SHR. See below for reasoning.
+首先，找到内存使用率较高的任务和 actor 。查看 :ref:`每个任务和参与者的内存使用情况图表 <dash-workflow-cpu-memory-analysis>` 以了解更多详细信息。
+每个组件图表的内存使用情况使用 RSS - SHR。推理见下文。
 
-Alternatively, you can also use the CLI command `htop <https://htop.dev/>`_.
+或者，您也可以使用 CLI 命令 `htop <https://htop.dev/>`_ 。
 
 .. image:: ../../images/htop.png
     :align: center
 
-See the ``allocate_memory`` row. See two columns, RSS and SHR. 
+见 ``allocate_memory`` 行，查看两栏 RSS 和 SHR。
 
-SHR usage is typically the memory usage from the Ray object store. The Ray object store allocates 30% of host memory to the shared memory (``/dev/shm``, unless you specify ``--object-store-memory``).
-If Ray workers access the object inside the object store using ``ray.get``, SHR usage increases. Since the Ray object store supports the :ref:`zero-copy <serialization-guide>`
-deserialization, several workers can access the same object without copying them to in-process memory. For example, if
-8 workers access the same object inside the Ray object store, each process' ``SHR`` usage increases. However, they are not using 8 * SHR memory (there's only 1 copy in the shared memory). 
-Also note that Ray object store triggers :ref:`object spilling <object-spilling>` when the object usage goes beyond the limit, which means the memory usage from the shared memory won't exceed 30%
-of the host memory.
+SHR 使用量通常是 Ray 对象存储中的内存使用量。 Ray 对象存储将 30% 的主机内存分配给共享内存 (``/dev/shm``，除非您指定 ``--object-store-memory``) 。
+如果 Ray 工作线程使用 ``ray.get`` 访问对象存储中的对象，则 SHR 使用量会增加。由于 Ray 对象存储支持 :ref:`zero-copy <serialization-guide>`
+反序列化，因此多个 worker 可以访问同一个对象，而无需将它们复制到进程内内存。 例如，如果
+个 worker 访问 Ray 对象存储中的同一对象，则每个进程的' ``SHR`` 使用量都会增加。然而，他们没有使用 8 * SHR 内存两 (共享内存中只有 1 个副本)。
+另请注意，当对象使用量超出限制时，Ray 对象存储会触发 :ref:`对象溢出 <object-spilling>` ，这意味着共享内存的内存使用量不会超过主机内存的 30%。
 
-Out-of-memory issues from a host, are due to RSS usage from each worker. Calculate per
-process memory usage by RSS - SHR because SHR is for Ray object store as explained above. The total memory usage is typically
-``SHR (object store memory usage, 30% of memory) + sum(RSS - SHR from each ray proc) + sum(RSS - SHR from system components. e.g., raylet, GCS. Usually small)``.
+主机内存不足问题是由于每个 worker 使用 RSS 造成的。 Calculate per
+通过 RSS - SHR 计算每个进程的内存使用量，因为 SHR 用于 Ray 对象存储，如上所述。总内存使用量通常为
+``SHR (对象存储内存两, 30% 总内存量) + sum(RSS - 每个 ray proc SHR 用量) + sum(RSS - SHR 系统组件，如 raylet，GCS。通常很小)``。
 
 .. _troubleshooting-out-of-memory-head:
 
-Head node out-of-Memory error
+头节点内存不足错误
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, check the head node memory usage from the metrics page. Find the head node address from the cluster page.
+首先，从指标页面检查头节点内存使用情况。从集群页面找到头节点地址。
 
 .. image:: ../../images/head-node-addr.png
     :align: center
 
-Then check the memory usage from the head node from the node memory usage view inside the Dashboard :ref:`metrics view <dash-metrics-view>`.
+然后从  :ref:`指标试图 <dash-metrics-view>` 内的节点内存使用情况视图检查头节点的内存使用情况。
 
 .. image:: ../../images/metrics-node-view.png
     :align: center
 
-The Ray head node has more memory-demanding system components such as GCS or the dashboard. 
-Also, the driver runs from a head node by default. If the head node has the same memory capacity as worker nodes
-and if you execute the same number of Tasks and Actors from a head node, it can easily have out-of-memory problems.
-In this case, do not run any Tasks and Actors on the head node by specifying ``--num-cpus=0`` when starting a head node by ``ray start --head``. If you use Kuberay, view `here <kuberay-num-cpus>`.
+Ray 头节点具有更多对内存要求较高的系统组件，例如 GCS 或仪表板。
+此外，驱动程序默认从头节点运行。如果头节点与工作节点具有相同的内存容量，并且从头节点执行相同数量的任务和Actor，则很容易出现内存不足的问题。
+在这种情况下，通过启动头节点  ``ray start --head`` 指定 ``--num-cpus=0`` 来禁用在头节点上运行任何任务和 Actor 。 如果您使用 KubeRay，请查看 `这里 <kuberay-num-cpus>`。
 
 .. _troubleshooting-out-of-memory-reduce-parallelism:
 
-Reduce Parallelism
+减少并行度
 ~~~~~~~~~~~~~~~~~~
 
-High parallelism can trigger out-of-memory errors. For example, if
-you have 8 training workers that perform the data preprocessing -> training. 
-If you load too much data into each worker, the total memory usage (``training worker mem usage * 8``) can exceed the
-memory capacity. 
+memory capacity.
+高并行性可能会触发内存不足错误。例如，如果您有 8 个训练 worker 执行数据预处理 -> 训练。
+如果向每个工作线程加载太多数据，则总内存使用量 (``training worker mem usage * 8``)  可能会超出内存容量。
 
-Verify the memory usage by looking at the :ref:`per Task and Actor memory usage graph <dash-workflow-cpu-memory-analysis>` and the Task metrics.
+通过查看 :ref:`每个任务和参与者的内存使用情况图 <dash-workflow-cpu-memory-analysis>` 以及任务指标来验证内存使用情况。
 
-First, see the memory usage of an ``allocate_memory`` task. The total is 18GB.
-At the same time, verify the 15 concurrent tasks that are running.
+首先，查看任务的内存使用情况 ``allocate_memory`` 。总计 18GB。
+同时，验证正在运行的 15 个并发任务。
 
 .. image:: ../../images/component-memory.png
     :align: center
@@ -159,37 +150,38 @@ At the same time, verify the 15 concurrent tasks that are running.
 .. image:: ../../images/tasks-graph.png
     :align: center
 
-Each task uses about 18GB / 15 == 1.2 GB. To reduce the parallelism:
+每个任务大约使用 18GB / 15 == 1.2 GB。减少并行度：
 
-- `Limit the max number of running tasks <https://docs.ray.io/en/latest/ray-core/patterns/limit-running-tasks.html>`_. 
-- Increase the ``num_cpus`` options for :func:`ray.remote`. Modern hardware typically has 4GB of memory per CPU, so you can choose the CPU requirements accordingly. This example specifies 1 CPU per ``allocate_memory`` Task. Doubling the CPU requirements, runs only half(7) of the Tasks at the same time, and memory usage doesn't exceed 9GB.
+- `限制运行任务的最大数量 <https://docs.ray.io/en/latest/ray-core/patterns/limit-running-tasks.html>`_ 。
+- 增加 :func:`ray.remote` 的 ``num_cpus`` 选项。 现代硬件通常每个 CPU 具有 4GB 内存，因此您可以相应地选择 CPU 要求。 此示例为每个 ``allocate_memory`` 任务指定 1 个 CPU。
+CPU 要求加倍，同时仅运行一半 (7) 的任务，并且内存使用量不超过 9GB。
 
 .. _troubleshooting-out-of-memory-profile:
 
-Profiling Task and Actor memory usage
+分析任务和 Actor 内存使用情况
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is also possible tasks and actors use more memory than you expect. For example, actors or tasks can have a memory leak or have unnecessary copies.
+任务和 actor 使用的内存也可能比您预期的要多。例如，actor 或任务可能存在内存泄漏或具有不必要的副本。
 
-View the instructions below to learn how to memory profile individual actors and tasks.
+查看下面的说明，了解如何记忆单个 actor 和任务的概要信息。
 
 .. _memray-profiling:
 
-Memory Profiling Ray tasks and actors
+内存分析 Ray 任务和 actor
 --------------------------------------
 
-To memory profile Ray tasks or actors, use `memray <https://bloomberg.github.io/memray/>`_.
-Note that you can also use other memory profiling tools if it supports a similar API.
+要分析 Ray task 或 actor 内存用量，使用 `memray <https://bloomberg.github.io/memray/>`_ 。
+请注意，您还可以使用其他支持类似 API 的内存分析工具。
 
-First, install ``memray``.
+首先安装 ``memray``。
 
 .. code-block:: bash
 
   pip install memray
 
-``memray`` supports a Python context manager to enable memory profiling. You can write the ``memray`` profiling file wherever you want.
-But in this example, we will write them to `/tmp/ray/session_latest/logs` because Ray dashboard allows you to download files inside the log folder.
-This will allow you to download profiling files from other nodes.
+``memray`` 支持 Python 上下文管理器以启用内存分析。您可以将 ``memray`` 分析文件写入任何您想要的位置。
+但在本示例中，我们将写入 `/tmp/ray/session_latest/logs` 因为 Ray 仪表板允许您下载日志文件夹内的文件。这
+将允许您从其他节点下载分析文件。
 
 .. tab-set::
 
@@ -202,28 +194,28 @@ This will allow you to download profiling files from other nodes.
 
     .. tab-item:: Tasks
 
-      Note that tasks have a shorter lifetime, so there could be lots of memory profiling files.
+      请注意，任务的生命周期较短，因此可能会有大量内存分析文件。
 
       .. literalinclude:: ../../doc_code/memray_profiling.py
           :language: python
           :start-after: __memray_profiling_task_start__
           :end-before: __memray_profiling_task_end__
 
-Once the task or actor runs, go to the :ref:`Logs view <dash-logs-view>` of the dashboard. Find and click the log file name.
+任务或 actor 运行后，转到仪表板的 :ref:`日志 <dash-logs-view>`。找到并单击日志文件名。
 
 .. image:: ../../images/memory-profiling-files.png
     :align: center
 
-Click the download button. 
+点击下载按钮。
 
 .. image:: ../../images/download-memory-profiling-files.png
     :align: center
 
-Now, you have the memory profiling file. Running
+现在，您已经有了内存分析文件。执行
 
 .. code-block:: bash
 
   memray flamegraph <memory profiling bin file>
 
-And you can see the result of the memory profiling!
+您可以看到内存分析的结果！
 

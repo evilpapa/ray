@@ -80,12 +80,9 @@
 占位组不可组合
 -----------------------------------
 
-**问题**: If you have a task that is called from something that runs in a Placement
-Group, the resources are never allocated and it hangs.
+**问题**: 若有一个从占位组进行调用的任务，那么资源永远不会被分配并会挂起。
 
-**Example**: You are using Ray Tune which creates Placement Groups, and you want to
-apply it to an objective function, but that objective function makes use
-of Ray Tasks itself, e.g.
+**示例**: 你正在使用 Ray Tune 创建占位组，并希望将其应用于目标函数，但是该目标函数使用了 Ray Task 本身，例如：
 
 .. testcode::
 
@@ -106,7 +103,7 @@ of Ray Tasks itself, e.g.
   tuner = tune.Tuner(objective, param_space={"a": 1})
   tuner.fit()
 
-This will error with message:
+这将出错并显示信息：
 
 .. testoutput::
   :options: +MOCK
@@ -114,11 +111,10 @@ This will error with message:
     ValueError: Cannot schedule create_task_that_uses_resources.<locals>.sample_task with the placement group
     because the resource request {'CPU': 10} cannot fit into any bundles for the placement group, [{'CPU': 1.0}].
 
-**Expected behavior**: The above executes.
+**预期行为**: 以上会进行执行。
 
-**Fix**: In the ``@ray.remote`` declaration of Tasks
-called by ``create_task_that_uses_resources()`` , include a
-``scheduling_strategy=PlacementGroupSchedulingStrategy(placement_group=None)``.
+**修复**: 在 ``create_task_that_uses_resources()`` 调用的 ``@ray.remote`` 声明中，包含
+``scheduling_strategy=PlacementGroupSchedulingStrategy(placement_group=None)``。
 
 .. code-block:: diff
 
@@ -126,15 +122,12 @@ called by ``create_task_that_uses_resources()`` , include a
   +     @ray.remote(num_cpus=10, scheduling_strategy=PlacementGroupSchedulingStrategy(placement_group=None))
   -     @ray.remote(num_cpus=10)
 
-Outdated Function Definitions
+过期的函数定义
 -----------------------------
 
-Due to subtleties of Python, if you redefine a remote function, you may not
-always get the expected behavior. In this case, it may be that Ray is not
-running the newest version of the function.
+由于 Python 的微妙，如果你重新定义远程函数，你可能并不总能获得预期的行为。在这种情况下， Ray 可能没有运行该函数的最新版本。
 
-Suppose you define a remote function ``f`` and then redefine it. Ray should use
-the newest version.
+假设你定义了一个远程函数 ``f`` ，然后重新定义它。Ray 应该运行最新的版本。
 
 .. testcode::
 
@@ -154,48 +147,38 @@ the newest version.
 
   2
 
-However, the following are cases where modifying the remote function will
-not update Ray to the new version (at least without stopping and restarting
-Ray).
+但是，以下情况 Ray 不会将远程函数修改为最新版本（至少在不停止并重新启动 Ray 的情况下）。
 
-- **The function is imported from an external file:** In this case,
-  ``f`` is defined in some external file ``file.py``. If you ``import file``,
-  change the definition of ``f`` in ``file.py``, then re-``import file``,
-  the function ``f`` will not be updated.
+- **该函数作为外部文件导入:** 本例中，
+  ``f`` 在外部文件 ``file.py`` 定义。如果你 ``import file``，
+  在 ``file.py`` 修改 ``f`` 定义，然后重新 ``import file``，
+  函数 ``f`` 不会更新。
 
-  This is because the second import gets ignored as a no-op, so ``f`` is
-  still defined by the first import.
+  因为第二个导入被是为无操作并被忽略，``f`` 仍由第一个文件导入定义。
 
-  A solution to this problem is to use ``reload(file)`` instead of a second
-  ``import file``. Reloading causes the new definition of ``f`` to be
-  re-executed, and exports it to the other machines. Note that in Python 3, you
-  need to do ``from importlib import reload``.
+  解决方案是使用 ``reload(file)`` 来代替 ``import file``。重新加载会重新执行新的定义，并将其
+  导出到其他机器。请注意，在 Python 3 中，你需要执行 ``from importlib import reload``。
 
-- **The function relies on a helper function from an external file:**
-  In this case, ``f`` can be defined within your Ray application, but relies
-  on a helper function ``h`` defined in some external file ``file.py``. If the
-  definition of ``h`` gets changed in ``file.py``, redefining ``f`` will not
-  update Ray to use the new version of ``h``.
+- **该函数依赖于外部文件中的辅助函数：**
+  在这种情况下， ``f`` 可以在 Ray 应用程序中定义，但依赖某些外部文件 ``file.py`` 定义的辅助
+  函数 ``h`` 。如果 ``file.py`` 中的 ``h`` 定义发生了变化，重新定义的 ``f`` 不会更新 Ray 使用最新版本的 ``h``。
 
-  This is because when ``f`` first gets defined, its definition is shipped to
-  all of the Worker processes, and is unpickled. During unpickling, ``file.py`` gets
-  imported in the Workers. Then when ``f`` gets redefined, its definition is
-  again shipped and unpickled in all of the Workers. But since ``file.py``
-  has been imported in the Workers already, it is treated as a second import
-  and is ignored as a no-op.
+  因为 ``f`` 最初定义之后，它的定义会被发送到所有工作进程，并不会被 unpickled。在 unpick 期间，
+  ``file.py`` 被导入到 worker 。然后当 ``f`` 被重新定义，定义重新被所有 worker 并 unpickled。
+  但是 ``file.py`` 已经被导入，会作为第二次导入并忽略来对待。
 
-  Unfortunately, reloading on the Driver does not update ``h``, as the reload
-  needs to happen on the worker.
+  不幸的是，重新加载 driver 不会更新 ``h``，重新加载需要在 worker 上进行。
 
   A solution to this problem is to redefine ``f`` to reload ``file.py`` before
   it calls ``h``. For example, if inside ``file.py`` you have
+  解决这个问题的方式是在 ``f`` 调用 ``h`` 之前重新加载 ``file.py``。例如，在 ``file.py`` 中
 
   .. testcode::
 
     def h():
         return 1
 
-  And you define remote function ``f`` as
+  远程方法 ``f`` 定义
 
   .. testcode::
 
@@ -203,7 +186,7 @@ Ray).
     def f():
         return file.h()
 
-  You can redefine ``f`` as follows.
+  按照如下重新定义 ``f`` 。
 
   .. testcode::
 
@@ -212,10 +195,8 @@ Ray).
         reload(file)
         return file.h()
 
-  This forces the reload to happen on the Workers as needed. Note that in
-  Python 3, you need to do ``from importlib import reload``.
+  这会强制 worker 按照需要机型重新加载。注意，在 Python 3 在，你需要 ``from importlib import reload`` 。
 
-This document discusses some common problems that people run into when using Ray
-as well as some known problems. If you encounter other problems, `let us know`_.
+本文档讨论了人们在使用 Ray 时遇到的一些常见问题以及一些已知问题。如果您遇到其他问题， `请告知我们`_ 。
 
 .. _`let us know`: https://github.com/ray-project/ray/issues

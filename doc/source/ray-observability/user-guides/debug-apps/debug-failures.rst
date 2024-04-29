@@ -33,59 +33,58 @@ Ray API 是未来的 API（事实上，可以 :ref:`将 Ray 对象引用转换�
 
 在 Ray 中，失败分为三种类型。有关更多详细信息，请参阅异常 API。
 
-- **应用程序失败**: This means the remote task/actor fails by the user code. In this case, ``get`` API will raise the :func:`RayTaskError <ray.exceptions.RayTaskError>` which includes the exception raised from the remote process.
-- **Intentional system failures**: This means Ray is failed, but the failure is intended. For example, when you call cancellation APIs like ``ray.cancel`` (for task) or ``ray.kill`` (for actors), the system fails remote tasks and actors, but it is intentional.
-- **Unintended system failures**: This means the remote tasks and actors failed due to unexpected system failures such as processes crashing (for example, by out-of-memory error) or nodes failing.
+- **应用程序失败**: 这意味着用户代码的远程 task/actor 失败。这种情况下， ``get`` API 会引发 :func:`RayTaskError <ray.exceptions.RayTaskError>` 包括从远程进程引发的异常。
+- **内部系统故障**: 这是 Ray 发生了故障，但故障是故意的。例如，当你调用取消 API 如 ``ray.cancel`` （针对任务）或 ``ray.kill`` （针对 actor ），系统会使远程 任务 / actor 失败，但是是故意的。
+- **意外系统故障**:这意味着远程任务 / actor 由于意外的系统故障而失败如进程崩溃（像是内存不足错误）或节点失败。
 
-  1. `Linux Out of Memory killer <https://www.kernel.org/doc/gorman/html/understand/understand016.html>`_ or :ref:`Ray Memory Monitor <ray-oom-monitor>` kills processes with high memory usages to avoid out-of-memory.
-  2. The machine shuts down (e.g., spot instance termination) or a :term:`raylet <raylet>` crashed (e.g., by an unexpected failure).
-  3. System is highly overloaded or stressed (either machine or system components like Raylet or :term:`GCS <GCS / Global Control Service>`), which makes the system unstable and fail.
+  1. `Linux OOM killer <https://www.kernel.org/doc/gorman/html/understand/understand016.html>`_ 或 :ref:`Ray Memory Monitor <ray-oom-monitor>` 会杀死内存使用率高的进程以防止 OOM。
+  2. 机器关机（如，现场实例终止）或 :term:`raylet <raylet>` 崩溃（如，意外故障）。
+  3. 系统高负载或高压力（机器或者系统组件如 Raylet 或 :term:`GCS <GCS / Global Control Service>`），这让系统不稳定或发生故障。
 
-Debugging Application Failures
+调试应用故障。
 ------------------------------
 
-Ray distributes users' code to multiple processes across many machines. Application failures mean bugs in users' code.
-Ray provides a debugging experience that's similar to debugging a single-process Python program.
+Ray 将用户的代码分发到多台机器上的多个进程。应用程序故障意味着用户代码中的错误。
+Ray 提供了类似于调试单进程 Python 程序的调试体验。
 
 print
 ~~~~~
 
-``print`` debugging is one of the most common ways to debug Python programs.
-:ref:`Ray's Task and Actor logs are printed to the Ray Driver <ray-worker-logs>` by default,
-which allows you to simply use the ``print`` function to debug the application failures.
+``print`` 调试是调试Python程序最常用的方法之一。
+:ref:`Ray 的 Task 和 Actor 日志默认打印到 Ray Driver <ray-worker-logs>` 上，
+这使您可以简单地使用 ``print`` 来调试应用程序故障。
 
-Debugger
+调试器
 ~~~~~~~~
 
-Many Python developers use a debugger to debug Python programs, and `Python pdb <https://docs.python.org/3/library/pdb.html>`_) is one of the popular choices.
-Ray has native integration to ``pdb``. You can simply add ``breakpoint()`` to Actors and Tasks code to enable ``pdb``. View :ref:`Ray Debugger <ray-debugger>` for more details.
+许多Python开发人员使用调试器来调试Python程序，而 `Python pdb <https://docs.python.org/3/library/pdb.html>`_) 是流行的选择之一。
+Ray 原生支持 ``pdb``。你可以简单的添加 ``breakpoint()`` 到 Actor 和 Task 代码来启用 ``pdb``。参考 :ref:`Ray Debugger <ray-debugger>` 了解更多信息。
 
 
-Running out of file descriptors (``Too may open files``)
+文件描述符用尽 (``Too may open files``)
 --------------------------------------------------------
 
-In a Ray cluster, arbitrary two system components can communicate with each other and make 1 or more connections.
-For example, some workers may need to communicate with GCS to schedule Actors (worker <-> GCS connection).
-Your Driver can invoke Actor methods (worker <-> worker connection).
+在 Ray 集群中，任意两个系统组件可以相互通信并建立 1 个或多个连接。
+例如，某些 worker 可能需要与 GCS 通信来调度 Actor（worker <-> GCS连接）。
+您的驱动程序可以调用 Actor 方法（worker <->worker 连接）。
 
-Ray can support 1000s of raylets and 10000s of worker processes. When a Ray cluster gets larger,
-each component can have an increasing number of network connections, which requires file descriptors.
+Ray 可以支持数千个 raylet 和数千个工作进程。当 Ray 集群变得更大时，‘
+每个组件可以拥有越来越多的网络连接，这需要文件描述符。
 
-Linux typically limits the default file descriptors per process to 1024. When there are
-more than 1024 connections to the component, it can raise error messages below.
+Linux 通常将每个进程的默认文件描述符限制为 1024。
+当与组件的连接超过 1024 个时，它可能会引发以下错误消息。
 
 .. code-block:: bash
 
   Too may open files
 
-It is especially common for the head node GCS process because it is a centralized
-component that many other components in Ray communicate with. When you see this error message,
-we recommend you adjust the max file descriptors limit per process via the ``ulimit`` command.
+对于头节点 GCS 进程来说尤其常见，因为它是 Ray 中许多其他组件与之通信的集中组件。
+当您看到此错误消息时，我们建议您通过 ``ulimit`` 命令调整每个进程的最大文件描述符限制
 
-We recommend you apply ``ulimit -n 65536`` to your host configuration. However, you can also selectively apply it for
-Ray components (view below example). Normally, each worker has 2~3 connections to GCS. Each raylet has 1~2 connections to GCS.
-65536 file descriptors can handle 10000~15000 of workers and 1000~2000 of nodes.
-If you have more workers, you should consider using a higher number than 65536.
+我们建议您应用 ``ulimit -n 65536`` 到您的主机配置。但是，您也可以有选择地将其应用于 Ray 组件（查看下面的示例）。
+通常，每个 worker 有 2~3 个与 GCS 的连接。每个 raylet 有 1~2 个到 GCS 的连接。
+65536 个文件描述符可以处理 10000~15000 个 worker 和 1000~2000 个节点。
+如果您有更多 worker ，则应考虑使用高于 65536 的数字。
 
 .. code-block:: bash
 
@@ -98,25 +97,23 @@ If you have more workers, you should consider using a higher number than 65536.
   # Start a Ray driver with higher ulimit.
   ulimit -n 65536 <python script>
 
-If that fails, double-check that the hard limit is sufficiently large by running ``ulimit -Hn``.
-If it is too small, you can increase the hard limit as follows (these instructions work on EC2).
+如果失败，请通过运行 ``ulimit -Hn`` 来仔细检查硬限制是否足够大。
+如果太小，您可以按如下方式增加硬限制（这些说明适用于 EC2）。
 
-* Increase the hard ulimit for open file descriptors system-wide by running
-  the following.
+* 通过运行以下命令增加系统范围内打开文件描述符的硬 ulimit。
 
   .. code-block:: bash
 
     sudo bash -c "echo $USER hard nofile 65536 >> /etc/security/limits.conf"
 
-* Logout and log back in.
+* 注销并重新登录。
 
 
-Failures due to memory issues
+内存导致的失败问题
 --------------------------------
-View :ref:`debugging memory issues <ray-core-mem-profiling>` for more details.
+惨绝 :ref:`调试内存问题 <ray-core-mem-profiling>` 获取信息。
 
 
-This document discusses some common problems that people run into when using Ray
-as well as some known problems. If you encounter other problems, `let us know`_.
+本文档讨论了人们在使用 Ray 时遇到的一些常见问题以及一些已知问题。如果您遇到其他问题， `请告诉我们`_ 。
 
 .. _`let us know`: https://github.com/ray-project/ray/issues

@@ -91,23 +91,23 @@ Tracer 提供者
 
 .. _remote-span-processors:
 
-Remote span processors
+远程 span 处理
 ~~~~~~~~~~~~~~~~~~~~~~
 这配置了将跟踪导出到的位置。参考 `此处的 <https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html#opentelemetry.sdk.trace.SpanProcessor>`__  SpanProcessor API。
 
-Users who want to experiment with tracing can configure their remote span processors to export spans to a local JSON file. Serious users developing locally can push their traces to Jaeger containers via the `Jaeger exporter <https://opentelemetry-python.readthedocs.io/en/latest/exporter/jaeger/jaeger.html#module-opentelemetry.exporter.jaeger>`_.
+想要尝试跟踪的用户可以配置其远程跨度处理器以将跨度导出到本地 JSON 文件。本地开发的认真用户可以通过 `Jaeger exporter <https://opentelemetry-python.readthedocs.io/en/latest/exporter/jaeger/jaeger.html#module-opentelemetry.exporter.jaeger>`_ 将其跟踪推送到 Jaeger 容器。
 
 .. _additional-instruments:
 
-Additional instruments
+附加说明
 ~~~~~~~~~~~~~~~~~~~~~~
-If you are using a library that has built-in tracing support, the ``setup_tracing`` function you provide should also patch those libraries. You can find more documentation for the instrumentation of these libraries `here <https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation>`_.
+如果您使用的库具有内置跟踪支持，你提供的 ``setup_tracing`` 函数也应该修补这些库。 您可以在 `此处 <https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation>`_ 找到有关这些库的更多文档。
 
-Custom traces
+自定义跟踪
 *************
-Add custom tracing in your programs. Within your program, get the tracer object with ``trace.get_tracer(__name__)`` and start a new span with ``tracer.start_as_current_span(...)``.
+在您的程序中添加自定义跟踪。在您的程序中，使用 ``trace.get_tracer(__name__)`` 获取跟踪器对象，并使用 ``tracer.start_as_current_span(...)`` 开始一个新的跨度。
 
-See below for a simple example of adding custom tracing.
+请参阅下面的添加自定义跟踪的简单示例。
 
 .. testcode::
 

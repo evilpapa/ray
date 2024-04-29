@@ -104,7 +104,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
@@ -126,7 +126,7 @@ Ray 状态 CLI 和 SDK
             0   task_running_300_seconds  RUNNING: 2      NORMAL_TASK
             1   Actor.__init__            FINISHED: 2     ACTOR_CREATION_TASK
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -141,7 +141,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
@@ -160,7 +160,7 @@ Ray 状态 CLI 和 SDK
             0  31405554844820381c2f0f8501000000  Actor                 96956  ALIVE
             1  f36758a9f8871a9ca993b1d201000000  Actor                 96955  ALIVE
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -176,7 +176,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
@@ -196,7 +196,7 @@ Ray 状态 CLI 和 SDK
             serialized_runtime_env: '{}'
             state: ALIVE
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -209,7 +209,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
@@ -224,7 +224,7 @@ Ray 状态 CLI 和 SDK
             :actor_name:Actor
             Actor created
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -262,13 +262,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray summary actors
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -283,13 +283,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray summary tasks
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -309,13 +309,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray summary objects
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -347,13 +347,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list nodes
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -364,13 +364,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list placement-groups
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -384,13 +384,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list objects -f pid=<PID> -f reference_type=LOCAL_REFERENCE
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -401,13 +401,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list actors -f state=ALIVE
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -418,13 +418,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list tasks -f state=RUNNING
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -435,13 +435,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list tasks -f state!=RUNNING
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -452,13 +452,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list tasks -f state=RUNNING -f name="task_running_300_seconds()"
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -471,13 +471,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray list tasks --detail
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
 
@@ -490,17 +490,17 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 获取特定实体（任务、actor 等）的状态
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Get a task's states**
+**获取任务的状态**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray get tasks <TASK_ID>
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -508,17 +508,17 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
             from ray.util.state import get_task
             get_task(id=<TASK_ID>)
 
-**Get a node's states**
+**获取节点的状态**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray get nodes <NODE_ID>
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -526,28 +526,27 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
             from ray.util.state import get_node
             get_node(id=<NODE_ID>)
 
-See :ref:`state CLI reference <state-api-cli-ref>` for more details about ``ray get`` command.
+有关命令的更多详细信息，请参阅 :ref:`状态 CLI 参考 <state-api-cli-ref>` 的 ``ray get`` 命令。
 
 
-Fetch the logs of a particular entity (task, actor, etc.)
+获取特定实体（任务、actor 等）的日志
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. _state-api-log-doc:
 
-State API also allows you to access Ray logs. Note that you cannot access the logs from a dead node.
-By default, the API prints logs from a head node.
+State API 还允许您访问 Ray 日志。请注意，您无法从死节点访问日志。默认情况下，API 从头节点打印日志。
 
-**Get all retrievable log file names from a head node in a cluster**
+**从集群中的头节点获取所有可检索的日志文件名**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray logs cluster
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -559,11 +558,11 @@ By default, the API prints logs from a head node.
             # Get the node ID / node IP from `ray list nodes`
             list_logs(node_id=<HEAD_NODE_ID>)
 
-**Get a particular log file from a node**
+**从节点获取特定日志文件**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
@@ -572,7 +571,7 @@ By default, the API prints logs from a head node.
             # `ray logs cluster` is alias to `ray logs` when querying with globs.
             ray logs gcs_server.out --node-id <NODE_ID>
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -583,11 +582,11 @@ By default, the API prints logs from a head node.
             for line in get_log(filename="gcs_server.out", node_id=<NODE_ID>):
                 print(line)
 
-**Stream a log file from a node**
+**从节点流式传输日志文件**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
@@ -597,7 +596,7 @@ By default, the API prints logs from a head node.
             ray logs cluster raylet.out --node-ip <NODE_IP> --follow
 
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -609,17 +608,17 @@ By default, the API prints logs from a head node.
             for line in get_log(filename="raylet.out", node_ip=<NODE_IP>, follow=True):
                 print(line)
 
-**Stream log from an actor with actor id**
+**来自具有 actor id 的 actor 的流日志**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray logs actor --id=<ACTOR_ID> --follow
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -631,17 +630,17 @@ By default, the API prints logs from a head node.
             for line in get_log(actor_id=<ACTOR_ID>, follow=True):
                 print(line)
 
-**Stream log from a pid**
+**来自 pid 的日志流**
 
 .. tabs::
 
-    .. group-tab:: CLI (Recommended)
+    .. group-tab:: CLI （推荐）
 
         .. code-block:: bash
 
             ray logs worker --pid=<PID> --follow
 
-    .. group-tab:: Python SDK (Internal Developer API)
+    .. group-tab:: Python SDK （内部开发 API）
 
         .. testcode::
             :skipif: True
@@ -655,61 +654,57 @@ By default, the API prints logs from a head node.
             for line in get_log(pid=<PID>, node_ip=<NODE_IP>, follow=True):
                 print(line)
 
-See :ref:`state CLI reference<state-api-cli-ref>` for more details about ``ray logs`` command.
+有关命令的更多详细信息，请参阅 :ref:`状态 CLI 参考<state-api-cli-ref>` 的 ``ray logs`` 命令。
 
 
-Failure Semantics
+失败语义
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The State APIs don't guarantee to return a consistent or complete snapshot of the cluster all the time. By default,
-all Python SDKs raise an exception when output is missing from the API. The CLI returns a partial result
-and provides warning messages. Here are cases where there can be missing output from the API.
+State API 不保证始终返回一致或完整的集群快照。
+默认情况下，当 API 缺少输出时，所有 Python SDK 都会引发异常。 
+CLI 返回部分结果并提供警告消息。在以下情况下，API 可能会丢失输出。
 
-**Query Failures**
+**查询失败**
 
-State APIs query "data sources" (e.g., GCS, raylets, etc.) to obtain and build the snapshot of the Cluster.
-However, data sources are sometimes unavailable (e.g., the source is down or overloaded). In this case, APIs
-return a partial (incomplete) snapshot of the Cluster, and users are informed that the output is incomplete through a warning message.
-All warnings are printed through Python's ``warnings`` library, and they can be suppressed.
+状态 API 查询“数据源”（例如，GCS、raylet 等）以获取并构建集群的快照。
+然而，数据源有时不可用（例如，源已关闭或过载）。
+在这种情况下，API 返回集群的部分（不完整）快照，并通过警告消息通知用户输出不完整。
+所有警告都通过 Python 的 ``warnings`` 库打印，可以抑制它们。
 
-**Data Truncation**
+**数据截断**
 
-When the returned number of entities (number of rows) is too large (> 100K), state APIs truncate the output data to ensure system stability
-(when this happens, there's no way to choose truncated data). When truncation happens it is informed through Python's
-``warnings`` module.
+当返回的实体数（行数）太大（> 100K）时，状态 API 会截断输出数据以确保系统稳定性（发生这种情况时，无法选择截断的数据）。
+当发生截断时， Python 的 ``warnings`` 模块会通知它。
 
-**Garbage Collected Resources**
+**垃圾收集资源**
 
-Depending on the lifecycle of the resources, some "finished" resources are not accessible
-through the APIs because they are already garbage collected.
+根据资源的生命周期，某些“已完成”资源无法通过 API 访问，因为它们已被垃圾收集。
 
 .. note::
 
-    Do not to rely on this API to obtain correct information on finished resources.
-    For example, Ray periodically garbage collects DEAD state Actor data to reduce memory usage.
-    Or it cleans up the FINISHED state of Tasks when its lineage goes out of scope.
+    不要依赖此 API 来获取有关已完成资源的正确信息。
+    例如，Ray 定期垃圾收集 DEAD 状态 Actor 数据以减少内存使用。
+    或者，当其沿袭超出范围时，它会清除任务的 FINISHED 状态。
 
-API Reference
+API 参考
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- For the CLI Reference, see :ref:`State CLI Refernece <state-api-cli-ref>`.
-- For the SDK Reference, see :ref:`State API Reference <state-api-ref>`.
-- For the Log CLI Reference, see :ref:`Log CLI Reference <ray-logs-api-cli-ref>`.
+- 有关 CLI 参考，请参阅 :ref:`状态 CLI 参考 <state-api-cli-ref>`。
+- 有关 SDK 参考，请参阅 :ref:`状态 API 参考 <state-api-ref>`。
+- 有关日志 CLI 参考，请参阅 :ref:`日志 CLI 参考 <ray-logs-api-cli-ref>`。
 
 
 
 
-Using Ray CLI tools from outside the cluster
+从集群外部使用 Ray CLI 工具
 --------------------------------------------------------
-These CLI commands have to be run on a node in the Ray Cluster. Examples for
-executing these commands from a machine outside the Ray Cluster are provided
-below.
+这些 CLI 命令必须在 Ray Cluster 中的节点上运行。下面提供了从 Ray Cluster 外部的机器执行这些命令的示例。
 
 .. tab-set::
 
     .. tab-item:: VM Cluster Launcher
 
-        Execute a command on the cluster using ``ray exec``:
+        使用以下命令 ``ray exec`` 在集群上执行命令：
 
         .. code-block:: shell
 
@@ -717,9 +712,8 @@ below.
 
     .. tab-item:: KubeRay
 
-        Execute a command on the cluster using ``kubectl exec`` and the configured
-        RayCluster name. Ray uses the Service targeting the Ray head pod to
-        execute a CLI command on the cluster.
+        使用 ``kubectl exec`` 和配置的 RayCluster 名称在集群上执行命令。
+        Ray 使用定位到 Ray head pod 的 Service 在集群上执行 CLI 命令。
 
         .. code-block:: shell
 
