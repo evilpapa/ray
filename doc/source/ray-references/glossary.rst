@@ -3,12 +3,11 @@
 Ray 术语表
 ============
 
-On this page you find a list of important terminology used throughout the Ray
-documentation, sorted alphabetically.
+在此页面上，您可以找到整个 Ray 文档中使用的重要术语列表，按字母顺序排序。
 
 .. glossary::
 
-    Action space
+    Action 空间
         Property of an RL environment. The shape(s) and datatype(s) that actions within
         an RL environment are allowed to have.
         Examples: An RL environment, in which an agent can move up, down, left,
@@ -19,28 +18,24 @@ documentation, sorted alphabetically.
         ``Box(-1.0, 1.0, (1,), float32)`` (single float values between -1.0 and 1.0).
 
     Actor
-        A Ray actor is a remote instance of a class, which is
-        essentially a stateful service. :ref:`Learn more about Ray actors<actor-guide>`.
+        是一个类的远程实例，本质上是一个有状态服务。 :ref:`了解有关 Ray actor 的更多信息<actor-guide>`.
 
     Actor task
-        An invocation of an Ray actor method. Sometimes we just call it a task.
+        Ray actor 方法的调用。有时我们只是称其为任务。
 
     Ray Agent
-        Daemon process running on each Ray node. It has several functionalities like
-        collecting metrics on the local node and installing runtime environments.
+        每个Ray节点上运行的守护进程。它具有多种功能，
+        例如收集本地节点上的指标和安装运行时环境。
 
     Agent
-        An acting entity inside an RL environment. One RL environment might contain
-        one (single-agent RL) or more (multi-agent RL) acting agents. Different agents
-        within the same environment might have different observation- and action-spaces,
-        different reward functions, and act at different time-steps.
+        强化学习环境中的行为实体。一个强化学习环境可能包含一个（单智能体强化学习）或多个（多智能体强化学习）行为实体。
+        不同环境中的智能体可能具有不同的观察空间和动作空间、不同的奖励函数，并在不同的时间步骤中行动。
 
-    Algorithm
-        A class that holds the who/when/where/how for training one or more RL agent(s).
-        The user interacts with an Algorithm instance directly to train their agents
-        (it is the top-most user facing API or RLlib).
+    Algorithm 算法
+        一个类，它包含训练一个或多个 RL 代理的 who/when/where/how 信息。
+        用户直接与算法实例交互，以训练他们的代理（它是最顶层的用户接口或 RLlib）。
 
-    Asynchronous execution
+    Asynchronous execution 异步执行
         An execution model where a later task can begin executing in parallel,
         without waiting for an earlier task to finish.
         Ray tasks and actor tasks are all executed asynchronously.

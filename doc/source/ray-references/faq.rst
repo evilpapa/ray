@@ -10,7 +10,7 @@
     ./../tune/faq.rst
 
 
-Further Questions or Issues?
+其他疑问或问题？
 ----------------------------
 
 .. include:: /_includes/_help.rst
