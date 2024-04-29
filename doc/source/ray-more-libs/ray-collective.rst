@@ -227,9 +227,9 @@ Ray 集体库与发布的 Ray 轮包捆绑在一起。除了 Ray 之外，用户
 
 ``ray.util.collective`` 也提供了进程之间的 P2P 发送/接收通信。
 
-The send/recv exhibits the same behavior with the collective functions:
-they are synchronous blocking calls -- a pair of send and recv must be called together on paired processes in order to specify the entire communication,
-and must successfully rendezvous with each other to proceed. See the code example below:
+send/recv 与集体函数表现出相同的行为：
+它们是同步阻塞调用 - 必须在成对进程上一起调用一对 send 和 receive，以便指定整个通信，
+并且必须成功地彼此会合才能继续。请参阅下面的代码示例：
 
 .. code-block:: python
 
@@ -272,26 +272,26 @@ and must successfully rendezvous with each other to proceed. See the code exampl
    # An anti-pattern: the following code will hang, because it doesn't instantiate the recv side call
    ray.get([A.do_send.remote(target_rank=1)])
 
-Single-GPU and Multi-GPU Collective Primitives
+单 GPU 和多 GPU 集体基元
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In many cluster setups, a machine usually has more than 1 GPU;
-effectively leveraging the GPU-GPU bandwidth, such as `NVLINK <https://www.nvidia.com/en-us/design-visualization/nvlink-bridges/>`_\ ,
-can significantly improve communication performance.
+在许多集群设置中，一台机器通常具有多个 GPU；
+有效利用GPU-GPU带宽，例如 `NVLINK <https://www.nvidia.com/en-us/design-visualization/nvlink-bridges/>`_\ ，
+可以显着提高通信性能。
 
-``ray.util.collective`` supports multi-GPU collective calls, in which case, a process (actor/tasks) manages more than 1 GPU (e.g., via ``ray.remote(num_gpus=4)``\ ).
-Using these multi-GPU collective functions are normally more performance-advantageous than using single-GPU collective API
-and spawning the number of processes equal to the number of GPUs.
-See the API references for the signatures of multi-GPU collective APIs.
+``ray.util.collective`` 支持多GPU集体调用，在这种情况下，一个进程 (actor/tasks) 管理超过1个GPU（例如，通过 ``ray.remote(num_gpus=4)``\ ）。
+使用这些多 GPU 集体函数通常比使用单 GPU 集体 API 更具性能优势，
+并且生成的进程数量等于 GPU 数量。
+请参阅 API 参考，了解多 GPU 集体 API 的签名。
 
-Also of note that all multi-GPU APIs are with the following restrictions:
+另请注意，所有多 GPU API 均具有以下限制：
 
 
-* Only NCCL backend is supported.
-* Collective processes that make multi-GPU collective or P2P calls need to own the same number of GPU devices.
-* The input to multi-GPU collective functions are normally a list of tensors, each located on a different GPU device owned by the caller process.
+* 仅支持 NCCL 后端。
+* 进行多GPU集体或P2P调用的集体进程需要拥有相同数量的GPU设备。
+* 多 GPU 集体函数的输入通常是张量列表，每个张量位于调用者进程拥有的不同 GPU 设备上。
 
-An example code utilizing the multi-GPU collective APIs is provided below:
+下面提供了利用多 GPU 集体 API 的示例代码：
 
 .. code-block:: python
 
@@ -342,17 +342,17 @@ An example code utilizing the multi-GPU collective APIs is provided below:
    results = ray.get([w.allreduce_call.remote() for w in workers])
    results = ray.get([w.p2p_call.remote() for w in workers])
 
-More Resources
+更多资源
 --------------
 
-The following links provide helpful resources on how to efficiently leverage the ``ray.util.collective`` library.
+以下链接提供了有关如何有效利用 ``ray.util.collective`` 库的有用资源。
 
 
-* `More running examples <https://github.com/ray-project/ray/tree/master/python/ray/util/collective/examples>`_ under ``ray.util.collective.examples``.
-* `Scaling up the Spacy Name Entity Recognition (NER) pipeline <https://github.com/explosion/spacy-ray>`_ using Ray collective library.
-* `Implementing the AllReduce strategy <https://github.com/ray-project/distml/blob/master/distml/strategy/allreduce_strategy.py>`_ for data-parallel distributed ML training.
+* 更多运行在 ``ray.util.collective.examples`` 的 `示例 <https://github.com/ray-project/ray/tree/master/python/ray/util/collective/examples>`_ 。
+* 使用 Ray 集体库 `扩展 Spacy 名称实体识别 (NER) 管道 <https://github.com/explosion/spacy-ray>`_ 。
+* `实现了 AllReduce 策略 <https://github.com/ray-project/distml/blob/master/distml/strategy/allreduce_strategy.py>`_ 的数据并行分布式机器学习训练。
 
-API References
+API 参考
 --------------
 
 .. automodule:: ray.util.collective.collective
