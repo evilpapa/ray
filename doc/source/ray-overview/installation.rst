@@ -136,7 +136,7 @@ Ray 在 Windows 中当前处于 beta 状态。
 
 .. note::
 
-  :ref:`使用统计 <ref-usage-stats>` 收集选项 (can be :ref:`disabled <usage-disable>`) 针对每日版本包括本地集群通过 ``ray.init()`` 以及远程集群运行的 cli 默认开启。
+  :ref:`使用统计 <ref-usage-stats>` 收集选项 (可 :ref:`禁用 <usage-disable>`) 针对每日版本包括本地集群通过 ``ray.init()`` 以及远程集群运行的 cli 默认开启。
 
 .. note::
 
@@ -190,7 +190,7 @@ Ray 在 Windows 中当前处于 beta 状态。
     pip install https://s3-us-west-2.amazonaws.com/ray-wheels/master/4f2ec46c3adb6ba9f412f09a9732f436c4a5d0c9/ray-3.0.0.dev0-cp39-cp39-macosx_10_15_x86_64.whl
 
 针对 wheel 文件名格式有少量的变量组成；最好和 :ref:`每日构建 章节 <install-nightlies>` 列出的 URL 格式相匹配。
-Here's a summary of the variations:
+以下是变化的总结：
 
 * 针对 MacOS，早于 2021 年 8 月 7 日的文件名会由 ``macosx_10_13`` 替代 ``macosx_10_15``。
 
@@ -319,7 +319,7 @@ Ray 指定，其余都适用于任何使用Windows的地方):
 
 
 将您遇到的任何问题提交给
-`GitHub <https://github.com/ray-project/ray/issues/>`_.
+`GitHub <https://github.com/ray-project/ray/issues/>`_ 。
 
 在 Arch Linux 上安装 Ray
 ----------------------------
@@ -335,7 +335,7 @@ Ray 在 Arch Linux 上通过 Arch 用户存储库 (`AUR`_) 作为 ``python-ray``
 
   yay -S python-ray
 
-任何相关问题的讨论请参考 ``python-ray`` 的 AUR 页面上的 `评论部分`_。
+任何相关问题的讨论请参考 ``python-ray`` 的 AUR 页面上的 `评论部分`_ 。
 
 .. _`AUR`: https://wiki.archlinux.org/index.php/Arch_User_Repository
 .. _`Arch Wiki`: https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_packages

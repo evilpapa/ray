@@ -53,8 +53,8 @@ Ray 的统一计算框架由三层组成：
     .. grid-item-card::
 
         **扩展机器学习工作负载**
-
         ^^^
+
        使用分布式库工具包构建 ML 应用程序
         :doc:`数据处理 <../data/data>`, 
         :doc:`模型训练 <../train/train>`, 
@@ -62,6 +62,7 @@ Ray 的统一计算框架由三层组成：
         :doc:`强化学习 <../rllib/index>`, 
         :doc:`模型服务 <../serve/index>`, 
         以及 :doc:`更多 <../ray-more-libs/index>`。
+
         +++
         .. button-ref:: libraries-quickstart
             :color: primary

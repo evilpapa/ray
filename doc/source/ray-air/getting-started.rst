@@ -36,7 +36,7 @@ Ray 的人工智能库通过为可扩展 ML 提供无缝、统一和开放的体
 基于 Ray 的 ML 平台示例
 ---------------------------------
 
-`Merlin <https://shopify.engineering/merlin-shopify-machine-learning-platform>`_ 是 Shopify 基于 Ray 的 ML 平台。它实现了 `分布式应用程序 <https://www.youtube.com/watch?v=kbvzvdKH7bc>`_（如产品分类和推荐）的快速迭代和扩展。
+`Merlin <https://shopify.engineering/merlin-shopify-machine-learning-platform>`_ 是 Shopify 基于 Ray 的 ML 平台。它实现了 `分布式应用程序 <https://www.youtube.com/watch?v=kbvzvdKH7bc>`_ （如产品分类和推荐）的快速迭代和扩展。
 
 .. figure:: /images/shopify-workload.png
 
