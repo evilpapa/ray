@@ -1,7 +1,7 @@
-# Application guide
+# 应用指南
 
-This section introduces the main differences in running a Ray application on your laptop vs on a Ray Cluster.
-To get started, check out the [job submissions](jobs-quickstart) page.
+本节介绍在笔记本电脑上运行 Ray 应用程序与在 Ray 集群上运行 Ray 应用程序的主要区别。
+首先，请查看 [job submissions](jobs-quickstart) 页面。
 
 ```{toctree}
 :maxdepth: '2'

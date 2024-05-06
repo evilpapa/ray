@@ -4,29 +4,28 @@
 数据保存
 ===========
 
-Ray Data lets you save data in files or other Python objects.
+Ray Data 允许您将数据保存在文件或其他 Python 对象中。
 
-This guide shows you how to:
+本指南向您展示如何：
 
-* `Write data to files <#writing-data-to-files>`_
-* `Convert Datasets to other Python libraries <#converting-datasets-to-other-python-libraries>`_
+* `将数据写入到文件 <#writing-data-to-files>`_
+* `转换 Datasets 到其他 Python 类库 <#converting-datasets-to-other-python-libraries>`_
 
-Writing data to files
+将数据写入文件
 =====================
 
-Ray Data writes to local disk and cloud storage.
+Ray Data写入本地磁盘和云存储。
 
-Writing data to local disk
+将数据写入本地磁盘
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To save your :class:`~ray.data.dataset.Dataset` to local disk, call a method
-like :meth:`Dataset.write_parquet <ray.data.Dataset.write_parquet>`  and specify a local
-directory with the `local://` scheme.
+要将您的内容 :class:`~ray.data.dataset.Dataset` 保存到本地磁盘，请调用
+:meth:`Dataset.write_parquet <ray.data.Dataset.write_parquet>` 方法并使用 `local://` 指定本地目录。
 
 .. warning::
 
-    If your cluster contains multiple nodes and you don't use `local://`, Ray Data
-    writes different partitions of data to different nodes.
+    如果您的集群包含多个节点并且您不使用 `local://`，Ray Data
+    会将不同分区的数据写入不同的节点。
 
 .. testcode::
 
@@ -36,22 +35,20 @@ directory with the `local://` scheme.
 
     ds.write_parquet("local:///tmp/iris/")
 
-To write data to formats other than Parquet, read the
-:ref:`Input/Output reference <input-output>`.
+要将数据写入 Parquet 以外的格式，请阅读
+:ref:`Input/Output 参考 <input-output>`。
 
-Writing data to cloud storage
+将数据写入云存储
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To save your :class:`~ray.data.dataset.Dataset` to cloud storage, authenticate all nodes
-with your cloud service provider. Then, call a method like
-:meth:`Dataset.write_parquet <ray.data.Dataset.write_parquet>` and specify a URI with
-the appropriate scheme. URI can point to buckets or folders.
+要将您的数据 :class:`~ray.data.dataset.Dataset` 保存到云存储，请向您的云服务提供商验证所有节点。然后，调用类似方法
+:meth:`Dataset.write_parquet <ray.data.Dataset.write_parquet>` 并使用适当的方案指定 URI。 URI 可以指向存储桶或文件夹。
 
 .. tab-set::
 
     .. tab-item:: S3
 
-        To save data to Amazon S3, specify a URI with the ``s3://`` scheme.
+        要将数据保存到 Amazon S3，请指定带有 ``s3://`` 方案的 URI。
 
         .. testcode::
             :skipif: True
@@ -104,15 +101,14 @@ the appropriate scheme. URI can point to buckets or folders.
             filesystem = adlfs.AzureBlobFileSystem(account_name="azureopendatastorage")
             ds.write_parquet("az://my-bucket/my-folder", filesystem=filesystem)
 
-To write data to formats other than Parquet, read the
-:ref:`Input/Output reference <input-output>`.
+要将数据写入 Parquet 以外的格式，请阅读
+:ref:`Input/Output 参考 <input-output>`。
 
-Writing data to NFS
+将数据写入 NFS
 ~~~~~~~~~~~~~~~~~~~
 
-To save your :class:`~ray.data.dataset.Dataset` to NFS file systems, call a method
-like :meth:`Dataset.write_parquet <ray.data.Dataset.write_parquet>` and specify a
-mounted directory.
+要将您的 :class:`~ray.data.dataset.Dataset` 保存到 NFS 文件系统，请调用类似方法
+:meth:`Dataset.write_parquet <ray.data.Dataset.write_parquet>` 并指定挂载目录。
 
 .. testcode::
     :skipif: True
@@ -123,16 +119,16 @@ mounted directory.
 
     ds.write_parquet("/mnt/cluster_storage/iris")
 
-To write data to formats other than Parquet, read the
-:ref:`Input/Output reference <input-output>`.
+要将数据写入 Parquet 以外的格式，请阅读
+:ref:`Input/Output 参考 <input-output>`。
 
 .. _changing-number-output-files:
 
-Changing the number of output files
+更改输出文件的数量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you call a write method, Ray Data writes your data to one file per :term:`block`.
-To change the number of blocks, call :meth:`~ray.data.Dataset.repartition`.
+当您调用写入方法时，Ray Data 会将您的数据写入每个 :term:`block` 的一个文件中。
+要更改块数，请调用 :meth:`~ray.data.Dataset.repartition`。
 
 .. testcode::
 
@@ -150,15 +146,15 @@ To change the number of blocks, call :meth:`~ray.data.Dataset.repartition`.
     ['26b07dba90824a03bb67f90a1360e104_000003.csv', '26b07dba90824a03bb67f90a1360e104_000002.csv']
 
 
-Converting Datasets to other Python libraries
+将数据集转换为其他 Python 库
 =============================================
 
-Converting Datasets to pandas
+将数据集转换为 pandas
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To convert a :class:`~ray.data.dataset.Dataset` to a pandas DataFrame, call
-:meth:`Dataset.to_pandas() <ray.data.Dataset.to_pandas>`. Your data must fit in memory
-on the head node.
+要将 :class:`~ray.data.dataset.Dataset` 转换为 pandas DataFrame，请调用
+:meth:`Dataset.to_pandas() <ray.data.Dataset.to_pandas>` 。
+您的数据必须适合头节点上的内存。
 
 .. testcode::
 
@@ -187,20 +183,20 @@ on the head node.
     <BLANKLINE>
     [150 rows x 5 columns]
 
-Converting Datasets to distributed DataFrames
+将数据集转换为分布式 DataFrame
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ray Data interoperates with distributed data processing frameworks like
-:ref:`Dask <dask-on-ray>`, :ref:`Spark <spark-on-ray>`, :ref:`Modin <modin-on-ray>`, and
-:ref:`Mars <mars-on-ray>`.
+Ray Data 与
+:ref:`Dask <dask-on-ray>` 、 :ref:`Spark <spark-on-ray>` 、 :ref:`Modin <modin-on-ray>` 和
+:ref:`Mars <mars-on-ray>` 等分布式数据处理框架进行互操作 。
 
 .. tab-set::
 
     .. tab-item:: Dask
 
-        To convert a :class:`~ray.data.dataset.Dataset` to a
-        `Dask DataFrame <https://docs.dask.org/en/stable/dataframe.html>`__, call
-        :meth:`Dataset.to_dask() <ray.data.Dataset.to_dask>`.
+        要将 :class:`~ray.data.dataset.Dataset` 转换成
+        `Dask DataFrame <https://docs.dask.org/en/stable/dataframe.html>`__ ，调用
+        :meth:`Dataset.to_dask() <ray.data.Dataset.to_dask>`。
 
         .. testcode::
             :skipif: True
@@ -213,9 +209,9 @@ Ray Data interoperates with distributed data processing frameworks like
 
     .. tab-item:: Spark
 
-        To convert a :class:`~ray.data.dataset.Dataset` to a `Spark DataFrame
-        <https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html>`__,
-        call :meth:`Dataset.to_spark() <ray.data.Dataset.to_spark>`.
+        要将 :class:`~ray.data.dataset.Dataset` 转换成 `Spark DataFrame
+        <https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html>`__，
+        调用 :meth:`Dataset.to_spark() <ray.data.Dataset.to_spark>`.
 
         .. testcode::
             :skipif: True
@@ -228,7 +224,7 @@ Ray Data interoperates with distributed data processing frameworks like
 
     .. tab-item:: Modin
 
-        To convert a :class:`~ray.data.dataset.Dataset` to a Modin DataFrame, call
+        要将 :class:`~ray.data.dataset.Dataset` 转换成 Modin DataFrame，调用
         :meth:`Dataset.to_modin() <ray.data.Dataset.to_modin>`.
 
         .. testcode::
@@ -242,7 +238,7 @@ Ray Data interoperates with distributed data processing frameworks like
 
     .. tab-item:: Mars
 
-        To convert a :class:`~ray.data.dataset.Dataset` from a Mars DataFrame, call
+       要将 :class:`~ray.data.dataset.Dataset` 转换成 Mars DataFrame，调用
         :meth:`Dataset.to_mars() <ray.data.Dataset.to_mars>`.
 
         .. testcode::

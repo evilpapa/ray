@@ -20,10 +20,10 @@ Ray Data 是一个可扩展的机器学习数据处理库。它提供了灵活�
 
     $ pip install -U 'ray[data]'
 
-To learn more about installing Ray and its libraries, see
-:ref:`Installing Ray <installation>`.
+要了解有关 Ray 机器类库的更多信息，请参阅
+ :ref:`安装 Ray <installation>`。
 
-Learn more
+学习更多内容
 ----------
 
 .. grid:: 1 2 2 2
@@ -35,7 +35,7 @@ Learn more
         **Ray Data Overview**
         ^^^
 
-        Get an overview of Ray Data, the workloads that it supports, and how it compares to alternatives.
+        获取 Ray Data 的概述，支持的工作负载以及与其他替代方案的比较。
 
         +++
         .. button-ref:: data_overview
@@ -50,8 +50,9 @@ Learn more
         **Key Concepts**
         ^^^
 
-        Understand the key concepts behind Ray Data. Learn what
-        :ref:`Datasets <dataset_concept>` are and how they're used.
+        
+        了解 Ray Data 背后的关键概念。了解什么是 
+        :ref:`Datasets <dataset_concept>` ，以及它们是如何使用的。
 
         +++
         .. button-ref:: data_key_concepts
@@ -59,14 +60,14 @@ Learn more
             :outline:
             :expand:
 
-            Learn Key Concepts
+            学习关键概念
 
     .. grid-item-card::
 
         **User Guides**
         ^^^
 
-        Learn how to use Ray Data, from basic usage to end-to-end guides.
+        学习如何使用 Ray Data，从基本用法到端到端指南。
 
         +++
         .. button-ref:: data_user_guide
@@ -74,14 +75,14 @@ Learn more
             :outline:
             :expand:
 
-            Learn how to use Ray Data
+            学习如何使用 Ray Data
 
     .. grid-item-card::
 
         **Examples**
         ^^^
 
-        Find both simple and scaling-out examples of using Ray Data.
+        查找使用 Ray Data 的简单示例和扩展示例。
 
         +++
         .. button-ref:: data-recipes
@@ -96,7 +97,7 @@ Learn more
         **API**
         ^^^
 
-        Get more in-depth information about the Ray Data API.
+        获取有关 Ray Data API 的更多深入信息。
 
         +++
         .. button-ref:: data-api
@@ -104,14 +105,14 @@ Learn more
             :outline:
             :expand:
 
-            Read the API Reference
+            阅读 API 参考
 
     .. grid-item-card::
 
         **Ray blogs**
         ^^^
 
-        Get the latest on engineering updates from the Ray team and how companies are using Ray Data.
+        获取 Ray 团队的工程更新以及公司如何使用 Ray Data 的最新信息。
 
         +++
         .. button-link:: https://www.anyscale.com/blog?tag=ray-datasets
@@ -119,4 +120,4 @@ Learn more
             :outline:
             :expand:
 
-            Read the Ray blogs
+            阅读 Ray 博客

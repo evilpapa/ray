@@ -1,6 +1,6 @@
 (jobs-overview)=
 
-# Ray Jobs Overview
+# Ray Job 概述
 
 Once you have deployed a Ray cluster (on [VMs](vm-cluster-quick-start) or [Kubernetes](kuberay-quickstart)), you are ready to run a Ray application!
 ![A diagram that shows three ways of running a job on a Ray cluster.](../../images/ray-job-diagram.svg "Three ways of running a job on a Ray cluster.")

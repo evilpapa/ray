@@ -4,26 +4,26 @@
 数据加载
 ============
 
-Ray Data loads data from various sources. This guide shows you how to:
+Ray Data 从各种来源加载数据。本指南向您展示如何：
 
-* `Read files <#reading-files>`_ like images
-* `Load in-memory data <#loading-data-from-other-libraries>`_ like pandas DataFrames
-* `Read databases <#reading-databases>`_ like MySQL
+* `读取图像 <#reading-files>`_ 等文件
+* `加载内存数据 <#loading-data-from-other-libraries>`_ 如 pandas DataFrames
+* `读取数据 <#reading-databases>`_ 如 MySQL
 
 .. _reading-files:
 
-Reading files
+读取文件
 =============
 
-Ray Data reads files from local disk or cloud storage in a variety of file formats.
-To view the full list of supported file formats, see the
-:ref:`Input/Output reference <input-output>`.
+Ray Data 从本地磁盘或云存储中读取多种文件格式的文件。
+要查看支持的文件格式的完整列表，请参阅
+:ref:`Input/Output 参考 <input-output>`。
 
 .. tab-set::
 
     .. tab-item:: Parquet
 
-        To read Parquet files, call :func:`~ray.data.read_parquet`.
+        要读取 Parquet 文件，请调用 :func:`~ray.data.read_parquet`。
 
         .. testcode::
             :skipif: True
@@ -46,8 +46,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: Images
 
-        To read raw images, call :func:`~ray.data.read_images`. Ray Data represents
-        images as NumPy ndarrays.
+        读取原始图像，请调用 :func:`~ray.data.read_images`。Ray Data 将图像表示为 NumPy ndarray。
 
         .. testcode::
             :skipif: True
@@ -67,7 +66,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: Text
 
-        To read lines of text, call :func:`~ray.data.read_text`.
+        要读取文本行，请调用 :func:`~ray.data.read_text`。
 
         .. testcode::
             :skipif: True
@@ -86,7 +85,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: CSV
 
-        To read CSV files, call :func:`~ray.data.read_csv`.
+        要读取 CSV 文件，请调用 :func:`~ray.data.read_csv`。
 
         .. testcode::
             :skipif: True
@@ -109,7 +108,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: Binary
 
-        To read raw binary files, call :func:`~ray.data.read_binary_files`.
+        要读取原始二进制文件，请调用 :func:`~ray.data.read_binary_files`。
 
         .. testcode::
             :skipif: True
@@ -128,7 +127,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: TFRecords
 
-        To read TFRecords files, call :func:`~ray.data.read_tfrecords`.
+        要读取 TFRecords 文件，请调用 :func:`~ray.data.read_tfrecords`。
 
         .. testcode::
             :skipif: True
@@ -149,18 +148,17 @@ To view the full list of supported file formats, see the
             petal width (cm)   double
             target             int64
 
-Reading files from local disk
+从本地磁盘读取文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To read files from local disk, call a function like :func:`~ray.data.read_parquet` and
-specify paths with the ``local://`` schema. Paths can point to files or directories.
+要从本地磁盘读取文件，请调用如 :func:`~ray.data.read_parquet` 函数，并使用
+``local://`` 协议指定路径。路径可以指向文件或目录。
 
-To read formats other than Parquet, see the :ref:`Input/Output reference <input-output>`.
+要读取 Parquet 以外的格式，请参阅 :ref:`Input/Output 参考 <input-output>`。
 
 .. tip::
 
-    If your files are accessible on every node, exclude ``local://`` to parallelize the
-    read tasks across the cluster.
+    如果您的文件可以在每个节点上访问，请排除 ``local://`` 以在集群中并行读取任务。
 
 .. testcode::
     :skipif: True
@@ -181,20 +179,20 @@ To read formats other than Parquet, see the :ref:`Input/Output reference <input-
     petal.width   double
     variety       string
 
-Reading files from cloud storage
+从云存储读取文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To read files in cloud storage, authenticate all nodes with your cloud service provider.
-Then, call a method like :func:`~ray.data.read_parquet` and specify URIs with the
-appropriate schema. URIs can point to buckets, folders, or objects.
+要读取云存储中的文件，请向云服务提供商验证所有节点。然后，调用类似方法
+:func:`~ray.data.read_parquet` 并指定具有适当架构的 URI。 
+URI 可以指向存储桶、文件夹或对象。
 
-To read formats other than Parquet, see the :ref:`Input/Output reference <input-output>`.
+要读取 Parquet 以外的格式，请参阅 :ref:`Input/Output 参考 <input-output>`。
 
 .. tab-set::
 
     .. tab-item:: S3
 
-        To read files from Amazon S3, specify URIs with the ``s3://`` scheme.
+        要从 Amazon S3 读取文件，请使用 ``s3://`` 协议。
 
         .. testcode::
 
@@ -216,14 +214,14 @@ To read formats other than Parquet, see the :ref:`Input/Output reference <input-
 
     .. tab-item:: GCS
 
-        To read files from Google Cloud Storage, install the
-        `Filesystem interface to Google Cloud Storage <https://gcsfs.readthedocs.io/en/latest/>`_
+        要从 Google Cloud Storage 读取文件，请安装
+        `Google Cloud Storage 的文件系统接口 <https://gcsfs.readthedocs.io/en/latest/>`_
 
         .. code-block:: console
 
             pip install gcsfs
 
-        Then, create a ``GCSFileSystem`` and specify URIs with the ``gcs://`` scheme.
+        然后，创建一个 ``GCSFileSystem`` 并使用 ``gcs://`` 指定 URI。
 
         .. testcode::
             :skipif: True
@@ -246,14 +244,14 @@ To read formats other than Parquet, see the :ref:`Input/Output reference <input-
 
     .. tab-item:: ABL
 
-        To read files from Azure Blob Storage, install the
-        `Filesystem interface to Azure-Datalake Gen1 and Gen2 Storage <https://pypi.org/project/adlfs/>`_
+        要从 Azure Blob 存储读取文件，请将
+        `文件系统接口安装到 Azure-Datalake Gen1 和 Gen2 存储 <https://pypi.org/project/adlfs/>`_
 
         .. code-block:: console
 
             pip install adlfs
 
-        Then, create a ``AzureBlobFileSystem`` and specify URIs with the `az://` scheme.
+        然后，创建一个 ``AzureBlobFileSystem`` 并使用 `az://` 协议的 URI。
 
         .. testcode::
             :skipif: True
@@ -278,13 +276,13 @@ To read formats other than Parquet, see the :ref:`Input/Output reference <input-
             petal.width   double
             variety       string
 
-Reading files from NFS
+从 NFS 读取文件
 ~~~~~~~~~~~~~~~~~~~~~~
 
-To read files from NFS filesystems, call a function like :func:`~ray.data.read_parquet`
-and specify files on the mounted filesystem. Paths can point to files or directories.
+要从 NFS 文件系统读取文件，请调用类似函数 :func:`~ray.data.read_parquet`
+并指定已挂载文件系统上的文件。路径可以指向文件或目录。
 
-To read formats other than Parquet, see the :ref:`Input/Output reference <input-output>`.
+要读取 Parquet 以外的格式，请参阅 :ref:`Input/Output 参考 <input-output>`。
 
 .. testcode::
     :skipif: True
@@ -305,11 +303,11 @@ To read formats other than Parquet, see the :ref:`Input/Output reference <input-
     petal.width   double
     variety       string
 
-Handling compressed files
+处理压缩文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To read a compressed file, specify ``compression`` in ``arrow_open_stream_args``.
-You can use any `codec supported by Arrow <https://arrow.apache.org/docs/python/generated/pyarrow.CompressedInputStream.html>`__.
+要读取压缩文件，请再 ``compression`` 中指定 ``arrow_open_stream_args`` 。
+您可以使用 `Arrow 支持的任何编解码器 <https://arrow.apache.org/docs/python/generated/pyarrow.CompressedInputStream.html>`__。
 
 .. testcode::
 
@@ -320,21 +318,20 @@ You can use any `codec supported by Arrow <https://arrow.apache.org/docs/python/
         arrow_open_stream_args={"compression": "gzip"},
     )
 
-Loading data from other libraries
+从其他库加载数据
 =================================
 
-Loading data from single-node data libraries
+从单节点数据库加载数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ray Data interoperates with libraries like pandas, NumPy, and Arrow.
+Ray Data 与 pandas、NumPy 和 Arrow 等库进行互操作。
 
 .. tab-set::
 
     .. tab-item:: Python objects
 
-        To create a :class:`~ray.data.dataset.Dataset` from Python objects, call
-        :func:`~ray.data.from_items` and pass in a list of ``Dict``. Ray Data treats
-        each ``Dict`` as a row.
+        要从Python 对象创建 :class:`~ray.data.dataset.Dataset` ，调用
+        :func:`~ray.data.from_items` 并传入 ``Dict``. Ray Data 将每个据 ``Dict`` 数据视为一行。
 
         .. testcode::
 
@@ -356,8 +353,7 @@ Ray Data interoperates with libraries like pandas, NumPy, and Arrow.
                schema={food: string, price: double}
             )
 
-        You can also create a :class:`~ray.data.dataset.Dataset` from a list of regular
-        Python objects.
+        您还可以从常规 Python 对象列表中创建一个 :class:`~ray.data.dataset.Dataset` 。
 
         .. testcode::
 
@@ -448,22 +444,21 @@ Ray Data interoperates with libraries like pandas, NumPy, and Arrow.
 
 .. _loading_datasets_from_distributed_df:
 
-Loading data from distributed DataFrame libraries
+从分布式 DataFrame 库加载数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ray Data interoperates with distributed data processing frameworks like
-:ref:`Dask <dask-on-ray>`, :ref:`Spark <spark-on-ray>`, :ref:`Modin <modin-on-ray>`, and
-:ref:`Mars <mars-on-ray>`.
+Ray Data 与
+:ref:`Dask <dask-on-ray>`、 :ref:`Spark <spark-on-ray>`、 :ref:`Modin <modin-on-ray>` 和
+:ref:`Mars <mars-on-ray>` 等分布式数据处理框架进行互操作 。
 
 .. tab-set::
 
     .. tab-item:: Dask
 
-        To create a :class:`~ray.data.dataset.Dataset` from a
-        `Dask DataFrame <https://docs.dask.org/en/stable/dataframe.html>`__, call
-        :func:`~ray.data.from_dask`. This function constructs a
-        ``Dataset`` backed by the distributed Pandas DataFrame partitions that underly
-        the Dask DataFrame.
+        要从
+        `Dask DataFrame <https://docs.dask.org/en/stable/dataframe.html>`__ 创建 :class:`~ray.data.dataset.Dataset`，调用
+        :func:`~ray.data.from_dask`。
+        该函数构造一个由 Dask DataFrame 的分布式 Pandas DataFrame 分区支持的 ``Dataset``。
 
         .. testcode::
             :skipif: True
@@ -487,10 +482,10 @@ Ray Data interoperates with distributed data processing frameworks like
 
     .. tab-item:: Spark
 
-        To create a :class:`~ray.data.dataset.Dataset` from a `Spark DataFrame
-        <https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html>`__,
-        call :func:`~ray.data.from_spark`. This function creates a ``Dataset`` backed by
-        the distributed Spark DataFrame partitions that underly the Spark DataFrame.
+        从 `Spark DataFrame
+        <https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/dataframe.html>`__ 创建 :class:`~ray.data.dataset.Dataset`，调用
+        :func:`~ray.data.from_spark`. 
+        该函数构造一个由 Spark DataFrame 的分布式 Pandas DataFrame 分区支持的 ``Dataset``。
 
         .. testcode::
             :skipif: True
@@ -515,9 +510,9 @@ Ray Data interoperates with distributed data processing frameworks like
 
     .. tab-item:: Modin
 
-        To create a :class:`~ray.data.dataset.Dataset` from a Modin DataFrame, call
-        :func:`~ray.data.from_modin`. This function constructs a ``Dataset`` backed by
-        the distributed Pandas DataFrame partitions that underly the Modin DataFrame.
+        要从 Modin DataFrame 创建 :class:`~ray.data.dataset.Dataset`，调用
+        :func:`~ray.data.from_modin`。
+        该函数构造一个由 Modin DataFrame 的分布式 Pandas DataFrame 分区支持的 ``Dataset``。
 
         .. testcode::
             :skipif: True
@@ -541,10 +536,9 @@ Ray Data interoperates with distributed data processing frameworks like
 
     .. tab-item:: Mars
 
-        To create a :class:`~ray.data.dataset.Dataset` from a Mars DataFrame, call
-        :func:`~ray.data.from_mars`. This function constructs a ``Dataset``
-        backed by the distributed Pandas DataFrame partitions that underly the Mars
-        DataFrame.
+        从  Mars DataFrame 创建 :class:`~ray.data.dataset.Dataset` ，调用
+        :func:`~ray.data.from_mars`. 
+        该函数构造一个由 Mars DataFrame 的分布式 Pandas DataFrame 分区支持的 ``Dataset``。
 
         .. testcode::
             :skipif: True
@@ -571,24 +565,21 @@ Ray Data interoperates with distributed data processing frameworks like
 
 .. _loading_datasets_from_ml_libraries:
 
-Loading data from ML libraries
+从 ML 库加载数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ray Data interoperates with HuggingFace and TensorFlow datasets.
+Ray Data 与 HuggingFace 和 TensorFlow 数据集互操作。
 
 .. tab-set::
 
     .. tab-item:: HuggingFace
 
-        To convert a 🤗 Dataset to a Ray Datasets, call
-        :func:`~ray.data.from_huggingface`. This function accesses the underlying Arrow
-        table and converts it to a Dataset directly.
+        要将 🤗 数据集转换为 Ray 数据集，请调用
+        :func:`~ray.data.from_huggingface`。
+        该函数构造一个由 🤗 数据集的分布式 Pandas DataFrame 分区支持的 ``Dataset``。
 
         .. warning::
-            :class:`~ray.data.from_huggingface` doesn't support parallel
-            reads. This isn't an issue with in-memory 🤗 Datasets, but may fail with
-            large memory-mapped 🤗 Datasets. Also, 🤗 ``IterableDataset`` objects aren't
-            supported.
+            :class:`~ray.data.from_huggingface` 不支持并行读取。对于内存中 🤗 数据集来说这不是问题，但对于大型内存映射 🤗 数据集可能会失败。此外， 🤗 ``IterableDataset`` 对象不支持。
 
         .. testcode::
 
@@ -606,11 +597,10 @@ Ray Data interoperates with HuggingFace and TensorFlow datasets.
 
     .. tab-item:: TensorFlow
 
-        To convert a TensorFlow dataset to a Ray Dataset, call :func:`~ray.data.from_tf`.
+        要转换 TensorFlow dataset 为 Ray Dataset，调用 :func:`~ray.data.from_tf`。
 
         .. warning::
-            :class:`~ray.data.from_tf` doesn't support parallel reads. Only use this
-            function with small datasets like MNIST or CIFAR.
+            :class:`~ray.data.from_tf` 不支持并行读取。仅将此函数用于 MNIST 或 CIFAR 等小型数据集。
 
         .. testcode::
 
@@ -639,32 +629,30 @@ Ray Data interoperates with HuggingFace and TensorFlow datasets.
                }
             )
 
-Reading databases
+读取数据库
 =================
 
-Ray Data reads from databases like MySQL, PostgreSQL, and MongoDB.
+Ray Data 从 MySQL、PostgreSQL 和 MongoDB 等数据库读取。
 
 .. _reading_sql:
 
-Reading SQL databases
+读取 SQL 数据库
 ~~~~~~~~~~~~~~~~~~~~~
 
-Call :func:`~ray.data.read_sql` to read data from a database that provides a
-`Python DB API2-compliant <https://peps.python.org/pep-0249/>`_ connector.
+调用 `Python DB API2 标准 <https://peps.python.org/pep-0249/>`_ 连接器的 :func:`~ray.data.read_sql` 从数据库中读取数据 。
 
 .. tab-set::
 
     .. tab-item:: MySQL
 
-        To read from MySQL, install
-        `MySQL Connector/Python <https://dev.mysql.com/doc/connector-python/en/>`_. It's the
-        first-party MySQL database connector.
+        要从 MySQL 读取数据，请安装
+        `MySQL Connector/Python <https://dev.mysql.com/doc/connector-python/en/>`_。它是第一方 MySQL 数据库连接器。
 
         .. code-block:: console
 
             pip install mysql-connector-python
 
-        Then, define your connection logic and query the database.
+        然后，定义连接逻辑并查询数据库。
 
         .. testcode::
             :skipif: True
@@ -843,12 +831,11 @@ Call :func:`~ray.data.read_sql` to read data from a database that provides a
 
 .. _reading_mongodb:
 
-Reading MongoDB
+读取 MongoDB
 ~~~~~~~~~~~~~~~
 
-To read data from MongoDB, call :func:`~ray.data.read_mongo` and specify the
-the source URI, database, and collection. You also need to specify a pipeline to
-run against the collection.
+要从 MongoDB 读取数据，请调用 :func:`~ray.data.read_mongo` 并指定源 URI、数据库和集合。
+您还需要指定针对集合运行的管道。
 
 .. testcode::
     :skipif: True
@@ -879,17 +866,17 @@ run against the collection.
         collection="my_collection",
     )
 
-Creating synthetic data
+创建合成数据
 =======================
 
-Synthetic datasets can be useful for testing and benchmarking.
+综合数据集可用于测试和基准测试。
 
 .. tab-set::
 
     .. tab-item:: Int Range
 
-        To create a synthetic :class:`~ray.data.Dataset` from a range of integers, call
-        :func:`~ray.data.range`. Ray Data stores the integer range in a single column.
+        要从一系列整数创建合成 :class:`~ray.data.Dataset` ，调用
+        :func:`~ray.data.range`。 Ray Data 将整数范围存储在单列中。
 
         .. testcode::
 
@@ -925,12 +912,12 @@ Synthetic datasets can be useful for testing and benchmarking.
             ------  ----
             data    numpy.ndarray(shape=(64, 64), dtype=int64)
 
-Loading other datasources
+加载其他数据源
 ==========================
 
-If Ray Data can't load your data, subclass
-:class:`~ray.data.datasource.Datasource`. Then, construct an instance of your custom
-datasource and pass it to :func:`~ray.data.read_datasource`.
+如果 Ray Data 无法加载您的数据，请使用
+:class:`~ray.data.datasource.Datasource`。然后，构建自定义数据源的实例并将其传递给
+给 :func:`~ray.data.read_datasource`。
 
 .. testcode::
     :skipif: True
@@ -941,20 +928,18 @@ datasource and pass it to :func:`~ray.data.read_datasource`.
     # Write to a custom datasource.
     ds.write_datasource(YourCustomDatasource(), **write_args)
 
-For an example, see :ref:`Implementing a Custom Datasource <custom_datasources>`.
+有关示例，请参阅 :ref:`实现自定义数据源 <custom_datasources>`。
 
-Performance considerations
+性能考虑
 ==========================
 
-The dataset ``parallelism`` determines the number of blocks the base data is split
-into for parallel reads. Ray Data decides internally how many read tasks to run
-concurrently to best utilize the cluster, ranging from ``1...parallelism`` tasks. In
-other words, the higher the parallelism, the smaller the data blocks in the Dataset and
-hence the more opportunity for parallel execution.
+``parallelism`` 数据集决定了基础数据被分割成并行读取的块数。
+ Ray Data 在内部决定同时运行多少个读取任务，以充分利用集群，范围从 ``1...parallelism`` 个读取任务。
+换句话说，并行度越高，Dataset 中的数据块越小，因此并行执行的机会就越多。
 
 .. image:: images/dataset-read.svg
    :width: 650px
    :align: center
 
-This default parallelism can be overridden via the ``parallelism`` argument; see the
-:ref:`performance guide <data_performance_tips>`  for more information on how to tune this read parallelism.
+可以通过 ``parallelism`` 数覆盖此默认并行性； 有关如何调整读取并行性的更多信息，请参阅
+:ref:`性能指南 <data_performance_tips>` 。

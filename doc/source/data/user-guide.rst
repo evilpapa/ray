@@ -6,8 +6,7 @@
 
 如果你是使用 Ray Data 的新手，
 请从 :ref:`Ray Data 关键概念 <data_key_concepts>` 开始。
-This user guide helps you navigate the Ray Data project and
-show you how achieve several tasks.
+本用户指南可帮助您浏览 Ray Data 项目并向您展示如何完成多项任务。
 
 .. toctree::
     :maxdepth: 2

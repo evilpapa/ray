@@ -3,30 +3,28 @@
 关键概念
 ============
 
-Learn about :class:`Dataset <ray.data.Dataset>` and the capabilities it provides.
+了解 :class:`Dataset <ray.data.Dataset>` 及其提供的功能。
 
-This guide provides a lightweight introduction to:
+本指南提供了以下内容的简单介绍：
 
-* :ref:`Loading data <loading_key_concept>`
-* :ref:`Transforming data <transforming_key_concept>`
-* :ref:`Consuming data <consuming_key_concept>`
-* :ref:`Saving data <saving_key_concept>`
+* :ref:`加载数据 <loading_key_concept>`
+* :ref:`转换数据 <transforming_key_concept>`
+* :ref:`消费数据 <consuming_key_concept>`
+* :ref:`保存数据 <saving_key_concept>`
 
 Datasets
 --------
 
-Ray Data's main abstraction is a :class:`Dataset <ray.data.Dataset>`, which
-is a distributed data collection. Datasets are designed for machine learning, and they
-can represent data collections that exceed a single machine's memory.
+Ray Data 的主要抽象是 :class:`Dataset <ray.data.Dataset>`，它是一个分布式数据集合。
+数据集是为机器学习而设计的，它们可以表示超出单台机器内存的数据集合。
 
 .. _loading_key_concept:
 
-Loading data
+加载数据
 ------------
 
-Create datasets from on-disk files, Python objects, and cloud storage services like S3.
-Ray Data can read from any `filesystem supported by Arrow
-<http://arrow.apache.org/docs/python/generated/pyarrow.fs.FileSystem.html>`__.
+从磁盘文件、Python 对象和 S3 等云存储服务创建数据集。 Ray Data 可以从 `Arrow 支持的任何文件系统
+<http://arrow.apache.org/docs/python/generated/pyarrow.fs.FileSystem.html>`__ 读取。
 
 .. testcode::
 
@@ -39,15 +37,14 @@ Ray Data can read from any `filesystem supported by Arrow
 
     {'sepal length (cm)': 5.1, 'sepal width (cm)': 3.5, 'petal length (cm)': 1.4, 'petal width (cm)': 0.2, 'target': 0}
 
-To learn more about creating datasets, read :ref:`Loading data <loading_data>`.
+要了解有关创建数据集的更多信息，请阅读 :ref:`加载数据 <loading_data>`。
 
 .. _transforming_key_concept:
 
-Transforming data
+转换数据
 -----------------
 
-Apply user-defined functions (UDFs) to transform datasets. Ray executes transformations
-in parallel for performance.
+应用用户定义函数 (UDF) 来转换数据集。 Ray 并行执行转换以提高性能。
 
 .. testcode::
 
@@ -79,16 +76,16 @@ in parallel for performance.
        }
     )
 
-To learn more about transforming datasets, read
-:ref:`Transforming data <transforming_data>`.
+要了解有关转换数据集的更多信息，请阅读
+:ref:`转换数据 <transforming_data>`.
 
 .. _consuming_key_concept:
 
-Consuming data
+消费数据
 --------------
 
-Pass datasets to Ray Tasks or Actors, and access records with methods like
-:meth:`~ray.data.Dataset.take_batch` and :meth:`~ray.data.Dataset.iter_batches`.
+将数据集传递给 Ray Tasks 或 Actors，并使用
+:meth:`~ray.data.Dataset.take_batch` 和 :meth:`~ray.data.Dataset.iter_batches` 等方法访问记录。
 
 .. tab-set::
 
@@ -137,16 +134,15 @@ Pass datasets to Ray Tasks or Actors, and access records with methods like
             ray.get([w.train.remote(s) for w, s in zip(workers, shards)])
 
 
-To learn more about consuming datasets, see
-:ref:`Iterating over Data <iterating-over-data>` and :ref:`Saving Data <saving-data>`.
+要了解有关使用数据集的更多信息，请参阅
+:ref:`迭代数据 <iterating-over-data>` 和 :ref:`保存数据 <saving-data>`.
 
 .. _saving_key_concept:
 
-Saving data
+保存数据
 -----------
 
-Call methods like :meth:`~ray.data.Dataset.write_parquet` to save dataset contents to local
-or remote filesystems.
+调用 :meth:`~ray.data.Dataset.write_parquet` 等方法将数据集内容保存到本地或远程文件系统。
 
 .. testcode::
     :hide:
@@ -169,4 +165,4 @@ or remote filesystems.
     ['..._000000.parquet', '..._000001.parquet']
 
 
-To learn more about saving dataset contents, see :ref:`Saving data <saving-data>`.
+要了解有关保存数据集内容的更多信息，请参阅 :ref:`保存数据 <saving-data>`。
