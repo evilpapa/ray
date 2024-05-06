@@ -4,23 +4,22 @@
 数据迭代
 ===================
 
-Ray Data lets you iterate over rows or batches of data.
+Ray Data 允许您迭代数据行或批量迭代数据。
 
-This guide shows you how to:
+本指南向您展示如何：
 
-* `Iterate over rows <#iterating-over-rows>`_
-* `Iterate over batches <#iterating-over-batches>`_
-* `Iterate over batches with shuffling <#iterating-over-batches-with-shuffling>`_
-* `Split datasets for distributed parallel training <#splitting-datasets-for-distributed-parallel-training>`_
+* `迭代行 <#iterating-over-rows>`_
+* `批量迭代 <#iterating-over-batches>`_
+* `通过 shuffling 批量迭代 <#iterating-over-batches-with-shuffling>`_
+* `分割数据集以进行分布式并行训练 <#splitting-datasets-for-distributed-parallel-training>`_
 
 .. _iterating-over-rows:
 
-Iterating over rows
+迭代行
 ===================
 
-To iterate over the rows of your dataset, call
-:meth:`Dataset.iter_rows() <ray.data.Dataset.iter_rows>`. Ray Data represents each row
-as a dictionary.
+要迭代数据集的行，请调用
+:meth:`Dataset.iter_rows() <ray.data.Dataset.iter_rows>`。Ray Data 将每一行表示为一个字典。
 
 .. testcode::
 
@@ -39,17 +38,16 @@ as a dictionary.
     {'sepal length (cm)': 5.9, 'sepal width (cm)': 3.0, 'petal length (cm)': 5.1, 'petal width (cm)': 1.8, 'target': 2}
 
 
-For more information on working with rows, see
-:ref:`Transforming rows <transforming_rows>` and
-:ref:`Inspecting rows <inspecting-rows>`.
+有关使用行的更多信息，请参阅
+:ref:`转换行 <transforming_rows>` 和
+:ref:`检查行 <inspecting-rows>`。
 
 .. _iterating-over-batches:
 
-Iterating over batches
+批量迭代
 ======================
 
-A batch contains data from multiple rows. Iterate over batches of dataset in different
-formats by calling one of the following methods:
+一个批次包含来自多行的数据。通过调用以下方法之一迭代不同格式的批量数据集：
 
 * `Dataset.iter_batches() <ray.data.Dataset.iter_batches>`
 * `Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>`
@@ -141,27 +139,24 @@ formats by calling one of the following methods:
             ...
             tf.Tensor([6.2 5.9], shape=(2,), dtype=float64) tf.Tensor([2 2], shape=(2,), dtype=int64)
 
-For more information on working with batches, see
-:ref:`Transforming batches <transforming_batches>` and
-:ref:`Inspecting batches <inspecting-batches>`.
+有关使用批量的更多信息，请参阅
+:ref:`批量转换 <transforming_batches>` 和
+:ref:`批量检查 <inspecting-batches>`。
 
 .. _iterating-over-batches-with-shuffling:
 
-Iterating over batches with shuffling
+通过 shuffling 批量迭代
 =====================================
 
-:class:`Dataset.random_shuffle <ray.data.Dataset.random_shuffle>` is slow because it
-shuffles all rows. If a full global shuffle isn't required, you can shuffle a subset of
-rows up to a provided buffer size during iteration by specifying
-``local_shuffle_buffer_size``. While this isn't a true global shuffle like
-``random_shuffle``, it's more performant because it doesn't require excessive data
-movement.
+:class:`Dataset.random_shuffle <ray.data.Dataset.random_shuffle>` 速度很慢，因为它会打乱所有行。
+如果不需要完整的全局混洗，您可以通过指定在迭代期间将行子集混洗到提供的缓冲区大小
+``local_shuffle_buffer_size``。虽然这不是真正的全局随机播放
+``random_shuffle``，但它的性能更高，因为它不需要过多的数据移动。
 
 .. tip::
 
-    To configure ``local_shuffle_buffer_size``, choose the smallest value that achieves
-    sufficient randomness. Higher values result in more randomness at the cost of slower
-    iteration.
+    要配置 ``local_shuffle_buffer_size``，请选择实现足够随机性的最小值。
+    较高的值会导致更多的随机性，但代价是迭代速度较慢。
 
 .. tab-set::
 
@@ -262,18 +257,17 @@ movement.
             ...
             tf.Tensor([5.  5.8], shape=(2,), dtype=float64) tf.Tensor([0 0], shape=(2,), dtype=int64)
 
-Splitting datasets for distributed parallel training
+分割数据集以进行分布式并行训练
 ====================================================
 
-If you're performing distributed data parallel training, call
-:meth:`Dataset.streaming_split <ray.data.Dataset.streaming_split>` to split your dataset
-into disjoint shards.
+如果您正在执行分布式数据并行训练，请调用
+:meth:`Dataset.streaming_split <ray.data.Dataset.streaming_split>` 将数据集拆分为不相交的分片。
 
 .. note::
 
-  If you're using :ref:`Ray Train <train-docs>`, you don't need to split the dataset.
-  Ray Train automatically splits your dataset for you. To learn more, see
-  :ref:`Data Loading for ML Training guide <data-ingest-torch>`.
+  如果您使用 :ref:`Ray Train <train-docs>`，则无需拆分数据集。 
+  Ray Train 会自动为您分割数据集。要了解更多信息，请参阅
+  :ref:`ML 训练数据加载指南 <data-ingest-torch>`。
 
 .. testcode::
 

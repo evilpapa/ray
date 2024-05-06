@@ -4,33 +4,32 @@
 数据转换
 =================
 
-Transformations let you process and modify your dataset. You can compose transformations
-to express a chain of computations.
+转换允许您处理和修改数据集。您可以组合转换来表达计算链。
 
 .. note::
-    Transformations are lazy by default. They aren't executed until you trigger consumption of the data by :ref:`iterating over the Dataset <iterating-over-data>`, :ref:`saving the Dataset <saving-data>`, or :ref:`inspecting properties of the Dataset <inspecting-data>`.
+    默认情况下，转换是惰性的。在您通过 :ref:`迭代 Dataset <iterating-over-data>`、 :ref:`保存 Dataset <saving-data>`、或 :ref:`检查 Dataset 属性 <inspecting-data>` 来触发数据消耗之前，它们不会被执行。
 
-This guide shows you how to:
+本指南向您展示如何：
 
-* `Transform rows <#transforming-rows>`_
-* `Transform batches <#transforming-batches>`_
-* `Groupby and transform groups <#groupby-and-transforming-groups>`_
-* `Shuffle rows <#shuffling-rows>`_
-* `Repartition data <#repartitioning-data>`_
+* `变换行 <#transforming-rows>`_
+* `批量转换 <#transforming-batches>`_
+* `Groupby 和变换组 <#groupby-and-transforming-groups>`_
+* `随机排列行 <#shuffling-rows>`_
+* `重新分区数据 <#repartitioning-data>`_
 
 .. _transforming_rows:
 
-Transforming rows
+转换行
 =================
 
-To transform rows, call :meth:`~ray.data.Dataset.map` or
-:meth:`~ray.data.Dataset.flat_map`.
+要转换行，请调用 :meth:`~ray.data.Dataset.map` 或
+:meth:`~ray.data.Dataset.flat_map`。
 
-Transforming rows with map
+使用 map 转换行
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your transformation returns exactly one row for each input row, call
-:meth:`~ray.data.Dataset.map`.
+如果您的转换为每个输入行返回一行，请调用
+:meth:`~ray.data.Dataset.map`。
 
 .. testcode::
 
@@ -49,13 +48,13 @@ If your transformation returns exactly one row for each input row, call
 
 .. tip::
 
-    If your transformation is vectorized, call :meth:`~ray.data.Dataset.map_batches` for
-    better performance. To learn more, see `Transforming batches <#transforming-batches>`_.
+    如果您的转换是矢量化的，则需要 :meth:`~ray.data.Dataset.map_batches` 获取更好的性能。
+    要了解更多信息，请参阅 `批量转换 <#transforming-batches>`_。
 
-Transforming rows with flat map
+用 flat map 转换行
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your transformation returns multiple rows for each input row, call
+如果您的转换为每个输入行返回多行，请调用
 :meth:`~ray.data.Dataset.flat_map`.
 
 .. testcode::
@@ -78,27 +77,26 @@ If your transformation returns multiple rows for each input row, call
 
 .. _transforming_batches:
 
-Transforming batches
+批量转换
 ====================
 
-If your transformation is vectorized like most NumPy or pandas operations, transforming
-batches is more performant than transforming rows.
+如果您的转换像大多数 NumPy 或 pandas 操作一样进行矢量化，则批量转换的性能比转换行的性能更高。
 
-Choosing between tasks and actors
+在任务和 actor 之间进行选择
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ray Data transforms batches with either tasks or actors. Actors perform setup exactly
-once. In contrast, tasks require setup every batch. So, if your transformation involves
-expensive setup like downloading model weights, use actors. Otherwise, use tasks.
+Ray Data 使用任务或 actor 进行批量转换。 Actor 只执行一次设置。相反，
+任务需要每批进行设置。因此，如果您的转换涉及昂贵的设置（例如下载模型权重），
+请使用 actor。否则，请使用任务。
 
-To learn more about tasks and actors, read the
-:ref:`Ray Core Key Concepts <core-key-concepts>`.
+要了解有关任务和 actor 的更多信息，请阅读
+:ref:`Ray 核心关键概念 <core-key-concepts>`。
 
-Transforming batches with tasks
+使用任务批量转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To transform batches with tasks, call :meth:`~ray.data.Dataset.map_batches`. Ray Data
-uses tasks by default.
+要使用任务批量转换，调用 :meth:`~ray.data.Dataset.map_batches`。 Ray Data
+默认使用的是任务。
 
 .. testcode::
 
@@ -117,17 +115,17 @@ uses tasks by default.
 
 .. _transforming_data_actors:
 
-Transforming batches with actors
+使用 actor 批量转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To transform batches with actors, complete these steps:
+要使用 actor 批量转换，请完成以下步骤：
 
-1. Implement a class. Perform setup in ``__init__`` and transform data in ``__call__``.
+1. 实现一个类。 ``__init__`` 进行设置，在 ``__call__`` 转换数据。
 
-2. Create an :class:`~ray.data.ActorPoolStrategy` and configure the number of concurrent
-   workers. Each worker transforms a partition of data.
+2. 创建 :class:`~ray.data.ActorPoolStrategy` 并配置并发 worker 的数量。
+   每个 worker 都会转换一个数据分区。
 
-3. Call :meth:`~ray.data.Dataset.map_batches` and pass your ``ActorPoolStrategy`` to ``compute``.
+3. 调用 :meth:`~ray.data.Dataset.map_batches` 并传递 ``ActorPoolStrategy`` 到 ``compute``。
 
 .. tab-set::
 
@@ -202,14 +200,13 @@ To transform batches with actors, complete these steps:
 
 .. _configure_batch_format:
 
-Configuring batch format
+配置批处理格式
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ray Data represents batches as dicts of NumPy ndarrays or pandas DataFrames. By
-default, Ray Data represents batches as dicts of NumPy ndarrays.
+Ray Data 将批次表示为 NumPy ndarray 或 pandas DataFrame 的字典。默认情况下，Ray Data 将批次表示为 NumPy ndarray 的字典。
 
-To configure the batch type, specify ``batch_format`` in
-:meth:`~ray.data.Dataset.map_batches`. You can return either format from your function.
+要配置批处理类型，请在 ``batch_format`` 中指定
+:meth:`~ray.data.Dataset.map_batches`。您可以从函数中返回任一格式。
 
 .. tab-set::
 
@@ -245,27 +242,27 @@ To configure the batch type, specify ``batch_format`` in
                 .map_batches(drop_nas, batch_format="pandas")
             )
 
-Configuring batch size
+配置批量大小
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Increasing ``batch_size`` improves the performance of vectorized transformations like
-NumPy functions and model inference. However, if your batch size is too large, your
-program might run out of memory. If you encounter an out-of-memory error, decrease your
-``batch_size``.
+增加 ``batch_size`` 可以提高 NumPy 函数和模型推理等矢量化转换的性能。
+但是，如果您的批处理大小太大，您的程序可能会耗尽内存。
+如果遇到内存不足错误，请减少
+``batch_size``。
 
 .. note::
 
-    The default batch size depends on your resource type. If you're using CPUs,
-    the default batch size is 4096. If you're using GPUs, you must specify an explicit
-    batch size.
+    默认批量大小取决于您的资源类型。如果您使用的是 CPU，
+    则默认批处理大小为 4096。
+    如果您使用的是 GPU，则必须指定显式批处理大小。
 
 .. _transforming_groupby:
 
-Groupby and transforming groups
+Groupby 和转换组
 ===============================
 
-To transform groups, call :meth:`~ray.data.Dataset.groupby` to group rows. Then, call
-:meth:`~ray.data.grouped_data.GroupedData.map_groups` to transform the groups.
+要转换组，请调用 :meth:`~ray.data.Dataset.groupby` 进行分组 。然后，调用
+:meth:`~ray.data.grouped_data.GroupedData.map_groups` 来转换组。
 
 .. tab-set::
 
@@ -311,10 +308,10 @@ To transform groups, call :meth:`~ray.data.Dataset.groupby` to group rows. Then,
                 .map_groups(normalize_features)
             )
 
-Shuffling rows
+打乱行
 ==============
 
-To randomly shuffle all rows, call :meth:`~ray.data.Dataset.random_shuffle`.
+要随机打乱所有行，请调用 :meth:`~ray.data.Dataset.random_shuffle`。
 
 .. testcode::
 
@@ -327,18 +324,18 @@ To randomly shuffle all rows, call :meth:`~ray.data.Dataset.random_shuffle`.
 
 .. tip::
 
-    :meth:`~ray.data.Dataset.random_shuffle` is slow. For better performance, try
-    `Iterating over batches with shuffling <iterating-over-data#iterating-over-batches-with-shuffling>`_.
+    :meth:`~ray.data.Dataset.random_shuffle` 很慢。为了获得更好的性能，请尝试
+    `Iterating over batches with shuffling <iterating-over-data#iterating-over-batches-with-shuffling>`_。
 
-Repartitioning data
+重新分区数据
 ===================
 
-A :class:`~ray.data.dataset.Dataset` operates on a sequence of distributed data
-:term:`blocks <block>`. If you want to achieve more fine-grained parallelization,
-increase the number of blocks by setting a higher ``parallelism`` at read time.
+:class:`~ray.data.dataset.Dataset` 对一系列分布式数据
+:term:`blocks <block>` 进行操作。如果您想实现更细粒度的并行化，
+请通过设置更高的 ``parallelism`` 读取时间来增加块数。
 
-To change the number of blocks for an existing Dataset, call
-:meth:`Dataset.repartition() <ray.data.Dataset.repartition>`.
+要更改现有数据集的块数，请调用
+:meth:`Dataset.repartition() <ray.data.Dataset.repartition>`。
 
 .. testcode::
 

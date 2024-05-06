@@ -1,29 +1,29 @@
 文本处理
 =================
 
-With Ray Data, you can easily read and transform large amounts of text data.
+使用 Ray Data，您可以轻松读取和转换大量文本数据。
 
-This guide shows you how to:
+本指南向您展示如何：
 
-* :ref:`Read text files <reading-text-files>`
-* :ref:`Transform text data <transforming-text>`
-* :ref:`Perform inference on text data <performing-inference-on-text>`
-* :ref:`Save text data <saving-text>`
+* :ref:`读取文本文件 <reading-text-files>`
+* :ref:`转换文本数据 <transforming-text>`
+* :ref:`对文本数据进行推理 <performing-inference-on-text>`
+* :ref:`保存文本数据 <saving-text>`
 
 .. _reading-text-files:
 
-Reading text files
+读取文本文件
 ------------------
 
-Ray Data can read lines of text and JSONL. Alternatively, you can read raw binary
-files and manually decode data.
+Ray Data 可以读取文本行和 JSONL。或者，
+您可以读取原始二进制文件并手动解码数据。
 
 .. tab-set::
 
     .. tab-item:: Text lines
 
-        To read lines of text, call :func:`~ray.data.read_text`. Ray Data creates a
-        row for each line of text.
+        要读取文本行，请调用 :func:`~ray.data.read_text` 。
+        Ray Data 为每行文本创建一行。
 
         .. testcode::
 
@@ -41,11 +41,10 @@ files and manually decode data.
 
     .. tab-item:: JSON Lines
 
-        `JSON Lines <https://jsonlines.org/>`_ is a text format for structured data.
-        It's typically used to process data one record at a time.
+        `JSON Lines <https://jsonlines.org/>`_ 是结构化数据的文本格式。它通常用于一次处理一条记录的数据。
 
-        To read JSON Lines files, call :func:`~ray.data.read_json`. Ray Data creates a
-        row for each JSON object.
+        要读取 JSON Lines 文件，请调用 :func:`~ray.data.read_json`。
+        Ray Data 为每个 JSON 对象创建一行。
 
         .. testcode::
 
@@ -64,8 +63,8 @@ files and manually decode data.
 
     .. tab-item:: Other formats
 
-        To read other text formats, call :func:`~ray.data.read_binary_files`. Then,
-        call :meth:`~ray.data.Dataset.map` to decode your data.
+        要阅读其他文本格式，请调用 :func:`~ray.data.read_binary_files`。然后，调用
+        :meth:`~ray.data.Dataset.map` 解码您的数据。
 
         .. testcode::
 
@@ -89,17 +88,16 @@ files and manually decode data.
 
             {'text': 'Batoidea\nBatoidea is a superorder of cartilaginous fishes...'}
 
-For more information on reading files, see :ref:`Loading data <loading_data>`.
+有关读取文件的更多信息，请参阅 :ref:`加载数据 <loading_data>`。
 
 .. _transforming-text:
 
-Transforming text
+转换文本
 -----------------
 
-To transform text, implement your transformation in a function or callable class. Then,
-call :meth:`Dataset.map() <ray.data.Dataset.map>` or
-:meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`. Ray Data transforms your
-text in parallel.
+要转换文本，请在函数或者调用类中实现你自己的转换。然后，
+调用 :meth:`Dataset.map() <ray.data.Dataset.map>` 或者
+:meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`。Ray Data 会并发处理你的文本。
 
 .. testcode::
 
@@ -123,17 +121,16 @@ text in parallel.
     {'text': 'beautiful is better than ugly.'}
     {'text': 'explicit is better than implicit.'}
 
-For more information on transforming data, see
-:ref:`Transforming data <transforming_data>`.
+有关转换数据的更多信息，请参阅
+:ref:`转换数据 <transforming_data>`。
 
 .. _performing-inference-on-text:
 
-Performing inference on text
+对文本进行推理
 ----------------------------
 
-To perform inference with a pre-trained model on text data, implement a callable class
-that sets up and invokes a model. Then, call
-:meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`.
+要使用预训练模型对文本数据执行推理，请实现一个用于设置和调用模型的可调用类。然后，调用
+:meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`。
 
 .. testcode::
 
@@ -167,20 +164,20 @@ that sets up and invokes a model. Then, call
     {'text': 'Beautiful is better than ugly.', 'label': 'POSITIVE'}
     {'text': 'Explicit is better than implicit.', 'label': 'POSITIVE'}
 
-For more information on performing inference, see
-:ref:`End-to-end: Offline Batch Inference <batch_inference_home>`
-and :ref:`Transforming batches with actors <transforming_data_actors>`.
+有关执行推理的更多信息，请参阅
+:ref:`End-to-end: 离线批量推理 <batch_inference_home>`
+和 :ref:`使用 actor 批量转换 <transforming_data_actors>`。
 
 .. _saving-text:
 
-Saving text
+保存文本
 -----------
 
-To save text, call a method like :meth:`~ray.data.Dataset.write_parquet`. Ray Data can
-save text in many formats.
+要保存文本，请调用类似的方法 :meth:`~ray.data.Dataset.write_parquet`。 
+Ray Data 可以以多种格式保存文本。
 
-To view the full list of supported file formats, see the
-:ref:`Input/Output reference <input-output>`.
+要查看支持的文件格式的完整列表，请参阅
+:ref:`Input/Output 参考 <input-output>`。
 
 .. testcode::
 
@@ -190,4 +187,4 @@ To view the full list of supported file formats, see the
 
     ds.write_parquet("local:///tmp/results")
 
-For more information on saving data, see :ref:`Saving data <saving-data>`.
+有关保存数据的更多信息，请参阅 :ref:`保存数据 <saving-data>`。
