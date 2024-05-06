@@ -60,7 +60,7 @@
 **运行时环境** 描述了 Ray 应用程序运行时所需的依赖项，包括 :ref:`文件、包、环境变量等 <runtime-environments-api-ref>`。
 它在运行时动态安装在集群上并缓存以供将来使用 （有关生命周期的详细信息，请参阅 :ref:`缓存和垃圾收集 <runtime-environments-caching>`）。
 
-如果使用了 :ref:`the Ray Cluster launcher <using-the-cluster-launcher>` ，则可以在准备好的环境上使用运行时环境。
+如果使用了 :ref:`Ray 集群启动器 <using-the-cluster-launcher>` ，则可以在准备好的环境上使用运行时环境。
 例如，您可以使用 Cluster 启动器安装一组基本软件包，然后使用运行时环境安装其他软件包。
 与基本集群环境相比，运行时环境仅对 Ray 进程有效。（例如，如果使用运行时环境 指定的 ``pip`` 包 ``my_pkg``，则在 Ray 任务、 actor 或作业之外调用 ``import my_pkg`` 语句将失败。）
 

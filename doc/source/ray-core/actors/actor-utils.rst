@@ -13,7 +13,7 @@ Actor Pool
 
         .. literalinclude:: ../doc_code/actor-pool.py
 
-        参阅 :class:`package reference <ray.util.ActorPool>` 获取更多信息。
+        参阅 :class:`包参考 <ray.util.ActorPool>` 获取更多信息。
 
     .. tab-item:: Java
 

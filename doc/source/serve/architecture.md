@@ -1,6 +1,6 @@
 (serve-architecture)=
 
-# Architecture
+# 架构
 
 In this section, we explore Serve's key architectural concepts and components. It will offer insight and overview into:
 - the role of each component in Serve and how they work

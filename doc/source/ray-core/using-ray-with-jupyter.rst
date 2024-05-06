@@ -19,6 +19,7 @@ IPython 将每个单元的输出无限期地存储在本地 Python 变量中。
 这会导致 Ray 固定对象，即使您的应用程序实际上可能没有使用它们。
 因此，显式调用 ``print`` 或者 ``repr`` 比让 Notebook 自动生成输出更好。
 另一个选择是使用以下命令完全禁用 IPython 缓存（从 bash/zsh 运行）：
+
 .. code-block:: console
 
     echo 'c = get_config()

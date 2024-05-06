@@ -1,6 +1,6 @@
 .. _modin-on-ray:
 
-Using Pandas on Ray (Modin)
+Ray 上使用 Pandas （Modin）
 ===========================
 
 Modin_, previously Pandas on Ray, is a dataframe manipulation library that

@@ -1,7 +1,7 @@
 .. _train-api:
 .. _air-trainer-ref:
 
-Ray Train API
+Ray 训练 API
 =============
 
 .. _train-integration-api:
@@ -9,7 +9,7 @@ Ray Train API
 
 .. currentmodule:: ray
 
-PyTorch Ecosystem
+PyTorch 生态
 -----------------
 
 .. autosummary::

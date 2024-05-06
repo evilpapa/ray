@@ -1,6 +1,6 @@
 (serve-autoscaling)=
 
-# Ray Serve 自东扩缩
+# Ray Serve 自动扩缩
 
 Each [Ray Serve deployment](serve-key-concepts-deployment) has one [replica](serve-architecture-high-level-view) by default. This means there is one worker process running the model and serving requests. When traffic to your deployment increases, the single replica can become overloaded. To maintain high performance of your service, you need to scale out your deployment.
 

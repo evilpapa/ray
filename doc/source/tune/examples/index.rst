@@ -1,7 +1,7 @@
 .. _tune-examples-ref:
 
 =================
-Ray Tune Examples
+Ray Tune 示例
 =================
 
 .. tip:: Check out :ref:`the Tune User Guides <tune-guides>` To learn more about Tune's features in depth.

@@ -1,7 +1,7 @@
 .. _tune-guides:
 
 ===========
-User Guides
+用户指南
 ===========
 
 .. tip:: We'd love to hear your feedback on using Tune - `get in touch <https://forms.gle/PTRvGLbKRdUfuzQo9>`_!

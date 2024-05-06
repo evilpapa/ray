@@ -1,6 +1,6 @@
 .. _train-more-frameworks:
 
-More Frameworks
+更多框架
 ===============
 
 .. grid:: 1 2 3 4

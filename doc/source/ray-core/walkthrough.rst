@@ -8,7 +8,7 @@ Ray Core 为构建和扩展分布式应用程序提供了少量的核心基元�
 入门
 ---------------
 
-要开始，请通过 ``pip-install-U Ray`` 安装 Ray。有关更多安装选项，请参阅：:ref:`Installing Ray<installation>`。以下几节将介绍使用 Ray Core 的基本知识。
+要开始，请通过 ``pip-install-U Ray`` 安装 Ray。有关更多安装选项，请参阅：:ref:`安装 Ray<installation>`。以下几节将介绍使用 Ray Core 的基本知识。
 
 第一步导入并实例化 Ray：
 

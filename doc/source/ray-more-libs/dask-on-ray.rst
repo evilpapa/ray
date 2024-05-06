@@ -1,6 +1,6 @@
 .. _dask-on-ray:
 
-Using Dask on Ray
+在 Ray 上使用 Dask
 =================
 
 

@@ -14,7 +14,7 @@ Ray 允许在单独的 Python worker 上异步执行任意函数。此类函数�
             :start-after: __tasks_start__
             :end-before: __tasks_end__
 
-        参阅 `ray.remote package reference <package-ref.html>`__ 页的具体文档来查看如何使用 ``ray.remote``。
+        参阅 `ray.remote 包参考 <package-ref.html>`__ 页的具体文档来查看如何使用 ``ray.remote``。
 
     .. tab-item:: Java
 

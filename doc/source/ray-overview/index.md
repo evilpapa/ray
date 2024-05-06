@@ -54,7 +54,6 @@ Ray 的统一计算框架由三层组成：
 
         **扩展机器学习工作负载**
         ^^^
-
        使用分布式库工具包构建 ML 应用程序
         :doc:`数据处理 <../data/data>`, 
         :doc:`模型训练 <../train/train>`, 
@@ -62,51 +61,46 @@ Ray 的统一计算框架由三层组成：
         :doc:`强化学习 <../rllib/index>`, 
         :doc:`模型服务 <../serve/index>`, 
         以及 :doc:`更多 <../ray-more-libs/index>`。
-
         +++
         .. button-ref:: libraries-quickstart
             :color: primary
             :outline:
             :expand:
-        
+
             Ray AI 类库
 
     .. grid-item-card::
         
         **构建分布式应用**
         ^^^
-
         使用如下方案构建并运行分布式应用
         :doc:`简单灵活的 API <../ray-core/walkthrough>`.
         :doc:很小甚至零改动 `并行化 <../ray-core/walkthrough>` 单机代码。
-        
         +++
         .. button-ref:: ../ray-core/walkthrough
             :color: primary
             :outline:
             :expand:
-        
-            Ray Core
+
+            Ray 核心
 
     .. grid-item-card::
         
         **部署大规模工作负载**
         ^^^
-
         在 :doc:`AWS，GCP，Azure <../cluster/getting-started>` 或
         :doc:`现场 <../cluster/vms/user-guides/launching-clusters/on-premises>` 部署工作负载。
         使用 Ray 集群管理来在已有
         :doc:`Kubernetes <../cluster/kubernetes/index>` 或
         :doc:`YARN <../cluster/vms/user-guides/community/yarn>` 或
         或 :doc:`Slurm <../cluster/vms/user-guides/community/slurm>` 集群运行 Ray。
-        
         +++
         .. button-ref:: ../cluster/getting-started
             :color: primary
             :outline:
             :expand:
-        
-            Ray Clusters 
+
+            Ray 集群 
 ```
 
 [Ray](../ray-air/getting-started) 的五个原生类库都分配一个特定的 ML 任务：
