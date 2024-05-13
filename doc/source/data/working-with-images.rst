@@ -1,39 +1,38 @@
 .. _working_with_images:
 
-Working with Images
+处理图像
 ===================
 
-With Ray Data, you can easily read and transform large image datasets.
+使用 Ray Data，您可以轻松读取和转换大型图像数据集。
 
-This guide shows you how to:
+本指南向您展示如何：
 
-* :ref:`Read images <reading_images>`
-* :ref:`Transform images <transforming_images>`
-* :ref:`Perform inference on images <performing_inference_on_images>`
-* :ref:`Save images <saving_images>`
+* :ref:`读取图像 <reading_images>`
+* :ref:`变换图像 <transforming_images>`
+* :ref:`对图像进行推理 <performing_inference_on_images>`
+* :ref:`保存图像 <saving_images>`
 
 .. _reading_images:
 
-Reading images
+读取图像
 --------------
 
-Ray Data can read images from a variety of formats.
+Ray Data 可以读取多种格式的图像。
 
-To view the full list of supported file formats, see the
-:ref:`Input/Output reference <input-output>`.
+要查看支持的文件格式的完整列表，请参阅
+:ref:`输入/输出参考 <input-output>`。
 
 .. tab-set::
 
     .. tab-item:: Raw images
 
-        To load raw images like JPEG files, call :func:`~ray.data.read_images`.
+        要加载 JPEG 文件的原始图像，请调用 :func:`~ray.data.read_images` 。
 
         .. note::
 
-            :func:`~ray.data.read_images` uses
-            `PIL <https://pillow.readthedocs.io/en/stable/index.html>`_. For a list of
-            supported file formats, see
-            `Image file formats <https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html>`_.
+            :func:`~ray.data.read_images` 使用
+            `PIL <https://pillow.readthedocs.io/en/stable/index.html>`_。有关支持的文件格式的列表，请参阅
+            `图像文件格式 <https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html>`_。
 
         .. testcode::
 
@@ -51,7 +50,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: NumPy
 
-        To load images stored in NumPy format, call :func:`~ray.data.read_numpy`.
+        要加载存储为 NumPy 数组的图像，请调用 :func:`~ray.data.read_numpy`。
 
         .. testcode::
 
@@ -69,7 +68,7 @@ To view the full list of supported file formats, see the
 
     .. tab-item:: TFRecords
 
-        Image datasets often contain ``tf.train.Example`` messages that look like this:
+        图像数据集通常包含类似于以下内容的 ``tf.train.Example`` 消息：
 
         .. code-block::
 
@@ -92,8 +91,8 @@ To view the full list of supported file formats, see the
                 }
             }
 
-        To load examples stored in this format, call :func:`~ray.data.read_tfrecords`.
-        Then, call :meth:`~ray.data.Dataset.map` to decode the raw image bytes.
+        要加载示例存储的这种格式，请调用 :func:`~ray.data.read_tfrecords`。
+        然后，调用 :meth:`~ray.data.Dataset.map` 来解码原始图像字节。
 
         .. testcode::
 
@@ -151,15 +150,15 @@ To view the full list of supported file formats, see the
             label   int64
 
 
-For more information on creating datasets, see :ref:`Loading Data <loading_data>`.
+更多创建数据集的信息，参考 :ref:`加载数据 <loading_data>`。
 
 .. _transforming_images:
 
-Transforming images
+变换图像
 -------------------
 
-To transform images, call :meth:`~ray.data.Dataset.map` or
-:meth:`~ray.data.Dataset.map_batches`.
+要变换图像，调用 :meth:`~ray.data.Dataset.map` 或
+:meth:`~ray.data.Dataset.map_batches`。
 
 .. testcode::
 
@@ -176,15 +175,15 @@ To transform images, call :meth:`~ray.data.Dataset.map` or
         .map_batches(increase_brightness)
     )
 
-For more information on transforming data, see
-:ref:`Transforming data <transforming_data>`.
+有关转换数据的更多信息，请参阅
+:ref:`数据转换 <transforming_data>`。
 
 .. _performing_inference_on_images:
 
-Performing inference on images
+对图像进行推理
 ------------------------------
 
-To perform inference with a pre-trained model, first load and transform your data.
+要使用预先训练的模型执行推理，请首先加载并转换数据。
 
 .. testcode::
 
@@ -205,7 +204,7 @@ To perform inference with a pre-trained model, first load and transform your dat
         .map(transform_image)
     )
 
-Next, implement a callable class that sets up and invokes your model.
+接下来，实现一个可调用类来设置和调用您的模型。
 
 .. testcode::
 
@@ -224,7 +223,7 @@ Next, implement a callable class that sets up and invokes your model.
                 outputs = self.model(inputs)
             return {"class": outputs.argmax(dim=1)}
 
-Finally, call :meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`.
+最后，调用 :meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`。
 
 .. testcode::
 
@@ -241,23 +240,23 @@ Finally, call :meth:`Dataset.map_batches() <ray.data.Dataset.map_batches>`.
     {'class': 153}
     {'class': 296}
 
-For more information on performing inference, see
-:ref:`End-to-end: Offline Batch Inference <batch_inference_home>`
-and :ref:`Transforming batches with actors <transforming_data_actors>`.
+有关执行推理的更多信息，请参阅
+:ref:`端到端：离线批量推理 <batch_inference_home>`
+和 :ref:`使用 actor 转换批次 <transforming_data_actors>`。
 
 .. _saving_images:
 
-Saving images
+保存图像
 -------------
 
-Save images with formats like PNG, Parquet, and NumPy. To view all supported formats,
-see the :ref:`Input/Output reference <input-output>`.
+使用 PNG、Parquet 和 NumPy 等格式保存图像。要查看所有支持的格式，请参阅
+参考 :ref:`输入/输出参考 <input-output>`。
 
 .. tab-set::
 
     .. tab-item:: Images
 
-        To save images as image files, call :meth:`~ray.data.Dataset.write_images`.
+        要将图像保存为图像文件，请调用 :meth:`~ray.data.Dataset.write_images`。
 
         .. testcode::
 
@@ -268,7 +267,7 @@ see the :ref:`Input/Output reference <input-output>`.
 
     .. tab-item:: Parquet
 
-        To save images in Parquet files, call :meth:`~ray.data.Dataset.write_parquet`.
+        要将图像保存在 Parquet 文件中，请调用 :meth:`~ray.data.Dataset.write_parquet`。
 
         .. testcode::
 
@@ -280,7 +279,7 @@ see the :ref:`Input/Output reference <input-output>`.
 
     .. tab-item:: NumPy
 
-        To save images in a NumPy file, call :meth:`~ray.data.Dataset.write_numpy`.
+        要将图像保存在 NumPy 文件中，请调用 :meth:`~ray.data.Dataset.write_numpy`。
 
         .. testcode::
 
@@ -289,4 +288,4 @@ see the :ref:`Input/Output reference <input-output>`.
             ds = ray.data.read_images("s3://anonymous@ray-example-data/image-datasets/simple")
             ds.write_numpy("/tmp/simple", column="image")
 
-For more information on saving data, see :ref:`Saving data <loading_data>`.
+有关保存数据的更多信息，请参阅 :ref:`保存数据 <loading_data>`。

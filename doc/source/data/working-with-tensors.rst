@@ -1,16 +1,16 @@
 .. _working_with_tensors:
 
-处理 Tensors
+处理张量
 ====================
 
-N-dimensional arrays (in other words, tensors) are ubiquitous in ML workloads. This guide
-describes the limitations and best practices of working with such data.
+N 维数组（即张量）在 ML 工作负载中无处不在。本指南
+描述了处理此类数据的限制和最佳实践。
 
-Tensor data representation
+张量数据表示
 --------------------------
 
-Ray Data represents tensors as
-`NumPy ndarrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`__.
+Ray Data 将张量表示为
+`NumPy ndarrays <https://numpy.org/doc/stable/reference/arrays.ndarray.html>`__。
 
 .. testcode::
 
@@ -27,10 +27,10 @@ Ray Data represents tensors as
        schema={image: numpy.ndarray(shape=(28, 28), dtype=uint8)}
     )
 
-Batches of fixed-shape tensors
+批量固定形状张量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your tensors have a fixed shape, Ray Data represents batches as regular ndarrays.
+如果您的张量具有固定形状，则 Ray Data 将批次表示为常规 ndarray。
 
 .. doctest::
 
@@ -42,10 +42,10 @@ If your tensors have a fixed shape, Ray Data represents batches as regular ndarr
     >>> batch["image"].dtype
     dtype('uint8')
 
-Batches of variable-shape tensors
+批量可变形状张量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your tensors vary in shape, Ray Data represents batches as arrays of object dtype.
+如果张量的形状不同， Ray Data 将批次表示为对象数据类型的数组。
 
 .. doctest::
 
@@ -57,7 +57,7 @@ If your tensors vary in shape, Ray Data represents batches as arrays of object d
     >>> batch["image"].dtype
     dtype('O')
 
-The individual elements of these object arrays are regular ndarrays.
+这些对象数组的各个元素都是常规的 ndarray。
 
 .. doctest::
 
@@ -70,10 +70,10 @@ The individual elements of these object arrays are regular ndarrays.
 
 .. _transforming_tensors:
 
-Transforming tensor data
+转换张量数据
 ------------------------
 
-Call :meth:`~ray.data.Dataset.map` or :meth:`~ray.data.Dataset.map_batches` to transform tensor data.
+调用 :meth:`~ray.data.Dataset.map` 或 :meth:`~ray.data.Dataset.map_batches` 来变换张量数据。
 
 .. testcode::
 
@@ -98,18 +98,18 @@ Call :meth:`~ray.data.Dataset.map` or :meth:`~ray.data.Dataset.map_batches` to t
     # Increase the brightness, batch at a time.
     ds.map_batches(batch_increase_brightness)
 
-In addition to NumPy ndarrays, Ray Data also treats returned lists of NumPy ndarrays and
-objects implementing ``__array__`` (for example, ``torch.Tensor``) as tensor data.
+除了 NumPy ndarrays，Ray Data 还将返回的 NumPy ndarrays 列表和
+实现 ``__array__`` 的对象（例如， ``torch.Tensor``）视为张量数据。
 
-For more information on transforming data, read
-:ref:`Transforming data <transforming_data>`.
+有关转换数据的更多信息，请阅读
+:ref:`转换数据 <transforming_data>`。
 
 
-Saving tensor data
+保存张量数据
 ------------------
 
-Save tensor data with formats like Parquet, NumPy, and JSON. To view all supported
-formats, see the :ref:`Input/Output reference <input-output>`.
+使用 Parquet、NumPy 和 JSON 等格式保存张量数据。要查看所有支持的格式，请参阅
+:ref:`输入/输出 参考 <input-output>`。
 
 .. tab-set::
 
@@ -148,4 +148,4 @@ formats, see the :ref:`Input/Output reference <input-output>`.
             ds = ray.data.read_images("s3://anonymous@ray-example-data/image-datasets/simple")
             ds.write_json("/tmp/simple")
 
-For more information on saving data, read :ref:`Saving data <loading_data>`.
+有关保存数据的更多信息，请阅读 :ref:`保存数据 <loading_data>`。

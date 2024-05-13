@@ -1,25 +1,25 @@
 .. _working_with_pytorch:
 
-处理 PyTorch
+使用 PyTorch
 ====================
 
-Ray Data integrates with the PyTorch ecosystem.
+Ray Data 与 PyTorch 生态系统集成。
 
-This guide describes how to:
+本指南介绍了如何：
 
-* :ref:`Iterate over your dataset as Torch tensors for model training <iterating_pytorch>`
-* :ref:`Write transformations that deal with Torch tensors <transform_pytorch>`
-* :ref:`Perform batch inference with Torch models <batch_inference_pytorch>`
-* :ref:`Save Datasets containing Torch tensors <saving_pytorch>`
-* :ref:`Migrate from PyTorch Datasets to Ray Data <migrate_pytorch>`
+* :ref:`将数据集作为 Torch 张量进行迭代以进行模型训练 <iterating_pytorch>`
+* :ref:`编写处理 Torch 张量的转换 <transform_pytorch>`
+* :ref:`使用 Torch 模型执行批量推理 <batch_inference_pytorch>`
+* :ref:`保存包含 Torch 张量的数据集 <saving_pytorch>`
+* :ref:`从 PyTorch 数据集迁移到 Ray 数据 <migrate_pytorch>`
 
 .. _iterating_pytorch:
 
-Iterating over Torch tensors for training
+迭代 Torch 张量进行训练
 -----------------------------------------
-To iterate over batches of data in Torch format, call :meth:`Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>`. Each batch is represented as `Dict[str, torch.Tensor]`, with one tensor per column in the dataset.
+要迭代 Torch 格式的批量数据，请调用 :meth:`Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>`。每个批次表示为 `Dict[str, torch.Tensor]`，数据集中每列一个张量。
 
-This is useful for training Torch models with batches from your dataset. For configuration details such as providing a ``collate_fn`` for customizing the conversion, see `the API reference <ray.data.Dataset.iter_torch_batches>`.
+这对于使用数据集中的批次训练 Torch 模型非常有用。有关提供 ``collate_fn`` 进行自定义转换的配置详细信息，请参阅 `API 参考 <ray.data.Dataset.iter_torch_batches>`。
 
 .. testcode::
 
@@ -38,9 +38,9 @@ This is useful for training Torch models with batches from your dataset. For con
     ...
     {'image': tensor([[[[...]]]], dtype=torch.uint8)}
 
-Integration with Ray Train
+与 Ray Train 集成
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ray Data integrates with :ref:`Ray Train <train-docs>` for easy data ingest for data parallel training, with support for PyTorch, PyTorch Lightning, or Hugging Face training.
+Ray Data 与 :ref:`Ray Train <train-docs>` 集成，可轻松摄取数据以进行数据并行训练，并支持 PyTorch、PyTorch Lightning 或 Hugging Face 训练。
 
 .. testcode::
 
@@ -78,17 +78,17 @@ Ray Data integrates with :ref:`Ray Train <train-docs>` for easy data ingest for 
     trainer.fit()
 
 
-For more details, see the :ref:`Ray Train user guide <data-ingest-torch>`.
+有关更多详细信息，请参阅 :ref:`Ray 训练用户指南 <data-ingest-torch>`。
 
 .. _transform_pytorch:
 
-Transformations with Torch tensors
+使用 Torch 张量进行变换
 ----------------------------------
-Transformations applied with `map` or ``map_batches`` can return Torch tensors.
+使用 `map` 或 ``map_batches`` 变换，可以返回 Torch 张量。
 
 .. caution::
 
-    Under the hood, Ray Data automatically converts Torch tensors to NumPy arrays. Subsequent transformations accept NumPy arrays as input, not Torch tensors.
+    在底层，Ray Data 自动将 Torch 张量转换为 NumPy 数组。后续转换接受 NumPy 数组作为输入，而不是 Torch 张量。
 
 .. tab-set::
 
@@ -154,12 +154,12 @@ Transformations applied with `map` or ``map_batches`` can return Torch tensors.
             ------  ----
             tensor  numpy.ndarray(shape=(32, 32, 3), dtype=uint8)
 
-For more information on transforming data, see :ref:`Transforming data <transforming_data>`.
+有关转换数据的更多信息，请参阅 :ref:`转换数据 <transforming_data>`。
 
-Built-in PyTorch transforms
+内置 PyTorch 转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can use built-in Torch transforms from ``torchvision``, ``torchtext``, and ``torchaudio`` Ray Data transformations.
+你可以使用 Ray Data 转换内置的 PyTorch 转换如 ``torchvision``， ``torchtext`` 和 ``torchaudio`` 。
 
 .. tab-set::
 
@@ -234,10 +234,10 @@ You can use built-in Torch transforms from ``torchvision``, ``torchtext``, and `
 
 .. _batch_inference_pytorch:
 
-Batch inference with PyTorch
+使用 PyTorch 进行批量推理
 ----------------------------
 
-With Ray Datasets, you can do scalable offline batch inference with Torch models by mapping a pre-trained model over your data.
+借助 Ray 数据集，您可以通过将预先训练的模型映射到数据上，使用 Torch 模型进行可扩展的离线批量推理。
 
 .. testcode::
 
@@ -286,21 +286,20 @@ With Ray Datasets, you can do scalable offline batch inference with Torch models
 
     {'output': array([0.5590901], dtype=float32)}
 
-For more details, see the :ref:`Batch inference user guide <batch_inference_home>`.
+更多信息，请参阅 :ref:`批量推理用户指南 <batch_inference_home>`。
 
 .. _saving_pytorch:
 
-Saving Datasets containing Torch tensors
+保存包含 Torch 张量的数据集
 ----------------------------------------
 
-Datasets containing Torch tensors can be saved to files, like parquet or NumPy.
+包含 Torch 张量的数据集可以保存到文件中，例如 parquet 或 NumPy。
 
-For more information on saving data, read
-:ref:`Saving data <saving-data>`.
+更多信息，请参阅 :ref:`保存数据 <saving-data>`。
 
 .. caution::
 
-    Torch tensors that are on GPU devices can't be serialized and written to disk. Convert the tensors to CPU (``tensor.to("cpu")``) before saving the data.
+    Torch 张量在 GPU 设备上无法序列化并写入磁盘。在保存数据之前将张量转换为 CPU（ ``tensor.to("cpu")``）。
 
 .. tab-set::
 
@@ -330,21 +329,21 @@ For more information on saving data, read
 
 .. _migrate_pytorch:
 
-Migrating from PyTorch Datasets and DataLoaders
+从 PyTorch 数据集和 DataLoaders 迁移
 -----------------------------------------------
 
-If you're currently using PyTorch Datasets and DataLoaders, you can migrate to Ray Data for working with distributed datasets.
+如果您正在使用 PyTorch 数据集和 DataLoader，您可以迁移到 Ray Data 以处理分布式数据集。
 
-PyTorch Datasets are replaced by the :class:`Dataset <ray.data.Dataset>` abstraction, and the PyTorch DataLoader is replaced by :meth:`Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>`.
+PyTorch 数据集被 :class:`Dataset <ray.data.Dataset>` 抽象替换，PyTorch DataLoader 被 :meth:`Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>` 替换。
 
-Built-in PyTorch Datasets
+内置 PyTorch 数据集
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are using built-in PyTorch datasets, for example from ``torchvision``, these can be converted to a Ray Dataset using the :meth:`from_torch() <ray.data.from_torch>` API.
+如果你使用的是内置的 PyTorch 数据集，例如来自 ``torchvision``，可以使用 :meth:`from_torch() <ray.data.from_torch>` API 将其转换为 Ray 数据集。
 
 .. caution::
 
-    :meth:`from_torch() <ray.data.from_torch>` requires the PyTorch Dataset to fit in memory. Use this only for small, built-in datasets for prototyping or testing.
+    :meth:`from_torch() <ray.data.from_torch>` 需要 PyTorch 数据集适合内存。仅将其用于小型内置数据集以进行原型设计或测试。
 
 .. testcode::
 
@@ -368,7 +367,7 @@ If you are using built-in PyTorch datasets, for example from ``torchvision``, th
     ------  ----
     item    <class 'object'>
 
-Custom PyTorch Datasets
+自定义 PyTorch 数据集
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 If you have a custom PyTorch Dataset, you can migrate to Ray Data by converting the logic in ``__getitem__`` to Ray Data read and transform operations.

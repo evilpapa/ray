@@ -4,22 +4,22 @@
 检查数据
 ===============
 
-Inspect :class:`Datasets <ray.data.Dataset>` to better understand your data.
+检查 :class:`Datasets <ray.data.Dataset>` 来更好的了解你的数据。
 
-This guide shows you how to:
+本指南将向您展示如何：
 
-* `Describe datasets <#describing-datasets>`_
-* `Inspect rows <#inspecting-rows>`_
-* `Inspect batches <#inspecting-batches>`_
-* `Inspect execution statistics <#inspecting-stats>`_
+* `描述 datasets <#describing-datasets>`_
+* `检查行 <#inspecting-rows>`_
+* `检验批次 <#inspecting-batches>`_
+* `检查执行统计 <#inspecting-stats>`_
 
 .. _describing-datasets:
 
-Describing datasets
+描述 Dataset
 ===================
 
-:class:`Datasets <ray.data.Dataset>` are tabular. To view a dataset's column names and
-types, call :meth:`Dataset.schema() <ray.data.Dataset.schema>`.
+:class:`Datasets <ray.data.Dataset>` 是表格形式。要查看数据集的列
+名称和类型，请调用 :meth:`Dataset.schema() <ray.data.Dataset.schema>`。
 
 .. testcode::
 
@@ -39,7 +39,7 @@ types, call :meth:`Dataset.schema() <ray.data.Dataset.schema>`.
     petal width (cm)   double
     target             int64
 
-For more information like the number of rows, print the Dataset.
+如需更多信息（例如行数），请打印数据集。
 
 .. testcode::
 
@@ -65,12 +65,11 @@ For more information like the number of rows, print the Dataset.
 
 .. _inspecting-rows:
 
-Inspecting rows
+检查行
 ===============
 
-To get a list of rows, call :meth:`Dataset.take() <ray.data.Dataset.take>` or
-:meth:`Dataset.take_all() <ray.data.Dataset.take_all>`. Ray Data represents each row as
-a dictionary.
+要获取行列表，请调用 :meth:`Dataset.take() <ray.data.Dataset.take>` 或
+:meth:`Dataset.take_all() <ray.data.Dataset.take_all>`。Ray Data 将每一行表示为一个字典。
 
 .. testcode::
 
@@ -86,20 +85,20 @@ a dictionary.
     [{'sepal length (cm)': 5.1, 'sepal width (cm)': 3.5, 'petal length (cm)': 1.4, 'petal width (cm)': 0.2, 'target': 0}]
 
 
-For more information on working with rows, see
-:ref:`Transforming rows <transforming_rows>` and
-:ref:`Iterating over rows <iterating-over-rows>`.
+有关处理行的更多信息，请参阅
+:ref:`转换行 <transforming_rows>` 和
+:ref:`迭代行 <iterating-over-rows>`。
 
 .. _inspecting-batches:
 
-Inspecting batches
+检查批次
 ==================
 
-A batch contains data from multiple rows. To inspect batches, call
-`Dataset.take_batch() <ray.data.Dataset.take_batch>`.
+一个批次包含来自多行的数据。要检查批次，请调用
+`Dataset.take_batch() <ray.data.Dataset.take_batch>`。
 
-By default, Ray Data represents batches as dicts of NumPy ndarrays. To change the type
-of the returned batch, set ``batch_format``.
+默认情况下，Ray Data 将批次表示为 NumPy ndarrays 的字典。要更改
+返回批次的类型，请设置 ``batch_format``。
 
 .. tab-set::
 
@@ -141,17 +140,17 @@ of the returned batch, set ``batch_format``.
             <BLANKLINE>
             [2 rows x 5 columns]
 
-For more information on working with batches, see
-:ref:`Transforming batches <transforming_batches>` and
-:ref:`Iterating over batches <iterating-over-batches>`.
+有关使用批次的更多信息，请参阅
+:ref:`转换批次 <transforming_batches>` 和
+:ref:`迭代批次 <iterating-over-batches>`。
 
 
-Inspecting execution statistics
+检查执行统计信息
 ===============================
 
-Ray Data calculates statistics during execution like the wall clock time and memory usage for the different stages.
+Ray Data 在执行期间计算统计数据，例如不同阶段的挂钟时间和内存使用情况。
 
-To view stats about your :class:`Datasets <ray.data.Dataset>`, call :meth:`Dataset.stats() <ray.data.Dataset.stats>` on an executed dataset. The stats are also persisted under `/tmp/ray/session_*/logs/ray-data.log`.
+要查看有关 :class:`Datasets <ray.data.Dataset>` 的统计数据，请在已执行的数据集上调用 :meth:`Dataset.stats() <ray.data.Dataset.stats>` 。统计数据也会保留在 `/tmp/ray/session_*/logs/ray-data.log` 下。
 
 .. testcode::
     import ray
