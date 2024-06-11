@@ -5,34 +5,34 @@
 
 .. tip::
 
-    `Get in touch <https://forms.gle/sGX7PQhheBGL6yxQ6>`_ to get help using Ray Data, the industry's fastest and cheapest solution for offline batch inference.
+    `请联系我们 <https://forms.gle/sGX7PQhheBGL6yxQ6>`_ 获取关于 Ray Data 的帮助，Ray Data 是行业中离线批量预估速度最快、成本最低的解决方案。
 
-Offline batch inference is a process for generating model predictions on a fixed set of input data. Ray Data offers an efficient and scalable solution for batch inference, providing faster execution and cost-effectiveness for deep learning applications.
+离线批量预估是在固定的输入数据集上生成模型预测的过程。Ray Data 为批量预估提供了高效且可扩展的解决方案，为深度学习应用提供更快的执行速度和更具成本效益的解决方案。
 
-For an overview on why you should use Ray Data for offline batch inference, and how it compares to alternatives, see the :ref:`Ray Data Overview <data_overview>`.
+有关如何使用 Ray Data 进行离线批量预估的概述以及与其他解决方案的比较，请参见 :ref:`Ray Data 概述 <data_overview>`。
 
 .. figure:: images/batch_inference.png
 
 
 .. _batch_inference_quickstart:
 
-Quickstart
+快速开始
 ----------
-To start, install Ray Data:
+首先，安装 Ray Data：
 
 .. code-block:: bash
 
     pip install -U "ray[data]"
 
-Using Ray Data for offline inference involves four basic steps:
+使用 Ray Data 进行离线预估包括以下四个基本步骤：
 
-- **Step 1:** Load your data into a Ray Dataset. Ray Data supports many different datasources and formats. For more details, see :ref:`Loading Data <loading_data>`.
-- **Step 2:** Define a Python class to load the pre-trained model.
-- **Step 3:** Transform your dataset using the pre-trained model by calling :meth:`ds.map_batches() <ray.data.Dataset.map_batches>`. For more details, see :ref:`Transforming Data <transforming_data>`.
-- **Step 4:** Get the final predictions by either iterating through the output or saving the results. For more details, see the :ref:`Iterating over data <iterating-over-data>` and :ref:`Saving data <saving-data>` user guides.
+- **步骤 1:** 加载数据集到 Ray Dataset。Ray Data 支持许多不同的数据源和格式。有关更多详细信息，请参见 :ref:`数据加载 <loading_data>`。
+- **步骤 2:** 定义一个 Python 类来加载预训练模型。
+- **步骤 3:** 通过调用 :meth:`ds.map_batches() <ray.data.Dataset.map_batches>` 使用预训练模型转换数据集。有关更多详细信息，请参见 :ref:`数据转换 <transforming_data>`。
+- **步骤 4:** 通过迭代或保存结果获取最终预测。有关更多详细信息，请参见 :ref:`数据迭代 <iterating-over-data>` 和 :ref:`数据保存 <saving-data>`。
 
-For more in-depth examples for your use case, see :ref:`the batch inference examples<batch_inference_examples>`.
-For how to configure batch inference, see :ref:`the configuration guide<batch_inference_configuration>`.
+更多有关您的用例的深入示例，请参见 :ref:`批量预估示例<batch_inference_examples>`。
+批量预估配置指南，请参见 :ref:`配置指南<batch_inference_configuration>`。
 
 .. tabs::
 
@@ -180,29 +180,29 @@ For how to configure batch inference, see :ref:`the configuration guide<batch_in
 
 .. _batch_inference_examples:
 
-More examples
+更多示例
 -------------
-- :doc:`Image Classification Batch Inference with PyTorch ResNet18 </data/examples/pytorch_resnet_batch_prediction>`
-- :doc:`Object Detection Batch Inference with PyTorch FasterRCNN_ResNet50 </data/examples/batch_inference_object_detection>`
-- :doc:`Image Classification Batch Inference with Hugging Face Vision Transformer </data/examples/huggingface_vit_batch_prediction>`
+- :doc:`使用 PyTorch ResNet18 进行图像分类批量推理 </data/examples/pytorch_resnet_batch_prediction>`
+- :doc:`使用 PyTorch FasterRCNN_ResNet50 进行对象检测批量推理 </data/examples/batch_inference_object_detection>`
+- :doc:`使用 Hugging Face 视觉转换器进行图像分类批量推理 </data/examples/huggingface_vit_batch_prediction>`
 
 .. _batch_inference_configuration:
 
-Configuration and troubleshooting
+配置和故障排除
 ---------------------------------
 
 .. _batch_inference_gpu:
 
-Using GPUs for inference
+使用 GPU 进行推理
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-To use GPUs for inference, make the following changes to your code:
+要使用 GPU 进行推理，请对代码进行以下更改：
 
-1. Update the class implementation to move the model and data to and from GPU.
-2. Specify ``num_gpus=1`` in the :meth:`ds.map_batches() <ray.data.Dataset.map_batches>` call to indicate that each actor should use 1 GPU.
-3. Specify a ``batch_size`` for inference. For more details on how to configure the batch size, see :ref:`Configuring Batch Size <batch_inference_batch_size>`.
+1. 更新类实现以将模型和数据移入和移出 GPU。
+2. 在 :meth:`ds.map_batches() <ray.data.Dataset.map_batches>`  调用中指定 ``num_gpus=1`` 以指示每个 actor 应使用 1 个 GPU。
+3. 指定 ``batch_size`` 以控制每个 actor 传递给 ``__call__`` 的输入批次的大小。
 
-The remaining is the same as the :ref:`Quickstart <batch_inference_quickstart>`.
+其余与 :ref:`快速开始 <batch_inference_quickstart>` 相同。
 
 .. tabs::
 
@@ -337,12 +337,12 @@ The remaining is the same as the :ref:`Quickstart <batch_inference_quickstart>`.
 
 .. _batch_inference_batch_size:
 
-Configuring Batch Size
+配置批量大小
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Configure the size of the input batch that's passed to ``__call__`` by setting the ``batch_size`` argument for :meth:`ds.map_batches() <ray.data.Dataset.map_batches>`
+通过设置传递给 ``__call__`` 的 :meth:`ds.map_batches() <ray.data.Dataset.map_batches>` 的 ``batch_size`` 的参数来配置输入批次的大小。
 
-Increasing batch size results in faster execution because inference is a vectorized operation. For GPU inference, increasing batch size increases GPU utilization. Set the batch size to as large possible without running out of memory. If you encounter out-of-memory errors, decreasing ``batch_size`` may help.
+增加 ``batch_size`` 会导致更快的执行，因为推理是一个矢量化操作。对于 GPU 推理，增加 ``batch_size`` 会增加 GPU 利用率。将 ``batch_size`` 设置为尽可能大，而不会耗尽内存。如果遇到内存不足错误，减小 ``batch_size`` 可能有所帮助。
 
 .. testcode::
 
@@ -360,35 +360,33 @@ Increasing batch size results in faster execution because inference is a vectori
     ds.map_batches(assert_batch, batch_size=2)
 
 .. caution::
-  The default ``batch_size`` of ``4096`` may be too large for datasets with large rows
-  (for example, tables with many columns or a collection of large images).
+  默认的 ``batch_size`` 为 ``4096``，对于具有大行的数据集（例如，具有许多列的表或大图像集合）可能太大。
 
-Handling GPU out-of-memory failures
+处理 GPU 内存不足故障
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you run into CUDA out-of-memory issues, your batch size is likely too large. Decrease the batch size by following :ref:`these steps <batch_inference_batch_size>`.
+如果您遇到 CUDA 内存不足问题，则您的批处理大小可能太大。按照 :ref:`以下步骤 <batch_inference_batch_size>` 减小批量大小。
 
-If your batch size is already set to 1, then use either a smaller model or GPU devices with more memory.
+如果您的批量大小已设置为 1，则使用较小的模型或具有更多内存的 GPU 设备。
 
-For advanced users working with large models, you can use model parallelism to shard the model across multiple GPUs.
+对于使用大型模型的高级用户，您可以使用模型并行性将模型分片到多个 GPU 上。
 
-Optimizing expensive CPU preprocessing
+优化昂贵的 CPU 预处理
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your workload involves expensive CPU preprocessing in addition to model inference, you can optimize throughput by separating the preprocessing and inference logic into separate stages. This separation allows inference on batch :math:`N` to execute concurrently with preprocessing on batch :math:`N+1`.
+如果您的工作负载除了模型推理之外还涉及昂贵的 CPU 预处理，您可以通过将预处理和推理逻辑分离到不同的阶段来优化吞吐量。这种分离允许批量推断 :math:`N` 与批处理预处理同时执行 :math:`N+1` 。
 
-For an example where preprocessing is done in a separate `map` call, see :doc:`Image Classification Batch Inference with PyTorch ResNet18 </data/examples/pytorch_resnet_batch_prediction>`.
+有关在单独的 `map` 调用中进行预处理的示例，请参见 :doc:`使用 PyTorch ResNet18 进行图像分类批量推理 </data/examples/pytorch_resnet_batch_prediction>`。
 
-Handling CPU out-of-memory failures
+处理 CPU 内存不足故障
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you run out of CPU RAM, you likely that you have too many model replicas that are running concurrently on the same node. For example, if a model
-uses 5 GB of RAM when created / run, and a machine has 16 GB of RAM total, then no more
-than three of these models can be run at the same time. The default resource assignments
-of one CPU per task/actor might lead to `OutOfMemoryError` from Ray in this situation.
+如果 CPU RAM 不足，则可以能在同一节点上并发运行太多模型副本。例如，如果
+模型在创建/运行时使用 5 GB 的 RAM，并且一台机器总共有 16 GB 的 RAM，则最多可以同时运行
+三个这些模型。Ray 的默认资源分配（每个任务/actor 一个 CPU）可能会导致此类情况下的 `OutOfMemoryError`。
 
-Suppose your cluster has 4 nodes, each with 16 CPUs. To limit to at most
-3 of these actors per node, you can override the CPU or memory:
+假设您的集群有 4 个节点，每个节点有 16 个 CPU。
+为了限制每个节点最多有 3 个这些 actor，您可以覆盖 CPU 或内存：
 
 .. testcode::
     :skipif: True
@@ -423,12 +421,12 @@ Suppose your cluster has 4 nodes, each with 16 CPUs. To limit to at most
 .. _batch_inference_ray_train:
 
 
-Using models from Ray Train
+使用 Ray Train 中的模型
 ---------------------------
 
-Models that have been trained with :ref:`Ray Train <train-docs>` can then be used for batch inference with :ref:`Ray Data <data>` via the :class:`Checkpoint <ray.train.Checkpoint>` that is returned by :ref:`Ray Train <train-docs>`.
+经过  :ref:`Ray Train <train-docs>` 训练的模型可以通过 :ref:`Ray Data <data>` 使用  :ref:`Ray Train <train-docs>` 返回的 :class:`Checkpoint <ray.train.Checkpoint>` 进行批量预测。
 
-**Step 1:** Train a model with :ref:`Ray Train <train-docs>`.
+**步骤 1:** 使用 :ref:`Ray Train <train-docs>` 训练模型。
 
 .. testcode::
 
@@ -455,20 +453,20 @@ Models that have been trained with :ref:`Ray Train <train-docs>` can then be use
     result = trainer.fit()
 
 
-**Step 2:** Extract the :class:`Checkpoint <ray.train.Checkpoint>` from the training :class:`Result <ray.train.Result>`.
+**步骤 2:** 从训练 :class:`Result <ray.train.Result>` 中提取 :class:`Checkpoint <ray.train.Checkpoint>` 。
 
 .. testcode::
 
     checkpoint = result.checkpoint
 
-**Step 3:** Use Ray Data for batch inference. To load in the model from the :class:`Checkpoint <ray.train.Checkpoint>` inside the Python class, use the methodology corresponding to the Trainer used to train the model.
+**步骤 3:** 使用 Ray Data 来进行批量预测。要从 :class:`Checkpoint <ray.train.Checkpoint>` 中加载模型到 Python 类中，请使用与用于训练模型的 Trainer 对应的方法。
 
 - **Deep Learning Trainers:** :ref:`train-checkpointing`
 - **Tree-Based Trainers:** :ref:`train-gbdt-checkpoints`
 
-In this case, use :meth:`XGBoostTrainer.get_model() <ray.train.xgboost.XGBoostTrainer.get_model>` to load the model.
+在本例中，使用 :meth:`XGBoostTrainer.get_model() <ray.train.xgboost.XGBoostTrainer.get_model>` 加载模型。
 
-The rest of the logic looks the same as in the `Quickstart <#quickstart>`_.
+其余逻辑与 `快速开始 <#quickstart>`_ 相同。
 
 .. testcode::
     

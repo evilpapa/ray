@@ -4,23 +4,23 @@ parts:
   - caption: Ray
     chapters:
       - file: ray-overview/index
-        title: "概述"
+        title: "概述「100%」"
       - file: ray-overview/getting-started
-        title: "入门"
+        title: "入门「100%」"
       - file: ray-overview/installation
-        title: "安装"
+        title: "安装「100%」"
       - file: ray-overview/use-cases
-        title: "用例"
+        title: "用例「100%」"
         sections:
           - file: ray-air/getting-started
 
       - file: ray-overview/examples
-        title: "示例库"
+        title: "示例库「1%」"
       - file: ray-overview/ray-libraries
-        title: "生态"
+        title: "生态「3%」"
 
       - file: ray-core/walkthrough
-        title: "Ray 核心"
+        title: "Ray 核心「100%」"
         sections:
           - file: ray-core/key-concepts
             title: "关键概念"
@@ -45,7 +45,7 @@ parts:
           - file: ray-core/api/index
 
       - file: data/data
-        title: Ray 数据
+        title: Ray 数据「75%」
         sections:
           - file: data/overview
             title: 概述
@@ -56,7 +56,7 @@ parts:
           - file: data/data-internals
 
       - file: train/train
-        title: Ray 训练
+        title: Ray 训练「0%」
         sections:
           - file: train/overview
             title: 概述
@@ -87,7 +87,7 @@ parts:
           - file: train/api/api
 
       - file: tune/index
-        title: Ray 调参
+        title: Ray 调参「0%」
         sections:
           - file: tune/getting-started
             title: "入门"
@@ -182,7 +182,7 @@ parts:
           - file: tune/api/api.rst
 
       - file: serve/index
-        title: Ray Serve
+        title: Ray Serve「0%」
         sections:
           - file: serve/getting_started
           - file: serve/key-concepts
@@ -221,7 +221,7 @@ parts:
           - file: serve/api/index
 
       - file: rllib/index
-        title: Ray RLlib
+        title: Ray RLlib「0%」
         sections:
           - file: rllib/rllib-training
           - file: rllib/key-concepts
@@ -248,7 +248,7 @@ parts:
           - file: rllib/package_ref/index
 
       - file: ray-more-libs/index
-        title: 更多类库
+        title: 更多类库「40%」
         sections:
           - file: ray-more-libs/joblib
           - file: ray-more-libs/multiprocessing
@@ -270,7 +270,7 @@ parts:
               - file: workflows/api/api
 
       - file: cluster/getting-started
-        title: "Ray 集群"
+        title: "Ray 集群「100%」"
         sections:
           - file: cluster/key-concepts
             title: 关键概念
@@ -357,7 +357,7 @@ parts:
           - file: cluster/package-overview
 
       - file: ray-observability/index
-        title: "监控调试"
+        title: "监控调试「100%」"
         sections:
           - file: ray-observability/getting-started
           - file: ray-observability/key-concepts
@@ -386,13 +386,13 @@ parts:
               - file: ray-observability/reference/system-metrics
 
       - file: ray-references/api
-        title: 参考
+        title: 参考「20%」
         sections:
           - file: cluster/usage-stats
           - file: ray-references/glossary
 
       - file: ray-contribute/index
-        title: 开发者指引
+        title: 开发者指引「30%」
 
       - file: ray-security/index
-        title: "安全"
+        title: "安全「100%」"

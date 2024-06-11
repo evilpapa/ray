@@ -1,45 +1,44 @@
 Ray 开发者调试
 ============================
 
-This debugging guide is for contributors to the Ray project. 
+本调试指引是专为 Ray 项目的贡献者准备的。
 
-Starting processes in a debugger
+开始进程调试
 --------------------------------
-When processes are crashing, it is often useful to start them in a debugger.
-Ray currently allows processes to be started in the following:
+当进程崩溃时，通常有必要在调试器中启动它们。
+Ray 目前允许在以下调试器中启动进程：
 
 - valgrind
-- the valgrind profiler
-- the perftools profiler
+- valgrind 分析器
+- perftools 分析器
 - gdb
 - tmux
 
-To use any of these tools, please make sure that you have them installed on
-your machine first (``gdb`` and ``valgrind`` on MacOS are known to have issues).
-Then, you can launch a subset of ray processes by adding the environment
-variable ``RAY_{PROCESS_NAME}_{DEBUGGER}=1``. For instance, if you wanted to
-start the raylet in ``valgrind``, then you simply need to set the environment
-variable ``RAY_RAYLET_VALGRIND=1``.
+要使用以上工具，请确保您的机器上已经安装了这些
+工具（已知 MacOS 上的 gdb 和 valgrind 存在问题）。
+之后，您可以通过添加以下环境
+变量 ``RAY_{PROCESS_NAME}_{DEBUGGER}=1`` 启动 ray 进程：
+例如，如果你想在 ``valgrind`` 中启动 raylet，
+你只需要设置环境变量 ``RAY_RAYLET_VALGRIND=1``。
 
-To start a process inside of ``gdb``, the process must also be started inside of
-``tmux``. So if you want to start the raylet in ``gdb``, you would start your
-Python script with the following:
+要在 ``gdb`` 中启动进程，进程也必须在 ``tmux`` 中启动。
+所以你想在 ``gdb`` 中启动 raylet，你需要
+在你的 Python 脚本中添加以下内容：
 
 .. code-block:: bash
 
  RAY_RAYLET_GDB=1 RAY_RAYLET_TMUX=1 python
 
-You can then list the ``tmux`` sessions with ``tmux ls`` and attach to the
-appropriate one.
+你可以使用 ``tmux ls`` 列出 ``tmux`` 会话，然后附加到适当的会话。
 
 You can also get a core dump of the ``raylet`` process, which is especially
 useful when filing `issues`_. The process to obtain a core dump is OS-specific,
 but usually involves running ``ulimit -c unlimited`` before starting Ray to
-allow core dump files to be written.
+allow core dump files to be written. 
 
 .. _backend-logging:
 
-Backend logging
+后端日志
 ---------------
 The ``raylet`` process logs detailed information about events like task
 execution and object transfers between nodes. To set the logging level at

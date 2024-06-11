@@ -1,6 +1,6 @@
 (gentle-intro)=
 
-# 入门
+# 入门「100%」
 使用 Ray 扩展笔记本电脑或云上的应用程序。为您的任务选择正确的指南。
 * 扩展 ML 工作负载：[Ray Libraries 快速入门](#ray-libraries-quickstart)
 * 扩展通用 Python 应用程序：[Ray Core 快速入门](#ray-core-quickstart)

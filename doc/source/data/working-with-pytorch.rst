@@ -370,15 +370,15 @@ PyTorch 数据集被 :class:`Dataset <ray.data.Dataset>` 抽象替换，PyTorch 
 自定义 PyTorch 数据集
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have a custom PyTorch Dataset, you can migrate to Ray Data by converting the logic in ``__getitem__`` to Ray Data read and transform operations.
+如果您有自定义 PyTorch 数据集，则可以通过 ``__getitem__`` 替换 Ray 数据读取和准换操作逻辑来迁移到 Ray Data。
 
-Any logic for reading data from cloud storage and disk can be replaced by one of the Ray Data ``read_*`` APIs, and any transformation logic can be applied as a :meth:`map <ray.data.Dataset.map>` call on the Dataset.
+任何从云存储和磁盘读取数据的逻辑都可以通过 Ray Data ``read_*`` API 之一替换，任何转换逻辑都可以作为 Dataset 上的 :meth:`map <ray.data.Dataset.map>` 调用应用。
 
-The following example shows a custom PyTorch Dataset, and what the analogous would look like with Ray Data.
+以下示例显示了一个自定义 PyTorch 数据集，以及使用 Ray Data 的类似情况。
 
 .. note::
 
-    Unlike PyTorch Map-style datasets, Ray Datasets aren't indexable.
+    与 PyTorch 地图样式数据集不同， Ray 数据集不可索引。
 
 .. tab-set::
 
@@ -468,12 +468,12 @@ The following example shows a custom PyTorch Dataset, and what the analogous wou
             # Map the transformations over the dataset.
             ds = ds.map(extract_label).map(transform_image)
 
-PyTorch DataLoader
+PyTorch 数据加载器
 ~~~~~~~~~~~~~~~~~~
 
-The PyTorch DataLoader can be replaced by calling :meth:`Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>` to iterate over batches of the dataset.
+数据加载器可以通过调用 :meth:`Dataset.iter_torch_batches() <ray.data.Dataset.iter_torch_batches>` 来批次迭代数据集。
 
-The following table describes how the arguments for PyTorch DataLoader map to Ray Data. Note the behavior may not necessarily be identical. For exact semantics and usage, :meth:`see the API reference <ray.data.Dataset.iter_torch_batches>`.
+以下表格描述了 PyTorch DataLoader 的参数如何映射到 Ray Data。请注意，行为可能不一定相同。有关确切的语义和用法，请 :meth:`参见 API 参考 <ray.data.Dataset.iter_torch_batches>`。
 
 .. list-table::
    :header-rows: 1
