@@ -214,7 +214,7 @@ def test_groupby_large_udf_returns(ray_start_regular_shared):
 
 
 def test_agg_errors(ray_start_regular_shared):
-    from ray.data.aggregate import Max
+    from ray.data._internal.aggregate._aggregate import Max
 
     ds = ray.data.range(100)
     ds.aggregate(Max("id"))  # OK
