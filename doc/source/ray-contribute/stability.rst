@@ -33,17 +33,17 @@ alpha 组件重大更改 **必须** 允许和预期，并且
 *beta* 组件应该尽可能稳定；然而，
 beta 组件 **必须** 允许随时间变化。
 
-Because users of beta components tend to have a lower tolerance of change, beta
-components **should** be as stable as possible; however, the beta component
-**must** be permitted to change over time. These changes **should** be minimal
-but **may** include backwards-incompatible changes to beta components.
+因为 beta 组件的用户往往对变化的容忍度较低，
+所以 beta 组件应 **尽可能** 稳定；然而，beta 组件 **必须** 允许随时间变化。
+这些变化应 **尽可能** 小，
+但 **可能** 包括对 beta 组件的不向后兼容的更改。
 
 Backwards-incompatible changes **must** be made only after a reasonable
 deprecation period to provide users with an opportunity to migrate their code.
 
 .. _api-stability-stable:
 
-Stable
+稳定版
 ~~~~~~
 
 A *stable* component **must** be fully-supported over the lifetime of the major

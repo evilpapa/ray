@@ -4,11 +4,11 @@
 如何编写代码片段
 ==========================
 
-Users learn from example. So, whether you're writing a docstring or a user guide,
-include examples that illustrate the relevant APIs. Your examples should run
-out-of-the-box so that users can copy them and adapt them to their own needs.
+用户通过示例学习。因此，无论您是编写文档字符串还是用户指南，
+都应包含说明相关 API 的示例。
+您的示例应该可以直接运行，以便用户可以复制并根据自己的需求进行调整。
 
-This page describes how to write code snippets so that they're tested in CI.
+本页描述了如何编写代码片段以便在 CI 中进行测试。
 
 .. note::
     The examples in this guide use reStructuredText. If you're writing

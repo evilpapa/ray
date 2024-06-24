@@ -3,27 +3,27 @@
 从源代码构建 Ray
 =========================
 
-For a majority of Ray users, installing Ray via the latest wheels or pip package is usually enough. However, you may want to build the latest master branch.
+对于多数 Ray 用户，通过最新的 wheels 或 pip 包安装 Ray 通常就足够了。然而，你可能想要构建最新的 master 分支。
 
 .. tip::
 
-  If you are only editing Python files, follow instructions for :ref:`python-develop` to avoid long build times.
+  如果你只是编辑 Python 文件，避免长时间的构建，可以参考 :ref:`python-develop`。
 
-  If you already followed the instructions in :ref:`python-develop` and want to switch to the Full build in this section, you will need to first uninstall.
+  如果已经按照 :ref:`python-develop` 中的说明操作，并想要切换到本节的完整构建，请先卸载。
 
 .. contents::
   :local:
 
-Clone the repository
+克隆仓库
 --------------------
 
-To build Ray locally you will need to have the Git repository, so first, fork it on GitHub. Then you can clone it to your machine:
+要在本地构建 Ray，你需要克隆 Git 仓库，首先在 GitHub 上 fork 仓库。然后你可以将其克隆到你的机器上：
 
 .. tab-set::
 
     .. tab-item:: Git SSH
 
-        To clone the repository using Git with SSH (the default) run:
+        要使用 SSH 克隆仓库，请运行：
 
         .. code-block:: shell
 
@@ -31,25 +31,25 @@ To build Ray locally you will need to have the Git repository, so first, fork it
 
     .. tab-item:: Git HTTPS
 
-        To clone the repository using Git with HTTPS run:
+        要使用 HTTPS 克隆仓库，请运行：
 
         .. code-block:: shell
 
             git clone https://github.com/[your username]/ray.git
 
-Then you can enter into the Ray git repository directory:
+然后进入 Ray git 仓库目录：
 
 .. code-block:: shell
 
     cd ray
 
-Next make sure you connect your repository to the upstream (main project) Ray repository. This will allow you to push your code to your repository when proposing changes (in pull requests) while also pulling updates from the main project.
+接下来确保将你的仓库连接到上游（主项目）Ray 仓库。这样你就可以在提出更改（pull requests）时将你的代码推送到你的仓库，同时也可以从主项目中拉取更新。
 
 .. tab-set::
 
     .. tab-item:: Git SSH
 
-        To connect your repository using SSH (the default) run the command:
+        通过 SSH 连接你的仓库（默认）运行以下命令：
 
         .. code-block:: shell
 
@@ -57,13 +57,13 @@ Next make sure you connect your repository to the upstream (main project) Ray re
 
     .. tab-item:: Git HTTPS
 
-        To connect your repository using HTTPS run the command:
+        使用 HTTPS 连接你的仓库运行以下命令：
 
         .. code-block:: shell
 
             git remote add upstream https://github.com/ray-project/ray.git
 
-Every time you want to update your local version you can pull the changes from the main repository:
+每次你想要更新本地版本时，你可以从主仓库拉取更改：
 
 .. code-block:: shell
 
@@ -72,49 +72,49 @@ Every time you want to update your local version you can pull the changes from t
     # Pull the latest changes from the main repository
     git pull upstream master
 
-Prepare the Python environment
+准备 Python 环境
 ------------------------------
 
-You probably want some type of Python virtual environment. For example, you can use Anaconda's ``conda``.
+你可能想要使用 Python 的虚拟环境。例如，你可以使用 Anaconda 的 ``conda``：
 
 .. tab-set::
 
     .. tab-item:: conda
 
-        Set up a ``conda`` environment named ``ray``:
+        设置一个名为 ``ray`` 的 ``conda`` 环境：
 
         .. code-block:: shell
 
             conda create -c conda-forge python=3.9 -n ray
 
 
-        Activate your virtual environment to tell the shell/terminal to use this particular Python:
+        激活你的虚拟环境，告诉 shell/terminal 使用这个特定的 Python：
 
         .. code-block:: shell
 
             conda activate ray
 
-        You need to activate the virtual environment every time you start a new shell/terminal to work on Ray.
+        你需要在每次启动新的 shell/terminal 时激活虚拟环境来工作在 Ray 上。
 
     .. tab-item:: venv
 
-        Use Python's integrated ``venv`` module to create a virtual environment called ``venv`` in the current directory:
+        使用 Python 的集成 ``venv`` 模块在当前目录创建一个名为 ``venv`` 的虚拟环境：
 
         .. code-block:: shell
 
             python -m venv venv
 
-        This contains a directory with all the packages used by the local Python of your project. You only need to do this step once.
+        者包含一个目录，其中包含项目的本地 Python 使用的所有包。你只需要执行这一步一次。
 
-        Activate your virtual environment to tell the  shell/terminal to use this particular Python:
+        激活你的虚拟环境，告诉 shell/terminal 使用这个特定的 Python：
 
         .. code-block:: shell
 
             source venv/bin/activate
 
-        You need to activate the virtual environment every time you start a new shell/terminal to work on Ray.
+        你需要在每次启动新的 shell/terminal 时激活虚拟环境来工作在 Ray 上。
 
-        Creating a new virtual environment can come with older versions of ``pip`` and ``wheel``. To avoid problems when you install packages, use the module ``pip`` to install the latest version of ``pip`` (itself) and ``wheel``:
+        创建一个新的虚拟环境可能会使用较旧版本的 ``pip`` 和 ``wheel``。为了避免安装包时出现问题，请使用模块 ``pip`` 安装 ``pip``（本身）和 ``wheel`` 的最新版本：
 
         .. code-block:: shell
 
@@ -122,7 +122,7 @@ You probably want some type of Python virtual environment. For example, you can 
 
 .. _python-develop:
 
-Building Ray (Python Only)
+构建 Ray（仅 Python）
 --------------------------
 
 .. note:: Unless otherwise stated, directory and file paths are relative to the project root directory.

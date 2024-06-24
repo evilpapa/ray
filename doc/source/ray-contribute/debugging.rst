@@ -31,28 +31,27 @@ Ray 目前允许在以下调试器中启动进程：
 
 你可以使用 ``tmux ls`` 列出 ``tmux`` 会话，然后附加到适当的会话。
 
-You can also get a core dump of the ``raylet`` process, which is especially
-useful when filing `issues`_. The process to obtain a core dump is OS-specific,
-but usually involves running ``ulimit -c unlimited`` before starting Ray to
-allow core dump files to be written. 
+你也可以获取 ``raylet`` 进程的核心转储，
+它在提交 `issues`_ 时特别有用。
+获取核心转储的过程是特定于操作系统的，
+但通常涉及在启动 Ray 之前运行 ``ulimit -c unlimited`` 以允许写入核心转储文件。
 
 .. _backend-logging:
 
 后端日志
 ---------------
-The ``raylet`` process logs detailed information about events like task
-execution and object transfers between nodes. To set the logging level at
-runtime, you can set the ``RAY_BACKEND_LOG_LEVEL`` environment variable before
-starting Ray. For example, you can do:
+``raylet`` 进程日志记录有关事件的详细信息，
+例如任务执行和节点之间的对象传输。
+要在运行时设置日志级别，您可以在启动 Ray 之前设置 ``RAY_BACKEND_LOG_LEVEL`` 环境变量。
+例如，您可以执行：
 
 .. code-block:: shell
 
  export RAY_BACKEND_LOG_LEVEL=debug
  ray start
 
-This will print any ``RAY_LOG(DEBUG)`` lines in the source code to the
-``raylet.err`` file, which you can find in :ref:`temp-dir-log-files`.
-If it worked, you should see as the first line in ``raylet.err``:
+这将把源代码中的任何 ``RAY_LOG(DEBUG)`` 行打印到 ``raylet.err`` 文件中，
+您可以在 :ref:`temp-dir-log-files` 中找到。
 
 .. code-block:: shell
 
@@ -64,14 +63,13 @@ If it worked, you should see as the first line in ``raylet.err``:
   :language: C
   :lines: 52,54
 
-Backend event stats
+后端事件统计
 -------------------
-The ``raylet`` process also periodically dumps event stats to the ``debug_state.txt`` log
-file if the ``RAY_event_stats=1`` environment variable is set. To also enable regular
-printing of the stats to log files, you can additional set ``RAY_event_stats_print_interval_ms=1000``.
+如果设置了 ``RAY_event_stats=1`` 环境变量，``raylet`` 进程还会定期将事件统计信息转储到 ``debug_state.txt`` 日志文件中。
+要定期将统计信息打印到日志文件中，您还可以设置 ``RAY_event_stats_print_interval_ms=1000``。
 
-Event stats include ASIO event handlers, periodic timers, and RPC handlers. Here is a sample
-of what the event stats look like:
+事件统计包括 ASIO 事件处理程序、周期性计时器和 RPC 处理程序。
+以下是事件统计的示例：
 
 .. code-block:: shell
 
@@ -88,19 +86,18 @@ of what the event stats look like:
     CoreWorkerService.grpc_client.RemoveObjectLocationOwner - 43177 total (0 active), CPU time: mean = 2.368 us, total = 102.252 ms
     NodeManagerService.grpc_server.PinObjectIDs - 40000 total (0 active), CPU time: mean = 194.860 us, total = 7.794 s
 
-Callback latency injection
+回调延迟注入
 --------------------------
-Sometimes, bugs are caused by RPC issues, for example, due to the delay of some requests, the system goes to a deadlock.
-To debug and reproduce this kind of issue, we need to have a way to inject latency for the RPC request. To enable this,
-``RAY_testing_asio_delay_us`` is introduced. If you'd like to make the callback of some RPC requests be executed after some time,
-you can do it with this variable. For example:
+有时，错误是由 RPC 问题引起的，例如，由于某些请求的延迟，系统陷入了死锁。
+要调试和重现这种问题，我们需要一种方法来为 RPC 请求注入延迟。为了启用这个功能，引入了 ``RAY_testing_asio_delay_us``。
+如果你想让某些 RPC 请求的回调在一段时间后执行，你可以使用这个变量。例如：
 
 .. code-block:: shell
 
   RAY_testing_asio_delay_us="NodeManagerService.grpc_client.PrepareBundleResources=2000000:2000000" ray start --head
 
 
-The syntax for this is ``RAY_testing_asio_delay_us="method1=min_us:max_us,method2=min_us:max_us"``. Entries are comma separated.
-There is a special method ``*`` which means all methods. It has a lower priority compared with other entries.
+该语法是 ``RAY_testing_asio_delay_us="method1=min_us:max_us,method2=min_us:max_us"``。条目是逗号分隔的。
+有一个特殊的方法 ``*``，表示所有方法。它与其他条目相比具有较低的优先级。
 
 .. _`issues`: https://github.com/ray-project/ray/issues
