@@ -11,19 +11,19 @@ Ray Train：可扩展模型训练
 
 |
 
-Ray Train is a scalable machine learning library for distributed training and fine-tuning.
+Ray Train 是一个可扩展的机器学习库，用于分布式训练和微调。
 
-Ray Train allows you to scale model training code from a single machine to a cluster of machines in the cloud, and abstracts away the complexities of distributed computing.
-Whether you have large models or large datasets, Ray Train is the simplest solution for distributed training.
+Ray Train 可让您将模型训练代码从单台机器扩展到云端的机器集群，并消除分布式计算的复杂性。
+无论您拥有大型模型还是大型数据集，Ray Train 都是最简单的分布式训练解决方案。
 
-Ray Train provides support for many frameworks:
+Ray Train 为许多框架提供支持：
 
 .. list-table::
    :widths: 1 1
    :header-rows: 1
 
-   * - PyTorch Ecosystem
-     - More Frameworks
+   * - PyTorch 生态
+     - 更多框架
    * - PyTorch
      - TensorFlow
    * - PyTorch Lightning
@@ -35,19 +35,19 @@ Ray Train provides support for many frameworks:
    * - DeepSpeed
      - LightGBM
 
-Install Ray Train
+安装 Ray Train
 -----------------
 
-To install Ray Train, run:
+要安装 Ray Train，请运行：
 
 .. code-block:: console
 
     $ pip install -U "ray[train]"
 
-To learn more about installing Ray and its libraries, see
-:ref:`Installing Ray <installation>`.
+学习更多关于安装 Ray 和其库的信息，请参见 
+:ref:`安装 Ray <installation>`。
 
-Get started
+开始
 -----------
 
 .. grid:: 1 2 2 2
@@ -56,10 +56,10 @@ Get started
 
     .. grid-item-card::
 
-        **Overview**
+        **概述**
         ^^^
 
-        Understand the key concepts for distributed training with Ray Train.
+        了解使用 Ray Train 进行分布式训练的关键概念。
 
         +++
         .. button-ref:: train-overview
@@ -67,14 +67,14 @@ Get started
             :outline:
             :expand:
 
-            Learn the basics
+            了解基础知识
 
     .. grid-item-card::
 
         **PyTorch**
         ^^^
 
-        Get started on distributed model training with Ray Train and PyTorch.
+        使用 Ray Train 和 PyTorch 开始进行分布式模型训练。
 
         +++
         .. button-ref:: train-pytorch
@@ -82,14 +82,14 @@ Get started
             :outline:
             :expand:
 
-            Try Ray Train with PyTorch
+            通过 PyTorch 尝试 Ray Train
 
     .. grid-item-card::
 
         **PyTorch Lightning**
         ^^^
 
-        Get started on distributed model training with Ray Train and Lightning.
+        使用 Ray Train 和 Lightning 开始进行分布式模型训练。
 
         +++
         .. button-ref:: train-pytorch-lightning
@@ -97,14 +97,14 @@ Get started
             :outline:
             :expand:
 
-            Try Ray Train with Lightning
+            通过 Lightning 尝试 Ray Train
 
     .. grid-item-card::
 
         **Hugging Face Transformers**
         ^^^
 
-        Get started on distributed model training with Ray Train and Transformers.
+        使用 Ray Train 和 Transformers 开始进行分布式模型训练。
 
         +++
         .. button-ref:: train-pytorch-transformers
@@ -112,9 +112,9 @@ Get started
             :outline:
             :expand:
 
-            Try Ray Train with Transformers
+            通过 Transformers 尝试 Ray Train
 
-Learn more
+了解更多
 ----------
 
 .. grid:: 1 2 2 2
@@ -123,10 +123,10 @@ Learn more
 
     .. grid-item-card::
 
-        **More Frameworks**
+        **更多框架**
         ^^^
 
-        Don't see your framework? See these guides.
+        没有找到你的框架？请参阅这些指南。
 
         +++
         .. button-ref:: train-more-frameworks
@@ -134,14 +134,14 @@ Learn more
             :outline:
             :expand:
 
-            Try Ray Train with other frameworks
+            尝试将 Ray Train 与其他框架一起使用
 
     .. grid-item-card::
 
-        **User Guides**
+        **用户指南**
         ^^^
 
-        Get how-to instructions for common training tasks with Ray Train.
+        获取使用 Ray Train 进行常见训练任务的操作说明。
 
         +++
         .. button-ref:: train-user-guides
@@ -149,14 +149,14 @@ Learn more
             :outline:
             :expand:
 
-            Read how-to guides
+            阅读操作指南
 
     .. grid-item-card::
 
-        **Examples**
+        **示例**
         ^^^
 
-        Browse end-to-end code examples for different use cases.
+        浏览不同用例的端到端代码示例。
 
         +++
         .. button-ref:: train-examples
@@ -164,14 +164,14 @@ Learn more
             :outline:
             :expand:
 
-            Learn through examples
+            通过例子学习
 
     .. grid-item-card::
 
         **API**
         ^^^
 
-        Consult the API Reference for full descriptions of the Ray Train API.
+        请参阅 API 参考，了解 Ray Train API 的完整描述。
 
         +++
         .. button-ref:: air-trainer-ref
@@ -179,4 +179,4 @@ Learn more
             :outline:
             :expand:
 
-            Read the API Reference
+            阅读 API 参考

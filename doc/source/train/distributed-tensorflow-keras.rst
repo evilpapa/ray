@@ -3,20 +3,19 @@
 TensorFlow 和 Keras 入门
 =====================================
 
-Ray Train's `TensorFlow <https://www.tensorflow.org/>`__ integration enables you
-to scale your TensorFlow and Keras training functions to many machines and GPUs.
+Ray Train 的 `TensorFlow <https://www.tensorflow.org/>`__ 集成使您
+能够将 TensorFlow 和 Keras 训练功能扩展到许多机器和 GPU。
 
-On a technical level, Ray Train schedules your training workers
-and configures ``TF_CONFIG`` for you, allowing you to run
-your ``MultiWorkerMirroredStrategy`` training script. See `Distributed
-training with TensorFlow <https://www.tensorflow.org/guide/distributed_training>`_
-for more information.
+从技术层面上讲，Ray Train 会为您安排训练工作程序并进行配置
+``TF_CONFIG`` ， 让您可以运行
+``MultiWorkerMirroredStrategy`` 训练脚本。有关更多信息，请参阅 `使用 TensorFlow 进行分布式训练 <https://www.tensorflow.org/guide/distributed_training>`_ 
+获取更多信息。
 
-Most of the examples in this guide use TensorFlow with Keras, but
-Ray Train also works with vanilla TensorFlow.
+本指南中的大多数示例均使用带有 Keras 的 TensorFlow，
+但 Ray Train 也可使用原始 TensorFlow。
 
 
-Quickstart
+快速开始
 -----------
 .. literalinclude:: ./doc_code/tf_starter.py
   :language: python
@@ -24,27 +23,26 @@ Quickstart
   :end-before: __tf_train_end__
 
 
-Update your training function
+更新你的训练函数
 -----------------------------
 
-First, update your :ref:`training function <train-overview-training-function>` to support distributed
-training.
+首先，更新您的 :ref:`训练函数 <train-overview-training-function>` 以支持分布式训练。
 
 
 .. note::
-   The current TensorFlow implementation supports
-   ``MultiWorkerMirroredStrategy`` (and ``MirroredStrategy``). If there are
-   other strategies you wish to see supported by Ray Train, submit a `feature request on GitHub <https://github.com/ray-project/ray/issues>`_.
+   当前 TensorFlow 实现支持
+   ``MultiWorkerMirroredStrategy`` (和 ``MirroredStrategy``)。 如果您希望 Ray Train 支持其他策略，
+   请 `在 GitHub 上提交功能请求 <https://github.com/ray-project/ray/issues>`_。
 
-These instructions closely follow TensorFlow's `Multi-worker training
-with Keras <https://www.tensorflow.org/tutorials/distribute/multi_worker_with_keras>`_
-tutorial. One key difference is that Ray Train handles the environment
-variable set up for you.
+本说明与 Tensorflow `Keras 多 worker 
+训练 <https://www.tensorflow.org/tutorials/distribute/multi_worker_with_keras>`_ 教程紧密相关。
+一个关键区别是 Ray Train 为您
+处理了环境变量设置。
 
-**Step 1:** Wrap your model in ``MultiWorkerMirroredStrategy``.
+**步骤 1:** 在 ``MultiWorkerMirroredStrategy`` 中包装模型。
 
-The `MultiWorkerMirroredStrategy <https://www.tensorflow.org/api_docs/python/tf/distribute/experimental/MultiWorkerMirroredStrategy>`_
-enables synchronous distributed training. You *must* build and compile the ``Model`` within the scope of the strategy.
+`MultiWorkerMirroredStrategy <https://www.tensorflow.org/api_docs/python/tf/distribute/experimental/MultiWorkerMirroredStrategy>`_
+可实现同步分布式训练。 你 *必须* 在策略范围内构建和编译 ``Model``。
 
 .. code-block:: python
 
@@ -52,11 +50,11 @@ enables synchronous distributed training. You *must* build and compile the ``Mod
         model = ... # build model
         model.compile()
 
-**Step 2:** Update your ``Dataset`` batch size to the *global* batch
+**步骤 2:** 更新 ``Dataset`` 批大小为 *全局* 批次大小。
 size.
 
-Set ``batch_size`` appropriately because `batch <https://www.tensorflow.org/api_docs/python/tf/data/Dataset#batch>`_
-splits evenly across worker processes.
+适当设置 ``batch_size`` 是因为 `batch <https://www.tensorflow.org/api_docs/python/tf/data/Dataset#batch>`_ 在
+工作进程之间均匀分割。
 
 .. code-block:: diff
 
@@ -65,21 +63,19 @@ splits evenly across worker processes.
 
 
 .. warning::
-    Ray doesn't automatically set any environment variables or configuration
-    related to local parallelism or threading
-    :ref:`aside from "OMP_NUM_THREADS" <omp-num-thread-note>`.
-    If you want greater control over TensorFlow threading, use
-    the ``tf.config.threading`` module (eg.
-    ``tf.config.threading.set_inter_op_parallelism_threads(num_cpus)``)
-    at the beginning of your ``train_loop_per_worker`` function.
+    :ref:`除了 "OMP_NUM_THREADS" <omp-num-thread-note>`，
+    Ray 不会自动设置任何与本地并行或线程相关的环境变量或配置。
+    如果您想要更好地控制 TensorFlow 线程，请在 ``train_loop_per_worker`` 函数开头使用
+    ``tf.config.threading`` 模块 （例如：
+    ``tf.config.threading.set_inter_op_parallelism_threads(num_cpus)``）。
 
-Create a TensorflowTrainer
+创建 TensorflowTrainer
 --------------------------
 
-``Trainer``\s are the primary Ray Train classes for managing state and
-execute training. For distributed Tensorflow,
-use a :class:`~ray.train.tensorflow.TensorflowTrainer`
-that you can setup like this:
+``Trainer``\s 是 Ray Train 的主要类，
+用于管理状态和执行训练。针对分布式 Tensorflow，
+使用 :class:`~ray.train.tensorflow.TensorflowTrainer` 
+可以这样设置：
 
 .. code-block:: python
 
@@ -92,8 +88,8 @@ that you can setup like this:
         scaling_config=ScalingConfig(use_gpu=use_gpu, num_workers=2)
     )
 
-To customize the backend setup, you can pass a
-:class:`~ray.train.tensorflow.TensorflowConfig`:
+要自定义后端设置，您可以传递
+:class:`~ray.train.tensorflow.TensorflowConfig`：
 
 .. code-block:: python
 
@@ -107,36 +103,34 @@ To customize the backend setup, you can pass a
     )
 
 
-For more configurability, see the :py:class:`~ray.train.data_parallel_trainer.DataParallelTrainer` API.
+更多配置信息，请参考 :py:class:`~ray.train.data_parallel_trainer.DataParallelTrainer` API。
 
 
-Run a training function
+运行训练函数
 -----------------------
 
-With a distributed training function and a Ray Train ``Trainer``, you are now
-ready to start training.
+借助分布式训练函数和 Ray Train ``Trainer``，
+您现在可以开始训练了。
 
 .. code-block:: python
 
     trainer.fit()
 
-Load and preprocess data
+加载和预处理数据
 ------------------------
 
-TensorFlow by default uses its own internal dataset sharding policy, as described
-`in the guide <https://www.tensorflow.org/tutorials/distribute/multi_worker_with_keras#dataset_sharding>`__.
-If your TensorFlow dataset is compatible with distributed loading, you don't need to
-change anything.
+Tensorflow 默认使用其内部数据集分片策略，如 `指南中所述 <https://www.tensorflow.org/tutorials/distribute/multi_worker_with_keras#dataset_sharding>`__。
+如果你的 TensorFlow 数据集与分布式加载兼容，你不需要改变任何东西。
 
-If you require more advanced preprocessing, you may want to consider using Ray Data
-for distributed data ingest. See :ref:`Ray Data with Ray Train <data-ingest-torch>`.
+如果你需要更多高级预处理，你可能想考虑使用 Ray Data 进行
+分布式数据提取。请参阅 :ref:`Ray Data with Ray Train <data-ingest-torch>`。
 
-The main difference is that you may want to convert your Ray Data dataset shard to
-a TensorFlow dataset in your training function so that you can use the Keras
-API for model training.
+主要不同是您可能希望在训练函数中将 Ray Data 数据集分片
+转换为 TensorFlow 数据集，以便您
+可以使用 Keras API 进行模型训练。
 
-`See this example <https://github.com/ray-project/ray/blob/master/python/ray/train/examples/tf/tune_tensorflow_autoencoder_example.py>`__
-for distributed data loading. The relevant parts are:
+`参阅示例 <https://github.com/ray-project/ray/blob/master/python/ray/train/examples/tf/tune_tensorflow_autoencoder_example.py>`__
+获取分布式数据加载。相关部分如下：
 
 .. code-block:: python
 
@@ -179,14 +173,14 @@ for distributed data loading. The relevant parts are:
 
 
 
-Report results
+报告结果
 --------------
-During training, the training loop should report intermediate results and checkpoints
-to Ray Train. This reporting logs the results to the console output and appends them to
-local log files. The logging also triggers :ref:`checkpoint bookkeeping <train-dl-configure-checkpoints>`.
+在训练期间，训练环应向 Ray Train 报告中间结果和检查点。 
+这些报告日志将结果记录到控制台输出并将其附加到本地日志文件。
+日志还会触发 :ref:`检查点记录 <train-dl-configure-checkpoints>`。
 
-The easiest way to report your results with Keras is by using the
-:class:`~ray.train.tensorflow.keras.ReportCheckpointCallback`:
+最简单的使用 Keras 报告结果的方法是使用
+:class:`~ray.train.tensorflow.keras.ReportCheckpointCallback`: 
 
 .. code-block:: python
 
@@ -198,29 +192,28 @@ The easiest way to report your results with Keras is by using the
             model.fit(dataset, callbacks=[ReportCheckpointCallback()])
 
 
-This callback automatically forwards all results and checkpoints from the
-Keras training function to Ray Train.
+此回调会自动将所有结果和检查点从 Keras 训练函数
+转发到 Ray Train。
 
 
-Aggregate results
+结果汇总
 ~~~~~~~~~~~~~~~~~
 
-TensorFlow Keras automatically aggregates metrics from all workers. If you wish to have more
-control over that, consider implementing a `custom training loop <https://www.tensorflow.org/tutorials/distribute/custom_training>`__.
+TensorFlow Keras 会自动汇总所有 worker 的指标。 如果您希望对此有更多控制权，
+考虑实现一个 `自定义训练循环 <https://www.tensorflow.org/tutorials/distribute/custom_training>`__。
 
 
-Save and load checkpoints
+保存并加载检查点
 -------------------------
 
-You can save :class:`Checkpoints <ray.train.Checkpoint>` by calling ``train.report(metrics, checkpoint=Checkpoint(...))`` in the
-training function. This call saves the checkpoint state from the distributed
-workers on the ``Trainer``, where you executed your python script.
+你可以通过调用在训练函数中的 ``train.report(metrics, checkpoint=Checkpoint(...))`` 来
+保存 :class:`Checkpoints <ray.train.Checkpoint>`。
+当执行你的 python 脚本，这些调用会将来自分布式 worker 的检查点状态保存在 ``Trainer`` 上。
 
-You can access the latest saved checkpoint through the ``checkpoint`` attribute of
-the :py:class:`~ray.train.Result`, and access the best saved checkpoints with the ``best_checkpoints``
-attribute.
+你可以通过 :py:class:`~ray.train.Result` 的 ``checkpoint`` 属性访问最新保存的检查点，
+并通过 ``best_checkpoints`` 属性访问最佳保存的检查点。
 
-These concrete examples demonstrate how Ray Train appropriately saves checkpoints, model weights but not models, in distributed training.
+这些具体的例子展示了 Ray Train 如何在分布式训练中适当地保存检查点、模型权重但不保存模型。
 
 
 .. code-block:: python
@@ -269,10 +262,10 @@ These concrete examples demonstrate how Ray Train appropriately saves checkpoint
     result = trainer.fit()
     print(result.checkpoint)
 
-By default, checkpoints persist to local disk in the :ref:`log
-directory <train-log-dir>` of each run.
+默认情况下，检查点持久化到本地磁盘中的
+每个运行的 :ref:`日志目录 <train-log-dir>`。
 
-Load checkpoints
+加载检查点
 ~~~~~~~~~~~~~~~~
 
 .. code-block:: python
@@ -340,10 +333,10 @@ Load checkpoints
     result = trainer.fit()
 
 
-Further reading
+进一步阅读
 ---------------
-See :ref:`User Guides <train-user-guides>` to explore more topics:
+请参阅 :ref:`用户指南 <train-user-guides>` 以探索更多主题：
 
-- :ref:`Experiment tracking <train-experiment-tracking-native>`
-- :ref:`Fault tolerance and training on spot instances <train-fault-tolerance>`
-- :ref:`Hyperparameter optimization <train-tune>`
+- :ref:`实验追踪 <train-experiment-tracking-native>`
+- :ref:`容错和现场实例训练 <train-fault-tolerance>`
+- :ref:`超参数优化 <train-tune>`

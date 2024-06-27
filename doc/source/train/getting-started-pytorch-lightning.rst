@@ -1,21 +1,21 @@
 .. _train-pytorch-lightning:
 
-Get Started with PyTorch Lightning
+开始使用 PyTorch Lightning
 ==================================
 
-This tutorial walks through the process of converting an existing PyTorch Lightning script to use Ray Train.
+本教程介绍将现有 PyTorch Lightning 脚本转换为使用 Ray Train 的过程。
 
-Learn how to:
+了解如何：
 
-1. Configure the Lightning Trainer so that it runs distributed with Ray and on the correct CPU or GPU device.
-2. Configure :ref:`training function <train-overview-training-function>` to report metrics and save checkpoints.
-3. Configure :ref:`scaling <train-overview-scaling-config>` and CPU or GPU resource requirements for a training job.
-4. Launch a distributed training job with a :class:`~ray.train.torch.TorchTrainer`.
+1. 配置 Lightning Trainer，使其与 Ray 一起分布在正确的 CPU 或 GPU 设备上运行。
+2. 配置 :ref:`训练函数 <train-overview-training-function>` 以报告指标并保存检查点。
+3. 为训练作业配置 :ref:`扩展 <train-overview-scaling-config>` 和 CPU 或 GPU 资源要求。
+4. 使用 :class:`~ray.train.torch.TorchTrainer` 启动分布式训练作业。
 
-Quickstart
+快速开始
 ----------
 
-For reference, the final code is as follows:
+作为参考，最终代码如下：
 
 .. code-block:: python
 
@@ -29,11 +29,11 @@ For reference, the final code is as follows:
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-1. Your `train_func` is the Python code that each distributed training :ref:`worker <train-overview-worker>` executes.
-2. Your `ScalingConfig` defines the number of distributed training workers and whether to use GPUs.
-3. Your `TorchTrainer` launches the distributed training job.
+1. 您的 `train_func` 是每个分布式训练 :ref:`worker <train-overview-worker>` 执行的 Python 代码。
+2. 您的 `ScalingConfig` 定义分布式训练 worker 的数量以及是否使用 GPU。
+3. 您的 `TorchTrainer` 启动了分布式训练作业。
 
-Compare a PyTorch Lightning training script with and without Ray Train.
+比较有和没有 Ray Train 的 PyTorch Lightning 训练脚本。
 
 .. tabs::
 
@@ -147,22 +147,22 @@ Compare a PyTorch Lightning training script with and without Ray Train.
             result = trainer.fit()            
 
 
-Set up a training function
+设置训练函数
 --------------------------
 
-First, update your training code to support distributed training. 
-Begin by wrapping your code in a :ref:`training function <train-overview-training-function>`:
+首先，更新您的训练代码以支持分布式训练。
+首先将您的代码包装在 :ref:`训练函数 <train-overview-training-function>`：
 
 .. code-block:: python
 
     def train_func(config):
         # Your PyTorch Lightning training code here.
 
-Each distributed training worker executes this function.
+每个分布式训练 worker 都执行此功能。
 
 
-Ray Train sets up your distributed process group on each worker. You only need to 
-make a few changes to your Lightning Trainer definition.
+ay Train 在每个 worker 上设置分布式进程组。
+您只需对 Lightning Trainer 定义进行一些更改。
 
 .. code-block:: diff
 
@@ -189,15 +189,14 @@ make a few changes to your Lightning Trainer definition.
         
          trainer.fit(model, datamodule=datamodule)
 
-The following sections discuss each change.
+以下各节讨论了每个变化。
 
-Configure the distributed strategy
+配置分布式策略
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Ray Train offers several sub-classed distributed strategies for Lightning. 
-These strategies retain the same argument list as their base strategy classes. 
-Internally, they configure the root device and the distributed 
-sampler arguments.
+Ray Train 为 Lightning 提供了几种子类分布式策略。
+这些策略保留与其基本策略类相同的参数列表。
+在内部，它们配置根设备和分布式采样器参数。
     
 - :class:`~ray.train.lightning.RayDDPStrategy` 
 - :class:`~ray.train.lightning.RayFSDPStrategy` 
@@ -220,12 +219,11 @@ sampler arguments.
          )
          ...
 
-Configure the Ray cluster environment plugin
+配置 Ray 集群环境插件
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Ray Train also provides a :class:`~ray.train.lightning.RayLightningEnvironment` class
-as a specification for the Ray Cluster. This utility class configures the worker's 
-local, global, and node rank and world size.
+Ray Train 还提供了一个 :class:`~ray.train.lightning.RayLightningEnvironment` 类
+作为 Ray Cluster 的规范。此实用程序类配置了 worker 的本地、全局和节点等级以及世界大小。
 
 
 .. code-block:: diff
@@ -245,12 +243,12 @@ local, global, and node rank and world size.
          ...
 
 
-Configure parallel devices
+配置并行设备
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In addition, Ray TorchTrainer has already configured the correct 
-``CUDA_VISIBLE_DEVICES`` for you. One should always use all available 
-GPUs by setting ``devices="auto"`` and ``acelerator="auto"``.
+此外，Ray TorchTrainer 已经为您配置了正确的
+``CUDA_VISIBLE_DEVICES``。应始终通过设置
+``devices="auto"`` 和 ``acelerator="auto"`` 来使用所有可用的 GPU。
 
 
 .. code-block:: diff
@@ -270,11 +268,11 @@ GPUs by setting ``devices="auto"`` and ``acelerator="auto"``.
 
 
 
-Report checkpoints and metrics
+报告检查点和指标
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To persist your checkpoints and monitor training progress, add a 
-:class:`ray.train.lightning.RayTrainReportCallback` utility callback to your Trainer. 
+为了保留您的检查点并监控训练进度，请添加
+:class:`ray.train.lightning.RayTrainReportCallback` 实用回调程序到你的 Trainer 中。
 
                     
 .. code-block:: diff
@@ -292,15 +290,15 @@ To persist your checkpoints and monitor training progress, add a
          ...
 
 
-Reporting metrics and checkpoints to Ray Train enables you to support :ref:`fault-tolerant training <train-fault-tolerance>` and :ref:`hyperparameter optimization <train-tune>`. 
-Note that the :class:`ray.train.lightning.RayTrainReportCallback` class only provides a simple implementation, and can be :ref:`further customized <train-dl-saving-checkpoints>`.
+向 Ray Train 报告指标和检查点使您能够支持 :ref:`容错训练 <train-fault-tolerance>` 和 :ref:`超参数优化 <train-tune>`.。
+请注意，该 :class:`ray.train.lightning.RayTrainReportCallback` 类仅提供简单的实现，并且可以 :ref:`进一步定制 <train-dl-saving-checkpoints>`。
 
-Prepare your Lightning Trainer
+准备你的 Lightning Trainer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Finally, pass your Lightning Trainer into
-:meth:`~ray.train.lightning.prepare_trainer` to validate 
-your configurations. 
+最后，将您的 Lightning Trainer 传入
+:meth:`~ray.train.lightning.prepare_trainer` 以
+验证您的配置。
 
 
 .. code-block:: diff
@@ -315,13 +313,13 @@ your configurations.
          ...
 
 
-Configure scale and GPUs
+配置规模和 GPU
 ------------------------
 
-Outside of your training function, create a :class:`~ray.train.ScalingConfig` object to configure:
+在你的训练功能之外，创建一个 :class:`~ray.train.ScalingConfig` 对象来配置：
 
-1. `num_workers` - The number of distributed training worker processes.
-2. `use_gpu` - Whether each worker should use a GPU (or CPU).
+1. `num_workers` - 分布式训练 worker 的数量。
+2. `use_gpu` - 每个 worker 是否应该使用 GPU（或 CPU）。
 
 .. code-block:: python
 
@@ -329,13 +327,13 @@ Outside of your training function, create a :class:`~ray.train.ScalingConfig` ob
     scaling_config = ScalingConfig(num_workers=2, use_gpu=True)
 
 
-For more details, see :ref:`train_scaling_config`.
+有关更多详细信息，请参阅 :ref:`train_scaling_config`。
 
-Launch a training job
+启动训练任务
 ---------------------
 
-Tying this all together, you can now launch a distributed training job 
-with a :class:`~ray.train.torch.TorchTrainer`.
+将所有这些结合在一起，您现在可以使用
+:class:`~ray.train.torch.TorchTrainer` 启动分布式训练工作。
 
 .. code-block:: python
 
@@ -344,13 +342,13 @@ with a :class:`~ray.train.torch.TorchTrainer`.
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-See :ref:`train-run-config` for more configuration options for `TorchTrainer`.
+有关更多 `TorchTrainer` 的配置选项，请参阅 :ref:`train-run-config` 。
 
-Access training results
+访问训练结果
 -----------------------
 
-After training completes, Ray Train returns a :class:`~ray.train.Result` object, which contains
-information about the training run, including the metrics and checkpoints reported during training.
+训练完成后，Ray Train 返回一个 :class:`~ray.train.Result` 对象，
+其中包含有关训练运行的信息，包括训练期间报告的指标和检查点。
 
 .. code-block:: python
 
@@ -361,46 +359,46 @@ information about the training run, including the metrics and checkpoints report
 
 .. TODO: Add results guide
 
-Next steps
+下一步
 ---------- 
 
-After you have converted your PyTorch Lightning training script to use Ray Train:
+将 PyTorch Lightning 训练脚本转换为使用 Ray Train 后：
 
-* See :ref:`User Guides <train-user-guides>` to learn more about how to perform specific tasks.
-* Browse the :ref:`Examples <train-examples>` for end-to-end examples of how to use Ray Train.
-* Consult the :ref:`API Reference <train-api>` for more details on the classes and methods from this tutorial.
+* 请参阅 :ref:`用户指南 <train-user-guides>` 以了解有关如何执行特定任务的更多信息。
+* 浏览 :ref:`示例 <train-examples>` ，了解如何使用 Ray Train 的端到端示例。
+* 有关本教程中的类和方法的更多详细信息，请参阅 :ref:`API 参考 <train-api>`。
 
-Version Compatibility
+版本兼容性
 ---------------------
 
-Ray Train is tested with `pytorch_lightning` versions `1.6.5` and `2.0.4`. For full compatibility, use ``pytorch_lightning>=1.6.5`` . 
-Earlier versions aren't prohibited but may result in unexpected issues. If you run into any compatibility issues, consider upgrading your PyTorch Lightning version or 
-`file an issue <https://github.com/ray-project/ray/issues>`_. 
+Ray Train 已使用 `pytorch_lightning` 版本 `1.6.5` 和 `2.0.4` 进行了测试。 要获得完全兼容性，请使用 ``pytorch_lightning>=1.6.5`` 。 
+早期版本不被禁止，但可能会导致意外问题。 
+如果遇到任何兼容性问题，请考虑升级您的 PyTorch Lightning 版本或 `提交问题 <<https://github.com/ray-project/ray/issues>` _。
 
 .. _lightning-trainer-migration-guide:
 
-LightningTrainer Migration Guide
+LightningTrainer 迁移指南
 --------------------------------
 
-Ray 2.4 introduced the `LightningTrainer`, and exposed a  
-`LightningConfigBuilder` to define configurations for `pl.LightningModule` 
-and `pl.Trainer`. 
+Ray 2.4 引入了 `LightningTrainer`，并公开了
+`LightningConfigBuilder` 配置来定义 `pl.LightningModule` 
+和 `pl.Trainer`。
 
-It then instantiates the model and trainer objects and runs a pre-defined 
-training function in a black box.
+然后，它实例化模型和训练器对象并在黑盒中
+运行预定义的训练函数。
 
-This version of the LightningTrainer API was constraining and limited 
-your ability to manage the training functionality.
+此版本的 LightningTrainer API 具有约束力，
+限制了您管理训练功能的能力。
 
-Ray 2.7 introduced the newly unified :class:`~ray.train.torch.TorchTrainer` API, which offers 
-enhanced transparency, flexibility, and simplicity. This API is more aligned
-with standard PyTorch Lightning scripts, ensuring users have better 
-control over their native Lightning code.
+Ray 2.7 引入了新统一的 :class:`~ray.train.torch.TorchTrainer` API，
+它提供了增强的透明度、灵活性和简单性。
+此 API 与标准 PyTorch Lightning 脚本更加一致，
+确保用户更好地控制其原生 Lightning 代码。
 
 
 .. tabs::
 
-    .. group-tab:: (Deprecating) LightningTrainer
+    .. group-tab:: (弃用) LightningTrainer
 
 
         .. code-block:: python
@@ -442,7 +440,7 @@ control over their native Lightning code.
 
                 
 
-    .. group-tab:: (New API) TorchTrainer
+    .. group-tab:: (新 API) TorchTrainer
 
         .. code-block:: python
             

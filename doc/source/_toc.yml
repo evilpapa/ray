@@ -56,7 +56,7 @@ parts:
           - file: data/data-internals
 
       - file: train/train
-        title: Ray 训练「0%」
+        title: Ray 训练「20%」
         sections:
           - file: train/overview
             title: 概述
@@ -182,7 +182,7 @@ parts:
           - file: tune/api/api.rst
 
       - file: serve/index
-        title: Ray Serve「0%」
+        title: Ray Serve「1%」
         sections:
           - file: serve/getting_started
           - file: serve/key-concepts

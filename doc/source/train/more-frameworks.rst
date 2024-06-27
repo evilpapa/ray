@@ -13,7 +13,7 @@
 
         .. button-ref:: train-hf-accelerate
 
-            Hugging Face Accelerate
+            Hugging Face 加速
     
     .. grid-item-card::
         :img-top: /images/deepspeed_logo.svg
@@ -29,7 +29,7 @@
 
         .. button-ref:: distributed-tensorflow-keras
 
-            TensorFlow and Keras
+            TensorFlow 和 Keras
 
     .. grid-item-card::
         :img-top: /images/xgboost_logo.png
@@ -37,7 +37,7 @@
 
         .. button-ref:: distributed-xgboost-lightgbm
 
-            XGBoost and LightGBM
+            XGBoost 和 LightGBM
 
     .. grid-item-card::
         :img-top: /images/horovod.png

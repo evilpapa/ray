@@ -63,7 +63,7 @@ html:
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 livehtml-fast:
-	FAST_BUILD=true sphinx-autobuild \
+	FAST_BUILD=true FAST=true sphinx-autobuild \
 		-b html \
 		--watch source \
 		-j auto -d _build/doctrees  -a -E source _build/html

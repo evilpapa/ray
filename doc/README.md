@@ -19,42 +19,41 @@ pip install -r requirements-doc.txt
 make develop && open _build/html/index.html
 ```
 
-> **_NOTE:_**  The above command is for development. To reproduce build failures from the
-> CI, you should use `make html` which is the same as `make develop` but treats warnings as errors.
-> Additionally, note that `make develop` uses the `FAST` environment variable to skip some
-> expensive parts of the build process. In particular, it will aggressively prune the
-> left-hand side navigation, but leave the documents itself intact.
+> **_NOTE:_**  以上命令用于开发。要从 CI 重现构建失败，
+> 你可以使用 `make html` ，它同 `make develop` 相同，但会把警告作为错误处理。
+> 此外，注意 `make develop` 使用 `FAST` 环境变量来跳过构建过程中的一些昂贵的部分。
+> 特别是，它将大力修剪左侧导航，
+> 但保持文档本身完好无损。
 
 ## 仅构建子项目
 
-Often your changes in documentation just concern one subproject, such as Tune or Train.
-To build just this one subproject, and ignore the rest
-(leading to build warnings due to broken references etc.), run the following command:
+通常，文档中的更改仅涉及一个子项目，例如 Tune 或 Train。
+要仅构建这一个子项目，并忽略其余项目
+（导致由于引用损坏等而出现构建警告），请运行以下命令：
 
 ```shell
 DOC_LIB=<project> sphinx-build -b html -d _build/doctrees  source _build/html
 ```
-where `<project>` is the name of the subproject and can be any of the docs projects in the `source/`
-directory either called `tune`, `rllib`, `train`, `cluster`, `serve`, `data` or the ones starting
-with `ray-`, e.g. `ray-observability`.
+`<project>` 是子项目的名称并可以是在 `source/` 下的任一文档项目如
+`tune`， `rllib`， `train`， `cluster`， `serve`， `data` 或者以
+ `ray-` 打头的，如 `ray-observability`。
 
-## Announcements and includes
+## 公告和包含
 
-To add new announcements and other messaging to the top or bottom of a documentation page,
-check the `_includes` folder first to see if the message you want is already there (like "get help"
-or "we're hiring" etc.)
-If not, add the template you want and include it accordingly, i.e. with
+要添加新的公告和其他头部或底部的文档页信息，
+首先检查 `_includes` 文件夹来查看所需信息是否已经存在（比如 “get help” 或者 “招聘” 等。）
+如果没有，请添加所需的模板并相应地包含它，即使用
 
 ```markdown
 .. include:: /_includes/<my-announcement>
 ```
 
-This ensures consistent messaging across documentation pages.
+这确保了文档页面间的信息传递一致性。
 
 ## 检查破坏的链接
 
-To check if there are broken links, run the following (we are currently not running this
-in the CI since there are false positives).
+要检查是否存在断开的链接，
+请运行以下命令（由于存在误报，我们目前不在 CI 中运行此操作）。
 
 ```bash
 make linkcheck
@@ -62,47 +61,47 @@ make linkcheck
 
 ## 运行 doctests
 
-To run tests for examples shipping with docstrings in Python files, run the following command:
+要对 Python 文件中带有文档字符串的示例运行测试，请运行以下命令：
 
 ```shell
 make doctest
 ```
 
-## Adding examples as MyST Markdown Notebooks
+## 将示例添加为 MyST Markdown 笔记本
 
-You can now add [executable notebooks](https://myst-nb.readthedocs.io/en/latest/use/markdown.html) to this project,
-which will get built into the documentation.
-An [example can be found here](./source/serve/tutorials/rllib.md).
-By default, building the docs with `make develop` will not run those notebooks.
-If you set the `RUN_NOTEBOOKS` environment variable to `"cache"`, each notebook cell will be run when you build the
-documentation, and outputs will be cached into `_build/.jupyter_cache`.
+你现在可以添加 [可执行笔记本](https://myst-nb.readthedocs.io/en/latest/use/markdown.html) 到项目中，
+它将会构建到文档中。
+一个 [可在这里找到的示例](./source/serve/tutorials/rllib.md)。
+默认情况下，使用 `make evolve` 构建文档不会运行这些笔记本。
+如果设置 `RUN_NOTEBOOKS` 环境变量为 `"cache"`，每个笔记本单元都将在您构建文档时运行，
+并且输出会缓存在 `_build/.jupyter_cache`。
 
 ```bash
 RUN_NOTEBOOKS="cache" make develop
 ```
 
-To force re-running the notebooks, use `RUN_NOTEBOOKS="force"`.
+强制重新运行笔记本，使用 `RUN_NOTEBOOKS="force"`。
 
-Using caching, this means the first time you build the documentation, it might take a while to run the notebooks.
-After that, notebook execution is only triggered when you change the notebook source file.
+使用缓存，这意味着首次构建文档时，可能会花好一会来运行笔记本。
+这之后，笔记本运行只有在笔记本源文件变化后触发。
 
-The benefits of working with notebooks for examples are that you don't separate the code from the documentation, but can still easily smoke-test the code.
+使用笔记本作为示例的好处是您不必将代码与文档分开，但仍可以轻松地对代码进行冒烟测试。
 
-## Adding Markdown docs from external (ecosystem) repositories
+## 从外部（生态系统）存储库添加 Markdown 文档
 
-In order to avoid a situation where duplicate documentation files live in both the docs folder
-in this repository and in external repositories of ecosystem libraries (eg. xgboost-ray), you can
-specify Markdown files that will be downloaded from other GitHub repositories during the build process.
+为了避免此存储库中的 docs 文件夹和生态系统库（例如 xgboost-ray）的外部存储库中
+存在重复的文档文件的情况，
+您可以指定在构建过程中从其他 GitHub 存储库下载的 Markdown 文件。
 
-In order to do that, simply edit the `EXTERNAL_MARKDOWN_FILES` list in `source/custom_directives.py`
-using the format in the comment. Before build process, the specified files will be downloaded, preprocessed
-and saved to given paths. The build process will then proceed as normal.
+为此，只需使用注释的格式编辑列在 `source/custom_directives.py` 中的 `EXTERNAL_MARKDOWN_FILES` 即可。
+在构建过程之前，将下载、预处理并保存到给定路径的指定文件。
+然后构建过程将正常进行。
 
-While both GitHub Markdown and MyST are supersets of Common Markdown, there are differences in syntax.
-Furthermore, some contents such as Sphinx headers are not desirable to be displayed on GitHub.
-In order to deal with this, simple preprocessing is performed to allow for differences
-in rendering on GitHub and in docs. You can use two commands (`$UNCOMMENT` and `$REMOVE`/`$END_REMOVE`)
-in the Markdown file, specified in the following way:
+虽然 GitHub Markdown 和 MyST 都是常见 Markdown 的超集，但在语法上存在差异。
+此外，某些内容（例如 Sphinx 标题）不适合显示在 GitHub 上。
+为了解决这个问题，会执行简单的预处理以允许在 GitHub 和文档中呈现差异。
+你可以在 Markdown 文件中使用两个命令 （`$UNCOMMENT` 和 `$REMOVE`/`$END_REMOVE`），
+指定方式如下：
 
 ### `$UNCOMMENT`
 
@@ -112,7 +111,7 @@ GitHub:
 <!--$UNCOMMENTthis will be uncommented--> More text
 ```
 
-In docs, this will become:
+在文档中，这将变成：
 
 ```html
 this will be uncommented More text
@@ -126,14 +125,14 @@ GitHub:
 <!--$REMOVE-->This will be removed<!--$END_REMOVE--> More text
 ```
 
-In docs, this will become:
+在文档中，这将变成：
 
 ```html
 More text
 ```
 
-Please note that the parsing is extremely simple (regex replace) and will not support nesting.
+请注意，解析非常简单（正则表达式替换）并且不支持嵌套。
 
 ## 测试本地修改
 
-If you want to run the preprocessing locally on a specific file (to eg. see how it will render after docs have been built), run `source/preprocess_github_markdown.py PATH_TO_MARKDOWN_FILE PATH_TO_PREPROCESSED_MARKDOWN_FILE`. Make sure to also edit `EXTERNAL_MARKDOWN_FILES` in `source/custom_directives.py` so that your file does not get overwritten by one downloaded from GitHub.
+如果您想要在特定文件上本地运行预处理（例如，查看文档构建后它将如何呈现），请运行 `source/preprocess_github_markdown.py PATH_TO_MARKDOWN_FILE PATH_TO_PREPROCESSED_MARKDOWN_FILE`。 请确保也在在 `source/custom_directives.py` 文件中编辑  `EXTERNAL_MARKDOWN_FILES` ，以便您的文件不会被从 GitHub 下载的文件覆盖。

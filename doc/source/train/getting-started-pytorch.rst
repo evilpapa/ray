@@ -3,20 +3,20 @@
 PyTorch 入门
 ========================
 
-This tutorial walks through the process of converting an existing PyTorch script to use Ray Train.
+本教程介绍将现有 PyTorch 脚本转换为使用 Ray Train 的过程。
 
-Learn how to:
+了解如何：
 
-1. Configure a model to run distributed and on the correct CPU/GPU device.
-2. Configure a dataloader to shard data across the :ref:`workers <train-overview-worker>` and place data on the correct CPU or GPU device.
-3. Configure a :ref:`training function <train-overview-training-function>` to report metrics and save checkpoints.
-4. Configure :ref:`scaling <train-overview-scaling-config>` and CPU or GPU resource requirements for a training job.
-5. Launch a distributed training job with a :class:`~ray.train.torch.TorchTrainer` class.
+1. 配置模型以在正确的 CPU/GPU 设备上运行分布式模型。
+2. 配置数据加载器以在各个 :ref:`workers <train-overview-worker>` 之间分片数据，并将数据放置在正确的 CPU 或 GPU 设备上。
+3. 配置 :ref:`训练功能 <train-overview-training-function>` 以报告指标并保存检查点。
+4. 为训练作业配置 :ref:`扩展 <train-overview-scaling-config>` 及 CPU 或 GPU 资源需求。
+5. 启动一个带有 :class:`~ray.train.torch.TorchTrainer` 类的分部署训练作业。
 
-Quickstart
+快速开始
 ----------
 
-For reference, the final code is as follows:
+作为参考，最终代码如下：
 
 .. code-block:: python
 
@@ -30,11 +30,11 @@ For reference, the final code is as follows:
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-1. `train_func` is the Python code that executes on each distributed training worker.
-2. `ScalingConfig` defines the number of distributed training workers and whether to use GPUs.
-3. `TorchTrainer` launches the distributed training job.
+1. `train_func` 是在每个分布式训练 worker 上执行的 Python 代码。
+2. `ScalingConfig` 定义分布式训练 worker 的数量以及是否使用 GPU。
+3. `TorchTrainer` 启动分布式训练作业。
 
-Compare a PyTorch training script with and without Ray Train.
+比较有和没有 Ray Train 的 PyTorch 训练脚本。
 
 .. tabs::
 
@@ -131,26 +131,26 @@ Compare a PyTorch training script with and without Ray Train.
             trainer = TorchTrainer(train_func, scaling_config=scaling_config)
             result = trainer.fit()
 
-Set up a training function
+设置训练函数
 --------------------------
 
-First, update your training code to support distributed training. 
-Begin by wrapping your code in a :ref:`training function <train-overview-training-function>`:
+首先，更新您的训练代码以支持分布式训练。
+首先将您的代码包装在 :ref:`训练函数 <train-overview-training-function>`：
 
 .. code-block:: python
 
     def train_func(config):
         # Your PyTorch training code here.
 
-Each distributed training worker executes this function.
+每个分布式训练 worker 都执行此功能。
 
-Set up a model
+设置模型
 ^^^^^^^^^^^^^^
 
-Use the :func:`ray.train.torch.prepare_model` utility function to:
+使用 :func:`ray.train.torch.prepare_model` 实用函数可以：
 
-1. Move your model to the correct device.
-2. Wrap it in ``DistributedDataParallel``.
+1. 将您的模型移动到正确的设备上。
+2. 在 ``DistributedDataParallel`` 中进行包装。
 
 .. code-block:: diff
 
@@ -172,18 +172,18 @@ Use the :func:`ray.train.torch.prepare_model` utility function to:
          
          ...
 
-Set up a dataset
+设置数据集
 ^^^^^^^^^^^^^^^^
 
 .. TODO: Update this to use Ray Data.
 
-Use the :func:`ray.train.torch.prepare_data_loader` utility function, which: 
+使用 :func:`ray.train.torch.prepare_data_loader` 效用函数，其会：
 
-1. Adds a ``DistributedSampler`` to your ``DataLoader``.
-2. Moves the batches to the right device. 
+1. 添加 ``DistributedSampler`` 到你的 ``DataLoader``。
+2. 将批次移动到正确的设备。
 
-Note that this step isn't necessary if you're passing in Ray Data to your Trainer.
-See :ref:`data-ingest-torch`.
+请注意，如果您将 Ray Data 传递给 Trainer，则此步骤不是必需的。
+请参阅 :ref:`data-ingest-torch`。
 
 .. code-block:: diff
 
@@ -208,18 +208,18 @@ See :ref:`data-ingest-torch`.
          ...
 
 .. tip::
-    Keep in mind that ``DataLoader`` takes in a ``batch_size`` which is the batch size for each worker.
-    The global batch size can be calculated from the worker batch size (and vice-versa) with the following equation:
+    请记住， ``DataLoader`` 其中 ``batch_size``是每个 worker 的批处理大小。
+    全局批处理大小可以通过以下公式根据工作器批处理大小计算得出（反之亦然）：
 
     .. code-block:: python
 
         global_batch_size = worker_batch_size * ray.train.get_context().get_world_size()
 
 
-Report checkpoints and metrics
+报告检查点和指标
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To monitor progress, you can report intermediate metrics and checkpoints using the :func:`ray.train.report` utility function.
+为了监控进度，您可以使用 :func:`ray.train.report` 实用功能报告中间指标和检查点。
 
 .. code-block:: diff
 
@@ -236,16 +236,16 @@ To monitor progress, you can report intermediate metrics and checkpoints using t
 
          ...
 
-For more details, see :ref:`train-monitoring-and-logging` and :ref:`train-checkpointing`.
+有关更多详细信息，请参阅 :ref:`train-monitoring-and-logging` 和 :ref:`train-checkpointing`。
 
 
-Configure scale and GPUs
+配置比例和 GPU
 ------------------------
 
-Outside of your training function, create a :class:`~ray.train.ScalingConfig` object to configure:
+在你的训练功能之外，创建一个 :class:`~ray.train.ScalingConfig` 对象来配置：
 
-1. `num_workers` - The number of distributed training worker processes.
-2. `use_gpu` - Whether each worker should use a GPU (or CPU).
+1. `num_workers` - 分布式训练 worker 的数量。
+2. `use_gpu` - 每个 worker 至少使用一个 GPU （或 CPU）。
 
 .. code-block:: python
 
@@ -253,13 +253,12 @@ Outside of your training function, create a :class:`~ray.train.ScalingConfig` ob
     scaling_config = ScalingConfig(num_workers=2, use_gpu=True)
 
 
-For more details, see :ref:`train_scaling_config`.
+更多详细信息，请参阅 :ref:`train_scaling_config`。
 
-Launch a training job
+启动训练任务
 ---------------------
 
-Tying this all together, you can now launch a distributed training job 
-with a :class:`~ray.train.torch.TorchTrainer`.
+将所有这些结合在一起，您现在可以使用 :class:`~ray.train.torch.TorchTrainer` 启动分布式训练工作。
 
 .. code-block:: python
 
@@ -268,11 +267,11 @@ with a :class:`~ray.train.torch.TorchTrainer`.
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-Access training results
+访问训练结果
 -----------------------
 
-After training completes, a :class:`~ray.train.Result` object is returned which contains
-information about the training run, including the metrics and checkpoints reported during training.
+训练完成后， :class:`~ray.train.Result` 将返回一个对象，
+其中包含有关训练运行的信息，包括训练期间报告的指标和检查点。
 
 .. code-block:: python
 
@@ -283,11 +282,11 @@ information about the training run, including the metrics and checkpoints report
 
 .. TODO: Add results guide
 
-Next steps
+下一步
 ----------
 
-After you have converted your PyTorch training script to use Ray Train:
+将 PyTorch 训练脚本转换为使用 Ray Train 后：
 
-* See :ref:`User Guides <train-user-guides>` to learn more about how to perform specific tasks.
-* Browse the :ref:`Examples <train-examples>` for end-to-end examples of how to use Ray Train.
-* Dive into the :ref:`API Reference <train-api>` for more details on the classes and methods used in this tutorial.
+* 参阅 :ref:`用户指南 <train-user-guides>` 以了解有关如何执行特定任务的更多信息。
+* 浏览 :ref:`示例 <train-examples>` ，了解如何使用 Ray Train 的端到端示例。
+* 深入 :ref:`API 参考 <train-api>` ，了解本教程中使用的类和方法的更多详细信息。

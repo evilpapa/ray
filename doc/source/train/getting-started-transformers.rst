@@ -1,20 +1,20 @@
 .. _train-pytorch-transformers:
 
-Get Started with Hugging Face Transformers
+开始使用 Hugging Face Transformers
 ==========================================
 
-This tutorial walks through the process of converting an existing Hugging Face Transformers script to use Ray Train.
+本教程介绍将现有 Hugging Face Transformers 脚本转换为使用 Ray Train 的过程。
 
-Learn how to:
+了解如何：
 
-1. Configure a :ref:`training function <train-overview-training-function>` to report metrics and save checkpoints.
-2. Configure :ref:`scaling <train-overview-scaling-config>` and CPU or GPU resource requirements for your training job.
-3. Launch your distributed training job with a :class:`~ray.train.torch.TorchTrainer`.
+1. 配置 a :ref:`训练函数 <train-overview-training-function>` 以报告指标并保存检查点。
+2. 为您的训练作业配置 :ref:`扩展 <train-overview-scaling-config>` 和 CPU 或 GPU 资源要求。
+3. 使用 :class:`~ray.train.torch.TorchTrainer` 启动您的分布式训练任务。
 
-Quickstart
+快速开始
 ----------
 
-For reference, the final code follows:
+作为参考，最终代码如下：
 
 .. code-block:: python
 
@@ -28,11 +28,11 @@ For reference, the final code follows:
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-1. `train_func` is the Python code that executes on each distributed training :ref:`worker <train-overview-worker>`.
-2. :class:`~ray.train.ScalingConfig` defines the number of distributed training workers and computing resources (e.g. GPUs).
-3. :class:`~ray.train.torch.TorchTrainer` launches the distributed training job.
+1. `train_func` 是在每个分布式训练 :ref:`worker <train-overview-worker>` 上执行的 Python 代码。
+2. :class:`~ray.train.ScalingConfig` 定义分布式训练 worker 和计算资源（例如 GPU）的数量。
+3. :class:`~ray.train.torch.TorchTrainer` 启动分布式训练作业。
 
-Compare a Hugging Face Transformers training script with and without Ray Train.
+比较有和没有 Ray Train 的 Hugging Face Transformers 训练脚本。
 
 .. tabs::
 
@@ -171,35 +171,35 @@ Compare a Hugging Face Transformers training script with and without Ray Train.
             ray_trainer.fit()
 
 
-Set up a training function
+设置训练函数
 --------------------------
 
-First, update your training code to support distributed training. 
-You can begin by wrapping your code in a :ref:`training function <train-overview-training-function>`:
+首先，更新您的训练代码以支持分布式训练。
+您可以先将代码包装在 :ref:`训练函数 <train-overview-training-function>` 中：
 
 .. code-block:: python
 
     def train_func(config):
         # Your Transformers training code here.
 
-This function executes on each distributed training worker. Ray Train sets up the distributed 
-process group on each worker before entering this function.
+此函数在每个分布式训练 worker 上执行。
+Ray Train 在进入此函数之前在每个 worker 上设置分布式进程组。
 
-Put all the logic into this function, including dataset construction and preprocessing, 
-model initialization, transformers trainer definition and more.
+将所有逻辑放入此函数中，包括数据集构建和预处理、模型初始化、
+变压器训练器定义等。
 
 .. note::
 
-    If you are using Hugging Face Datasets or Evaluate, make sure to call ``datasets.load_dataset`` and ``evaluate.load`` 
-    inside the training function. Don't pass the loaded datasets and metrics from outside of the training 
-    function, because it might cause serialization errors while transferring the objects to the workers.
+    如果您正在使用 Hugging Face Datasets 或 Evaluate，请确保在训练函数内部调用 ``datasets.load_dataset`` 和 ``evaluate.load`` 
+    不要从训练函数外部传递加载的数据集和指标，
+    因为这可能会导致在将对象传输给工作器时出现序列化错误。
 
 
-Report checkpoints and metrics
+报告检查点和指标
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To persist your checkpoints and monitor training progress, add a 
-:class:`ray.train.huggingface.transformers.RayTrainReportCallback` utility callback to your Trainer. 
+为了保留您的检查点并监控训练进度，请想您的训练器添加
+:class:`ray.train.huggingface.transformers.RayTrainReportCallback` 使用回调程序。
 
 
 .. code-block:: diff
@@ -214,16 +214,16 @@ To persist your checkpoints and monitor training progress, add a
          ...
 
 
-Reporting metrics and checkpoints to Ray Train ensures that you can use Ray Tune and :ref:`fault-tolerant training <train-fault-tolerance>`. 
-Note that the :class:`ray.train.huggingface.transformers.RayTrainReportCallback` only provides a simple implementation, and you can :ref:`further customize <train-dl-saving-checkpoints>` it.
+向 Ray Train 报告指标和检查点可确保您可以使用 Ray Tune 和 :ref:`容错训练 <train-fault-tolerance>`。
+请注意， :class:`ray.train.huggingface.transformers.RayTrainReportCallback` 仅提供了一个简单的实现，您可以 :ref:`进一步定义 <train-dl-saving-checkpoints>` 它。
 
 
-Prepare a Transformers Trainer
+准备一个 Transformers 训练器
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Finally, pass your Transformers Trainer into
-:meth:`~ray.train.huggingface.transformers.prepare_trainer` to validate 
-your configurations and enable Ray Data Integration. 
+最后，将您的 Transformers Trainer 传入
+:meth:`~ray.train.huggingface.transformers.prepare_trainer` 以验证您的配置
+并启用 Ray Data Integration。
 
 
 .. code-block:: diff
@@ -239,13 +239,13 @@ your configurations and enable Ray Data Integration.
          ...
 
 
-Configure scale and GPUs
+配置规模和 GPU
 ------------------------
 
-Outside of your training function, create a :class:`~ray.train.ScalingConfig` object to configure:
+在你的训练功能之外，创建一个 :class:`~ray.train.ScalingConfig` 对象来配置：
 
-1. `num_workers` - The number of distributed training worker processes.
-2. `use_gpu` - Whether each worker should use a GPU (or CPU).
+1. `num_workers` - T分布式训练 worker 的数量。
+2. `use_gpu` - 每个 worker 是否应该使用 GPU（或 CPU）。
 
 .. code-block:: python
 
@@ -253,13 +253,12 @@ Outside of your training function, create a :class:`~ray.train.ScalingConfig` ob
     scaling_config = ScalingConfig(num_workers=2, use_gpu=True)
 
 
-For more details, see :ref:`train_scaling_config`.
+有关更多详细信息，请参阅 :ref:`train_scaling_config`。
 
-Launch a training job
+启动训练任务
 ---------------------
 
-Tying this all together, you can now launch a distributed training job 
-with a :class:`~ray.train.torch.TorchTrainer`.
+将所有这些结合在一起，您现在可以使用 :class:`~ray.train.torch.TorchTrainer` 启动分布式训练任务。
 
 .. code-block:: python
 
@@ -268,13 +267,13 @@ with a :class:`~ray.train.torch.TorchTrainer`.
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-Refer to :ref:`train-run-config` for more configuration options for `TorchTrainer`.
+有关更多配置选项，请参阅 `TorchTrainer` 中的 :ref:`train-run-config` 。
 
-Access training results
+访问训练结果
 -----------------------
 
-After training completes, a :class:`~ray.train.Result` object is returned which contains
-information about the training run, including the metrics and checkpoints reported during training.
+训练完成后，Ray Train 返回一个 :class:`~ray.train.Result` 对象，
+其中包含有关训练运行的信息，包括训练期间报告的指标和检查点。
 
 .. code-block:: python
 
@@ -288,30 +287,30 @@ information about the training run, including the metrics and checkpoints report
 Next steps
 ---------- 
 
-After you have converted your Hugging Face Transformers training script to use Ray Train:
+将 Hugging Face Transformers 训练脚本转换为使用 Ray Train 后：
 
-* See :ref:`User Guides <train-user-guides>` to learn more about how to perform specific tasks.
-* Browse the :ref:`Examples <train-examples>` for end-to-end examples of how to use Ray Train.
-* Dive into the :ref:`API Reference <train-api>` for more details on the classes and methods used in this tutorial.
+* 请参阅 :ref:`用户指南 <train-user-guides>` 以了解有关如何执行特定任务的更多信息。
+* 浏览 :ref:`示例 <train-examples>` ，了解如何使用 Ray Train 的端到端示例。
+* 有关本教程中的类和方法的更多详细信息，请参阅 :ref:`API 参考 <train-api>`。
 
 
 .. _transformers-trainer-migration-guide:
 
-TransformersTrainer Migration Guide
+TransformersTrainer 迁移指南
 -----------------------------------
 
-Ray 2.1 introduced the `TransformersTrainer`, which exposes a `trainer_init_per_worker` interface 
-to define `transformers.Trainer`, then runs a pre-defined training function in a black box.
+Ray 2.1 引入了 `TransformersTrainer`，它公开一个 `trainer_init_per_worker` 接口
+来定义 `transformers.Trainer`，然后在黑盒中运行预定义的训练函数。
 
-Ray 2.7 introduced the newly unified :class:`~ray.train.torch.TorchTrainer` API, 
-which offers enhanced transparency, flexibility, and simplicity. This API aligns more
-with standard Hugging Face Transformers scripts, ensuring that you have better control over your 
-native Transformers training code.
+Ray 2.7 引入了全新统一的 :class:`~ray.train.torch.TorchTrainer` API，
+它提供了增强的透明度、灵活性和简单性。
+此 API 与标准 Hugging Face Transformers 脚本更加一致，
+确保您能够更好地控制原生 Transformers 训练代码。
 
 
 .. tabs::
 
-    .. group-tab:: (Deprecating) TransformersTrainer
+    .. group-tab:: (弃用) TransformersTrainer
 
 
         .. code-block:: python
@@ -365,7 +364,7 @@ native Transformers training code.
             result = ray_trainer.fit()
                 
 
-    .. group-tab:: (New API) TorchTrainer
+    .. group-tab:: (新 API) TorchTrainer
 
         .. code-block:: python
             

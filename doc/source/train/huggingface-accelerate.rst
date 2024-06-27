@@ -1,11 +1,11 @@
 .. _train-hf-accelerate:
 
-Get Started with Hugging Face Accelerate
+开始使用 Hugging Face Accelerate
 ========================================
 
-The :class:`~ray.train.torch.TorchTrainer` can help you easily launch your `Accelerate <https://huggingface.co/docs/accelerate>`_  training across a distributed Ray cluster.
+:class:`~ray.train.torch.TorchTrainer` 可以帮助您轻松地在分布式 Ray 集群中启动 `Accelerate <https://huggingface.co/docs/accelerate>`_  训练。
 
-You only need to run your existing training code with a TorchTrainer. You can expect the final code to look like this:
+您只需要使用 TorchTrainer 运行现有的训练代码。最终代码如下所示：
 
 .. code-block:: python
 
@@ -47,24 +47,23 @@ You only need to run your existing training code with a TorchTrainer. You can ex
 
 .. tip::
 
-    Model and data preparation for distributed training is completely handled by the `Accelerator <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator>`_ 
-    object and its `Accelerator.prepare() <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator.prepare>`_  method.
+    分布式训练的模型和数据准备完全由 `Accelerator <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator>`_ 
+    对象及其 `Accelerator.prepare() <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator.prepare>`_  方法处理。
     
-    Unlike with native PyTorch, PyTorch Lightning, or Hugging Face Transformers, **don't** call any additional Ray Train utilities 
-    like :meth:`~ray.train.torch.prepare_model` or :meth:`~ray.train.torch.prepare_data_loader` in your training function. 
+    与原生 PyTorch、PyTorch Lightning 或 Hugging Face Transformers 不同， **不要** 在训练函数中
+    调用任何其他 Ray Train 实用程序（如 :meth:`~ray.train.torch.prepare_model` 或 :meth:`~ray.train.torch.prepare_data_loader` ）。
 
-Configure Accelerate
+配置加速
 --------------------
 
-In Ray Train, you can set configurations through the `accelerate.Accelerator <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator>`_ 
-object in your training function. Below are starter examples for configuring Accelerate.
+在 Ray Train 中，您可以通过训练函数中的 `accelerate.Accelerator <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator>`_ 
+对象设置配置。以下是配置 Accelerate 的入门示例。
 
 .. tabs::
 
     .. group-tab:: DeepSpeed
 
-        For example, to run DeepSpeed with Accelerate, create a `DeepSpeedPlugin <https://huggingface.co/docs/accelerate/main/en/package_reference/deepspeed>`_ 
-        from a dictionary:
+        例如，要使用 Accelerate 运行 DeepSpeed，请创建 `DeepSpeedPlugin <https://huggingface.co/docs/accelerate/main/en/package_reference/deepspeed>`_ 字典：
 
         .. code-block:: python
 
@@ -121,8 +120,8 @@ object in your training function. Below are starter examples for configuring Acc
 
     .. group-tab:: FSDP
 
-        For PyTorch FSDP, create a `FullyShardedDataParallelPlugin <https://huggingface.co/docs/accelerate/main/en/package_reference/fsdp>`_ 
-        and pass it to the Accelerator.
+        对于 PyTorch FSDP，创建一个 `FullyShardedDataParallelPlugin <https://huggingface.co/docs/accelerate/main/en/package_reference/fsdp>`_ 
+        并将其传递给加速器。
 
         .. code-block:: python
 
@@ -160,27 +159,27 @@ object in your training function. Below are starter examples for configuring Acc
             )
             trainer.fit()
 
-Note that Accelerate also provides a CLI tool, `"accelerate config"`, to generate a configuration and launch your training 
-job with `"accelerate launch"`. However, it's not necessary here because Ray's `TorchTrainer` already sets up the Torch 
-distributed environment and launches the training function on all workers.
+
+请注意，Accelerate 还提供了一个 CLI 工具，`"accelerate config"` ，用于生成配置并使用  `"accelerate launch"` 启动训练作业。
+但是，这里不需要它，因为 Ray 的 `TorchTrainer` 已经设置了 Torch 分布式环境并在所有 worker 上启动了训练功能。
 
 
-Next, see these end-to-end examples below for more details:
+接下来，请参阅下面这些端到端示例以了解更多详细信息：
 
 .. tabs::
 
-    .. group-tab:: Example with Ray Data
+    .. group-tab:: Ray Data 使用示例
 
-        .. dropdown:: Show Code
+        .. dropdown:: 显示代码
 
             .. literalinclude:: /../../python/ray/train/examples/accelerate/accelerate_torch_trainer.py
                 :language: python
                 :start-after: __accelerate_torch_basic_example_start__
                 :end-before: __accelerate_torch_basic_example_end__
 
-    .. group-tab:: Example with PyTorch DataLoader
+    .. group-tab:: PyTorch DataLoader 使用示例
 
-        .. dropdown:: Show Code
+        .. dropdown:: 显示代码
 
             .. literalinclude:: /../../python/ray/train/examples/accelerate/accelerate_torch_trainer_no_raydata.py
                 :language: python
@@ -189,28 +188,28 @@ Next, see these end-to-end examples below for more details:
 
 .. seealso::
 
-    If you're looking for more advanced use cases, check out this Llama-2 fine-tuning example: 
+    如果你正在寻找更高级的用例，请查看此 Llama-2 微调示例：
     
-    - `Fine-tuning Llama-2 series models with Deepspeed, Accelerate, and Ray Train. <https://github.com/ray-project/ray/tree/master/doc/source/templates/04_finetuning_llms_with_deepspeed>`_
+    - `使用 Deepspeed、Accelerate 和 Ray Train 对 Llama-2 系列模型进行微调。 <https://github.com/ray-project/ray/tree/master/doc/source/templates/04_finetuning_llms_with_deepspeed>`_
 
-You may also find these user guides helpful:
+您可能还会发现这些用户指南很有帮助：
 
-- :ref:`Configuring Scale and GPUs <train_scaling_config>`
-- :ref:`Configuration and Persistent Storage <train-run-config>`
-- :ref:`Saving and Loading Checkpoints <train-checkpointing>`
-- :ref:`How to use Ray Data with Ray Train <data-ingest-torch>`
+- :ref:`配置 Scale 和 GPU <train_scaling_config>`
+- :ref:`配置和持久存储 <train-run-config>`
+- :ref:`保存和加载检查点 <train-checkpointing>`
+- :ref:`如何将 Ray Data 与 Ray Train 结合使用 <data-ingest-torch>`
 
 
-AccelerateTrainer Migration Guide 
+AccelerateTrainer 迁移指南
 ---------------------------------
 
-Before Ray 2.7, Ray Train's :class:`AccelerateTrainer <ray.train.huggingface.AccelerateTrainer>` API was the 
-recommended way to run Accelerate code. As a subclass of :class:`TorchTrainer <ray.train.torch.TorchTrainer>`,  
-the AccelerateTrainer takes in a configuration file generated by ``accelerate config`` and applies it to all workers. 
-Aside from that, the functionality of ``AccelerateTrainer`` is identical to ``TorchTrainer``.
+在 Ray 2.7 之前，Ray Train 的 :class:`AccelerateTrainer <ray.train.huggingface.AccelerateTrainer>` 是运行 Accelerate 代码的推荐方式。
+作为 :class:`TorchTrainer <ray.train.torch.TorchTrainer>` 的子类，
+AccelerateTrainer 接收由 ``accelerate config`` 生成的配置文件并将其应用于所有 worker 。
+除此之外， ``AccelerateTrainer`` 的功能与 ``TorchTrainer`` 相同。
 
-However, this caused confusion around whether this was the *only* way to run Accelerate code. 
-Because you can express the full Accelerate functionality with the ``Accelerator`` and ``TorchTrainer`` combination, the plan is to deprecate the ``AccelerateTrainer`` in Ray 2.8, 
-and it's recommend to run your  Accelerate code directly with ``TorchTrainer``. 
+然而，这引起了人们的困惑，即这是否是运行 Accelerate 代码的 *唯一* 方式。
+由于您可以使用和 ``Accelerator`` 和 ``TorchTrainer`` 组合来表达完整的 Accelerate 功能， 因此计划在 Ray 2.8 中弃用 ``AccelerateTrainer`` ，
+并且建议直接使用 ``TorchTrainer`` 来运行加速代码。
 
 

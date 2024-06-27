@@ -3,7 +3,7 @@
 # Ray Serve: 可扩展和可编程的服务
 
 :::{tip}
-[Get in touch with us](https://docs.google.com/forms/d/1l8HT35jXMPtxVUtQPeGoe09VGp5jcvSv0TqPgyz6lGU) if you're using or considering using Ray Serve.
+如果您正在使用或考虑使用 Ray Serve，[请与我们联系](https://docs.google.com/forms/d/1l8HT35jXMPtxVUtQPeGoe09VGp5jcvSv0TqPgyz6lGU) 。
 :::
 
 ```{image} logo.svg
@@ -14,33 +14,33 @@
 
 (rayserve-overview)=
 
-Ray Serve is a scalable model serving library for building online inference APIs.
-Serve is framework-agnostic, so you can use a single toolkit to serve everything from deep learning models built with frameworks like PyTorch, TensorFlow, and Keras, to Scikit-Learn models, to arbitrary Python business logic. It has several features and performance optimizations for serving Large Language Models such as response streaming, dynamic request batching, multi-node/multi-GPU serving, etc.
+Ray Serve 是一个可扩展的模型服务库，用于构建在线推理 API。
+Serve 与框架无关，因此您可以使用单个工具包来提供从使用 PyTorch、TensorFlow 和 Keras 等框架构建的深度学习模型到 Scikit-Learn 模型，再到任意 Python 业务逻辑的所有内容。它具有多种功能和性能优化，可用于提供大型语言模型，例如响应流、动态请求批处理、多节点/多 GPU 服务等。
 
-Ray Serve is particularly well suited for [model composition](serve-model-composition) and many model serving, enabling you to build a complex inference service consisting of multiple ML models and business logic all in Python code. 
+Ray Serve 特别适合 [模型组合](serve-model-composition) 和多模型服务，使您能够用 Python 代码构建由多个 ML 模型和业务逻辑组成的复杂推理服务。
 
-Ray Serve is built on top of Ray, so it easily scales to many machines and offers flexible scheduling support such as fractional GPUs so you can share resources and serve many machine learning models at low cost.
+Ray Serve 建立在 Ray 之上，因此它可以轻松扩展到多台机器，并提供灵活的调度支持（例如部分 GPU），以便您可以共享资源并以低成本提供许多机器学习模型。
 
-## Quickstart
+## 快速开始
 
-Install Ray Serve and its dependencies:
+安装 Ray Serve 和其依赖：
 
 ```bash
 pip install "ray[serve]"
 ```
-Define a simple "hello world" application, run it locally, and query it over HTTP.
+定义一个简单的 “hello world” 应用程序，在本地运行它，并通过 HTTP 查询它。
 
 ```{literalinclude} doc_code/quickstart.py
 :language: python
 ```
 
-## More examples
+## 更多示例
 
 ::::{tab-set}
 
-:::{tab-item} Model composition
+:::{tab-item} 模型组合
 
-Use Serve's model composition API to combine multiple deployments into a single application.
+使用 Serve 的模型组合 API 将多个部署组合成一个应用程序。
 
 ```{literalinclude} doc_code/quickstart_composed.py
 :language: python
@@ -48,9 +48,9 @@ Use Serve's model composition API to combine multiple deployments into a single 
 
 :::
 
-:::{tab-item} FastAPI integration
+:::{tab-item} FastAPI 集成
 
-Use Serve's [FastAPI](https://fastapi.tiangolo.com/) integration to elegantly handle HTTP parsing and validation.
+使用 Serve 的 [FastAPI](https://fastapi.tiangolo.com/) 集成来优雅地处理 HTTP 解析和验证。
 
 ```{literalinclude} doc_code/fastapi_example.py
 :language: python
@@ -60,10 +60,10 @@ Use Serve's [FastAPI](https://fastapi.tiangolo.com/) integration to elegantly ha
 
 :::{tab-item} Hugging Face Transformers model
 
-To run this example, install the following: ``pip install transformers``
+要运行此示例，请安装以下内容： ``pip install transformers``
 
-Serve a pre-trained [Hugging Face Transformers](https://huggingface.co/docs/transformers/index) model using Ray Serve.
-The model we'll use is a sentiment analysis model: it will take a text string as input and return if the text was "POSITIVE" or "NEGATIVE."
+使用 Ray Serve 提供预先训练的 [Hugging Face Transformers](https://huggingface.co/docs/transformers/index) 模型。
+我们将使用的模型是情绪分析模型：它将以文本字符串作为输入，并返回文本是“积极”还是“消极”。
 
 ```{literalinclude} doc_code/transformers_example.py
 :language: python
@@ -73,7 +73,7 @@ The model we'll use is a sentiment analysis model: it will take a text string as
 
 ::::
 
-## Why choose Serve?
+## 为什么选择 Serve？
 
 :::{dropdown} Build end-to-end ML-powered applications
 :animate: fade-in-slide-down

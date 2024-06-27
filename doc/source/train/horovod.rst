@@ -1,41 +1,38 @@
 
 .. _train-horovod:
 
-Get Started with Horovod
+Horovod 指南
 ========================
 
-Ray Train configures the Horovod environment and Rendezvous
-server for you, allowing you to run your ``DistributedOptimizer`` training
-script. See the `Horovod documentation <https://horovod.readthedocs.io/en/stable/index.html>`_
-for more information.
+Ray Train 为你配置 Horovod 环境 和 Rendezvous
+服务。让您可以运行你的 ``DistributedOptimizer`` 训练脚本。
+有关更多信息，参考 `Horovod 文档 <https://horovod.readthedocs.io/en/stable/index.html>`_ 。
 
-Quickstart
+快速开始
 -----------
 .. literalinclude:: ./doc_code/hvd_trainer.py
   :language: python
 
 
 
-Update your training function
+更新你的训练函数
 -----------------------------
 
-First, update your :ref:`training function <train-overview-training-function>` to support distributed
-training.
+首先，更新 :ref:`训练函数 <train-overview-training-function>` 以支持分布式训练。
 
-If you have a training function that already runs with the `Horovod Ray
-Executor <https://horovod.readthedocs.io/en/stable/ray_include.html#horovod-ray-executor>`_,
-you shouldn't need to make any additional changes.
+如果你的训练函数已经可以在 `Horovod Ray Executor <https://horovod.readthedocs.io/en/stable/ray_include.html#horovod-ray-executor>`_ 上运行，
+你不需要做任何额外的更改。
 
-To onboard onto Horovod, visit the `Horovod guide
-<https://horovod.readthedocs.io/en/stable/index.html#get-started>`_.
+要加入 Horovod，请访问 `Horovod 指南 
+<https://horovod.readthedocs.io/en/stable/index.html#get-started>`_。
 
 
-Create a HorovodTrainer
+创建 HorovodTrainer
 -----------------------
 
-``Trainer``\s are the primary Ray Train classes to use to manage state and
-execute training. For Horovod, use a :class:`~ray.train.horovod.HorovodTrainer`
-that you can setup like this:
+``Trainer``\s 是主要的 Ray Train 类用于管理状态和执行训练。
+对于 Horovod 使用 :class:`~ray.train.horovod.HorovodTrainer`，
+你可以这样设置：
 
 .. code-block:: python
 
@@ -48,11 +45,11 @@ that you can setup like this:
         scaling_config=ScalingConfig(use_gpu=use_gpu, num_workers=2)
     )
 
-When training with Horovod, always use a HorovodTrainer,
-irrespective of the training framework, for example, PyTorch or TensorFlow.
+使用 Horovod 进行训练时，始终使用 HorovodTrainer，
+无论训练框架是什么，例如 PyTorch 或 TensorFlow。
 
-To customize the backend setup, you can pass a
-:class:`~ray.train.horovod.HorovodConfig`:
+要自定义后端设置，可以传递一个 
+:class:`~ray.train.horovod.HorovodConfig`：
 
 .. code-block:: python
 
@@ -65,32 +62,31 @@ To customize the backend setup, you can pass a
         scaling_config=ScalingConfig(num_workers=2),
     )
 
-For more configurability, see the :py:class:`~ray.train.data_parallel_trainer.DataParallelTrainer` API.
+更多配置信息，参考 :py:class:`~ray.train.data_parallel_trainer.DataParallelTrainer` API。
 
-Run a training function
+运行训练函数
 -----------------------
 
-With a distributed training function and a Ray Train ``Trainer``, you are now
-ready to start training.
+借助分布式训练函数和 Ray Train ``Trainer``，
+你现在可以开始训练了。
 
 .. code-block:: python
 
     trainer.fit()
 
 
-Further reading
+进一步阅读
 ---------------
 
-Ray Train's :class:`~ray.train.horovod.HorovodTrainer` replaces the distributed
-communication backend of the native libraries with its own implementation.
-Thus, the remaining integration points remain the same. If you're using Horovod
-with :ref:`PyTorch <train-pytorch>` or :ref:`Tensorflow <train-tensorflow-overview>`,
-refer to the respective guides for further configuration
-and information.
+Ray Train 的 :class:`~ray.train.horovod.HorovodTrainer` 用自己的实现
+替换了本机库的分布式通信后端。
+因此，其余的集成点保持不变。 如果您将 Horovod 与
+:ref:`PyTorch <train-pytorch>` 或 :ref:`Tensorflow <train-tensorflow-overview>` 集成，
+请参阅相应的指南以获取进一步的配置和信息。
 
-If you are implementing your own Horovod-based training routine without using any of
-the training libraries, read through the
-:ref:`User Guides <train-user-guides>`, as you can apply much of the content
-to generic use cases and adapt them easily.
+如果您正在实施自己的基于 Horovod 的训练程序而
+不使用任何训练库， 请阅读
+:ref:`用户指南 <train-user-guides>`，因为您可以将大部分内容应用于
+通用用例并轻松地对其进行调整。
 
 

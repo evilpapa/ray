@@ -3,12 +3,12 @@
 DeepSpeed 入门
 ==========================
 
-The :class:`~ray.train.torch.TorchTrainer` can help you easily launch your `DeepSpeed <https://www.deepspeed.ai/>`_  training across a distributed Ray cluster.
+:class:`~ray.train.torch.TorchTrainer` 帮助您轻松地在分布式 Ray 集群中启动 `DeepSpeed <https://www.deepspeed.ai/>`_  训练。
 
-Code example
+代码示例
 ------------
 
-You only need to run your existing training code with a TorchTrainer. You can expect the final code to look like this:
+您只需要使用 TorchTrainer 运行现有的训练代码。最终代码如下所示：
 
 .. code-block:: python
 
@@ -48,7 +48,7 @@ You only need to run your existing training code with a TorchTrainer. You can ex
     trainer.fit()
 
 
-Below is a simple example of ZeRO-3 training with DeepSpeed only. 
+下面是仅使用 DeepSpeed 进行 ZeRO-3 训练的一个简单示例。
 
 .. tabs::
 
@@ -72,26 +72,25 @@ Below is a simple example of ZeRO-3 training with DeepSpeed only.
 
 .. tip::
 
-    To run DeepSpeed with pure PyTorch, you **don't need to** provide any additional Ray Train utilities 
-    like :meth:`~ray.train.torch.prepare_model` or :meth:`~ray.train.torch.prepare_data_loader` in your training funciton. Instead, 
-    keep using `deepspeed.initialize() <https://deepspeed.readthedocs.io/en/latest/initialize.html>`_ as usual to prepare everything 
-    for distributed training.
+    要使用纯 PyTorch 运行 DeepSpeed，您 **无需** 在训练函数中提供任何其他 Ray Train 实用程序（例
+    如 :meth:`~ray.train.torch.prepare_model` 或 :meth:`~ray.train.torch.prepare_data_loader` ）。
+    相反，继续像往常一样使用 `deepspeed.initialize() <https://deepspeed.readthedocs.io/en/latest/initialize.html>`_ 为分布式训练做好一切准备。
 
-Run DeepSpeed with other frameworks
+使用其他框架运行 DeepSpeed
 -----------------------------------
 
-Many deep learning frameworks have integrated with DeepSpeed, including Lightning, Transformers, Accelerate, and more. You can run all these combinations in Ray Train.
+许多深度学习框架已与 DeepSpeed 集成，包括 Lightning、Transformers、Accelerate 等。您可以在 Ray Train 中运行所有这些组合。
 
-Check the below examples for more details:
+查看以下示例以了解更多详细信息：
 
 .. list-table::
    :header-rows: 1
 
-   * - Framework
-     - Example
-   * - Accelelate (:ref:`User Guide <train-hf-accelerate>`)
-     - `Fine-tune Llama-2 series models with Deepspeed, Accelerate, and Ray Train. <https://github.com/ray-project/ray/tree/master/doc/source/templates/04_finetuning_llms_with_deepspeed>`_
-   * - Transformers (:ref:`User Guide <train-pytorch-transformers>`)
-     - :ref:`Fine-tune GPT-J-6b with DeepSpeed and Hugging Face Transformers <gptj_deepspeed_finetune>`
-   * - Lightning (:ref:`User Guide <train-pytorch-lightning>`)
-     - :ref:`Fine-tune vicuna-13b with DeepSpeed and PyTorch Lightning <vicuna_lightning_deepspeed_finetuning>`
+   * - 框架
+     - 例子
+   * - Accelelate (:ref:`用户指南 <train-hf-accelerate>`)
+     - `使用 Deepspeed、Accelerate 和 Ray Train 微调 Llama-2 系列模型。 <https://github.com/ray-project/ray/tree/master/doc/source/templates/04_finetuning_llms_with_deepspeed>`_
+   * - Transformers (:ref:`用户指南 <train-pytorch-transformers>`)
+     - :ref:`使用 DeepSpeed 和 Hugging Face Transformers 对 GPT-J-6b 进行微调 <gptj_deepspeed_finetune>`
+   * - Lightning (:ref:`用户指南 <train-pytorch-lightning>`)
+     - :ref:`使用 DeepSpeed 和 PyTorch Lightning 对 vicuna-13b 进行微调 <vicuna_lightning_deepspeed_finetuning>`
