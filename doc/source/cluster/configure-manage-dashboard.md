@@ -1,28 +1,28 @@
 (observability-configure-manage-dashboard)=
 # 配置管理 Ray 仪表盘
-{ref}`Ray Dashboard<observability-getting-started>` is one of the most important tools to monitor and debug Ray applications and Clusters. This page describes how to configure Ray Dashboard on your Clusters.
+{ref}`Ray 仪表盘<observability-getting-started>` 是监控和调试 Ray 应用程序和集群的最重要工具之一。本页介绍如何在集群上配置 Ray 仪表盘。
 
-Dashboard configurations may differ depending on how you launch Ray Clusters (e.g., local Ray Cluster v.s. KubeRay). Integrations with Prometheus and Grafana are optional for enhanced Dashboard experience.
+仪表板配置可能因您启动 Ray 集群的方式而异（例如，本地 Ray 集群与 KubeRay）。与 Prometheus 和 Grafana 的集成是可选的，以增强仪表板体验。
 
 :::{note}
-Ray Dashboard is only intended for interactive development and debugging because the Dashboard UI and the underlying data are not accessible after Clusters are terminated. For production monitoring and debugging, users should rely on [persisted logs](../cluster/kubernetes/user-guides/logging.md), [persisted metrics](./metrics.md), [persisted Ray states](../ray-observability/user-guides/cli-sdk.rst), and other observability tools.
+Ray Dashboard 仅适用于交互式开发和调试，因为集群终止后，仪表板 UI 和底层数据将无法访问。对于生产监控和调试，用户应依赖 [日志持久化](../cluster/kubernetes/user-guides/logging.md)， [指标持久化](./metrics.md)， [Ray 状态持久化](../ray-observability/user-guides/cli-sdk.rst)，和其他可观察性工具。
 :::
 
-## Changing the Ray Dashboard port
-Ray Dashboard runs on port `8265` of the head node. Follow the instructions below to customize the port if needed.
+## 更改 Ray Dashboard 端口
+Ray Dashboard 运行在头节点的 `8265` 端口。请按照以下说明自定义端口（如果需要）。
 
 ::::{tab-set}
 
-:::{tab-item} Single-node local cluster
-**Start the cluster explicitly with CLI** <br/>
-Pass the ``--dashboard-port`` argument with ``ray start`` in the command line.
+:::{tab-item} 单节点本地集群
+**通过 CLI 明确启动集群** <br/>
+在命令行为 ``ray start`` 传递 ``--dashboard-port`` 参数。
 
-**Start the cluster implicitly with `ray.init`** <br/>
-Pass the keyword argument ``dashboard_port`` in your call to ``ray.init()``.
+**通过 `ray.init` 明确启动集群** <br/>
+在调用 ``ray.init()`` 传递关键参数 ``dashboard_port``。
 :::
 
-:::{tab-item} VM Cluster Launcher
-Include the ``--dashboard-port`` argument in the `head_start_ray_commands` section of the [Cluster Launcher's YAML file](https://github.com/ray-project/ray/blob/0574620d454952556fa1befc7694353d68c72049/python/ray/autoscaler/aws/example-full.yaml#L172).
+:::{tab-item} VM 集群启动器
+在 [集群启动 YAML 文件](https://github.com/ray-project/ray/blob/0574620d454952556fa1befc7694353d68c72049/python/ray/autoscaler/aws/example-full.yaml#L172) 的 `head_start_ray_commands` 节点包含  ``--dashboard-port``  参数。
 ```yaml
 head_start_ray_commands: 
   - ray stop 
@@ -33,48 +33,47 @@ head_start_ray_commands:
 :::
 
 :::{tab-item} KubeRay
-View the [specifying non-default ports](https://docs.ray.io/en/latest/cluster/kubernetes/user-guides/config.html#specifying-non-default-ports) page for details.
+参考 [指定非默认端口](https://docs.ray.io/en/latest/cluster/kubernetes/user-guides/config.html#specifying-non-default-ports) 页获取详细信息。
 :::
 
 ::::
 
 (dashboard-in-browser)=
-## Viewing Ray Dashboard in browsers
-When you start a single-node Ray cluster on your laptop, you can access the dashboard through a URL printed when Ray is initialized (the default URL is `http://localhost:8265`).
+## 在浏览器查看 Ray Dashboard
+当你在笔记本电脑上启动单节点 Ray 集群时，你可以通过 Ray 初始化时打印的 URL 访问仪表板（默认 URL 为 `http://localhost:8265`）。
 
 
-When you start a remote Ray cluster with the {ref}`VM cluster launcher <vm-cluster-quick-start>`, {ref}`KubeRay operator <kuberay-quickstart>`, or manual configuration, the Ray Dashboard launches on the head node but the dashboard port may not be publicly exposed. You need an additional setup to access the Ray Dashboard from outside the head node.
+当你通过 {ref}`VM cluster launcher <vm-cluster-quick-start>`，{ref}`KubeRay operator <kuberay-quickstart>`，或手动配置启动一个远程 Ray 集群，Ray 仪表盘会在头节点启动，端口可能是非公开的。你需要额外的设置以从头节点之外进行访问。
 
 :::{danger}
-For security purpose, do not expose Ray Dashboard publicly without proper authentication in place.
+为了安全目的，在没有适当的身份验证的情况下，请勿公开 Ray Dashboard。
 :::
 
 ::::{tab-set}
 
-:::{tab-item} VM Cluster Launcher
-**Port forwarding** <br/>
-You can securely port-forward local traffic to the dashboard with the ``ray
-dashboard`` command.
+:::{tab-item} VM 集群启动器
+**端口转发** <br/>
+您可以使用 ``ray dashboard`` 命令 安全地将本地流量端口转发到仪表板。
 
 ```shell
 $ ray dashboard [-p <port, 8265 by default>] <cluster config file>
 ```
 
-The dashboard is now visible at ``http://localhost:8265``.
+仪表板现在可在 ``http://localhost:8265`` 查看。
 :::
 
 :::{tab-item} KubeRay
 
-The KubeRay operator makes Dashboard available via a Service targeting the Ray head pod, named ``<RayCluster name>-head-svc``. Access
-Dashboard from within the Kubernetes cluster at ``http://<RayCluster name>-head-svc:8265``. 
+KubeRay 控制器通过指定 Ray 头 pod 名为 ``<RayCluster name>-head-svc`` 的 service 是仪表盘可用。
+在 Kubernetes 集群内通过 ``http://<RayCluster name>-head-svc:8265`` 访问。
 
-There are two ways to expose Dashboard outside the Cluster:
+有两种方法可以在集群外部公开仪表板：
 
-**1. Setting up ingress** <br/>
-Follow the [instructions](kuberay-ingress) to set up ingress to access Ray Dashboard. **The Ingress must only allows access from trusted sources.**
+**1. 设置 ingress** <br/>
+按照 [说明](kuberay-ingress) 设置入口以访问 Ray Dashboard。 **入口必须仅允许来自受信任来源的访问。**
 
-**2. Port forwarding** <br/>
-You can also view the dashboard from outside the Kubernetes cluster by using port-forwarding:
+**2. 端口转发** <br/>
+您还可以使用端口转发从 Kubernetes 集群外部查看仪表板：
 
 ```shell
 $ kubectl port-forward --address 0.0.0.0 service/${RAYCLUSTER_NAME}-head-svc 8265:8265 
@@ -83,29 +82,29 @@ $ kubectl port-forward --address 0.0.0.0 service/${RAYCLUSTER_NAME}-head-svc 826
 
 ```{admonition} Note
 :class: note
-Do not use port forwarding for production environment. Follow the instructions above to expose the Dashboard with Ingress.
+不要在生产环境中使用端口转发。按照上述说明使用 Ingress 公开仪表板。
 ```
 
-For more information about configuring network access to a Ray cluster on Kubernetes, see the {ref}`networking notes <kuberay-networking>`.
+有关在 Kubernetes 上配置 Ray 集群网络访问的更多信息，请参阅 {ref}`网络说明 <kuberay-networking>`。
 
 :::
 
 ::::
 
-## Running behind a reverse proxy
+## 在反向代理后运行
 
-Ray Dashboard should work out-of-the-box when accessed via a reverse proxy. API requests don't need to be proxied individually.
+通过反向代理访问时，Ray Dashboard 应该可以立即使用。API 请求不需要单独代理。
 
-Always access the dashboard with a trailing ``/`` at the end of the URL.
-For example, if your proxy is set up to handle requests to ``/ray/dashboard``, view the dashboard at ``www.my-website.com/ray/dashboard/``.
+始终在 URL 末尾以 ``/`` 结束访问仪表盘。
+例如，如果您的代理设置为处理对 ``/ray/dashboard`` 的请求，则通过 ``www.my-website.com/ray/dashboard/`` 进行查看。
 
-The dashboard sends HTTP requests with relative URL paths. Browsers handle these requests as expected when the ``window.location.href`` ends in a trailing ``/``.
+仪表板发送带有相对 URL 路径的 HTTP 请求。当 ``window.location.href`` 以反斜线 ``/`` 结束，浏览器会按预期处理这些请求。
 
-This is a peculiarity of how many browsers handle requests with relative URLs, despite what [MDN](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_URL#examples_of_relative_urls) defines as the expected behavior.
+尽管 [MDN](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_URL#examples_of_relative_urls) 定义了预期行为，但这是许多浏览器处理具有相对 URL 的请求的特性。
 
-Make your dashboard visible without a trailing ``/`` by including a rule in your reverse proxy that redirects the user's browser to ``/``, i.e. ``/ray/dashboard`` --> ``/ray/dashboard/``.
+通过在反向代理中包含一条规则将用户的浏览器重定向到 ``/``，比如 ``/ray/dashboard`` --> ``/ray/dashboard/`` 来使仪表盘不以 ``/`` 结尾的方式可见。
 
-Below is an example with a [traefik](https://doc.traefik.io/traefik/getting-started/quick-start/) TOML file that accomplishes this:
+下面是一个使用 [traefik](https://doc.traefik.io/traefik/getting-started/quick-start/) TOML 文件实现此目的的示例：
 
 ```yaml
 [http]
@@ -128,26 +127,26 @@ Below is an example with a [traefik](https://doc.traefik.io/traefik/getting-star
 
 ```{admonition} Warning
 :class: warning
-The Ray Dashboard provides read **and write** access to the Ray Cluster. The reverse proxy must provide authentication or network ingress controls to prevent unauthorized access to the Cluster.
+Ray Dashboard 提供对 Ray Cluster 的 **读写** 访问权限。反向代理必须提供身份验证或网络入口控制，以防止未经授权访问 Cluster。
 ```
 
-## Disabling the Dashboard
+## 禁用 Dashboard
 
-Dashboard is included if you use `ray[default]` or {ref}`other installation commands <installation>` and automatically started.
+如果您使用或 `ray[default]` 或 {ref}`其他安装命令 <installation>` 仪表盘会自动包含并启动。
 
-To disable Dashboard, use the following arguments `--include-dashboard`.
+要禁用仪表盘，适应以下参数 `--include-dashboard`。
 
 ::::{tab-set}
 
-:::{tab-item} Single-node local cluster
+:::{tab-item} 单节点本地集群
 
-**Start the cluster explicitly with CLI** <br/>
+**明确以 CLI 方式启动** <br/>
 
 ```bash
 ray start --include-dashboard=False
 ```
 
-**Start the cluster implicitly with `ray.init`** <br/>
+**明确以 `ray.init` 方式启动集群** <br/>
 
 ```{testcode}
 :hide:
@@ -163,26 +162,26 @@ ray.init(include_dashboard=False)
 
 :::
 
-:::{tab-item} VM Cluster Launcher
-Include the `ray start --head --include-dashboard=False` argument
-in the `head_start_ray_commands` section of the [Cluster Launcher's YAML file](https://github.com/ray-project/ray/blob/0574620d454952556fa1befc7694353d68c72049/python/ray/autoscaler/aws/example-full.yaml#L172).
+:::{tab-item} VM 集群启动器
+在 [集群启动器 YAML 文件](https://github.com/ray-project/ray/blob/0574620d454952556fa1befc7694353d68c72049/python/ray/autoscaler/aws/example-full.yaml#L172) 的 `head_start_ray_commands` 节点
+包含 `ray start --head --include-dashboard=False` 参数。
 :::
 
 :::{tab-item} KubeRay
 
 ```{admonition} Warning
 :class: warning
-It's not recommended to disable Dashboard because several KubeRay features like `RayJob` and `RayService` depend on it.
+不建议禁用 Dashboard，因为 KubeRay 的一些特性如 `RayJob` 和 `RayService` 依赖它。
 ```
 
-Set `spec.headGroupSpec.rayStartParams.include-dashboard` to `False`. Check out this [example YAML file](https://gist.github.com/kevin85421/0e6a8dd02c056704327d949b9ec96ef9).
+设置 `spec.headGroupSpec.rayStartParams.include-dashboard` 为 `False`。查看这个 [YAML 示例文件](https://gist.github.com/kevin85421/0e6a8dd02c056704327d949b9ec96ef9)。
 
 :::
 ::::
 
 
 (observability-visualization-setup)=
-## Embed Grafana visualizations into Ray Dashboard
+## 将 Grafana 可视化嵌入到 Ray 仪表盘
 
 For the enhanced Ray Dashboard experience, like {ref}`viewing time-series metrics<dash-metrics-view>` together with logs, Job info, etc., set up Prometheus and Grafana and integrate them with Ray Dashboard.
 

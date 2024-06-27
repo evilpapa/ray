@@ -3,7 +3,7 @@
 # 用户指引
 
 :::{note}
-了解 Kubernetes 上的 Ray 基础知识，推荐受限查看 {ref}`introductory guide <kuberay-quickstart>` 。
+了解 Kubernetes 上的 Ray 基础知识，推荐受限查看 {ref}`入门指南 <kuberay-quickstart>` 。
 :::
 
 * {ref}`kuberay-rayservice`

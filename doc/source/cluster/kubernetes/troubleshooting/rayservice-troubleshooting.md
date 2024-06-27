@@ -94,35 +94,34 @@ kubectl exec -it $HEAD_POD -- ray summary actors
 (kuberay-raysvc-issue2)=
 ### 问题 2: `serveConfigV2` 不正确
 
-For the sake of flexibility, we have set `serveConfigV2` as a YAML multi-line string in the RayService CR.
-This implies that there is no strict type checking for the Ray Serve configurations in `serveConfigV2` field.
-Some tips to help you debug the `serveConfigV2` field:
+为了灵活性，我们在 RayService CR 中设置 `serveConfigV2` 为多行 YAML 字符串。
+这意味着 Ray Serve 中的 `serveConfigV2` 字段配置没有严格的类型检查。
+以下是一些帮助您调试 `serveConfigV2` 字段的提示：
 
-* Check [the documentation](serve-api) for the schema about
-the Ray Serve Multi-application API `PUT "/api/serve/applications/"`.
-* Unlike `serveConfig`, `serveConfigV2` adheres to the snake case naming convention. For example, `numReplicas` is used in `serveConfig`, while `num_replicas` is used in `serveConfigV2`. 
+* 检查有关 Ray Serve 多应用程序 API 的架构 [文档](serve-api) 中的 `PUT "/api/serve/applications/"` 。
+* 与 `serveConfig` 不同，`serveConfigV2` 遵循蛇形命名约定。例如， `numReplicas` 用于 `serveConfig`，而 `num_replicas` 用于 `serveConfigV2`。 
 
 (kuberay-raysvc-issue3-1)=
-### 问题 3-1: The Ray image does not include the required dependencies.
+### 问题 3-1: Ray 镜像不包含所需的依赖项。
 
-You have two options to resolve this issue:
+您可以通过两种方式解决此问题：
 
-* Build your own Ray image with the required dependencies.
-* Specify the required dependencies via `runtime_env` in `serveConfigV2` field.
-  * For example, the MobileNet example requires `python-multipart`, which is not included in the Ray image `rayproject/ray-ml:2.5.0`.
-Therefore, the YAML file includes `python-multipart` in the runtime environment. For more details, refer to [the MobileNet example](kuberay-mobilenet-rayservice-example).
+* 使用所需的依赖项构建您自己的 Ray 镜像。
+* 通过在 `runtime_env` 的 `serveConfigV2` 字段指定所需的依赖。
+  * 例如，MobileNet 示例需要 `python-multipart`，而他没有包含在 `rayproject/ray-ml:2.5.0` 镜像中。
+因此，运行时环境 YAML 文件包含 `python-multipart` 。更多详情，参考 [MobileNet 示例](kuberay-mobilenet-rayservice-example)。
 
 (kuberay-raysvc-issue3-2)=
-### 问题 3-2: Examples for troubleshooting dependency issues.
+### 问题 3-2: 解决依赖性问题的示例。
 
-> Note: We highly recommend testing your Ray Serve script locally or in a RayCluster before deploying it to a RayService. This helps identify any dependency issues in the early stages. Refer to [rayserve-dev-doc.md](kuberay-dev-serve) for more details.
+> 注意: 我们强烈建议您在本地或 RayCluster 中测试您的 Ray Serve 脚本，然后再将其部署到 RayService。这有助于在早期阶段识别任何依赖关系问题。有关更多详细信息，请参阅 [rayserve-dev-doc.md](kuberay-dev-serve) 。
 
-In the [MobileNet example](kuberay-mobilenet-rayservice-example), the [mobilenet.py](https://github.com/ray-project/serve_config_examples/blob/master/mobilenet/mobilenet.py) consists of two functions: `__init__()` and `__call__()`.
-The function `__call__()` is only called when the Serve application receives a request.
+在 [MobileNet 示例](kuberay-mobilenet-rayservice-example)， [mobilenet.py](https://github.com/ray-project/serve_config_examples/blob/master/mobilenet/mobilenet.py) 由两个函数组成： `__init__()` 和 `__call__()`。
+`__call__()` 函数仅在 Serve 应用程序收到请求时被调用。
 
-* Example 1: Remove `python-multipart` from the runtime environment in [the MobileNet YAML](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml).
-  * The `python-multipart` library is only required for the `__call__` 方法. Therefore, we can only observe the dependency issue when we send a request to the application.
-  * Example error message:
+* 示例 1: 在运行时环境 [MobileNet YAML](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) 文件移除 `python-multipart`
+  * `python-multipart` 库只被 `__call__` 方法需要。因此，我们只能在向应用程序发送请求时才能观察到依赖关系问题。
+  * 错误消息示例：
     ```bash
     Unexpected error, traceback: ray::ServeReplica:mobilenet_ImageClassifier.handle_request() (pid=226, ip=10.244.0.9)
       .
@@ -135,9 +134,9 @@ The function `__call__()` is only called when the Serve application receives a r
     AssertionError: The `python-multipart` library must be installed to use form parsing..
     ```
 
-* Example 2: Update the image from `rayproject/ray-ml:2.5.0` to `rayproject/ray:2.5.0` in [the MobileNet YAML](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml). The latter image does not include `tensorflow`.
-  * The `tensorflow` library is imported in the [mobilenet.py](https://github.com/ray-project/serve_config_examples/blob/master/mobilenet/mobilenet.py).
-  * Example error message:
+* 示例 2: 在 [the MobileNet YAML](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) 更新 `rayproject/ray-ml:2.5.0` 为 `rayproject/ray:2.5.0`。 后者不包含 `tensorflow`。
+  * `tensorflow` 类库在 [mobilenet.py](https://github.com/ray-project/serve_config_examples/blob/master/mobilenet/mobilenet.py) 中引入。
+  * 错误消息示例：
     ```bash
     kubectl describe rayservices.ray.io rayservice-mobilenet
 
@@ -155,13 +154,13 @@ The function `__call__()` is only called when the Serve application receives a r
     ```
 
 (kuberay-raysvc-issue4)=
-### 问题 4: Incorrect `import_path`.
+### 问题 4: 不正确的 `import_path`.
 
-You can refer to [the documentation](https://docs.ray.io/en/latest/serve/api/doc/ray.serve.schema.ServeApplicationSchema.html#ray.serve.schema.ServeApplicationSchema.import_path) for more details about the format of `import_path`.
-Taking [the MobileNet YAML file](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) as an example,
-the `import_path` is `mobilenet.mobilenet:app`. The first `mobilenet` is the name of the directory in the `working_dir`,
-the second `mobilenet` is the name of the Python file in the directory `mobilenet/`,
-and `app` is the name of the variable representing Ray Serve application within the Python file.
+有关 `import_path` 格式的详细信息，参考 [本文档](https://docs.ray.io/en/latest/serve/api/doc/ray.serve.schema.ServeApplicationSchema.html#ray.serve.schema.ServeApplicationSchema.import_path)。
+拿 [MobileNet YAML 文件](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-service.mobilenet.yaml) 作为示例，
+`import_path` 为 `mobilenet.mobilenet:app`。第一个 `mobilenet` 是 `working_dir` 目录的名字，
+第二个 `mobilenet` 是目录 `mobilenet/` 中 Python 文件的名称， 
+`app` 是 Python 文件内代表 Ray Serve 应用程序的变量名称。
 
 ```yaml
   serveConfigV2: |
@@ -174,58 +173,58 @@ and `app` is the name of the variable representing Ray Serve application within 
 ```
 
 (kuberay-raysvc-issue5)=
-### 问题 5: Fail to create / update Serve applications.
+### 问题 5: 无法创建/更新服务应用程序。
 
-You may encounter the following error messages when KubeRay tries to create / update Serve applications:
+当 KubeRay 尝试创建/更新 Serve 应用程序时，您可能会遇到以下错误消息：
 
-#### Error message 1: `connect: connection refused`
+#### 错误消息 1: `connect: connection refused`
 
 ```
 Put "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:52365: connect: connection refused
 ```
 
-For RayService, the KubeRay operator submits a request to the RayCluster for creating Serve applications once the head Pod is ready.
-It's important to note that the Dashboard, Dashboard Agent and GCS may take a few seconds to start up after the head Pod is ready.
-As a result, the request may fail a few times initially before the necessary components are fully operational.
+对于 RayService，一旦头部 Pod 准备就绪，KubeRay 控制器就会向 RayCluster 提交创建 Serve 应用程序的请求。
+需要注意的是，在头部 Pod 准备就绪后，Dashboard、Dashboard Agent 和 GCS 可能需要几秒钟才能启动。
+因此，在必要组件完全运行之前，请求可能会最初失败几次。
 
-If you continue to encounter this issue after waiting for 1 minute, it's possible that the dashboard or dashboard agent may have failed to start.
-For more information, you can check the `dashboard.log` and `dashboard_agent.log` files located at `/tmp/ray/session_latest/logs/` on the head Pod.
+如果等待 1 分钟后仍遇到此问题，则可能是仪表板或仪表板代理启动失败。
+有关更多信息，您可以检查位于头部 Pod 上的位于 `/tmp/ray/session_latest/logs/` 路径的 `dashboard.log` 和 `dashboard_agent.log` 文件。
 
-#### Error message 2: `i/o timeout`
+#### 错误消息 2: `i/o timeout`
 
 ```
 Put "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:52365: i/o timeout"
 ```
 
-One possible cause of this issue could be a Kubernetes NetworkPolicy blocking the traffic between the Ray Pods and the dashboard agent's port (i.e., 52365).
+导致此问题的一个可能原因可能是 Kubernetes NetworkPolicy 阻止了 Ray Pods 和仪表板代理端口（即 52365）之间的流量。
 
 (kuberay-raysvc-issue6)=
 ### 问题 6: `runtime_env`
 
-In `serveConfigV2`, you can specify the runtime environment for the Ray Serve applications via `runtime_env`.
-Some common issues related to `runtime_env`:
+在 `serveConfigV2`，您可以通过 `runtime_env` 指定 Ray Serve 应用程序的运行时环境。
+以下内容与 `runtime_env` 相关的一些常见问题 :
 
-* The `working_dir` points to a private AWS S3 bucket, but the Ray Pods do not have the necessary permissions to access the bucket.
+* `working_dir` 指向私有 AWS S3 存储桶，但 Ray Pods 没有访问该存储桶所需的权限。
 
-* The NetworkPolicy blocks the traffic between the Ray Pods and the external URLs specified in `runtime_env`.
+* NetworkPolicy 阻止 Ray Pods 与 `runtime_env` 中指定的外部 URL 之间的流量。
 
 (kuberay-raysvc-issue7)=
-### 问题 7: Failed to get Serve application statuses.
+### 问题 7: 无法获取服务应用程序状态。
 
-You may encounter the following error message when KubeRay tries to get Serve application statuses:
+当 KubeRay 尝试获取 Serve 应用程序状态时，您可能会遇到以下错误消息：
 
 ```
 Get "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:52365: connect: connection refused"
 ```
 
-As mentioned in [Issue 5](#issue-5-fail-to-create--update-serve-applications), the KubeRay operator submits a `Put` request to the RayCluster for creating Serve applications once the head Pod is ready.
-After the successful submission of the `Put` request to the dashboard agent, a `Get` request is sent to the dashboard agent port (i.e., 52365). 
-The successful submission indicates that all the necessary components, including the dashboard agent, are fully operational. 
-Therefore, unlike Issue 5, the failure of the `Get` request is not expected.
+如 [Issue 5](#issue-5-fail-to-create--update-serve-applications) 提到，KubeRay 控制器当 head Pod 就绪时，提交一个 `Put` 请求到 RayCluster。
+在 `Put` 请求 dashboard agent 成功后，会向仪表盘代理端口（即 52365）发送请求。
+提交成功表明包括仪表盘代理在内的所有必要组件都已完全正常运行。
+因此，与问题 5 不同，`Get` 请求失败是意料之中的。
 
-If you consistently encounter this issue, there are several possible causes:
+如果您持续遇到此问题，则可能存在以下几种原因：
 
-* The dashboard agent process on the head Pod is not running. You can check the `dashboard_agent.log` file located at `/tmp/ray/session_latest/logs/` on the head Pod for more information. In addition, you can also perform an experiment to reproduce this cause by manually killing the dashboard agent process on the head Pod.
+* 头 Pod 上的仪表板代理进程未运行。您可以检查头 Pod 上位于 `/tmp/ray/session_latest/logs/` 目录的 `dashboard_agent.log` 获取更多信息。 此外，您还可以通过手动终止头 Pod 上的仪表板代理进程来执行实验以重现此原因。
   ```bash
   # Step 1: Log in to the head Pod
   kubectl exec -it $HEAD_POD -n $YOUR_NAMESPACE -- bash
@@ -256,24 +255,24 @@ If you consistently encounter this issue, there are several possible causes:
   ```
 
 (kuberay-raysvc-issue8)=
-### 问题 8: A loop of restarting the RayCluster occurs when the Kubernetes cluster runs out of resources. (KubeRay v0.6.1 or earlier)
+### 问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。（KubeRay v0.6.1 及以下版本）
 
-> Note: Currently, the KubeRay operator does not have a clear plan to handle situations where the Kubernetes cluster runs out of resources.
-Therefore, we recommend ensuring that the Kubernetes cluster has sufficient resources to accommodate the serve application.
+> 注意：目前 KubeRay 运营团队还没有明确的方案来应对 Kubernetes 集群资源耗尽的情况，
+因此，我们建议确保 Kubernetes 集群有足够的资源来承载服务应用。
 
-If the status of a serve application remains non-`RUNNING` for more than `serviceUnhealthySecondThreshold` seconds,
-the KubeRay operator will consider the RayCluster as unhealthy and initiate the preparation of a new RayCluster.
-A common cause of this issue is that the Kubernetes cluster does not have enough resources to accommodate the serve application.
-In such cases, the KubeRay operator may continue to restart the RayCluster, leading to a loop of restarts.
+如果服务应用程序的状态持续非 `RUNNING` 状态超过 `serviceUnhealthySecondThreshold` 秒，
+KubeRay operator 将认为 RayCluster 不健康并启动新的 RayCluster 的准备。
+此问题的一个常见原因是 Kubernetes 集群没有足够的资源来容纳服务应用程序。
+在这种情况下，KubeRay operator 可能会继续重启 RayCluster，从而导致重启循环。
 
-We can also perform an experiment to reproduce this situation:
+我们也可以做一个实验来重现这种情况：
 
-* A Kubernetes cluster with an 8-CPUs node
+* 具有 8 个 CPU 节点的 Kubernetes 集群
 * [ray-service.insufficient-resources.yaml](https://gist.github.com/kevin85421/6a7779308aa45b197db8015aca0c1faf)
   * RayCluster:
-    * The cluster has 1 head Pod with 4 physical CPUs, but `num-cpus` is set to 0 in `rayStartParams` to prevent any serve replicas from being scheduled on the head Pod.
-    * The cluster also has 1 worker Pod with 1 CPU by default.
-  * `serveConfigV2` specifies 5 serve deployments, each with 1 replica and a requirement of 1 CPU.
+    * 该集群有 1 个带有 4 个物理 CPU 的头部 Pod，但 `rayStartParams` 中 `num-cpus` 设置为 0 以防止在头部 Pod 上安排任何服务副本。
+    * 该集群还默认有 1 个工作 Pod，具有 1 个 CPU。
+  * `serveConfigV2` 指定 5 个服务部署，每个部署有 1 个副本并需要 1 个 CPU。
 
 ```bash
 # Step 1: Get the number of CPUs available on the node
@@ -312,11 +311,11 @@ kubectl logs $KUBERAY_OPERATOR_POD -n $YOUR_NAMESPACE | tee operator-log
 ```
 
 (kuberay-raysvc-issue9)=
-### Issue 9: Upgrade from Ray Serve's single-application API to its multi-application API without downtime
+### Issue 9: 无需停机即可从 Ray Serve 的单应用程序 API 升级到其多应用程序 API
 
-KubeRay v0.6.0 has begun supporting Ray Serve API V2 (multi-application) by exposing `serveConfigV2` in the RayService CRD.
-However, Ray Serve does not support deploying both API V1 and API V2 in the cluster simultaneously.
-Hence, if users want to perform in-place upgrades by replacing `serveConfig` with `serveConfigV2`, they may encounter the following error message:
+KubeRay v0.6.0 已开始通过在 RayService CRD 中  `serveConfigV2` 暴露的方式支持 Ray Serve API V2（多应用） 。
+但 Ray Serve 不支持在集群中同时部署 API V1 和 API V2。
+因此，如果用户想要通过替换 `serveConfig` 为 `serveConfigV2` 进行就地升级，可能会遇到以下错误信息：
 
 ```
 ray.serve.exceptions.RayServeException: You are trying to deploy a multi-application config, however a single-application 
@@ -326,9 +325,9 @@ multi-app config of format `ServeDeploySchema`. If you are using the REST API, y
 the multi-app API endpoint `/api/serve/applications/`.
 ```
 
-To resolve this issue, you can replace `serveConfig` with `serveConfigV2` and modify `rayVersion` which has no effect when the Ray version is 2.0.0 or later to 2.100.0.
-This will trigger a new RayCluster preparation instead of an in-place update.
+要解决此问题，您可以将 `serveConfig` 替换为 `serveConfigV2` 并修改 `rayVersion` ，当 Ray 版本为 2.0.0 或更高版本到 2.100.0 时，此修改无效。
+这将触发新的 RayCluster 准备，而不是就地更新。
 
-If, after following the steps above, you still see the error message and GCS fault tolerance is enabled, it may be due to the `ray.io/external-storage-namespace` annotatoin being the same for both old and new RayClusters.
-You can remove the annotation and KubeRay will automatically generate a unique key for each RayCluster custom resource.
-You can refer to [kuberay#1297](https://github.com/ray-project/kuberay/issues/1297) for more details.
+如果按照上述步骤操作后，仍然出现错误提示，且 GCS 容错功能已开启，则可能是由于新旧 RayClusters 的注解 `ray.io/external-storage-namespace` 相同导致的。
+您可以移除注解，KubeRay 会自动为每个 RayCluster 自定义资源生成一个唯一的 key。
+更多详情可参考 [kuberay#1297](https://github.com/ray-project/kuberay/issues/1297) 。

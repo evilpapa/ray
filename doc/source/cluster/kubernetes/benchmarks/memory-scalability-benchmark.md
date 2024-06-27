@@ -6,7 +6,7 @@
 
 ![benchmark architecture](../images/benchmark_architecture.png)
 
-这种架构不是一个好的实践，但它可以满足当前的需求。
+这种架构是不好的实践，但它可以满足当前的需求。
 
 ## 准备
 

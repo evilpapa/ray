@@ -1,27 +1,27 @@
 .. _cluster-FAQ:
 
 ===
-FAQ
+常问问题
 ===
 
-These are some Frequently Asked Questions that we've seen pop up for using Ray clusters.
-If you still have questions after reading this FAQ,  please reach out on
-`our Discourse <https://discuss.ray.io/>`__!
+这些是我们在使用 Ray 集群时遇到的一些常见问题。
+如果您在阅读此常见问题解答后仍有疑问，请联系
+`我们的 Discourse <https://discuss.ray.io/>`__！
 
-Do Ray clusters support multi-tenancy?
+Ray 集群是否支持多租户？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Yes, you can run multiple :ref:`jobs <jobs-overview>` from different users simultaneously in a Ray cluster
-but it's NOT recommended in production.
-The reason is that Ray currently still misses some features for multi-tenancy in production:
+是的，您可以在 Ray 集群中同时运行来自不同用户的多个 :ref:`jobs <jobs-overview>` ，
+但不建议在生产中这样做。
+原因是 Ray 目前仍然缺少生产中多租户的一些功能：
 
-* Ray doesn't provide strong resource isolation:
+* Ray 不提供强大的资源隔离：
   Ray :ref:`resources <core-resources>` are logical and they don't limit the physical resources a task or actor can use while running.
   This means simultaneous jobs can interfere with each other and makes them less reliable to run in production.
 
-* Ray doesn't support priorities: All jobs, tasks and actors have the same priority so there is no way to prioritize important jobs under load.
+* Ray 不支持优先级：所有作业、任务和 actor 都有相同的优先级，因此无法在负载下对重要作业进行优先排序。
 
-* Ray doesn't support access control: jobs have full access to a Ray cluster and all of the resources within it.
+* Ray 不支持访问控制：job 对 Ray 集群及其内的所有资源具有完全访问权。
 
 On the other hand, you can run the same job multiple times using the same cluster to save the cluster startup time.
 

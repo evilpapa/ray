@@ -134,7 +134,7 @@ result = ray.get(check_gcs_read_write.remote())
 print(result)
 ```
 
-You should see the following output:
+你能看到以下输出：
 
 ```text
 Hello, Ray on GKE!

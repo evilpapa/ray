@@ -3,8 +3,7 @@
 Ray Cluster 管理 API
 ==========================
 
-This section contains a reference for the cluster management API. If there is anything missing, please open an issue
-on `Github`_.
+本节包含集群管理 API 的参考。如果有任何遗漏，请在 `Github`_ 上开一个问题。
 
 .. _`GitHub`: https://github.com/ray-project/ray/issues
 

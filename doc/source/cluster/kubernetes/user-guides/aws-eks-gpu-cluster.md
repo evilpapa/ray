@@ -1,47 +1,46 @@
 (kuberay-eks-gpu-cluster-setup)=
 
-# Start Amazon EKS Cluster with GPUs for KubeRay
+# 为 KubeRay 启动带有 GPU 的 Amazon EKS 集群
 
-This guide walks you through the steps to create an Amazon EKS cluster with GPU nodes specifically for KubeRay.
-The configuration outlined here can be applied to most KubeRay examples found in the documentation.
+本指南将引导您完成专门为 KubeRay 创建具有 GPU 节点的 Amazon EKS 集群的步骤。
+此处概述的配置可应用于文档中的大多数 KubeRay 示例。
 
-## Step 1: Create a Kubernetes cluster on Amazon EKS
+## 步骤 1: 在 Amazon EKS 上创建 Kubernetes 集群
 
-Follow the first two steps in [this AWS documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#) to: 
-(1) create your Amazon EKS cluster and (2) configure your computer to communicate with your cluster.
+按照此 [AWS 文档](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#) 中的前两个步骤：
+(1) 创建您的 Amazon EKS 集群 和 (2) 配置您的计算机以与您的集群进行通信。
 
-## Step 2: Create node groups for the Amazon EKS cluster
+## 步骤 2: 为 Amazon EKS 集群创建节点组
 
-Follow "Step 3: Create nodes" in [this AWS documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#) to create node groups.
-The following section provides more detailed information.
+根据 [AWS 文档](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#) 按照 "步骤 3: 创建节点" 创建节点组。
+以下部分提供了更详细的信息。
 
-### Create a CPU node group
+### 创建 CPU 节点组
 
-Typically, avoid running GPU workloads on the Ray head. Create a CPU node group for all Pods except Ray GPU 
-workers, such as the KubeRay operator, Ray head, and CoreDNS Pods.
+通常，避免在 Ray head 上运行 GPU 工作负载。
+为除 Ray GPU 工作器之外的所有 Pod（例如 KubeRay 运算符、Ray head 和 CoreDNS Pod）创建 CPU 节点组。
 
-Here's a common configuration that works for most KubeRay examples in the docs:
-  * Instance type: [**m5.xlarge**](https://aws.amazon.com/ec2/instance-types/m5/) (4 vCPU; 16 GB RAM)
-  * Disk size: 256 GB
-  * Desired size: 1, Min size: 0, Max size: 1
+以下是适用于文档中大多数 KubeRay 示例的常用配置：
+  * 实例类型： [**m5.xlarge**](https://aws.amazon.com/ec2/instance-types/m5/) (4 vCPU; 16 GB RAM)
+  * 磁盘大小： 256 GB
+  * 所需尺寸：1，最小尺寸：0，最大尺寸：1
 
-### Create a GPU node group
+### 创建 GPU 节点组
 
-Create a GPU node group for Ray GPU workers.
+为 Ray GPU 工作者创建一个 GPU 节点组。
 
-1. Here's a common configuration that works for most KubeRay examples in the docs:
-   * AMI type: Bottlerocket NVIDIA (BOTTLEROCKET_x86_64_NVIDIA)
-   * Instance type: [**g5.xlarge**](https://aws.amazon.com/ec2/instance-types/g5/) (1 GPU; 24 GB GPU Memory; 4 vCPUs; 16 GB RAM)
-   * Disk size: 1024 GB
-   * Desired size: 1, Min size: 0, Max size: 1
+1. 以下是适用于文档中大多数 KubeRay 示例的常用配置：
+   * AMI 类型：Bottlerocket NVIDIA (BOTTLEROCKET_x86_64_NVIDIA)
+   * 实例类型： [**g5.xlarge**](https://aws.amazon.com/ec2/instance-types/g5/) （1 GPU；24 GB GPU 内存；4 vCPU；16 GB RAM）
+   * 磁盘大小：1024 GB
+   * 所需尺寸：1，最小尺寸：0，最大尺寸：1
 
-> **Note:** If you encounter permission issues with `kubectl`, follow "Step 2: Configure your computer to communicate with your cluster"
-in the [AWS documentation](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#).
+> **注意:** 如果您遇到 `kubectl` 权限问题，请参考 [AWS 文档](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#) 按照 "步骤 2: 配置您的计算机以与您的集群通信" 进行操作
 
-2. Please install the NVIDIA device plugin. (Note: You can skip this step if you used the `BOTTLEROCKET_x86_64_NVIDIA` AMI in the step above.)
-   * Install the DaemonSet for NVIDIA device plugin to run GPU enabled containers in your Amazon EKS cluster. You can refer to the [Amazon EKS optimized accelerated Amazon Linux AMIs](https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html#gpu-ami)
-   or [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) repository for more details.
-   * If the GPU nodes have taints, add `tolerations` to `nvidia-device-plugin.yml` to enable the DaemonSet to schedule Pods on the GPU nodes.
+2. 请安装 NVIDIA 设备插件。 （注意：如果您在上面的步骤中使用了 `BOTTLEROCKET_x86_64_NVIDIA` AMI。）
+   * 安装 DaemonSet for NVIDIA 设备插件以在 Amazon EKS 集群中运行支持 GPU 的容器。你可参考 [Amazon EKS 优化的加速 Amazon Linux AMIs](https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html#gpu-ami)
+   或 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) 了解更多详细信息。
+   * 如果 GPU 节点有污点，则添加 `tolerations` 到 `nvidia-device-plugin.yml` 启用 DaemonSet 在 GPU 节点上调度 Pod。
 
 ```sh
 # Install the DaemonSet
@@ -57,15 +56,15 @@ kubectl get nodes "-o=custom-columns=NAME:.metadata.name,GPU:.status.allocatable
 # ip-....us-west-2.compute.internal   <none>
 ```
 
-3. Add a Kubernetes taint to prevent scheduling CPU Pods on this GPU node group. For KubeRay examples, add the following taint to the GPU nodes: `Key: ray.io/node-type, Value: worker, Effect: NoSchedule`, and include the corresponding `tolerations` for GPU Ray worker Pods.
+3. 添加 Kubernetes 污点以防止在此 GPU 节点组上调度 CPU Pod。对于 KubeRay 示例，将以下污点添加到 GPU 节点： `Key: ray.io/node-type, Value: worker, Effect: NoSchedule`，并包含与 GPU Ray 工作 Pod 对应的污点 `tolerations`。
 
-> Warning: GPU nodes are extremely expensive. Please remember to delete the cluster if you no longer need it.
+> 警告：GPU 节点非常昂贵。如果您不再需要该集群，请记得将其删除。
 
-## Step 3: Verify the node groups
+## 步骤 3: 验证节点组
 
-> **Note:** If you encounter permission issues with `eksctl`, navigate to your AWS account's webpage and copy the
-credential environment variables, including `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN`,
-from the "Command line or programmatic access" page.
+> **注意:** 如果您遇到  `eksctl` 权限问题，请导航至您的 AWS 账户的网页
+并从“命令行或编程访问” 页面复制
+凭证环境变量，包括 `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` 和 `AWS_SESSION_TOKEN`,
 
 ```sh
 eksctl get nodegroup --cluster ${YOUR_EKS_NAME}

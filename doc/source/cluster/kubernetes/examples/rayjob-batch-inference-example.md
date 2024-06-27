@@ -1,21 +1,21 @@
 (kuberay-batch-inference-example)=
 
-# RayJob Batch Inference Example
+# RayJob 批量推理示例
 
-This example demonstrates how to use the RayJob custom resource to run a batch inference job on a Ray cluster.
+此示例演示如何使用 RayJob 自定义资源在 Ray 集群上运行批量推理作业。
 
-This example uses an image classification workload, which is based on <https://docs.ray.io/en/latest/data/examples/huggingface_vit_batch_prediction.html>. See that page for a full explanation of the code.
+此示例使用图像分类工作负载，该工作负载基于 <https://docs.ray.io/en/latest/data/examples/huggingface_vit_batch_prediction.html>。请参阅该页面以获取代码的完整说明。
 
-## Prerequisites
+## 先决条件
 
-You must have a Kubernetes cluster running,`kubectl` configured to use it, and GPUs available. This example provides a brief tutorial for setting up the necessary GPUs on Google Kubernetes Engine (GKE), but you can use any Kubernetes cluster with GPUs.
+您必须拥有一个正在运行的 Kubernetes 集群，并配置 `kubectl` 以使用它，并且有可用的 GPU。此示例提供了在 Google Kubernetes Engine (GKE) 上设置必要 GPU 的简短教程，但您可以使用任何带有 GPU 的 Kubernetes 集群。
 
-## Step 0: Create a Kubernetes cluster on GKE (Optional)
+## 步骤 0: 在 GKE 上创建 Kubernetes 集群（可选）
 
-If you already have a Kubernetes cluster with GPUs, you can skip this step.
+如果您已经拥有带有 GPU 的 Kubernetes 集群，则可以跳过此步骤。
 
 
-Otherwise, follow [this tutorial](kuberay-gke-gpu-cluster-setup), but substitute the following GPU node pool creation command to create a Kubernetes cluster on GKE with four Nvidia T4 GPUs:
+否则，请按照 [本教程](kuberay-gke-gpu-cluster-setup)，但替换以下 GPU 节点池创建命令，以在 GKE 上创建具有四个 Nvidia T4 GPU 的 Kubernetes 集群：
 
 ```sh
 gcloud container node-pools create gpu-node-pool \
@@ -29,27 +29,27 @@ gcloud container node-pools create gpu-node-pool \
   --machine-type n1-standard-64
 ```
 
-This example uses four [Nvidia T4](https://cloud.google.com/compute/docs/gpus#nvidia_t4_gpus) GPUs. The machine type is `n1-standard-64`, which has [64 vCPUs and 240 GB RAM](https://cloud.google.com/compute/docs/general-purpose-machines#n1_machine_types).
+本示例使用四个 [Nvidia T4](https://cloud.google.com/compute/docs/gpus#nvidia_t4_gpus) GPU。机器类型为 `n1-standard-64`，具有 [64 vCPUs 和 240 GB 内存](https://cloud.google.com/compute/docs/general-purpose-machines#n1_machine_types)。
 
-## Step 1: Install the KubeRay Operator
+## 步骤 1: 安装 KubeRay Operator
 
-Follow [this document](kuberay-operator-deploy) to install the latest stable KubeRay operator from the Helm repository.
+按照 [本文档](kuberay-operator-deploy) 从 Helm 存储库安装最新的稳定 KubeRay 控制器。
 
-It should be scheduled on the CPU pod.
+它应该在 CPU pod 上进行调度。
 
-## Step 2: Submit the RayJob
+## 步骤 2: 提交 RayJob
 
-Create the RayJob custom resource. The RayJob spec is defined in [ray-job.batch-inference.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-job.batch-inference.yaml).
+创建 RayJob 自定义资源。 RayJob 规范定义在 [ray-job.batch-inference.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-job.batch-inference.yaml)。
 
-Download the file with `curl`:
+使用 `curl` 下载文件：
 
 ```bash
 curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-operator/config/samples/ray-job.batch-inference.yaml
 ```
 
-Note that the `RayJob` spec contains a spec for the `RayCluster` that is to be created for the job. For this tutorial, we use a single-node cluster with 4 GPUs.  For production use cases, we recommend using a multi-node cluster where the head node does not have GPUs, so that Ray can automatically schedule GPU workloads on worker nodes and they won't interfere with critical Ray processes on the head node.
+请注意，该 `RayJob` 包含了创建 job 的 `RayCluster` 定义。在本教程中，我们使用具有 4 个 GPU 的单节点集群。对于生产用例，我们建议使用头节点没有 GPU 的多节点集群，以便 Ray 可以自动在工作节点上安排 GPU 工作负载，并且它们不会干扰头节点上的关键 Ray 进程。
 
-Note the following fields in the `RayJob` spec, which specify the Ray image and the GPU resources for the Ray node:
+请注意 `RayJob` 规范中的以下字段，它们指定了 Ray 镜像和 Ray 节点的 GPU 资源：
 
 ```yaml
         spec:
@@ -72,15 +72,15 @@ Note the following fields in the `RayJob` spec, which specify the Ray image and 
             cloud.google.com/gke-accelerator: nvidia-tesla-t4 # This is the GPU type we used in the GPU node pool.
 ```
 
-To submit the job, run the following command:
+要提交作业，请运行以下命令：
 
 ```bash
 kubectl apply -f ray-job.batch-inference.yaml
 ```
 
-Check the status with `kubectl describe rayjob rayjob-sample`.
+使用 `kubectl describe rayjob rayjob-sample` 检查状态。
 
-Sample output:
+示例输出：
 
 ```
 [...]
@@ -113,9 +113,9 @@ Events:
   Normal  Created  32m   rayjob-controller  Created k8s job rayjob-sample
 ```
 
-To view the logs, first find the name of the pod running the job with `kubectl get pods`.
+要查看日志，首先使用 `kubectl get pods` 找到运行作业的 pod 的名称。
 
-Sample output:
+示例输出：
 
 ```bash
 NAME                                        READY   STATUS      RESTARTS   AGE
@@ -124,15 +124,15 @@ rayjob-sample-raycluster-j6t8n-head-kx2gz   1/1     Running     0          35m
 rayjob-sample-w98c7                         0/1     Completed   0          30m
 ```
 
-The Ray cluster is still running because `shutdownAfterJobFinishes` is not set in the `RayJob` spec. If you set `shutdownAfterJobFinishes` to `true`, the cluster is shut down after the job finishes.
+ay 集群仍在运行，因为 `RayJob` 规范中未设置 `shutdownAfterJobFinishes` 。如果 `shutdownAfterJobFinishes` 设置为 `true`，则作业完成后集群将关闭。
 
-Next, run:
+接下来运行：
 
 ```text
 kubetcl logs rayjob-sample-w98c7
 ```
 
-to get the standard output of the `entrypoint` command for the `RayJob`.  Sample output:
+获取 `RayJob` 中 `entrypoint` 命令的标准输出。示例输出：
 
 ```text
 [...]

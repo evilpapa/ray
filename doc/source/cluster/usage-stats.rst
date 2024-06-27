@@ -3,33 +3,33 @@
 使用统计收集
 ======================
 
-Starting in Ray 1.13, Ray collects usage stats data by default (guarded by an opt-out prompt).
-This data will be used by the open-source Ray engineering team to better understand how to improve our libraries and core APIs, and how to prioritize bug fixes and enhancements.
+从 Ray 1.13 开始，Ray 默认收集使用统计数据（由选择退出提示保护）。
+开源 Ray 工程团队将使用这些数据来更好地了解如何改进我们的库和核心 API，以及如何确定错误修复和增强功能的优先级。
 
-Here are the guiding principles of our collection policy:
+以下是我们收集政策的指导原则：
 
-- **No surprises** — you will be notified before we begin collecting data. You will be notified of any changes to the data being collected or how it is used.
-- **Easy opt-out:** You will be able to easily opt-out of data collection
-- **Transparency** — you will be able to review all data that is sent to us
-- **Control** — you will have control over your data, and we will honor requests to delete your data.
-- We will **not** collect any personally identifiable data or proprietary code/data
-- We will **not** sell data or buy data about you.
+- **不会有意外** — 我们开始收集数据之前会通知您。如果收集的数据或数据使用方式有任何变化，您都会收到通知。
+- **轻松选择退出:** 您可以轻松选择退出数据收集
+- **透明度** — 您将能够查看发送给我们的所有数据
+- **控制** — 您将控制您的数据，并且我们将尊重您删除数据的请求。
+- 我们 **不会** 收集任何个人身份信息或专有代码/数据
+- 我们 **不会** 出售或购买您的数据。
 
-You will always be able to :ref:`disable the usage stats collection <usage-disable>`.
+您将始终能够 :ref:`禁用使用情况统计信息收集 <usage-disable>`。
 
-For more context, please refer to this `RFC <https://github.com/ray-project/ray/issues/20857>`_.
+有关更多背景信息，请参阅此 `RFC <https://github.com/ray-project/ray/issues/20857>`_ 。
 
-What data is collected?
+收集哪些数据？
 -----------------------
 
-We collect non-sensitive data that helps us understand how Ray is used (e.g., which Ray libraries are used).
-**Personally identifiable data will never be collected.** Please check the UsageStatsToReport class to see the data we collect.
+我们收集非敏感数据，以帮助我们了解 Ray 的使用方式（例如，使用了哪些 Ray 库）。
+**个人身份数据绝不会收集。** 请查看 UsageStatsToReport 类以查看我们收集的数据。
 
 .. _usage-disable:
 
-How to disable it
+如何禁用
 -----------------
-There are multiple ways to disable usage stats collection before starting a cluster:
+在启动集群之前，有多种方法可以禁用使用情况统计信息收集：
 
 #. Add ``--disable-usage-stats`` option to the command that starts the Ray cluster (e.g., ``ray start --head --disable-usage-stats`` :ref:`command <ray-start-doc>`).
 
@@ -42,7 +42,7 @@ There are multiple ways to disable usage stats collection before starting a clus
 Currently there is no way to enable or disable collection for a running cluster; you have to stop and restart the cluster.
 
 
-How does it work?
+它是如何工作的？
 -----------------
 
 When a Ray cluster is started via :ref:`ray start --head <ray-start-doc>`, :ref:`ray up <ray-up-doc>`, :ref:`ray submit --start <ray-submit-doc>` or :ref:`ray exec --start <ray-exec-doc>`,
@@ -62,12 +62,12 @@ and report to ``https://usage-stats.ray.io/`` every hour. The reported usage sta
 
 Usage stats collection is very lightweight and should have no impact on your workload in any way.
 
-Requesting removal of collected data
+请求删除收集的数据
 ------------------------------------
 
 To request removal of collected data, please email us at ``usage_stats@ray.io`` with the ``session_id`` that you can find in ``/tmp/ray/session_xxx/usage_stats.json``.
 
-Frequently Asked Questions (FAQ)
+常见问题 (FAQ)
 --------------------------------
 
 **Does the session_id map to personal data?**
@@ -81,6 +81,6 @@ The session_id is logged so that deletion requests can be honored.
 We definitely see this use case and would love to chat with you to make this work -- email ``usage_stats@ray.io``.
 
 
-Contact us
+联系我们
 ----------
-If you have any feedback regarding usage stats collection, please email us at ``usage_stats@ray.io``.
+如果您对使用情况统计收集有任何反馈，请发送电子邮件至 ``usage_stats@ray.io``。
