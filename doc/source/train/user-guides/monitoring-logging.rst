@@ -1,22 +1,20 @@
 .. _train-monitoring-and-logging:
 
-Monitoring and Logging Metrics
+监控和记录指标
 ==============================
 
-Ray Train provides an API for reporting intermediate
-results and checkpoints from the training function (run on distributed workers) up to the
-``Trainer`` (where your python script is executed) by calling ``train.report(metrics)``.
-The results will be collected from the distributed workers and passed to the driver to
-be logged and displayed.
+Ray Train 提供了一个 API，用于通过
+调用 ``train.report(metrics)`` 从分布式工作节点上的训练函数（运行）
+到 ``Trainer``（执行您的 python 脚本）报告中间结果和检查点。
+结果将从分布式 worker 收集并传递给驱动程序进行记录和显示。
 
 .. warning::
 
-    Only the results from rank 0 worker will be used. However, in order to ensure
-    consistency, ``train.report()`` has to be called on each worker. If you
-    want to aggregate results from multiple workers, see :ref:`train-aggregating-results`.
+    仅使用来自等级 0 的 worker 的结果。但是，为了确保一致性，
+    必须在每个 worker 上调用 ``train.report()``。
+    如果要聚合来自多个 worker 的结果，请参见 :ref:`train-aggregating-results`。
 
-The primary use-case for reporting is for metrics (accuracy, loss, etc.) at
-the end of each training epoch.
+报告的主要用例是每个训练阶段结束时的指标（准确性、损失等）。
 
 .. tab-set::
 
@@ -34,7 +32,7 @@ the end of each training epoch.
 
     .. tab-item:: PyTorch Lightning
 
-        In PyTorch Lightning, we use a callback to call ``train.report()``.
+        在 PyTorch Lightning，我们使用回调调用 ``train.report()``。
 
         .. code-block:: python
 
@@ -59,22 +57,22 @@ the end of each training epoch.
 
 .. _train-aggregating-results:
 
-How to obtain and aggregate results from different workers?
+如何获取并汇总来自不同 worker 的结果？
 -----------------------------------------------------------
 
-In real applications, you may want to calculate optimization metrics besides accuracy and loss: recall, precision, Fbeta, etc.
-You may also want to collect metrics from multiple workers. While Ray Train currently only reports metrics from the rank 0
-worker, you can use third-party libraries or distributed primitives of your machine learning framework to report
-metrics from multiple workers.
+实际应用中，您可能希望计算除准确性和损失之外的优化指标：召回率、精确度、Fbeta 等。
+你可能还想从多个 worker 收集指标。
+虽然 Ray Train 目前仅从等级 0 的 worker 报告指标，
+但您可以使用第三方库或机器学习框架的分布式原语来报告来自多个 worker 的指标。
 
 
 .. tab-set::
 
     .. tab-item:: Native PyTorch
 
-        Ray Train natively supports `TorchMetrics <https://torchmetrics.readthedocs.io/en/latest/>`_, which provides a collection of machine learning metrics for distributed, scalable PyTorch models.
+        Ray Train 原生支持 `TorchMetrics <https://torchmetrics.readthedocs.io/en/latest/>`_，它为分布式、可扩展的 PyTorch 模型提供了一组机器学习指标。
 
-        Here is an example of reporting both the aggregated R2 score and mean train and validation loss from all workers.
+        下面是报告所有 worker 的汇总 R2 分数和平均训练和验证损失的示例。
 
         .. literalinclude:: ../doc_code/torchmetrics_example.py
             :language: python

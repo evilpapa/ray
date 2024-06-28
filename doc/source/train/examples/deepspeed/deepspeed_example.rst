@@ -2,23 +2,23 @@
 
 .. _deepspeed_example:
 
-Train with DeepSpeed ZeRO-3 and Ray Train
+使用 DeepSpeed ZeRO-3 和 Ray Train 进行训练
 =========================================
 
-This is an intermediate example that shows how to do distributed training with DeepSpeed ZeRO-3 and Ray Train.
-It demonstrates how to use :ref:`Ray Data <data>` with DeepSpeed ZeRO-3 and Ray Train.
-If you just want to quickly convert your existing TorchTrainer scripts into Ray Train, you can refer to the :ref:`Train with DeepSpeed <train-deepspeed>`.
+这是一个中间示例，展示了如何使用 DeepSpeed ZeRO-3 和 Ray Train 进行分布式训练。
+它演示了如何将 :ref:`Ray Data <data>` 与 DeepSpeed ZeRO-3 和 Ray Train 结合使用。
+如果您只是想快速将现有的 TorchTrainer 脚本转换为 Ray Train，可以参考 :ref:`使用 DeepSpeed 进行训练 <train-deepspeed>`。
 
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: /../../python/ray/train/examples/deepspeed/deepspeed_torch_trainer.py
 
 
-See also
+同样看看
 --------
 
-* :ref:`Ray Train Examples <train-examples>` for more use cases.
+* 更多 :ref:`Ray Train 示例 <train-examples>`
 
-* :ref:`Get Started with DeepSpeed <train-deepspeed>` for a tutorial.    
+* :ref:`开始使用 DeepSpeed <train-deepspeed>` 的教程。

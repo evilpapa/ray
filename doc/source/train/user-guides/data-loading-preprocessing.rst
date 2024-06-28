@@ -1,12 +1,12 @@
 .. _data-ingest-torch:
 
-Data Loading and Preprocessing
+数据加载和预处理
 ==============================
 
-Ray Train integrates with :ref:`Ray Data <data>` to offer an efficient, streaming solution for loading and preprocessing large datasets. 
-We recommend using Ray Data for its ability to performantly support large-scale distributed training workloads - for advantages and comparisons to alternatives, see :ref:`Ray Data Overview <data_overview>`.
+Ray Train 与 :ref:`Ray Data <data>` 集成，为加载和预处理大型数据集提供高效的流式解决方案。
+们推荐使用 Ray Data，因为它能够支持大规模分布式训练工作负载，具有高效的性能 - 有关优势和与其他替代方案的比较，请参见 :ref:`Ray Data 概述 <data_overview>`。
 
-In this guide, we will cover how to incorporate Ray Data into your Ray Train script, and different ways to customize your data ingestion pipeline.
+本指引中，我们将介绍如何将 Ray Data 集成到 Ray Train 脚本中，以及不同的方式来定制数据摄入管道。
 
 .. TODO: Replace this image with a better one.
 
@@ -14,20 +14,21 @@ In this guide, we will cover how to incorporate Ray Data into your Ray Train scr
     :align: center
     :width: 300px
 
-Quickstart
+快速开始
 ----------
-Install Ray Data and Ray Train:
+安装 Ray Data 和 Ray Train：
 
 .. code-block:: bash
 
     pip install -U "ray[data,train]"
 
-Data ingestion can be set up with four basic steps:
+Data ingestion can be set up with four basic steps: 
+数据提取可以通过以下四个基本步骤设置：
 
-1. Create a Ray Dataset.
-2. Preprocess your Ray Dataset.
-3. Input the preprocessed Dataset into the Ray Train Trainer.
-4. Consume the Ray Dataset in your training function.
+1. 创建一个 Ray 数据集。
+2. 预处理 Ray 数据集。
+3. 将预处理后的数据集输入到 Ray Train Trainer 中。
+4. 在训练函数中使用 Ray 数据集。
 
 .. tabs::
 
@@ -183,71 +184,71 @@ Data ingestion can be set up with four basic steps:
 
 .. _train-datasets-load:
 
-Loading data
+加载数据
 ~~~~~~~~~~~~
 
-Ray Datasets can be created from many different data sources and formats. For more details, see :ref:`Loading Data <loading_data>`.
+Ray 数据集可以从许多不同的数据源和格式中创建。有关更多详细信息，请参见 :ref:`Loading Data <loading_data>`。
 
 .. _train-datasets-preprocess:
 
-Preprocessing data
+预处理数据
 ~~~~~~~~~~~~~~~~~~
 
-Ray Data support a wide range of preprocessing operations that can be used to transform your data prior to training.
+Ray 数据支持广泛的预处理操作，可用于在训练之前转换数据。
 
-- For general preprocessing, see :ref:`Transforming Data <transforming_data>`.
-- For tabular data, see :ref:`Preprocessing Structured Data <preprocessing_structured_data>`.
-- For PyTorch tensors, see :ref:`Transformations with torch tensors <transform_pytorch>`.
-- For optimizing expensive preprocessing operations, see :ref:`Caching the preprocessed dataset <dataset_cache_performance>`.
+- 对于常规预处理，请参阅 :ref:`转换数据 <transforming_data>`.
+- 对于表格数据，请参见 :ref:`结构化数据预处理 <preprocessing_structured_data>`。
+- 对于 PyTorch 张量，请参见 :ref:`使用 torch 张量进行转换 <transform_pytorch>`。
+- 对于优化昂贵的预处理操作，请参见 :ref:`缓存预处理数据集 <dataset_cache_performance>`。
 
 .. _train-datasets-input:
 
-Inputting and splitting data
+输入及分割数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Your preprocessed datasets can be passed into a Ray Train Trainer (e.g. :class:`~ray.train.torch.TorchTrainer`) through the ``datasets`` argument.
+你的预处理数据集可以通过 ``datasets`` 参数传递给 Ray Train Trainer（例如：:class:`~ray.train.torch.TorchTrainer`）。
 
-The datasets passed into the Trainer's ``datasets`` can be accessed inside of the ``train_loop_per_worker`` run on each distributed training worker by calling :meth:`ray.train.get_dataset_shard`. 
+传入 Trainer ``datasets`` 的数据集可以通过在每个分布式训练工作节点上运行的 ``train_loop_per_worker`` 中调用 :meth:`ray.train.get_dataset_shard` 来访问。
 
-All datasets are split (i.e. sharded) across the training workers by default. :meth:`~ray.train.get_dataset_shard` will return ``1/n`` of the dataset, where ``n`` is the number of training workers.
+所有数据集默认都会被分割（即分片）到训练工作节点上。 :meth:`~ray.train.get_dataset_shard` 将返回数据集的 ``1/n`` 部分，其中 ``n`` 是训练工作节点的数量。
 
 .. note::
 
-    Please be aware that as the evaluation dataset is split, users have to aggregate the evaluation results across workers. 
-    You might consider using `TorchMetrics <https://torchmetrics.readthedocs.io/en/latest/>`_ (:ref:`example <deepspeed_example>`) or 
-    utilities available in other frameworks that you can explore.
+    请注意，由于评估数据集被分割，用户必须在工作节点上聚合评估结果。
+    你可以考虑使用 `TorchMetrics <https://torchmetrics.readthedocs.io/en/latest/>`_ (:ref:`example <deepspeed_example>`) 或
+    其他框架中提供的实用工具。
 
-This behavior can be overwritten by passing in the ``dataset_config`` argument. For more information on configuring splitting logic, see :ref:`Splitting datasets <train-datasets-split>`.
+可通过传递 ``dataset_config`` 参数来覆盖此行为。有关配置拆分逻辑的更多信息，请参见 :ref:`Splitting datasets <train-datasets-split>`。
 
 .. _train-datasets-consume:
 
-Consuming data
+消费数据
 ~~~~~~~~~~~~~~
 
-Inside the ``train_loop_per_worker``, each worker can access its shard of the dataset via :meth:`ray.train.get_dataset_shard`.
+在 ``train_loop_per_worker`` 中，每个工作节点都可以通过 :meth:`ray.train.get_dataset_shard` 访问其数据集的分片。
 
-This data can be consumed in a variety of ways:
+这些数据可以通过多种方式使用：
 
-- To create a generic Iterable of batches, you can call :meth:`~ray.data.DataIterator.iter_batches`.
-- To create a replacement for a PyTorch DataLoader, you can call :meth:`~ray.data.DataIterator.iter_torch_batches`.
+- 要创建批量的 Iterable，可以调用 :meth:`~ray.data.DataIterator.iter_batches`。
+- 要创建一个 PyTorch DataLoader 的替代品，可以调用 :meth:`~ray.data.DataIterator.iter_torch_batches`。
 
-For more details on how to iterate over your data, see :ref:`Iterating over data <iterating-over-data>`.
+更多如何迭代数据的详细信息，请参见 :ref:`Iterating over data <iterating-over-data>`。
 
 .. _train-datasets-pytorch:
 
-Starting with PyTorch data
+从 PyTorch 数据开始
 --------------------------
 
-Some frameworks provide their own dataset and data loading utilities. For example:
+一些框架提供了自己的数据集和数据加载工具。例如：
 
 - **PyTorch:** `Dataset & DataLoader <https://pytorch.org/tutorials/beginner/basics/data_tutorial.html>`_
 - **Hugging Face:** `Dataset <https://huggingface.co/docs/datasets/index>`_
 - **PyTorch Lightning:** `LightningDataModule <https://lightning.ai/docs/pytorch/stable/data/datamodule.html>`_
 
-These utilities can still be used directly with Ray Train. In particular, you may want to do this if you already have your data ingestion pipeline set up.
-However, for more performant large-scale data ingestion we do recommend migrating to Ray Data.
+这些实用程序仍可直接与 Ray Train 一起使用。特别是，如果您已经设置了数据提取管道，则可能需要这样做。
+但是，为了实现更高性能的大规模数据提取，我们建议迁移到 Ray Data。
 
-At a high level, you can compare these concepts as follows:
+从高层次来看，您可以按如下方式比较这些概念：
 
 .. list-table::
    :header-rows: 1
@@ -263,49 +264,48 @@ At a high level, you can compare these concepts as follows:
      - :meth:`ray.data.Dataset.iter_torch_batches`
 
 
-For more details, see the following sections for each framework.
+有关更多详细信息，请参阅以下每个框架的部分。
 
 .. tabs::
 
-    .. tab:: PyTorch Dataset and DataLoader
+    .. tab:: PyTorch Dataset 和 DataLoader
 
-        **Option 1 (with Ray Data):** Convert your PyTorch Dataset to a Ray Dataset and pass it into the Trainer via  ``datasets`` argument.
-        Inside your ``train_loop_per_worker``, you can access the dataset via :meth:`ray.train.get_dataset_shard`. 
-        You can convert this to replace the PyTorch DataLoader via :meth:`ray.data.DataIterator.iter_torch_batches`.
-         
-        For more details, see the :ref:`Migrating from PyTorch Datasets and DataLoaders <migrate_pytorch>`.
+        **选项 1 (使用 Ray Data):** 将 PyTorch Dataset 转换为 Ray Dataset 并通过 ``datasets`` 参数传递给 Trainer。在 ``train_loop_per_worker`` 中，
+        您可以通过 :meth:`ray.train.get_dataset_shard` 访问数据集。
+        您可以通过 :meth:`ray.data.DataIterator.iter_torch_batches` 将其转换为替换 PyTorch DataLoader。
 
-        **Option 2 (without Ray Data):** Instantiate the Torch Dataset and DataLoader directly in the ``train_loop_per_worker``.
-        You can use the :meth:`ray.train.torch.prepare_data_loader` utility to set up the DataLoader for distributed training.
+        更多详细信息，请参见 :ref:`从 PyTorch 数据集和 DataLoader 迁移 <migrate_pytorch>`。
+
+        **选项 2 (不用 Ray Data):** 直接在 ``train_loop_per_worker`` 中实例化 Torch Dataset 和 DataLoader。
+        你可以使用 :meth:`ray.train.torch.prepare_data_loader` 实用工具来设置 DataLoader 以进行分布式训练。
     
     .. tab:: LightningDataModule
 
-        The ``LightningDataModule`` is created with PyTorch ``Dataset``\s and ``DataLoader``\s. You can apply the same logic here.
+        ``LightningDataModule`` 是使用 PyTorch ``Dataset`` 和 ``DataLoader`` 创建的。您可以在这里应用相同的逻辑。
 
     .. tab:: Hugging Face Dataset
 
-        **Option 1 (with Ray Data):** Convert your Hugging Face Dataset to a Ray Dataset and pass it into the Trainer via the ``datasets`` argument.
-        Inside your ``train_loop_per_worker``, you can access the dataset via :meth:`ray.train.get_dataset_shard`. 
+        **选项 1 (使用 Ray Data):** 转换你的 Hugging Face Dataset 为 Ray Dataset 并通过 ``datasets`` 参数传递给 Trainer。
+        在 ``train_loop_per_worker`` 中，你可以通过 :meth:`ray.train.get_dataset_shard` 访问数据集。
 
         For instructions, see :ref:`Ray Data for Hugging Face <loading_datasets_from_ml_libraries>`.
 
-        **Option 2 (without Ray Data):** Instantiate the Hugging Face Dataset directly in the ``train_loop_per_worker``.
+        **选项 2 (不用 Ray Data):** 直接在 ``train_loop_per_worker`` 中实例化 Hugging Face Dataset。
 
     .. tip:: 
 
-        When using Torch or Hugging Face Datasets directly without Ray Data, make sure to instantiate your Dataset *inside* the ``train_loop_per_worker``. 
-        Instatiating the Dataset outside of the ``train_loop_per_worker`` and passing it in via global scope
-        can cause errors due to the Dataset not being serializable.
+        当直接使用 Torch 或 Hugging Face 数据集而不使用 Ray Data 时，请确保在 ``train_loop_per_worker`` 中实例化您的数据集。
+        在 ``train_loop_per_worker`` 之外实例化数据集并通过全局范围传递可能会导致错误，因为数据集不可序列化。
 
 .. _train-datasets-split:
 
-Splitting datasets
+分割数据集
 ------------------
-By default, Ray Train splits all datasets across workers using :meth:`Dataset.streaming_split <ray.data.Dataset.streaming_split>`. Each worker sees a disjoint subset of the data, instead of iterating over the entire dataset. Unless randomly shuffled, the same splits are used for each iteration of the dataset. 
+默认，Ray Train 使用 :meth:`Dataset.streaming_split <ray.data.Dataset.streaming_split>` 将所有数据集分割到工作节点上。每个 worker 看到数据的一个不相交子集，而不是迭代整个数据集。除非随机洗牌，否则每次迭代数据集时都会使用相同的拆分。
 
-If want to customize which datasets are split, pass in a :class:`DataConfig <ray.train.DataConfig>` to the Trainer constructor. 
+如果要自定义哪些数据集被拆分，请在 Trainer 构造函数中传递 :class:`DataConfig <ray.train.DataConfig>`。
 
-For example, to split only the training dataset, do the following:
+例如，要仅拆分训练数据集，请执行以下操作：
 
 .. testcode::
 
@@ -343,9 +343,9 @@ For example, to split only the training dataset, do the following:
     my_trainer.fit()
 
 
-Full customization (advanced)
+完全自定义（高级）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-For use cases not covered by the default config class, you can also fully customize exactly how your input datasets are split. Define a custom :class:`DataConfig <ray.train.DataConfig>` class (DeveloperAPI). The :class:`DataConfig <ray.train.DataConfig>` class is responsible for that shared setup and splitting of data across nodes.
+对于默认配置类未覆盖的用例，您还可以完全自定义输入数据集的拆分方式。定义一个自定义 :class:`DataConfig <ray.train.DataConfig>` 类（DeveloperAPI）。:class:`DataConfig <ray.train.DataConfig>` 类负责在节点之间共享设置和拆分数据。
 
 .. testcode::
 
@@ -405,23 +405,23 @@ For use cases not covered by the default config class, you can also fully custom
     my_trainer.fit()
 
 
-The subclass must be serializable, since Ray Train copies it from the driver script to the driving actor of the Trainer. Ray Train calls its :meth:`configure <ray.train.DataConfig.configure>` method on the main actor of the Trainer group to create the data iterators for each worker.
+子类必须是可序列化的，因为 Ray Train 会将其从驱动脚本复制到 Trainer 的驱动 actor。Ray Train 在 Trainer 组的主 actor 上调用其 :meth:`configure <ray.train.DataConfig.configure>` 方法，以为每个 worker 创建数据迭代器。
 
-In general, you can use :class:`DataConfig <ray.train.DataConfig>` for any shared setup that has to occur ahead of time before the workers start iterating over data. The setup runs at the start of each Trainer run.
+通常，你可以使用 :class:`DataConfig <ray.train.DataConfig>` 来设置任何必须在 worker 开始迭代数据之前提前发生的共享设置。设置在每次 Trainer 运行开始时运行。
 
 
-Random shuffling
+随机洗牌
 ----------------
-Randomly shuffling data for each epoch can be important for model quality depending on what model you are training.
+根据您正在训练的模型，随机打乱每个时期的数据对于模型质量非常重要
 
-Ray Data has two approaches to random shuffling:
+Ray Data 有两种随机改组方法：
 
-1. Shuffling data blocks and local shuffling on each training worker. This requires less communication at the cost of less randomness (i.e. rows that appear in the same data block are more likely to appear near each other in the iteration order).
-2. Full global shuffle, which is more expensive. This will fully decorrelate row iteration order from the original dataset order, at the cost of significantly more computation, I/O, and communication.
+1. 在每个训练 worker 上对数据块进行随机化。这需要更少的通信，但牺牲了一些随机性（即，出现在同一数据块中的行更有可能在迭代顺序中靠近彼此）。
+2. 全局洗牌，这更昂贵。这将完全使行迭代顺序与原始数据集顺序解耦，但代价是更多的计算、I/O 和通信。
 
-For most cases, option 1 suffices. 
+对于大多数情况来说，选项 1 就足够了。
 
-First, randomize each :ref:`block <dataset_concept>` of your dataset via :meth:`randomize_block_order <ray.data.Dataset.randomize_block_order>`. Then, when iterating over your dataset during training, enable local shuffling by specifying a ``local_shuffle_buffer_size`` to :meth:`iter_batches <ray.data.DataIterator.iter_batches>` or :meth:`iter_torch_batches <ray.data.DataIterator.iter_torch_batches>`.
+首先，通过 :meth:`randomize_block_order` 对数据集的每个 :ref:`block <dataset_concept>` 进行随机化。然后，在训练期间迭代数据集时，通过为 :meth:`iter_batches` 或 :meth:`iter_torch_batches` 指定 ``local_shuffle_buffer_size`` 来启用本地洗牌。
 
 .. testcode::
     import ray
@@ -453,7 +453,7 @@ First, randomize each :ref:`block <dataset_concept>` of your dataset via :meth:`
     my_trainer.fit()
 
 
-If your model is sensitive to shuffle quality, call :meth:`Dataset.random_shuffle <ray.data.Dataset.random_shuffle>` to perform a global shuffle.
+如果您的模型对洗牌质量很敏感，请调 :meth:`Dataset.random_shuffle <ray.data.Dataset.random_shuffle>` 以执行全局洗牌。
 
 .. testcode::
 
@@ -468,14 +468,14 @@ If your model is sensitive to shuffle quality, call :meth:`Dataset.random_shuffl
     # is called after the `.random_shuffle()`
     ds = ds.random_shuffle()
 
-For more information on how to optimize shuffling, and which approach to choose, see the :ref:`Optimize shuffling guide <optimizing_shuffles>`.
+有关如何优化 shuffing 以及选择哪种方法的更多信息，请参阅 :ref:`shuffling 优化指南 <optimizing_shuffles>`。
 
 
-Enabling reproducibility
+启用可重现性
 ------------------------
-When developing or hyperparameter tuning models, reproducibility is important during data ingest so that data ingest does not affect model quality. Follow these three steps to enable reproducibility:
+当开发或超参数调整模型时，数据提取的可重现性很重要，以确保数据提取不会影响模型质量。遵循以下三个步骤以启用可重现性：
 
-**Step 1:** Enable deterministic execution in Ray Datasets by setting the `preserve_order` flag in the :class:`DataContext <ray.data.context.DataContext>`.
+**步骤 1:** 通过在 :class:`DataContext <ray.data.context.DataContext>` 中设置 `preserve_order` 标志来启用 Ray 数据集中的确定性执行。
 
 .. testcode::
 
@@ -489,27 +489,27 @@ When developing or hyperparameter tuning models, reproducibility is important du
         "s3://anonymous@ray-example-data/sms_spam_collection_subset.txt"
     )
 
-**Step 2:** Set a seed for any shuffling operations: 
+**步骤 2:** 设置任何洗牌操作的种子：
 
-* `seed` argument to :meth:`random_shuffle <ray.data.Dataset.random_shuffle>`
-* `seed` argument to :meth:`randomize_block_order <ray.data.Dataset.randomize_block_order>` 
-* `local_shuffle_seed` argument to :meth:`iter_batches <ray.data.DataIterator.iter_batches>`
+* :meth:`random_shuffle <ray.data.Dataset.random_shuffle>` 的 `seed` 参数
+* :meth:`randomize_block_order <ray.data.Dataset.randomize_block_order>` 的 `seed` 参数
+* :meth:`iter_batches <ray.data.DataIterator.iter_batches>` 的 `local_shuffle_seed` 参数
 
-**Step 3:** Follow the best practices for enabling reproducibility for your training framework of choice. For example, see the `Pytorch reproducibility guide <https://pytorch.org/docs/stable/notes/randomness.html>`_.
+**步骤 3:** 遵循最佳实践，以确保您的训练框架在可重现性方面的设置正确。更多信息，请参见 `Pytorch 可重现性指南 <https://pytorch.org/docs/stable/notes/randomness.html>`_。
 
 
 
 .. _preprocessing_structured_data:
 
-Preprocessing structured data
+预处理结构化数据
 -----------------------------
 
 .. note::
-    This section is for tabular/structured data. The recommended way for preprocessing unstructured data is to use
-    Ray Data operations such as `map_batches`. See the :ref:`Ray Data Working with Pytorch guide <working_with_pytorch>` for more details.
+    本节适用于表格/结构化数据。预处理非结构化数据的推荐方式是使用 Ray Data 操作，例如 `map_batches`。
+    有关更多详细信息，请参见 :ref:`Ray Data Working with Pytorch guide <working_with_pytorch>`。
 
-For tabular data, we recommend using Ray Data :ref:`preprocessors <air-preprocessors>`, which implement common data preprocessing operations.
-You can use this with Ray Train Trainers by applying them on the dataset before passing the dataset into a Trainer. For example:
+针对表格数据，我们建议使用 Ray Data :ref:`preprocessors <air-preprocessors>`，这些预处理器实现了常见的数据预处理操作。
+你可使用这些预处理器在将数据集传递到 Trainer 之前对数据集进行处理。例如：
 
 .. testcode::
 
@@ -563,18 +563,18 @@ You can use this with Ray Train Trainers by applying them on the dataset before 
     print(StandardScaler.deserialize(metadata["preprocessor_pkl"]))
 
 
-In this example, we persist the fitted preprocessor using the ``Trainer(metadata={...})`` constructor argument. This arg specifies a dict that will available from ``TrainContext.get_metadata()`` and ``checkpoint.get_metadata()`` for checkpoints saved from the Trainer. This enables recreation of the fitted preprocessor for use for inference.
+在本示例中，我们使用 ``Trainer(metadata={...})`` 构造函数参数持久化了拟合的预处理器。此参数指定一个字典，将在 ``TrainContext.get_metadata()`` 和 ``checkpoint.get_metadata()`` 中可用，用于从 Trainer 保存的检查点中重新创建拟合的预处理器以用于推理。
 
-Performance tips
+性能技巧
 ----------------
 
-Prefetching batches
+预取批次
 ~~~~~~~~~~~~~~~~~~~
-While iterating over your dataset for training, you can increase ``prefetch_batches`` in :meth:`iter_batches <ray.data.DataIterator.iter_batches>` or :meth:`iter_torch_batches <ray.data.DataIterator.iter_torch_batches>` to further increase performance. While training on the current batch, this launches N background threads to fetch and process the next N batches.
+在迭代数据集进行训练时，您可以增加 ``prefetch_batches`` 参数以进一步提高性能。在训练当前批次时，这会启动 N 个后台线程来获取和处理下一个 N 个批次。
 
-This approach can help if training is bottlenecked on cross-node data transfer or on last-mile preprocessing such as converting batches to tensors or executing ``collate_fn``. However, increasing ``prefetch_batches`` leads to more data that needs to be held in heap memory. By default, ``prefetch_batches`` is set to 1.
+如果训练在跨节点数据传输或在最后一英里预处理上受到瓶颈，这种方法可以帮助。例如，将批次转换为张量或执行 ``collate_fn``。但是，增加 ``prefetch_batches`` 会导致更多数据需要保存在堆内存中。默认情况下，``prefetch_batches`` 设置为 1。
 
-For example, the following code prefetches 10 batches at a time for each training worker:
+比如，以下代码每次预取 10 个批次给每个训练 worker：
 
 .. testcode::
 
@@ -605,13 +605,13 @@ For example, the following code prefetches 10 batches at a time for each trainin
 
 .. _dataset_cache_performance:
 
-Caching the preprocessed dataset
+缓存预处理数据集
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-If you're training on GPUs and have an expensive CPU preprocessing operation, this approach may bottleneck training throughput.
+如果你在 GPU 上训练并且有一个昂贵的 CPU 预处理操作，这种方法可能会成为训练吞吐量的瓶颈。
 
-If your preprocessed Dataset is small enough to fit in Ray object store memory (by default this is 30% of total cluster RAM), *materialize* the preprocessed dataset in Ray's built-in object store, by calling :meth:`materialize() <ray.data.Dataset.materialize>` on the preprocessed dataset. This method tells Ray Data to compute the entire preprocessed and pin it in the Ray object store memory. As a result, when iterating over the dataset repeatedly, the preprocessing operations do not need to be re-run. However, if the preprocessed data is too large to fit into Ray object store memory, this approach will greatly decreases performance as data needs to be spilled to and read back from disk.
+如果你的预处理数据集小到可以放入 Ray 对象存储内存中（默认情况下这是总集群 RAM 的 30%），通过在预处理数据集上调用 :meth:`materialize() <ray.data.Dataset.materialize>` 来在 Ray 的内置对象存储中 *materialize* 预处理数据集。此方法告诉 Ray Data 计算整个预处理数据并将其固定在 Ray 对象存储内存中。结果是，当重复迭代数据集时，不需要重新运行预处理操作。但是，如果预处理数据太大而无法放入 Ray 对象存储内存中，这种方法会大大降低性能，因为数据需要溢出到磁盘并从磁盘读回。
 
-Transformations that you want run per-epoch, such as randomization, should go after the materialize call.
+你希望在每个 epoch 运行的转换，例如随机化，应该在 materialize 调用之后。
 
 .. testcode::
 
@@ -648,10 +648,10 @@ Transformations that you want run per-epoch, such as randomization, should go af
     # Pass train_ds to the Trainer
 
 
-Adding CPU-only nodes to your cluster
+向集群添加 CPU-only 节点
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-If you are bottlenecked on expensive CPU preprocessing and the preprocessed Dataset is too large to fit in object store memory, then materializing the dataset doesn't work. In this case, since Ray supports heterogeneous clusters, you can add more CPU-only nodes to your cluster.
+如果你在昂贵的 CPU 预处理上受到瓶颈，并且预处理数据集太大而无法放入对象存储内存中，那么材料化数据集就行不通。在这种情况下，由于 Ray 支持异构集群，您可以向集群添加更多的 CPU-only 节点。
 
-For cases where you're bottlenecked by object store memory, adding more CPU-only nodes to your cluster increases total cluster object store memory, allowing more data to be buffered in between preprocessing and training stages.
+对于受对象存储内存瓶颈的情况，向集群添加更多的 CPU-only 节点会增加总集群对象存储内存，从而允许在预处理和训练阶段之间缓冲更多数据。
 
-For cases where you're bottlenecked by preprocessing compute time, adding more CPU-only nodes adds more CPU cores to your cluster, further parallelizing preprocessing. If your preprocessing is still not fast enough to saturate GPUs, then add enough CPU-only nodes to :ref:`cache the preprocessed dataset <dataset_cache_performance>`.
+对于预处理计算时间受限的情况，添加更多的 CPU-only 节点会向集群添加更多的 CPU 核心，进一步并行化预处理。如果您的预处理仍然无法快速饱和 GPU，则添加足够的 CPU-only 节点以 :ref:`缓存预处理数据集 <dataset_cache_performance>`。

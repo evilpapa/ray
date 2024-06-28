@@ -2,23 +2,22 @@
 
 .. _accelerate_example:
 
-Distributed Training with Hugging Face Accelerate
+使用 Hugging Face Accelerate 进行分布式训练
 =================================================
 
-This example does distributed data parallel training
-with Hugging Face Accelerate, Ray Train, and Ray Data.
-It fine-tunes a BERT model and is adapted from
+此示例使用 Hugging Face Accelerate、Ray Train 和 Ray Data 进行分布式数据并行训练。
+它微调了 BERT 模型，改编自
 https://github.com/huggingface/accelerate/blob/main/examples/nlp_example.py
 
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: /../../python/ray/train/examples/accelerate/accelerate_torch_trainer.py
 
-See also
+同样看看
 --------
 
-* :ref:`Get Started with Hugging Face Accelerate <train-hf-accelerate>` for a tutorial on using Ray Train and HF Accelerate
+* :ref:`开始使用 Hugging Face Accelerate <train-hf-accelerate>`，查看有关使用 Ray Train 和 HF Accelerate 的教程
 
-* :ref:`Ray Train Examples <train-examples>` for more use cases
+* 更多 :ref:`Ray Train 示例 <train-examples>`

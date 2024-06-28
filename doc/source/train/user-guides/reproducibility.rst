@@ -1,15 +1,14 @@
 .. _train-reproducibility:
 
-Reproducibility
+可重复性
 ---------------
 
 .. tab-set::
 
     .. tab-item:: PyTorch
 
-        To limit sources of nondeterministic behavior, add
-        :func:`ray.train.torch.enable_reproducibility` to the top of your training
-        function.
+        为了限制不确定性行为的来源，请将
+        :func:`ray.train.torch.enable_reproducibility` 添加到训练功能的顶部。
 
         .. code-block:: diff
 
@@ -21,9 +20,9 @@ Reproducibility
 
                  ...
 
-        .. warning:: :func:`ray.train.torch.enable_reproducibility` can't guarantee
-            completely reproducible results across executions. To learn more, read
-            the `PyTorch notes on randomness <https://pytorch.org/docs/stable/notes/randomness.html>`_.
+        .. warning:: :func:`ray.train.torch.enable_reproducibility` 无法保证
+            在执行过程中完全可重现结果。 要了解更多信息，请阅读
+            `PyTorch 关于随机性的说明 <https://pytorch.org/docs/stable/notes/randomness.html>`_。
 
 ..
     import ray

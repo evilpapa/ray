@@ -2,19 +2,19 @@
 
 .. _torch_fashion_mnist_ex:
 
-Train a PyTorch Model on Fashion MNIST
+使用 PyTorch 训练时尚 MNIST 图像分类器
 ======================================
 
-This example runs distributed training of a PyTorch model on Fashion MNIST with Ray Train.
+此示例使用 Ray Train 在 Fashion MNIST 上运行 PyTorch 模型的分布式训练。
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: /../../python/ray/train/examples/pytorch/torch_fashion_mnist_example.py
 
-See also
+也可以看看
 --------
 
-* :ref:`Get Started with PyTorch <train-pytorch>` for a tutorial on using Ray Train and PyTorch 
+* :ref:`PyTorch 入门指南 <train-pytorch>`，查看有关使用 Ray Train 和 PyTorch 的教程
 
-* :ref:`Ray Train Examples <train-examples>` for more use cases
+* 更多用例的 :ref:`Ray Train 示例 <train-examples>`

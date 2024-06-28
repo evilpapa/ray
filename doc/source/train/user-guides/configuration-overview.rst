@@ -1,24 +1,22 @@
 :orphan:
 
-Configuration Overview
+配置概述
 ======================
 
 .. _train-run-config:
 
-Run Configuration in Train (``RunConfig``)
+在 Train 中运行配置 （``RunConfig``）
 ------------------------------------------
 
-``RunConfig`` is a configuration object used in Ray Train to define the experiment
-spec that corresponds to a call to ``trainer.fit()``.
+``RunConfig`` 是 Ray Train 中用来定义与调用 ``trainer.fit()`` 相对应的实验规范的配置对象。
 
-It includes settings such as the experiment name, storage path for results,
-stopping conditions, custom callbacks, checkpoint configuration, verbosity level,
-and logging options.
+它包含了设置诸如实验名称、结果存储路径、停
+止条件、自定义回调、检查点配置、详细程度和日志选项等的设置。
 
-Many of these settings are configured through other config objects and passed through
-the ``RunConfig``. The following sub-sections contain descriptions of these configs.
+某些设置是通过其他配置对象进行配置并通过 ``RunConfig`` 传递的。
+以下各小节包含这些配置的描述。
 
-The properties of the run configuration are :ref:`not tunable <tune-search-space-tutorial>`.
+运行配置的属性是 :ref:`不可调整的 <tune-search-space-tutorial>`。
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
@@ -27,7 +25,7 @@ The properties of the run configuration are :ref:`not tunable <tune-search-space
 
 .. seealso::
 
-    See the :class:`~ray.train.RunConfig` API reference.
+    查看 :class:`~ray.train.RunConfig` API 参考。
 
-    See :ref:`persistent-storage-guide` for storage configuration examples (related to ``storage_path``).
+    查看 :ref:`persistent-storage-guide` 以获取存储配置示例 （关联 ``storage_path``）。
 

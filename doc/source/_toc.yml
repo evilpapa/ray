@@ -45,7 +45,7 @@ parts:
           - file: ray-core/api/index
 
       - file: data/data
-        title: Ray 数据「75%」
+        title: Ray 数据「85%」
         sections:
           - file: data/overview
             title: 概述
@@ -56,7 +56,7 @@ parts:
           - file: data/data-internals
 
       - file: train/train
-        title: Ray 训练「20%」
+        title: Ray 训练「95%」
         sections:
           - file: train/overview
             title: 概述
@@ -73,9 +73,9 @@ parts:
               - file: train/deepspeed
                 title: DeepSpeed 指南
               - file: train/distributed-tensorflow-keras
-                title: TensorFlow and Keras 指南
+                title: TensorFlow 和 Keras 指南
               - file: train/distributed-xgboost-lightgbm
-                title: XGBoost and LightGBM 指南
+                title: XGBoost 和 LightGBM 指南
               - file: train/horovod
                 title: Horovod 指南
           - file: train/user-guides
@@ -99,27 +99,27 @@ parts:
                 title: "运行基础实验"
               - file: tune/tutorials/tune-output
               - file: tune/tutorials/tune-resources
-                title: "Setting Trial Resources"
+                title: "设置实验资源"
               - file: tune/tutorials/tune-search-spaces
-                title: "Using Search Spaces"
+                title: "使用搜索空间"
               - file: tune/tutorials/tune-stopping
               - file: tune/tutorials/tune-trial-checkpoints
               - file: tune/tutorials/tune-storage
               - file: tune/tutorials/tune-fault-tolerance
               - file: tune/tutorials/tune-metrics
-                title: "Using Callbacks and Metrics"
+                title: "使用回调和指标"
               - file: tune/tutorials/tune_get_data_in_and_out
               - file: tune/examples/tune_analyze_results
               - file: tune/examples/pbt_guide
                 sections:
                   - file: tune/examples/pbt_visualization/pbt_visualization
-                    title: "Visualizing and Understanding PBT"
+                    title: "可视化和理解PBT"
               - file: tune/tutorials/tune-distributed
-                title: "Deploying Tune in the Cloud"
+                title: "云上部署 Tune"
               - file: tune/tutorials/tune-lifecycle
                 title: "Tune 架构"
               - file: tune/tutorials/tune-scalability
-                title: "Scalability Benchmarks"
+                title: "可扩展性基准"
           - file: tune/examples/index
             sections:
               - file: tune/examples/ml-frameworks

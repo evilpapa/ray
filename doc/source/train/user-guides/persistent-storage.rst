@@ -2,43 +2,43 @@
 
 .. _train-log-dir:
 
-Configuring Persistent Storage
+配置持久存储
 ==============================
 
-A Ray Train run produces a history of :ref:`reported metrics <train-monitoring-and-logging>`,
-:ref:`checkpoints <train-checkpointing>`, and :ref:`other artifacts <train-artifacts>`.
-You can configure these to be saved to a persistent storage location.
+Ray Train 运行会产生一系列的 :ref:`reported metrics <train-monitoring-and-logging>`、
+:ref:`checkpoints <train-checkpointing>` 和 :ref:`other artifacts <train-artifacts>`。
+你可以配置这些内容保存到持久存储位置。
 
 .. figure:: ../images/persistent_storage_checkpoint.png
     :align: center
     :width: 600px
 
-    An example of multiple workers spread across multiple nodes uploading checkpoints to persistent storage.
+    多个工作程序分布在多个节点上，将检查点上传到持久存储的示例。
 
-**Ray Train expects all workers to be able to write files to the same persistent storage location.**
-Therefore, Ray Train requires some form of external persistent storage such as
-cloud storage (e.g., S3, GCS) or a shared filesystem (e.g., AWS EFS, Google Filestore, HDFS)
-for multi-node training.
+**Ray Train 期望所有 worker 都能够将文件写入同一个持久存储位置。**
+因此，Ray Train 需要某种形式的外部持久存储，
+例如云存储（例如 S3、GCS）或
+共享文件系统（例如 AWS EFS、Google Filestore、HDFS）来进行多节点训练。
 
-Here are some capabilities that persistent storage enables:
+以下是持久存储支持的一些功能：
 
-- **Checkpointing and fault tolerance**: Saving checkpoints to a persistent storage location
-  allows you to resume training from the last checkpoint in case of a node failure.
-  See :ref:`train-checkpointing` for a detailed guide on how to set up checkpointing.
-- **Post-experiment analysis**: A consolidated location storing data from all trials is useful for post-experiment analysis
-  such as accessing the best checkpoints and hyperparameter configs after the cluster has already been terminated.
-- **Bridge training/fine-tuning with downstream serving and batch inference tasks**: You can easily access the models
-  and artifacts to share them with others or use them in downstream tasks.
+- **检查点和容错**: 将检查点保存到持久存储位置，
+  您可以在发生节点故障时从最后一个检查点恢复训练。
+  有关如何设置检查点的详细指南，请参阅 :ref:`train-checkpointing`。
+- **实验后分析**: 存储所有试验数据的合并位置对于实验后分析很有用，
+  例如在集群终止后访问最佳检查点和超参数配置。
+- **通过下游服务和批量推理任务桥接训练/微调**: ：您可以轻松访问模型和工件，
+  与他人共享或在下游任务中使用它们。
 
 
-Cloud storage (AWS S3, Google Cloud Storage)
+云存储（AWS S3、Google Cloud 存储 ）
 --------------------------------------------
 
 .. tip::
 
-    Cloud storage is the recommended persistent storage option.
+    云存储是推荐的持久存储选项。
 
-Use cloud storage by specifying a bucket URI as the :class:`RunConfig(storage_path) <ray.train.RunConfig>`:
+通过使用 :class:`RunConfig(storage_path) <ray.train.RunConfig>` 指定 桶 URI 存储位置来使用云存储：
 
 .. code-block:: python
 
@@ -54,14 +54,14 @@ Use cloud storage by specifying a bucket URI as the :class:`RunConfig(storage_pa
     )
 
 
-Ensure that all nodes in the Ray cluster have access to cloud storage, so outputs from workers can be uploaded to a shared cloud bucket.
-In this example, all files are uploaded to shared storage at ``s3://bucket-name/sub-path/experiment_name`` for further processing.
+确保 Ray 集群中的所有节点都可以访问云存储，这样工作器的输出就可以上传到共享云存储桶。
+此例中，所有文件都上传到共享存储位置 ``s3://bucket-name/sub-path/experiment_name`` 以供进一步处理。
 
 
-Shared filesystem (NFS, HDFS)
+共享文件系统 (NFS、HDFS) 
 -----------------------------
 
-Use by specifying the shared storage path as the :class:`RunConfig(storage_path) <ray.train.RunConfig>`:
+使用 :class:`RunConfig(storage_path) <ray.train.RunConfig>` 指定共享存储位置：
 
 .. code-block:: python
 
@@ -78,21 +78,21 @@ Use by specifying the shared storage path as the :class:`RunConfig(storage_path)
         )
     )
 
-Ensure that all nodes in the Ray cluster have access to the shared filesystem, e.g. AWS EFS, Google Cloud Filestore, or HDFS,
-so that outputs can be saved to there.
-In this example, all files are saved to ``/mnt/cluster_storage/experiment_name`` for further processing.
+确保 Ray 集群中的所有节点都可以访问共享文件系统，例如 AWS EFS、Google Cloud Filestore 或 HDFS，
+以便将输出保存到那里。
+在此示例中，所有文件都保存到 ``/mnt/cluster_storage/experiment_name`` 以便进一步处理。
 
 
-Local storage
+本地存储
 -------------
 
-Using local storage for a single-node cluster
+对单节点集群使用本地存储
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you're just running an experiment on a single node (e.g., on a laptop), Ray Train will use the
-local filesystem as the storage location for checkpoints and other artifacts.
-Results are saved to ``~/ray_results`` in a sub-directory with a unique auto-generated name by default,
-unless you customize this with ``storage_path`` and ``name`` in :class:`~ray.train.RunConfig`.
+如果您只是在单个节点（例如笔记本电脑）上运行实验，
+Ray Train 将使用本地文件系统作为检查点和其他工件的存储位置。
+默认情况下，结果将保存到 ``~/ray_results`` 具有唯一自动生成名称的子目录中，
+除非您使用在 :class:`~ray.train.RunConfig` 自定义 ``storage_path`` 和 ``name``。
 
 
 .. code-block:: python
@@ -109,51 +109,50 @@ unless you customize this with ``storage_path`` and ``name`` in :class:`~ray.tra
     )
 
 
-In this example, all experiment results can found locally at ``/tmp/custom/storage/path/experiment_name`` for further processing.
+在此示例中，所有实验结果均可在本地找到 ``/tmp/custom/storage/path/experiment_name`` 以进行进一步处理。
 
 
-Using local storage for a multi-node cluster
+对多节点集群使用本地存储
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning::
 
-    When running on multiple nodes, using the local filesystem of the head node as the persistent storage location is no longer supported.
+    在多个节点上运行时，不再支持使用头节点的本地文件系统作为持久存储位置。
 
-    If you save checkpoints with :meth:`ray.train.report(..., checkpoint=...) <ray.train.report>`
-    and run on a multi-node cluster, Ray Train will raise an error if NFS or cloud storage is not setup.
-    This is because Ray Train expects all workers to be able to write the checkpoint to
-    the same persistent storage location.
+    如果使用 :meth:`ray.train.report(..., checkpoint=...) <ray.train.report>` 保存检查点
+    并在该集群上运行，则如果未设置 NFS 或云存储，Ray Train 将引发错误。
+    这是因为 Ray Train 期望所有 worker 都能够将检查点写入相同的持久存储位置。
 
-    If your training loop does not save checkpoints, the reported metrics will still
-    be aggregated to the local storage path on the head node.
+    如果您的训练循环没有保存检查点，
+    则报告的指标仍将聚合到头节点上的本地存储路径。
 
-    See `this issue <https://github.com/ray-project/ray/issues/37177>`_ for more information.
+    参考 `此问题 <https://github.com/ray-project/ray/issues/37177>`_ 以了解更多信息。
 
 
 .. _custom-storage-filesystem:
 
-Custom storage
+自定义存储
 --------------
 
-If the cases above don't suit your needs, Ray Train can support custom filesystems and perform custom logic.
-Ray Train standardizes on the ``pyarrow.fs.FileSystem`` interface to interact with storage
-(`see the API reference here <https://arrow.apache.org/docs/python/generated/pyarrow.fs.FileSystem.html>`_).
+如果上述情况不符合您的需求，Ray Train 可以支持自定义文件系统并执行自定义逻辑。
+Ray Train 标准化了 ``pyarrow.fs.FileSystem`` 接口来集成存储
+(`参阅这里的 API 参考 <https://arrow.apache.org/docs/python/generated/pyarrow.fs.FileSystem.html>`_)。
 
-By default, passing ``storage_path=s3://bucket-name/sub-path/`` will use pyarrow's
-`default S3 filesystem implementation <https://arrow.apache.org/docs/python/generated/pyarrow.fs.S3FileSystem.html>`_
-to upload files. (`See the other default implementations. <https://arrow.apache.org/docs/python/api/filesystems.html#filesystem-implementations>`_)
+默认情况下，传递 ``storage_path=s3://bucket-name/sub-path/`` 会使用 pyarrow 的
+`默认 S3 文件系统实现 <https://arrow.apache.org/docs/python/generated/pyarrow.fs.S3FileSystem.html>`_
+来上传文件。 (`参考其他默认实现。 <https://arrow.apache.org/docs/python/api/filesystems.html#filesystem-implementations>`_)
 
-Implement custom storage upload and download logic by providing an implementation of
-``pyarrow.fs.FileSystem`` to :class:`RunConfig(storage_filesystem) <ray.train.RunConfig>`.
+通过 :class:`RunConfig(storage_filesystem) <ray.train.RunConfig>` 提供 ``pyarrow.fs.FileSystem`` 的自定义实现
+来存储上传和下载逻辑。
 
 .. warning::
 
-    When providing a custom filesystem, the associated ``storage_path`` is expected
-    to be a qualified filesystem path *without the protocol prefix*.
+    提供自定义文件系统时，关联 ``storage_path`` 应该是一个
+    *没有协议前缀的* 合格文件系统路径。
 
-    For example, if you provide a custom S3 filesystem for ``s3://bucket-name/sub-path/``,
-    then the ``storage_path`` should be ``bucket-name/sub-path/`` with the ``s3://`` stripped.
-    See the example below for example usage.
+    例如，如果您为 ``storage_path`` 提供了 ``s3://bucket-name/sub-path/``，
+    ``storage_path`` 应是剥离 ``s3://`` 的 ``bucket-name/sub-path/``.
+    参考以下使用示例。
 
 .. code-block:: python
 
@@ -178,13 +177,13 @@ Implement custom storage upload and download logic by providing an implementatio
     )
 
 
-``fsspec`` filesystems
+``fsspec`` 文件系统
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-`fsspec <https://filesystem-spec.readthedocs.io/en/latest/>`_ offers many filesystem implementations,
-such as ``s3fs``, ``gcsfs``, etc.
+`fsspec <https://filesystem-spec.readthedocs.io/en/latest/>`_ 提供许多文件系统实现，
+例如 ``s3fs``、 ``gcsfs`` 等。
 
-You can use any of these implementations by wrapping the ``fsspec`` filesystem with a ``pyarrow.fs`` utility:
+您可以通过用实用程序 ``pyarrow.fs`` 包装 ``fsspec`` 文件系统来使用这些实现。
 
 .. code-block:: python
 
@@ -203,20 +202,20 @@ You can use any of these implementations by wrapping the ``fsspec`` filesystem w
 
 .. seealso::
 
-    See the API references to the ``pyarrow.fs`` wrapper utilities:
+    请参阅包装器实用程序 ``pyarrow.fs`` 的 API 参考：
 
     * https://arrow.apache.org/docs/python/generated/pyarrow.fs.PyFileSystem.html
     * https://arrow.apache.org/docs/python/generated/pyarrow.fs.FSSpecHandler.html
 
 
 
-MinIO and other S3-compatible storage
+MinIO 和其他与 S3 兼容的存储
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can follow the :ref:`examples shown above <custom-storage-filesystem>` to configure
-a custom S3 filesystem to work with MinIO.
+您可以按照 :ref:`如上示例 <custom-storage-filesystem>` 配置
+自定义 S3 文件系统以与 MinIO 一起使用。
 
-Note that including these as query parameters in the ``storage_path`` URI directly is another option:
+请注意，直接将这些作为查询参数包含在 ``storage_path`` URI 中是另一种选择：
 
 .. code-block:: python
 
@@ -232,16 +231,16 @@ Note that including these as query parameters in the ``storage_path`` URI direct
     )
 
 
-Overview of Ray Train outputs
+Ray Train 输出概述
 -----------------------------
 
-So far, we covered how to configure the storage location for Ray Train outputs.
-Let's walk through a concrete example to see what exactly these outputs are,
-and how they're structured in storage.
+到目前为止，我们介绍了如何配置 Ray Train 输出的存储位置。
+让我们通过一个具体的示例来了解这些输出到底是什么，
+以及它们在存储中的结构。
 
 .. seealso::
 
-    This example includes checkpointing, which is covered in detail in :ref:`train-checkpointing`.
+    本示例包含检查点，详细信息请参阅 :ref:`train-checkpointing`。
 
 .. code-block:: python
 
@@ -282,7 +281,7 @@ and how they're structured in storage.
     result: train.Result = trainer.fit()
     last_checkpoint: Checkpoint = result.checkpoint
 
-Here's a rundown of all files that will be persisted to storage:
+以下是将保存到存储中的所有文件的概要：
 
 .. code-block:: text
 
@@ -302,8 +301,7 @@ Here's a rundown of all files that will be persisted to storage:
             ├── artifact-rank=1-iter=0.txt
             └── ...
 
-The :class:`~ray.train.Result` and :class:`~ray.train.Checkpoint` objects returned by
-``trainer.fit`` are the easiest way to access the data in these files:
+``trainer.fit`` 返回的 :class:`~ray.train.Result` 及 :class:`~ray.train.Checkpoint` 对象是访问这些文件中的数据的最简单方法：
 
 .. code-block:: python
 
@@ -314,43 +312,40 @@ The :class:`~ray.train.Result` and :class:`~ray.train.Checkpoint` objects return
     # S3FileSystem, "bucket-name/sub-path/experiment_name/TorchTrainer_46367_00000_0_.../checkpoint_000009"
 
 
-See :ref:`train-inspect-results` for a full guide on interacting with training :class:`Results <ray.train.Result>`.
+参考 :ref:`train-inspect-results` 以获取有关与训练 :class:`Results <ray.train.Result>` 交互的完整指南。
 
 
 .. _train-artifacts:
 
-Persisting training artifacts
+保存训练成果
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the example above, we saved some artifacts within the training loop to the worker's
-*current working directory*.
-If you were training a stable diffusion model, you could save
-some sample generated images every so often as a training artifact.
+如上示例中，我们将训练循环中的一些成功保存到 worker 的 *当前工作目录* 。
+如果你正在训练一个稳定的扩散模型，你可以保存一些生成的样本图像作为训练工件。
 
-By default, the worker's current working directory is set to the local version of the "trial directory."
-For example, ``~/ray_results/experiment_name/TorchTrainer_46367_00000_0_...`` in the example above.
+默认，worker 的当前工作目录设置为“试验目录”的本地版本。
+比如，上面示例中的 ``~/ray_results/experiment_name/TorchTrainer_46367_00000_0_...``。
 
-If :class:`RunConfig(SyncConfig(sync_artifacts=True)) <ray.train.SyncConfig>`, then
-all artifacts saved in this directory will be persisted to storage.
+如果 :class:`RunConfig(SyncConfig(sync_artifacts=True)) <ray.train.SyncConfig>`，
+那么保存在此目录中的所有工件都将被持久保存到存储中。
 
-The frequency of artifact syncing can be configured via :class:`SyncConfig <ray.train.SyncConfig>`.
-Note that this behavior is off by default.
+可以通过 :class:`SyncConfig <ray.train.SyncConfig>` 配置工件同步的频率。
+请注意，此行为默认处于关闭状态。
 
 .. figure:: ../images/persistent_storage_artifacts.png
     :align: center
     :width: 600px
 
-    Multiple workers spread across multiple nodes save artifacts to their local
-    working directory, which is then persisted to storage.
+    分布在多个节点的多个 worker 将工件保存到其本地工作目录中，
+    然后将其持久保存到存储中。
 
 .. warning::
 
-    Artifacts saved by *every worker* will be synced to storage. If you have multiple workers
-    co-located on the same node, make sure that workers don't delete files within their
-    shared working directory.
+    *每个 worker* 保存的工件都将同步到存储。 如果您有多个 worker
+    位于同一个节点上，请
+    确保工作器不会删除其共享工作目录中的文件。
 
-    A best practice is to only write artifacts from a single worker unless you
-    really need artifacts from multiple.
+    最佳做法是只从单个 worker 那里写入工件，除非您确实需要来自多个 worker 的工件。
 
     .. code-block:: python
 
@@ -365,17 +360,17 @@ Note that this behavior is off by default.
             ...
 
 
-Advanced configuration
+高级配置
 ----------------------
 
-Setting the intermediate local directory
+设置中间本地路径
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When a ``storage_path`` is specified, training outputs are saved to an
-*intermediate local directory*, then persisted (copied/uploaded) to the ``storage_path``.
-By default, this intermediate local directory is a sub-directory of ``~/ray_results``.
+当指定 ``storage_path`` ，训练输出将保存到
+*中间本地目录*，然后持久化（复制/上传）到 ``storage_path``。
+认情况下，此中间本地目录是 ``~/ray_results`` 的子目录。
 
-Customize this intermediate local directory with the ``RAY_AIR_LOCAL_CACHE_DIR`` environment variable:
+使用环境变量 ``RAY_AIR_LOCAL_CACHE_DIR`` 定制这个中间本地目录：
 
 .. code-block:: python
 
@@ -386,14 +381,13 @@ Customize this intermediate local directory with the ``RAY_AIR_LOCAL_CACHE_DIR``
 
 .. _train-ray-storage:
 
-Automatically setting up persistent storage
+自动设置持久存储
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can control where to store training results with the ``RAY_STORAGE``
-environment variable.
+您可以使用环境变量 ``RAY_STORAGE`` 控制存储训练结果的位置。
 
-For instance, if you set ``RAY_STORAGE="s3://my_bucket/train_results"``, your
-results will automatically persisted there.
+例如，如果您设置 ``RAY_STORAGE="s3://my_bucket/train_results"``，您的
+结果将自动保存在那里。
 
-If you manually set a :attr:`RunConfig.storage_path <ray.train.RunConfig.storage_path>`, it
-will take precedence over this environment variable.
+如果您手动设置 :attr:`RunConfig.storage_path <ray.train.RunConfig.storage_path>`，它
+将优先于此环境变量。

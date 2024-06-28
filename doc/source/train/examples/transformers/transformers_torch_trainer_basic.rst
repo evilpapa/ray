@@ -2,20 +2,20 @@
 
 .. _transformers_torch_trainer_basic_example :
 
-Fine-tune a Text Classifier with Hugging Face Transformers
+使用 Hugging Face Transformer 对文本分类器进行微调
 ==========================================================
 
-This basic example of distributed training with Ray Train and Hugging Face (HF) Transformers
-fine-tunes a text classifier on the Yelp review dataset using HF Transformers and Ray Train.
+这个使用 Ray Train 和 Hugging Face (HF) Transformers 进行分布式训练的基本示例
+使用 HF Transformers 和 Ray Train 对 Yelp 评论数据集上的文本分类器进行微调。
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: /../../python/ray/train/examples/transformers/transformers_torch_trainer_basic.py
 
-See also
+也可以看看
 --------
 
-* :ref:`Get Started with Hugging Face Transformers <train-pytorch-transformers>` for a tutorial
+* :ref:`开始使用 Hugging Face Transformers 的 <train-pytorch-transformers>` 的教程
 
-* :ref:`Ray Train Examples <train-examples>` for more use cases
+* 更多 :ref:`Ray Train 示例 <train-examples>` 

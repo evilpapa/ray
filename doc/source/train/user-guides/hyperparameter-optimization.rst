@@ -1,9 +1,9 @@
 .. _train-tune:
 
-Hyperparameter Tuning with Ray Tune
+使用 Ray Tune 进行超参数优化
 ===================================
 
-Hyperparameter tuning with :ref:`Ray Tune <tune-main>` is natively supported with Ray Train.
+Ray Train 原生支持使用  :ref:`Ray Tune <tune-main>` 进行超参数优化。
 
 
 .. https://docs.google.com/drawings/d/1yMd12iMkyo6DGrFoET1TIlKfFnXX9dfh2u3GSdTz6W4/edit
@@ -11,30 +11,30 @@ Hyperparameter tuning with :ref:`Ray Tune <tune-main>` is natively supported wit
 .. figure:: ../images/train-tuner.svg
     :align: center
 
-    The `Tuner` will take in a `Trainer` and execute multiple training runs, each with different hyperparameter configurations.
+    `Tuner` 接受 `Trainer` 并执行多次训练运行，每次都有不同的超参数配置。
 
-Key Concepts
+关键概念
 ------------
 
-There are a number of key concepts when doing hyperparameter optimization with a :class:`~ray.tune.Tuner`:
+使用 :class:`~ray.tune.Tuner` 进行超参数优化时，有许多关键概念：
 
-* A set of hyperparameters you want to tune in a *search space*.
-* A *search algorithm* to effectively optimize your parameters and optionally use a
-  *scheduler* to stop searches early and speed up your experiments.
-* The *search space*, *search algorithm*, *scheduler*, and *Trainer* are passed to a Tuner,
-  which runs the hyperparameter tuning workload by evaluating multiple hyperparameters in parallel.
-* Each individual hyperparameter evaluation run is called a *trial*.
-* The Tuner returns its results as a :class:`~ray.tune.ResultGrid`.
+* 你想在 *搜索空间* 中调整的一组超参数。
+* 一种 *搜索算法* 可以有效地优化您的参数，
+  并且可以选择使用 *scheduler* 来提前停止搜索并加快实验速度。
+* *搜索空间*、*搜索算法*、*scheduler* 和 *Trainer* 都传递给 Tuner，
+ Tuner 会并行评估多个超参数。
+* 每次单独的超参数评估运行称为 *trial*。
+* Tuner 会将结果作为 :class:`~ray.tune.ResultGrid` 返回。
 
 .. note::
-   Tuners can also be used to launch hyperparameter tuning without using Ray Train. See
-   :ref:`the Ray Tune documentation <tune-main>` for more guides and examples.
+   Tuner 还可以用于在不使用 Ray Train 的情况下启动超参数调优。
+   请参阅 :ref:`Ray Tune 文档 <tune-main>` 以获取更多指南和示例。
 
-Basic usage
+基本用法
 -----------
 
-You can take an existing :class:`Trainer <ray.train.base_trainer.BaseTrainer>` and simply
-pass it into a :class:`~ray.tune.Tuner`.
+你可以使用以下 :class:`Trainer <ray.train.base_trainer.BaseTrainer>` 并
+将其传递给 :class:`~ray.tune.Tuner`。
 
 .. literalinclude:: ../doc_code/tuner.py
     :language: python
@@ -43,85 +43,85 @@ pass it into a :class:`~ray.tune.Tuner`.
 
 
 
-How to configure a Tuner?
+如何配置 Tuner？
 -------------------------
 
-There are two main configuration objects that can be passed into a Tuner: the :class:`TuneConfig <ray.tune.tune_config.TuneConfig>` and the :class:`RunConfig <ray.train.RunConfig>`.
+有两个主要配置对象可以传递到 Tuner：:class:`TuneConfig <ray.tune.tune_config.TuneConfig>` 和 :class:`RunConfig <ray.train.RunConfig>`。
 
-The :class:`TuneConfig <ray.tune.TuneConfig>` contains tuning specific settings, including:
+:class:`TuneConfig <ray.tune.TuneConfig>` 包含调整特定设置，包括：
 
-- the tuning algorithm to use
-- the metric and mode to rank results
-- the amount of parallelism to use
+- 要使用的调整算法
+- 对结果进行排序的指标和模式
+- 要使用的并行量
 
-Here are some common configurations for `TuneConfig`:
+以下是 `TuneConfig` 一些常见的配置示例：
 
 .. literalinclude:: ../doc_code/tuner.py
     :language: python
     :start-after: __tune_config_start__
     :end-before: __tune_config_end__
 
-See the :class:`TuneConfig API reference <ray.tune.tune_config.TuneConfig>` for more details.
+请参阅 :class:`TuneConfig API 参考 <ray.tune.tune_config.TuneConfig>` 以了解更多详细信息。
 
-The :class:`RunConfig <ray.train.RunConfig>` contains configurations that are more generic than tuning specific settings.
-This includes:
+:class:`RunConfig <ray.train.RunConfig>` 包含比调整特定设置更通用的配置。
+其中包括：
 
-- failure/retry configurations
-- verbosity levels
-- the name of the experiment
-- the logging directory
-- checkpoint configurations
-- custom callbacks
-- integration with cloud storage
+- 失败/重试配置
+- 详细程度
+- 实验名称
+- 日志目录
+- 检查点配置
+- 自定义回调
+- 与云存储集成
 
-Below we showcase some common configurations of :class:`RunConfig <ray.train.RunConfig>`.
+下面我们展示一些常见的 :class:`RunConfig <ray.train.RunConfig>` 配置。
 
 .. literalinclude:: ../doc_code/tuner.py
     :language: python
     :start-after: __run_config_start__
     :end-before: __run_config_end__
 
-See the :class:`RunConfig API reference <ray.train.RunConfig>` for more details.
+参考 :class:`RunConfig API 参考 <ray.train.RunConfig>` 以了解更多详细信息。
 
 
-Search Space configuration
+搜索空间配置
 --------------------------
 
-A `Tuner` takes in a `param_space` argument where you can define the search space
-from which hyperparameter configurations will be sampled.
+`Tuner` 接受 `param_space` 参数，您可以在其中定义超参数配置将
+从中进行采样的搜索空间。
 
-Depending on the model and dataset, you may want to tune:
+根据模型和数据集，您可能需要调整：
 
-- The training batch size
-- The learning rate for deep learning training (e.g., image classification)
-- The maximum depth for tree-based models (e.g., XGBoost)
+- 训练批次大小
+- 深度学习训练的学习率（例如图像分类）
+- 基于树的模型的最大深度（例如 XGBoost）
 
-You can use a Tuner to tune most arguments and configurations for Ray Train, including but
-not limited to:
+您可以使用 Tuner 调整 Ray Train 的大多数参数和配置，
+包括但不限于：
 
 - Ray :class:`Datasets <ray.data.Dataset>`
 - :class:`~ray.train.ScalingConfig`
-- and other hyperparameters.
+- 和其他超参数。
 
 
-Read more about :ref:`Tune search spaces here <tune-search-space-tutorial>`.
+在此处阅读有关 :ref:`Tune 搜索空间 <tune-search-space-tutorial>` 的更多信息。
 
-Train - Tune gotchas
+Train - Tune 陷
 --------------------
 
-There are a couple gotchas about parameter specification when using Tuners with Trainers:
+在将 Tuner 与 Trainer 结合使用时，存在一些有关参数规范的陷阱：
 
-- By default, configuration dictionaries and config objects will be deep-merged.
-- Parameters that are duplicated in the Trainer and Tuner will be overwritten by the Tuner ``param_space``.
-- **Exception:** all arguments of the :class:`RunConfig <ray.train.RunConfig>` and :class:`TuneConfig <ray.tune.tune_config.TuneConfig>` are inherently un-tunable.
+- 默认情况下，配置字典和配置对象将深度合并。
+- Tuner 中 ``param_space`` 会覆盖 Tuner 和 Trainer 中的重复参数。
+- **例外:** :class:`RunConfig <ray.train.RunConfig>` 和 :class:`TuneConfig <ray.tune.tune_config.TuneConfig>` 的所有参数本质上都是不可调的。
 
-See :doc:`/tune/tutorials/tune_get_data_in_and_out` for an example.
+参考 :doc:`/tune/tutorials/tune_get_data_in_and_out` 示例。
 
-Advanced Tuning
+高级调整
 ---------------
 
-Tuners also offer the ability to tune over different data preprocessing steps and
-different training/validation datasets, as shown in the following snippet.
+Tuner 还提供调整不同数据预处理步骤和不同训练/验证数据集的能力，
+如下面的代码片段所示。
 
 .. literalinclude:: ../doc_code/tuner.py
     :language: python

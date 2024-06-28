@@ -1,19 +1,18 @@
 .. _train_scaling_config:
 
-Configuring Scale and GPUs
+配置 Scale 和 GPU
 ==========================
-Increasing the scale of a Ray Train training run is simple and can be done in a few lines of code.
-The main interface for this is the :class:`~ray.train.ScalingConfig`, 
-which configures the number of workers and the resources they should use.
+增加 Ray Train 训练运行的规模很简单，只需几行代码即可完成。
+此操作的主要接口时 :class:`~ray.train.ScalingConfig`，
+它配置了工作器的数量及其应使用的资源。
 
-In this guide, a *worker* refers to a Ray Train distributed training worker,
-which is a :ref:`Ray Actor <actor-key-concept>` that runs your training function.
+在本指南中， *worker* 是指 Ray Train 分布式训练 worker，
+它是运行训练功能的 :ref:`Ray Actor <actor-key-concept>` 。
 
-Increasing the number of workers
+增加 worker 数量
 --------------------------------
-The main interface to control parallelism in your training code is to set the
-number of workers. This can be done by passing the ``num_workers`` attribute to
-the :class:`~ray.train.ScalingConfig`:
+控制训练代码中并行性的主要接口是设置工作器的数量。
+这可以通过将 ``num_workers`` 属性传递给 :class:`~ray.train.ScalingConfig` 来完成：
 
 .. code-block:: python
 
@@ -24,11 +23,11 @@ the :class:`~ray.train.ScalingConfig`:
     )
 
 
-Using GPUs
+使用 GPU
 ----------
-To use GPUs, pass ``use_gpu=True`` to the :class:`~ray.train.ScalingConfig`.
-This will request one GPU per training worker. In the example below, training will
-run on 8 GPUs (8 workers, each using one GPU).
+要使用 GPU，请传递 ``use_gpu=True`` 给 :class:`~ray.train.ScalingConfig`。
+这将为每个训练 worker 请求一个 GPU。在下面的示例中，
+训练将在 8 个 GPU 上运行（8 个工作器，每个工作器使用一个 GPU）。
 
 .. code-block:: python
 
@@ -40,13 +39,13 @@ run on 8 GPUs (8 workers, each using one GPU).
     )
 
 
-Using GPUs in the training function
+在训练函数中使用 GPU
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When ``use_gpu=True`` is set, Ray Train will automatically set up environment variables
-in your training function so that the GPUs can be detected and used
-(e.g. ``CUDA_VISIBLE_DEVICES``).
+设置 ``use_gpu=True`` 后，Ray Train 将自动在您的训练函数中设置环境变量，
+以便可以检测和使用 GPU
+（例如 ``CUDA_VISIBLE_DEVICES``）。
 
-You can get the associated devices with :meth:`ray.train.torch.get_device`.
+您可以通过 :meth:`ray.train.torch.get_device` 获取关联的设备。
 
 .. code-block:: python
 
@@ -72,11 +71,11 @@ You can get the associated devices with :meth:`ray.train.torch.get_device`.
     trainer.fit()
 
 
-Setting the resources per worker
+为每个 worker 设置资源
 --------------------------------
-If you want to allocate more than one CPU or GPU per training worker, or if you
-defined :ref:`custom cluster resources <cluster-resources>`, set
-the ``resources_per_worker`` attribute:
+如果你想为每个训练 worker 分配多个 CPU 或 GPU，或者如果你
+定义了 :ref:`自定义集群资源 <cluster-resources>`，请
+设置 ``resources_per_worker`` 属性：
 
 .. code-block:: python
 
@@ -93,11 +92,11 @@ the ``resources_per_worker`` attribute:
 
 
 .. note::
-    If you specify GPUs in ``resources_per_worker``, you also need to set
-    ``use_gpu=True``.
+    如果您在 ``resources_per_worker``中指定 GPU ，则还需要设置
+    ``use_gpu=True``。
 
-You can also instruct Ray Train to use fractional GPUs. In that case, multiple workers
-will be assigned the same CUDA device.
+您还可以指示 Ray Train 使用部分 GPU。在这种情况下，多个 worker 将被
+分配相同的 CUDA 设备。
 
 .. code-block:: python
 
@@ -113,18 +112,18 @@ will be assigned the same CUDA device.
     )
 
 
-Setting the communication backend (PyTorch)
+设置通信后端（PyTorch）
 -------------------------------------------
 
 .. note::
 
-    This is an advanced setting. In most cases, you don't have to change this setting.
+    这是一个高级设置。大多数情况下，您无需更改此设置。
 
-You can set the PyTorch distributed communication backend (e.g. GLOO or NCCL) by passing a
-:class:`~ray.train.torch.TorchConfig` to the :class:`~ray.train.torch.TorchTrainer`.
+你可以通过将 :class:`~ray.train.torch.TorchConfig` 传递给 :class:`~ray.train.torch.TorchTrainer`来
+设置 PyTorch 分布式通信后端（例如 GLOO 或 NCCL）。
 
-See the `PyTorch API reference <https://pytorch.org/docs/stable/distributed.html#torch.distributed.init_process_group>`__
-for valid options.
+参阅 `PyTorch API 参考 <https://pytorch.org/docs/stable/distributed.html#torch.distributed.init_process_group>`__
+以了解有效选项。
 
 .. code-block:: python
 
@@ -142,16 +141,16 @@ for valid options.
 
 .. _train_trainer_resources:
 
-Trainer resources
+Trainer 资源
 -----------------
-So far we've configured resources for each training worker. Technically, each
-training worker is a :ref:`Ray Actor <actor-guide>`. Ray Train also schedules
-an actor for the :class:`Trainer <ray.train.trainer.BaseTrainer>` object when
-you call :meth:`Trainer.fit() <ray.train.trainer.BaseTrainer.fit>`.
+到目前为止，我们已经为每个训练 worker 配置了资源。从技术上讲，每个
+训练 worker 都是一个 :ref:`Ray Actor <actor-guide>`。当您调用
+:meth:`Trainer.fit() <ray.train.trainer.BaseTrainer.fit>` 时，Ray Train 还会为
+:class:`Trainer <ray.train.trainer.BaseTrainer>` 对象创建一个 actor。
 
-This object often only manages lightweight communication between the training workers.
-You can still specify its resources, which can be useful if you implemented your own
-Trainer that does heavier processing.
+此对象通常仅管理训练 worker 之间的轻量级通信。
+您仍然可以指定其资源，
+如果您实施了执行更繁重处理的自己的训练器，这将很有用。
 
 .. code-block:: python
 
@@ -165,10 +164,10 @@ Trainer that does heavier processing.
         }
     )
 
-Per default, a trainer uses 1 CPU. If you have a cluster with 8 CPUs and want
-to start 4 training workers a 2 CPUs, this will not work, as the total number
-of required CPUs will be 9 (4 * 2 + 1). In that case, you can specify the trainer
-resources to use 0 CPUs:
+默认情况下，训练器使用 1 个 CPU。如果您有一个包含 8 个 CPU 的集群，
+并且想要启动 4 个训练工作器和 2 个 CPU，那么这将行不通，
+因为所需的 CPU 总数将为 9 (4 * 2 + 1)。
+在这种情况下，您可以指定训练器资源使用 0 个 CPU：
 
 .. code-block:: python
 

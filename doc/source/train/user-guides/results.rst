@@ -1,45 +1,43 @@
 .. _train-inspect-results:
 
-Inspecting Training Results
+检查训练结果
 ===========================
 
-The return value of your :meth:`Trainer.fit() <ray.train.trainer.BaseTrainer.fit>`
-call is a :class:`~ray.train.Result` object.
+调用 :meth:`Trainer.fit() <ray.train.trainer.BaseTrainer.fit>` 的返回结果是
+一个 :class:`~ray.train.Result` 对象。
 
-The :class:`~ray.train.Result` object contains, among other information:
+:class:`~ray.train.Result` 对象包含以下信息：
 
-- The last reported metrics (e.g. the loss)
-- The last reported checkpoint (to load the model)
-- Error messages, if any errors occurred
+- 最后报告的指标（例如损失）
+- 最后报告的检查点（加载模型）
+- 如果发生任何错误，则显示错误消息
 
-Viewing metrics
+查看指标
 ---------------
-You can retrieve metrics reported to Ray Train from the :class:`~ray.train.Result`
-object.
+您可以从 :class:`~ray.train.Result` 对象检索报告给 Ray Train 的指标。
 
-Common metrics include the training or validation loss, or prediction accuracies.
+常见指标包括训练或验证损失，或预测准确性。
 
-The metrics retrieved from the :class:`~ray.train.Result` object
-correspond to those you passed to :func:`train.report <ray.train.report>`
-as an argument :ref:`in your training function <train-monitoring-and-logging>`.
+从 :class:`~ray.train.Result` 对象检索到的指标与
+您作为 :ref:`在您的训练函数中 <train-monitoring-and-logging>` 的参数
+传递给 :func:`train.report <ray.train.report>` 的指标相对应，。
 
 
-Last reported metrics
+最近报告的指标
 ~~~~~~~~~~~~~~~~~~~~~
 
-Use :attr:`Result.metrics <ray.train.Result.metrics>` to retrieve the
-latest reported metrics.
+使用 :attr:`Result.metrics <ray.train.Result.metrics>` 检索
+最新报告的指标。
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
     :start-after: __result_metrics_start__
     :end-before: __result_metrics_end__
 
-Dataframe of all reported metrics
+所有报告指标的数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use :attr:`Result.metrics_dataframe <ray.train.Result.metrics_dataframe>` to retrieve
-a pandas DataFrame of all reported metrics.
+使用 :attr:`Result.metrics_dataframe <ray.train.Result.metrics_dataframe>`检索所有报告指标的 pandas DataFrame。
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
@@ -47,26 +45,24 @@ a pandas DataFrame of all reported metrics.
     :end-before: __result_dataframe_end__
 
 
-Retrieving checkpoints
+检索检查点
 ----------------------
-You can retrieve checkpoints reported to Ray Train from the :class:`~ray.train.Result`
-object.
+您可以从 :class:`~ray.train.Result` 对象检索报告给 Ray Train 的检查点。
 
-:ref:`Checkpoints <train-checkpointing>` contain all the information that is needed
-to restore the training state. This usually includes the trained model.
+:ref:`Checkpoints <train-checkpointing>` 包含恢复训练状态所需的所有信息。、
+这通常包括训练后的模型。
 
-You can use checkpoints for common downstream tasks such as
-:ref:`offline batch inference with Ray Data <batch_inference_ray_train>`,
-or :doc:`online model serving with Ray Serve </serve/index>`.
+您可以将检查点用于常见的下游任务，例如
+:ref:`使用 Ray Data 进行离线批量推理 <batch_inference_ray_train>`,
+或 :doc:`使用 Ray Serve 进行在线模型服务 </serve/index>`。
 
-The checkpoints retrieved from the :class:`~ray.train.Result` object
-correspond to those you passed to :func:`train.report <ray.train.report>`
-as an argument :ref:`in your training function <train-monitoring-and-logging>`.
+:class:`~ray.train.Result` 对象检索到的检查点与您
+:ref:`在训练函数中 <train-monitoring-and-logging>` 作为参数
+传递给 :func:`train.report <ray.train.report>` 的检查点相对应。
 
-Last saved checkpoint
+最后保存的检查点
 ~~~~~~~~~~~~~~~~~~~~~
-Use :attr:`Result.checkpoint <ray.train.Result.checkpoint>` to retrieve the
-last checkpoint.
+使用 :attr:`Result.checkpoint <ray.train.Result.checkpoint>`检索最后一个检查点。
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
@@ -74,29 +70,29 @@ last checkpoint.
     :end-before: __result_checkpoint_end__
 
 
-Other checkpoints
+其他检查点
 ~~~~~~~~~~~~~~~~~
-Sometimes you want to access an earlier checkpoint. For instance, if your loss increased
-after more training due to overfitting, you may want to retrieve the checkpoint with
-the lowest loss.
+有时，您希望访问较早的检查点。例如，如果
+由于过度拟合导致损失在更多训练后增加，
+您可能希望检索损失最低的检查点。
 
-You can retrieve a list of all available checkpoints and their metrics with
-:attr:`Result.best_checkpoints <ray.train.Result.best_checkpoints>`
+您可以使用以下方式 :attr:`Result.best_checkpoints <ray.train.Result.best_checkpoints>` 检索
+所有可用检查点及其指标的列表
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
     :start-after: __result_best_checkpoint_start__
     :end-before: __result_best_checkpoint_end__
 
-Accessing storage location
+访问存储位置
 ---------------------------
-If you need to retrieve the results later, you can get the storage location
-of the training run with :attr:`Result.path <ray.train.Result.path>`.
+如果您稍后需要检索结果，可以使用 :attr:`Result.path <ray.train.Result.path>`
+获取训练运行的存储位置。
 
-This path will correspond to the :ref:`storage_path <train-log-dir>` you configured
-in the :class:`~ray.train.RunConfig`. It will be a
-(nested) subdirectory within that path, usually
-of the form `TrainerName_date-string/TrainerName_id_00000_0_...`.
+此路径将对应于您在 :class:`~ray.train.RunConfig` 中
+配置的 :ref:`storage_path <train-log-dir>` 。
+它将是该路径内的（嵌套）子目录，通常为
+`TrainerName_date-string/TrainerName_id_00000_0_...` 的形式。
 
 
 .. literalinclude:: ../doc_code/key_concepts.py
@@ -105,7 +101,7 @@ of the form `TrainerName_date-string/TrainerName_id_00000_0_...`.
     :end-before: __result_path_end__
 
 
-You can restore a result with :meth:`Result.from_path <ray.train.Result.from_path>`:
+你可以使用 :meth:`Result.from_path <ray.train.Result.from_path>` 恢复结果：
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
@@ -114,11 +110,11 @@ You can restore a result with :meth:`Result.from_path <ray.train.Result.from_pat
 
 
 
-Viewing Errors
+查看错误
 --------------
-If an error occurred during training,
-:attr:`Result.error <ray.train.Result.error>` will be set and contain the exception
-that was raised.
+如果训练期间发生错误，
+:attr:`Result.error <ray.train.Result.error>` 
+将会设置并包含引发的异常。
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
@@ -126,10 +122,10 @@ that was raised.
     :end-before: __result_error_end__
 
 
-Finding results on persistent storage
+在持久存储中查找结果
 -------------------------------------
-All training results, including reported metrics, checkpoints, and error files,
-are stored on the configured :ref:`persistent storage <train-log-dir>`.
+有训练结果（包括报告的指标、检查点和错误文件）都存储
+在配置的 :ref:`持久化存储 <train-log-dir>` 中。
 
-See :ref:`our persistent storage guide <train-log-dir>` to configure this location
-for your training run.
+参考 :ref:`我们的持久化存储指南 <train-log-dir>`，为您的
+训练运行位置配置。

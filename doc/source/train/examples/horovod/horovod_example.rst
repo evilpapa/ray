@@ -2,19 +2,19 @@
 
 .. _horovod_example:
 
-Run Horovod Distributed Training with PyTorch and Ray Train
+使用 PyTorch 和 Ray Train 运行 Horovod 分布式训练
 ===========================================================
 
-This basic example demonstrates how to run Horovod distributed training with PyTorch and Ray Train.
+这个基本示例演示了如何使用 PyTorch 和 Ray Train 运行 Horovod 分布式训练。
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: /../../python/ray/train/examples/horovod/horovod_example.py
 
 
-See also
+也可以看看
 --------
 
-* :ref:`Get Started with Horovod <train-horovod>` for a tutorial on using Horovod with Ray Train
-* :ref:`Ray Train Examples <train-examples>` for more use cases
+* :ref:`Horovod 入门指南 <train-horovod>` ，查看有关将 Horovod 与 Ray Train 结合使用的教程
+* 更多 :ref:`Ray Train 示例 <train-examples>`

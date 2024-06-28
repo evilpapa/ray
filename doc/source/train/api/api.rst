@@ -58,7 +58,7 @@ Hugging Face Transformers
     ~train.huggingface.transformers.RayTrainReportCallback
 
 
-More Frameworks
+更多框架
 ---------------
 
 Tensorflow/Keras
@@ -102,7 +102,7 @@ LightGBM
 
 .. _ray-train-configs-api:
 
-Ray Train Configuration
+Ray Train 配置
 -----------------------
 
 .. autosummary::
@@ -117,10 +117,10 @@ Ray Train Configuration
 
 .. _train-loop-api:
 
-Ray Train Utilities
+Ray Train 实用工具
 -------------------
 
-**Classes**
+**类**
 
 .. autosummary::
     :toctree: doc/
@@ -128,7 +128,7 @@ Ray Train Utilities
     ~train.Checkpoint
     ~train.context.TrainContext
 
-**Functions**
+**函数**
 
 .. autosummary::
     :toctree: doc/
@@ -139,7 +139,7 @@ Ray Train Utilities
     ~train.report
 
 
-Ray Train Output
+Ray Train 输出
 ----------------
 
 .. autosummary::
@@ -149,12 +149,12 @@ Ray Train Output
     ~train.Result
 
 
-Ray Train Developer APIs
+Ray Train 开发者 API
 ------------------------
 
 .. _train-base-trainer:
 
-Trainer Base Classes
+Trainer 基础类
 ~~~~~~~~~~~~~~~~~~~~
 
 .. autosummary::
@@ -165,7 +165,7 @@ Trainer Base Classes
     ~train.gbdt_trainer.GBDTTrainer
 
 
-Train Backend Base Classes
+Train 后端基础类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _train-backend:

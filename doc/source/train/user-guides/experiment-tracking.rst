@@ -1,21 +1,19 @@
 .. _train-experiment-tracking-native:
 
 ===================
-Experiment Tracking
+实现追踪
 ===================
 
 .. note::
-    This guide is relevant for all trainers in which you define a custom training loop. 
-    This includes :class:`TorchTrainer <ray.train.torch.TorchTrainer>` and 
-    :class:`TensorflowTrainer <ray.train.tensorflow.TensorflowTrainer>`.
+    本指南适用于您定义自定义训练循环的所有训练器。
+    这包括 :class:`TorchTrainer <ray.train.torch.TorchTrainer>` 和 
+    :class:`TensorflowTrainer <ray.train.tensorflow.TensorflowTrainer>`。
 
-Most experiment tracking libraries work out-of-the-box with Ray Train. 
-This guide provides instructions on how to set up the code so that your favorite experiment tracking libraries 
-can work for distributed training with Ray Train. The end of the guide has common errors to aid in debugging 
-the setup.
+多数实验追踪库可以直接与 Ray Train 配合使用。
+本指南提供了如何设置代码的说明，以便将您喜欢的实验追踪库可以与 Ray Train 的分布式训练配合使用。
+指南最后列出了常见错误，以帮助调试设置。
 
-The following pseudo code demonstrates how to use the native experiment tracking library calls 
-inside of Ray Train: 
+以下伪代码演示了如何在 Ray Train 中使用原生实验追踪库调用：
 
 .. code-block:: python
 
@@ -29,16 +27,15 @@ inside of Ray Train:
     trainer = TorchTrainer(train_func, scaling_config=scaling_config)
     result = trainer.fit()
 
-Ray Train lets you use native experiment tracking libraries by customizing the tracking 
-logic inside the :ref:`train_func<train-overview-training-function>` function. 
-In this way, you can port your experiment tracking logic to Ray Train with minimal changes. 
+Ray Train 让您可以使用原生实验追踪类库在 :ref:`train_func<train-overview-training-function>` 函数中自定义追踪逻辑。
+这样，你只需进行最少的更改就可以将实验追踪逻辑移植到 Ray Train 中。
 
-Getting Started
+入门
 ===============
 
-Let's start by looking at some code snippets.
+让我们先看一些代码片段。
 
-The following examples uses Weights & Biases (W&B) and MLflow but it's adaptable to other frameworks.
+以下示例使用权重和偏差（W＆B）和 MLflow，但它可以适用于其他框架。
 
 .. tabs::
 
@@ -110,10 +107,9 @@ The following examples uses Weights & Biases (W&B) and MLflow but it's adaptable
 
 .. tip::
 
-    A major difference between distributed and non-distributed training is that in distributed training, 
-    multiple processes are running in parallel and under certain setups they have the same results. If all 
-    of them report results to the tracking backend, you may get duplicated results. To address that,  
-    Ray Train lets you apply logging logic to only the rank 0 worker with the following method:
+    分布式和非分布式训练之间的主要区别在于，在分布式训练中，多个进程并行运行，并且在某些设置下它们具有相同的结果。
+    如果所有进程都将结果报告给跟踪后端，您可能会得到重复的结果。为了解决这个问题，
+    Ray Train 允许您使用以下方法将日志记录逻辑仅应用于等级 0 的 worker ：
     :meth:`ray.train.get_context().get_world_rank() <ray.train.context.TrainContext.get_world_rank>`.
 
     .. code-block:: python
@@ -125,44 +121,44 @@ The following examples uses Weights & Biases (W&B) and MLflow but it's adaptable
                 # Add your logging logic only for rank0 worker.
             ...
 
-The interaction with the experiment tracking backend within the :ref:`train_func<train-overview-training-function>` 
-has 4 logical steps:
+与 :ref:`train_func<train-overview-training-function>` 中的实验跟踪后端的交互
+有 4 个逻辑步骤：
 
-#. Set up the connection to a tracking backend
-#. Configure and launch a run
-#. Log metrics
-#. Finish the run
+#. 设置与跟踪后端的连接
+#. 配置并启动运行
+#. 记录指标
+#. 结束运行
 
-More details about each step follows.
+以下是关于每个步骤的更多详细信息。
 
-Step 1: Connect to your tracking backend
+步骤 1：连接到你的跟踪后端
 ----------------------------------------
 
-First, decide which tracking backend to use: W&B, MLflow, TensorBoard, Comet, etc.
-If applicable, make sure that you properly set up credentials on each training worker.
+首先，决定使用哪个跟踪后端：W&B、MLflow、TensorBoard、Comet 等。
+如果适用，请确保在每个训练 worker 上正确设置凭据。
 
 .. tabs::
 
     .. tab:: W&B
         
-        W&B offers both *online* and *offline* modes. 
+        W&B 提供 *在线* 和 *离线* 模式。
 
-        **Online**
+        **在线**
 
-        For *online* mode, because you log to W&B's tracking service, ensure that you set the credentials 
-        inside of :ref:`train_func<train-overview-training-function>`. See :ref:`Set up credentials<set-up-credentials>` 
-        for more information.
+        针对 *在线* 模式，因为您要记录到 W&B 的跟踪服务，
+        确保您在 :ref:`train_func<train-overview-training-function>` 中设置凭据。
+        参考 :ref:`设置凭据<set-up-credentials>` 获取更多信息。
 
         .. code-block:: python
             
             # This is equivalent to `os.environ["WANDB_API_KEY"] = "your_api_key"`
             wandb.login(key="your_api_key")
 
-        **Offline**
+        **离线**
 
-        For *offline* mode, because you log towards a local file system, 
-        point the offline directory to a shared storage path that all nodes can write to. 
-        See :ref:`Set up a shared file system<set-up-shared-file-system>` for more information.
+        针对 *离线* 模式，因为您要记录到本地文件系统，
+        指定一个所有节点都可以写入的共享存储路径。
+        参考 :ref:`设置共享文件存储<set-up-credentials>` 获取更多信息。
         
         .. code-block:: python
 
@@ -171,22 +167,22 @@ If applicable, make sure that you properly set up credentials on each training w
 
     .. tab:: MLflow
         
-        MLflow offers both *local* and *remote* (for example, to Databrick's MLflow service) modes. 
+        MLflow 提供了 *本地* 和 *远程*（例如，到 Databrick 的 MLflow 服务）模式。
 
-        **Local**
+        **本地**
 
-        For *local* mode, because you log to a local file 
-        system, point offline directory to a shared storage path. that all nodes can write 
-        to. See :ref:`Set up a shared file system<set-up-shared-file-system>` for more information. 
+        针对 *本地* 模式，因为您要记录到本地文件系统，将离线目录指向共享存储路径。
+        这样所有节点都可以写入。
+        参考 :ref:`设置共享文件系统<set-up-shared-file-system>` 获取更多信息。
         
         .. code-block:: python
 
             mlflow.start_run(tracking_uri="file:some_shared_storage_path/mlruns")
 
-        **Remote, hosted by Databricks**
+        **远程，由 Databricks 托管**
             
-        Ensure that all nodes have access to the Databricks config file. 
-        See :ref:`Set up credentials<set-up-credentials>` for more information.
+        确保所有节点都可以访问 Databricks 配置文件。
+        参考 :ref:`设置凭据<set-up-credentials>` 获取更多信息。
         
         .. code-block:: python
 
@@ -198,14 +194,14 @@ If applicable, make sure that you properly set up credentials on each training w
 
 .. _set-up-credentials:
 
-Set up credentials
+设置凭据
 ~~~~~~~~~~~~~~~~~~
 
-Refer to each tracking library's API documentation on setting up credentials.
-This step usually involves setting an environment variable or accessing a config file.
+请参阅每个跟踪库的 API 文档以了解如何设置凭据。
+此步骤通常涉及设置环境变量或访问配置文件。
 
-The easiest way to pass an environment variable credential to training workers is through 
-:ref:`runtime environments <runtime-environments>`, where you initialize with the following code:
+最简单的方式是将环境变量凭据通过 :ref:`runtime environments <runtime-environments>` 传递给训练 workers，
+您可以使用以下代码初始化：
 
 .. code-block:: python
 
@@ -213,22 +209,22 @@ The easiest way to pass an environment variable credential to training workers i
     # This makes sure that training workers have the same env var set
     ray.init(runtime_env={"env_vars": {"SOME_API_KEY": "your_api_key"}})
 
-For accessing the config file, ensure that the config file is accessible to all nodes.
-One way to do this is by setting up a shared storage. Another way is to save a copy in each node.
+要访问配置文件，请确保配置文件对所有节点都是可访问的。
+一种方法是设置共享存储。另一种方法是在每个节点中保存一份副本。
 
 .. _set-up-shared-file-system:
 
-Set up a shared file system
+设置共享文件系统
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Set up a network filesystem accessible to all nodes in the cluster. 
-For example, AWS EFS or Google Cloud Filestore.
+设置集群中所有节点均可访问的网络文件系统。
+例如 AWS EFS 或 Google Cloud Filestore。
 
-Step 2: Configure and start the run 
+步骤 2: 配置并开始运行
 -----------------------------------
 
-This step usually involves picking an identifier for the run and associating it with a project.
-Refer to the tracking libraries' documentation for semantics. 
+此步骤通常涉及为运行选择一个标识符并将其与项目关联。
+请参阅跟踪库的文档以了解语义。
 
 .. To conveniently link back to Ray Train run, you may want to log the persistent storage path 
 .. of the run as a config.
@@ -241,9 +237,9 @@ Refer to the tracking libraries' documentation for semantics.
 
 .. tip::
     
-    When performing **fault-tolerant training** with auto-restoration, use a 
-    consistent ID to configure all tracking runs that logically belong to the same training run.
-    One way to acquire an unique ID is with the following method: 
+    执行具有自动恢复功能的 **容错训练** 时，
+    请使用一致的 ID 来配置逻辑上属于同一训练运行的所有跟踪运行。
+    获取唯一 ID 的一种方法是使用以下方法：
     :meth:`ray.train.get_context().get_trial_id() <ray.train.context.TrainContext.get_trial_id>`.
 
     .. code-block:: python
@@ -265,22 +261,18 @@ Refer to the tracking libraries' documentation for semantics.
         trainer.fit()
             
 
-Step 3: Log metrics
+步骤 3: 记录指标
 -------------------
 
-You can customize how to log parameters, metrics, models, or media contents, within 
-:ref:`train_func<train-overview-training-function>`, just as in a non-distributed training script. 
-You can also use native integrations that a particular tracking framework has with 
-specific training frameworks. For example, ``mlflow.pytorch.autolog()``, 
-``lightning.pytorch.loggers.MLFlowLogger``, etc. 
+你可以在 :ref:`train_func<train-overview-training-function>` 中自定义如何记录参数、指标、模型或媒体内容，就像在非分布式训练脚本中一样。
+使用特定跟踪框架与特定训练框架的本机集成。比如，``mlflow.pytorch.autolog()``, 
+``lightning.pytorch.loggers.MLFlowLogger`` 等。
 
-Step 4: Finish the run
+步骤 4: 结束运行
 ----------------------
 
-This step ensures that all logs are synced to the tracking service. Depending on the implementation of 
-various tracking libraries, sometimes logs are first cached locally and only synced to the tracking 
-service in an asynchronous fashion. 
-Finishing the run makes sure that all logs are synced by the time training workers exit. 
+此步骤可确保所有日志都同步到跟踪服务。根据各种跟踪库的实现，有时日志会先在本地缓存，然后以异步方式同步到跟踪服务。
+完成运行可确保在训练 worker 退出时所有日志都已同步。
 
 .. tabs::
 
@@ -305,10 +297,10 @@ Finishing the run makes sure that all logs are synced by the time training worke
             # https://www.comet.com/docs/v2/api-and-sdk/python-sdk/reference/Experiment/#experimentend
             Experiment.end()    
 
-Examples
+例子
 ========
 
-The following are runnable examples for PyTorch and PyTorch Lightning.
+以下是 PyTorch 和 PyTorch Lightning 的可运行示例。
 
 PyTorch
 -------
@@ -331,10 +323,10 @@ PyTorch
 PyTorch Lightning
 -----------------
 
-You can use the native Logger integration in PyTorch Lightning with W&B, CometML, MLFlow, 
-and Tensorboard, while using Ray Train's TorchTrainer.
+您可以将 PyTorch Lightning 中的本机 Logger 集成与 W&B、CometML、MLFlow 和 Tensorboard 一起使用，
+同时使用 Ray Train 的 TorchTrainer。
 
-The following example walks you through the process. The code here is runnable. 
+以下示例将引导您完成该过程。此处的代码可运行。
 
 .. dropdown:: W&B
 
@@ -378,33 +370,31 @@ The following example walks you through the process. The code here is runnable.
         :start-after: __lightning_experiment_tracking_tensorboard_start__
         :end-before: __lightning_experiment_tracking_tensorboard_end__
 
-Common Errors
+常见错误
 =============
 
-Missing Credentials
+缺少凭证
 -------------------
 
-**I have already called `wandb login` cli, but am still getting** 
+**我已经调用了 `wandb login` cli，但仍然得到** 
 
 .. code-block:: none
 
     wandb: ERROR api_key not configured (no-tty). call wandb.login(key=[your_api_key]).
 
-This is probably due to wandb credentials are not set up correctly
-on worker nodes. Make sure that you run ``wandb.login`` 
-or pass ``WANDB_API_KEY`` to each training function. 
-See :ref:`Set up credentials <set-up-credentials>` for more details.
+这可能是由于未在工作节点上正确设置 wandb 凭据引起的。
+确保您运行 ``wandb.login`` 或将 ``WANDB_API_KEY`` 传递给每个训练函数。
+参考 :ref:`设置凭据<set-up-credentials>` 获取更多信息。
 
-Missing Configurations
+缺少配置
 ----------------------
 
-**I have already run `databricks configure`, but am still getting**
+**我已经运行了 `databricks configure` ，但仍然**
 
 .. code-block:: none
 
     databricks_cli.utils.InvalidConfigurationError: You haven't configured the CLI yet!
 
-This is usually caused by running ``databricks configure`` which 
-generates ``~/.databrickscfg`` only on head node. Move this file to a shared
-location or copy it to each node.
-See :ref:`Set up credentials <set-up-credentials>` for more details.
+这通常由于运行 ``databricks configure`` 而生成的 ``~/.databrickscfg`` 仅在 head 节点上。 
+移动此文件到共享位置或将其复制到每个节点。
+参考 :ref:`设置凭据<set-up-credentials>` 获取更多信息。

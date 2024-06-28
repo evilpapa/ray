@@ -2,20 +2,20 @@
 
 .. _tensorflow_mnist_example:
 
-Training with TensorFlow and Ray Train
+使用 TensorFlow 和 Ray Train 进行训练
 ======================================
 
-This basic example runs distributed training of a TensorFlow model on MNIST with Ray Train.
+这个基本示例使用 Ray Train 在 MNIST 上运行 TensorFlow 模型的分布式训练。
 
-Code example
+代码示例
 ------------
 
 .. literalinclude:: /../../python/ray/train/examples/tf/tensorflow_mnist_example.py
 
 
-See also
+也可以看看
 --------
 
-* :ref:`Ray Train Examples <train-examples>` for more use cases.
+* 更多 :ref:`Ray Train 示例 <train-examples>`
 
-* :ref:`Distributed Tensorflow & Keras <train-tensorflow-overview>` for a tutorial. 
+* :ref:`分布式 Tensorflow & Keras <train-tensorflow-overview>` 教程。

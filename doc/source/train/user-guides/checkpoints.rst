@@ -1,80 +1,80 @@
 .. _train-checkpointing:
 
-Saving and Loading Checkpoints
+保存加载检查点
 ==============================
 
-Ray Train provides a way to snapshot training progress with :class:`Checkpoints <ray.train.Checkpoint>`.
+Ray Train 提供了一种快照训练进度的方法 :class:`Checkpoints <ray.train.Checkpoint>` 。
 
-This is useful for:
+这对于以下情况有用：
 
-1. **Storing the best-performing model weights:** Save your model to persistent storage, and use it for downstream serving/inference.
-2. **Fault tolerance:** Handle node failures in a long-running training job on a cluster of pre-emptible machines/pods.
-3. **Distributed checkpointing:** When doing *model-parallel training*, Ray Train checkpointing provides an easy way to
-   :ref:`upload model shards from each worker in parallel <train-distributed-checkpointing>`,
-   without needing to gather the full model to a single node.
-4. **Integration with Ray Tune:** Checkpoint saving and loading is required by certain :ref:`Ray Tune schedulers <tune-schedulers>`.
+1. **存储性能最佳的模型权重：** 将模型保存到持久存储中，并将其用于下游服务/推理。
+2. **容错：** 处理在集群上可抢占机器 / pod 上长期运行的训练作业中的节点故障。
+3. **分布式检查点：** 在进行 *模型并行训练*时，Ray Train 检查点提供了一种简单的方法，可以
+   :ref:`从每个 worker 并行上传模型碎片 <train-distributed-checkpointing>`，
+   而无需将完整模型收集到单个节点。
+4. **与 Ray Tune 集成：** 检查点的保存和加载被默写 :ref:`Ray Tune 调度程序 <tune-schedulers>` 所需。
 
 
 .. _train-dl-saving-checkpoints:
 
-Saving checkpoints during training
+训练期间保存检查点
 ----------------------------------
 
-The :class:`Checkpoint <ray.train.Checkpoint>` is a lightweight interface provided
-by Ray Train that represents a *directory* that exists at on local or remote storage.
+:class:`Checkpoint <ray.train.Checkpoint>` 是 Ray Train 提供的轻量级接口，表示
+存在于本地或远程存储中的 *目录* 。
 
-For example, a checkpoint could point to a directory in cloud storage:
-``s3://my-bucket/my-checkpoint-dir``.
-A locally available checkpoint points to a location on the local filesystem:
-``/tmp/my-checkpoint-dir``.
+例如，检查点可以指向云存储中的目录：
+``s3://my-bucket/my-checkpoint-dir``。
+本地可用的检查点指向本地文件系统上的位置：
+``/tmp/my-checkpoint-dir``。
 
-Here's how you save a checkpoint in the training loop:
+以下是在训练循环中保存检查点的方法：
 
-1. Write your model checkpoint to a local directory.
+1. 将您的模型检查点写入本地目录。
 
-   - Since a :class:`Checkpoint <ray.train.Checkpoint>` just points to a directory, the contents are completely up to you.
-   - This means that you can use any serialization format you want.
-   - This makes it **easy to use familiar checkpoint utilities provided by training frameworks**, such as
-     ``torch.save``, ``pl.Trainer.save_checkpoint``, Accelerate's ``accelerator.save_model``,
-     Transformers' ``save_pretrained``, ``tf.keras.Model.save``, etc.
+   - 由于 :class:`Checkpoint <ray.train.Checkpoint>` 只是指向一个目录，因此其内容完全由您决定。
+   - 这意味着您可以使用任何您想要的序列化格式。
+   - 这使得 **使用训练框架提供的熟悉的检查点实用程序变得容易**，例如
+     ``torch.save``， ``pl.Trainer.save_checkpoint``，Accelerate 的 ``accelerator.save_model``，
+     Transformer 的 ``save_pretrained``，``tf.keras.Model.save`` 等等。
 
-2. Create a :class:`Checkpoint <ray.train.Checkpoint>` from the directory using :meth:`Checkpoint.from_directory <ray.train.Checkpoint.from_directory>`.
+2. 使用 :meth:`Checkpoint.from_directory <ray.train.Checkpoint.from_directory>` 从目录创建一个 :class:`Checkpoint <ray.train.Checkpoint>`。
 
-3. Report the checkpoint to Ray Train using :func:`ray.train.report(metrics, checkpoint=...) <ray.train.report>`.
+3. 使用 :func:`ray.train.report(metrics, checkpoint=...) <ray.train.report>` 向 Ray Train 报告检查点。
 
-   - The metrics reported alongside the checkpoint are used to :ref:`keep track of the best-performing checkpoints <train-dl-configure-checkpoints>`.
-   - This will **upload the checkpoint to persistent storage** if configured. See :ref:`persistent-storage-guide`.
+   - 与检查点一起报告的指标用于 :ref:`跟踪性能最佳的检查点 <train-dl-configure-checkpoints>`。
+   - 如果已配置，这会将 **检查点上传到持久存储** 。参阅 :ref:`persistent-storage-guide`。
 
 
 .. figure:: ../images/checkpoint_lifecycle.png
 
-    The lifecycle of a :class:`~ray.train.Checkpoint`, from being saved locally
-    to disk to being uploaded to persistent storage via ``train.report``.
+    :class:`~ray.train.Checkpoint` 的声明周期，从本地
+    保存到磁盘到通过 ``train.report`` 上传到持久存储。
 
-As shown in the figure above, the best practice for saving checkpoints is to
-first dump the checkpoint to a local temporary directory. Then, the call to ``train.report``
-uploads the checkpoint to its final persistent storage location.
-Then, the local temporary directory can be safely cleaned up to free up disk space
-(e.g., from exiting the ``tempfile.TemporaryDirectory`` context).
+如上图所示，保存检查点的最佳实践是首先将检查点转储到本地临时目录。
+然后，调用 ``train.report``
+将检查点上传到其最终持久存储位置。
+然后，可以安全地清理本地临时目录以释放磁盘空间
+（例如，从存在的 ``tempfile.TemporaryDirectory``）。
 
 .. tip::
 
-    In standard DDP training, where each worker has a copy of the full-model, you should
-    only save and report a checkpoint from a single worker to prevent redundant uploads.
+    在标准 DDP 训练中，每个 worker 都有完整模型的副本，您应该
+    只保存并报告来自单个 worker 的检查点，以防止重复上传。
 
-    This typically looks like:
+    这通常看起来像：
 
     .. literalinclude::  ../doc_code/checkpoints.py
         :language: python
         :start-after: __checkpoint_from_single_worker_start__
         :end-before: __checkpoint_from_single_worker_end__
 
-    If using parallel training strategies such as DeepSpeed Zero-3 and FSDP, where
-    each worker only has a shard of the full-model, you should save and report a checkpoint
-    from each worker. See :ref:`train-distributed-checkpointing` for an example.
+    如果使用 DeepSpeed Zero-3 和 FSDP 等并行训练策略，其中
+    每个 worker 仅具有完整模型的一个分片，则应保存并报告每个工作器的检查点。
+    参阅 :ref:`train-distributed-checkpointing` 作为示例。
 
 
-Here are a few examples of saving checkpoints with different training frameworks:
+以下是使用不同训练框架保存检查点的几个示例：
 
 .. tab-set::
 
@@ -87,33 +87,31 @@ Here are a few examples of saving checkpoints with different training frameworks
 
         .. tip::
 
-            You most likely want to unwrap the DDP model before saving it to a checkpoint.
-            ``model.module.state_dict()`` is the state dict without each key having a ``"module."`` prefix.
+            您很可能希望在将 DDP 模型保存到检查点之前将其解开。
+            ``model.module.state_dict()`` 是状态字典，其中每个键都没有前缀 ``"module."`` 前缀。
 
 
     .. tab-item:: PyTorch Lightning
 
-        Ray Train leverages PyTorch Lightning's ``Callback`` interface to report metrics
-        and checkpoints. We provide a simple callback implementation that reports
-        ``on_train_epoch_end``.
+        Ray Train 利用 PyTorch Lightning 的 ``Callback`` 接口来报告指标和检查点。
+        我们提供了一个简单的回调 ``on_train_epoch_end`` 实现来报告。
 
-        Specifically, on each train epoch end, it
+        具体来说，在每个训练周期结束时，它
 
-        - collects all the logged metrics from ``trainer.callback_metrics``
-        - saves a checkpoint via ``trainer.save_checkpoint``
-        - reports to Ray Train via :func:`ray.train.report(metrics, checkpoint) <ray.train.report>`
+        - 从 ``trainer.callback_metrics`` 收集所有记录的指标
+        - 通过 ``trainer.save_checkpoint`` 保存检查点
+        - 通过 :func:`ray.train.report(metrics, checkpoint) <ray.train.report>` 向 Ray Train 报告
 
         .. literalinclude:: ../doc_code/checkpoints.py
             :language: python
             :start-after: __lightning_save_example_start__
             :end-before: __lightning_save_example_end__
 
-        You can always get the saved checkpoint path from :attr:`result.checkpoint <ray.train.Result.checkpoint>` and
-        :attr:`result.best_checkpoints <ray.train.Result.best_checkpoints>`.
+        您始终可以从 :attr:`result.checkpoint <ray.train.Result.checkpoint>` 和
+        :attr:`result.best_checkpoints <ray.train.Result.best_checkpoints>` 路径获取检查点。
 
-        For more advanced usage (e.g. reporting at different frequency, reporting
-        customized checkpoint files), you can implement your own customized callback.
-        Here is a simple example that reports a checkpoint every 3 epochs:
+        对于更高级的用法（例如以不同的频率报告、报告自定义检查点文件），您可以实现自己的自定义回调。
+        这是一个每 3 个 epoch 报告一次检查点的简单示例：
 
         .. literalinclude:: ../doc_code/checkpoints.py
             :language: python
@@ -123,28 +121,28 @@ Here are a few examples of saving checkpoints with different training frameworks
 
     .. tab-item:: Hugging Face Transformers
 
-        Ray Train leverages HuggingFace Transformers Trainer's ``Callback`` interface
-        to report metrics and checkpoints.
+        Ray Train 利用 HuggingFace Transformers Trainer 的 ``Callback`` 接口
+        来报告指标和检查点。
 
-        **Option 1: Use Ray Train's default report callback**
+        **选项 1: 使用 Ray Train 的默认回调报告**
 
-        We provide a simple callback implementation :class:`~ray.train.huggingface.transformers.RayTrainReportCallback` that
-        reports on checkpoint save. You can change the checkpointing frequency by ``save_strategy`` and ``save_steps``.
-        It collects the latest logged metrics and report them together with the latest saved checkpoint.
+        我们提供了一个简单的回调实现 :class:`~ray.train.huggingface.transformers.RayTrainReportCallback`
+        来报告检查点保存情况。您可以通过 ``save_strategy`` 和 ``save_steps`` 更改检查点频率。
+        它会收集最新记录的指标并将其与最新保存的检查点一起报告。
 
         .. literalinclude:: ../doc_code/checkpoints.py
             :language: python
             :start-after: __transformers_save_example_start__
             :end-before: __transformers_save_example_end__
 
-        Note that :class:`~ray.train.huggingface.transformers.RayTrainReportCallback`
-        binds the latest metrics and checkpoints together,
-        so users can properly configure ``logging_strategy``, ``save_strategy`` and ``evaluation_strategy``
-        to ensure the monitoring metric is logged at the same step as checkpoint saving.
+        请注意， :class:`~ray.train.huggingface.transformers.RayTrainReportCallback`
+        将最新的指标和检查点绑定在一起，
+        用户可以正确配置 ``logging_strategy``， ``save_strategy`` 和 ``evaluation_strategy``
+        来确保监控指标与检查点保存在同一步骤记录。
 
-        For example, the evaluation metrics (``eval_loss`` in this case) are logged during
-        evaluation. If users want to keep the best 3 checkpoints according to ``eval_loss``, they
-        should align the saving and evaluation frequency. Below are two examples of valid configurations:
+        例如，评估指标（在本例中的 ``eval_loss``）在评估期间被记录。
+        如果用户希望根据 ``eval_loss`` 保留最佳的 3 个检查点，
+        他们应该调整保存和评估频率。以下是两个有效配置的示例：
 
         .. code-block:: python
 
@@ -165,12 +163,11 @@ Here are a few examples of saving checkpoints with different training frameworks
             # And more ...
 
 
-        **Option 2: Implement your customized report callback**
+        **选项 2: 实现自定义回调**
 
-        If you feel that Ray Train's default :class:`~ray.train.huggingface.transformers.RayTrainReportCallback`
-        is not sufficient for your use case, you can also implement a callback yourself!
-        Below is a example implementation that collects latest metrics
-        and reports on checkpoint save.
+        如果您觉得 Ray Train 的默认 :class:`~ray.train.huggingface.transformers.RayTrainReportCallback`
+        不足以满足您的用例，您也可以自己实现回调！
+        下面是一个收集最新指标并报告保存检查点的示例实现。
 
         .. literalinclude:: ../doc_code/checkpoints.py
             :language: python
@@ -178,43 +175,40 @@ Here are a few examples of saving checkpoints with different training frameworks
             :end-before: __transformers_custom_save_example_end__
 
 
-        You can customize when (``on_save``, ``on_epoch_end``, ``on_evaluate``) and
-        what (customized metrics and checkpoint files) to report by implementing your own
-        Transformers Trainer callback.
+        您可以通过实现自己的 Transformers Trainer 回调来确定何时报告（``on_save``， ``on_epoch_end``， ``on_evaluate``）
+        以及报告什么（自定义指标和检查点文件）
 
 
 .. _train-distributed-checkpointing:
 
-Saving checkpoints from multiple workers (distributed checkpointing)
+保存来自多个 worker 的检查点（分布式检查点）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In model parallel training strategies where each worker only has a shard of the full-model,
-you can save and report checkpoint shards in parallel from each worker.
+在每个 worker 仅具有完整模型的一个分片的模型并行训练策略中，
+您可以从每个 worker 并行保存和报告检查点分片。
 
 .. figure:: ../images/persistent_storage_checkpoint.png
 
-    Distributed checkpointing in Ray Train. Each worker uploads its own checkpoint shard
-    to persistent storage independently.
+    Ray Train 的分布式检查点。每个 worker 将自己的检查点分片独立上传到持久存储。
 
-Distributed checkpointing is the best practice for saving checkpoints
-when doing model-parallel training (e.g., DeepSpeed, FSDP, Megatron-LM).
+分布式检查点是进行
+模型并行训练（例如 DeepSpeed、FSDP、Megatron-LM）时保存检查点的最佳实践。
 
-There are two major benefits:
+有两个主要好处：
 
-1. **It is faster, resulting in less idle time.** Faster checkpointing incentivizes more frequent checkpointing!
+1. **速度更快，从而减少空闲时间。** 更快的检查点会激励更频繁的检查点！
 
-   Each worker can upload its checkpoint shard in parallel,
-   maximizing the network bandwidth of the cluster. Instead of a single node
-   uploading the full model of size ``M``, the cluster distributes the load across
-   ``N`` nodes, each uploading a shard of size ``M / N``.
+   每个 worker 都可以并行上传其检查点分片，从而最大限度地提高集群的网络带宽。
+   集群不再由单个节点上传大小为“M”的完整模型，
+   而是将负载分散到“N”个节点上，
+   每个节点上传大小为“M / N”的分片。
 
-2. **Distributed checkpointing avoids needing to gather the full model onto a single worker's CPU memory.**
+2. **分布式检查点避免需要将完整模型收集到单个工作者的 CPU 内存上。**
 
-   This gather operation puts a large CPU memory requirement on the worker that performs checkpointing
-   and is a common source of OOM errors.
+   此收集操作对执行检查点的 worker 提出了很大的 CPU 内存要求，并且是 OOM 错误的常见来源。
 
 
-Here is an example of distributed checkpointing with PyTorch:
+以下是使用 PyTorch 进行分布式检查点的示例：
 
 .. literalinclude:: ../doc_code/checkpoints.py
     :language: python
@@ -224,25 +218,25 @@ Here is an example of distributed checkpointing with PyTorch:
 
 .. note::
 
-    Checkpoint files with the same name will collide between workers.
-    You can get around this by adding a rank-specific suffix to checkpoint files.
+    具有相同名称的检查点文件将在 worker 之间发生冲突。
+    您可以通过向检查点文件添加特定于等级的后缀来解决此问题。
 
-    Note that having filename collisions does not error, but it will result in the last
-    uploaded version being the one that is persisted. This is fine if the file
-    contents are the same across all workers.
+    请注意，文件名冲突不会出错，
+    但会导致最后上传的版本被保留。
+    如果文件内容在所有 Worker 中都相同，则这没有问题。
 
-    Model shard saving utilities provided by frameworks such as DeepSpeed will create
-    rank-specific filenames already, so you usually do not need to worry about this.
+    DeepSpeed 等框架提供的模型分片保存实用程序将创建
+    特定于等级的文件名，因此您通常不需要担心这一点。
 
 
 .. _train-dl-configure-checkpoints:
 
-Configure checkpointing
+配置检查点
 -----------------------
 
-Ray Train provides some configuration options for checkpointing via :class:`~ray.train.CheckpointConfig`.
-The primary configuration is keeping only the top ``K`` checkpoints with respect to a metric.
-Lower-performing checkpoints are deleted to save storage space. By default, all checkpoints are kept.
+Ray Train 通过 :class:`~ray.train.CheckpointConfig` 提供了一些检查点配置选项。
+主要配置是仅保留 top ``K`` 与指标相关的顶级检查点。
+性能较差的检查点将被删除以节省存储空间。默认情况下，所有检查点都会保留。
 
 .. literalinclude:: ../doc_code/key_concepts.py
     :language: python
@@ -252,25 +246,24 @@ Lower-performing checkpoints are deleted to save storage space. By default, all 
 
 .. note::
 
-    If you want to save the top ``num_to_keep`` checkpoints with respect to a metric via
-    :py:class:`~ray.train.CheckpointConfig`,
-    please ensure that the metric is always reported together with the checkpoints.
+    如果您想通过 :py:class:`~ray.train.CheckpointConfig` 保存与某个指标相关的 top ``num_to_keep`` 检查点，
+    请确保该指标始终与检查点一起报告。
 
 
 
-Using checkpoints after training
+训练后使用检查点
 --------------------------------
 
-The latest saved checkpoint can be accessed with :attr:`Result.checkpoint <ray.train.Result.checkpoint>`.
+最近的检查点可通过 :attr:`Result.checkpoint <ray.train.Result.checkpoint>` 访问。
 
-The full list of persisted checkpoints can be accessed with :attr:`Result.best_checkpoints <ray.train.Result.best_checkpoints>`.
-If :class:`CheckpointConfig(num_to_keep) <ray.train.CheckpointConfig>` is set, this list will contain the best ``num_to_keep`` checkpoints.
+完成的持久化检查点列表可通过 :attr:`Result.best_checkpoints <ray.train.Result.best_checkpoints>` 访问。
+如果设置了 :class:`CheckpointConfig(num_to_keep) <ray.train.CheckpointConfig>`， 此列表将包含最佳的 ``num_to_keep`` 个保存点。
 
-See :ref:`train-inspect-results` for a full guide on inspecting training results.
+参阅 :ref:`train-inspect-results` ，了解检查训练结果的完整指南。
 
 :meth:`Checkpoint.as_directory <ray.train.Checkpoint.as_directory>`
-and :meth:`Checkpoint.to_directory <ray.train.Checkpoint.to_directory>`
-are the two main APIs to interact with Train checkpoints:
+和 :meth:`Checkpoint.to_directory <ray.train.Checkpoint.to_directory>`
+是与 Train 检查点交互的两个主要 API：
 
 .. literalinclude:: ../doc_code/checkpoints.py
     :language: python
@@ -280,20 +273,19 @@ are the two main APIs to interact with Train checkpoints:
 
 .. _train-dl-loading-checkpoints:
 
-Restore training state from a checkpoint
+从检查点恢复训练状态
 ----------------------------------------
 
-In order to enable fault tolerance, you should modify your training loop to restore
-training state from a :class:`~ray.train.Checkpoint`.
+为了实现容错功能，您应该修改训练循环以从 :class:`~ray.train.Checkpoint` 中恢复训练状态。
 
-The :class:`Checkpoint <ray.train.Checkpoint>` to restore from can be accessed in the
-training function with :func:`ray.train.get_checkpoint <ray.train.get_checkpoint>`.
+可以使用 :func:`ray.train.get_checkpoint <ray.train.get_checkpoint>` 来在训练功能中
+访问要恢复的 :class:`Checkpoint <ray.train.Checkpoint>`。
 
-The checkpoint returned by :func:`ray.train.get_checkpoint <ray.train.get_checkpoint>` is populated in two ways:
+:func:`ray.train.get_checkpoint <ray.train.get_checkpoint>` 返回的检查点以两种方式填充：
 
-1. It can be auto-populated as the latest reported checkpoint, e.g. during :ref:`automatic failure recovery <train-fault-tolerance>` or :ref:`on manual restoration <train-restore-guide>`.
-2. It can be manually populated by passing a checkpoint to the ``resume_from_checkpoint`` argument of a Ray :class:`Trainer <ray.train.trainer.BaseTrainer>`.
-   This is useful for initializing a new training run with a previous run's checkpoint.
+1. 它可以自动填充为最新报告的检查点，例如在 :ref:`自动错误恢复 <train-fault-tolerance>` 或 :ref:`手动恢复 <train-restore-guide>`。
+2. 可以通过将检查点传递给 Ray :class:`Trainer <ray.train.trainer.BaseTrainer>` 的参数 ``resume_from_checkpoint`` 来手动填充它。
+   这对于使用上一次运行的检查点初始化新的训练运行很有用。
 
 
 .. tab-set::
@@ -316,19 +308,16 @@ The checkpoint returned by :func:`ray.train.get_checkpoint <ray.train.get_checkp
 
 .. note::
 
-    In these examples, :meth:`Checkpoint.as_directory <ray.train.Checkpoint.as_directory>`
-    is used to view the checkpoint contents as a local directory.
+    在这些示例中，:meth:`Checkpoint.as_directory <ray.train.Checkpoint.as_directory>`
+    用于将检查点内容作为本地目录查看。
 
-    *If the checkpoint points to a local directory*, this method just returns the
-    local directory path without making a copy.
+    *如果检查点指向本地目录* ，则此方法仅返回本地目录路径而不进行复制。
 
-    *If the checkpoint points to a remote directory*, this method will download the
-    checkpoint to a local temporary directory and return the path to the temporary directory.
+    *如果检查点指向远程目录*，此方法将检查点下载
+    到本地临时目录并返回临时目录的路径。
 
-    **If multiple processes on the same node call this method simultaneously,**
-    only a single process will perform the download, while the others
-    wait for the download to finish. Once the download finishes, all processes receive
-    the same local (temporary) directory to read from.
+    **如果同一节点上的多个进程同时调用此方法，**
+    则只有一个进程会执行下载，而其他进程则等待下载完成。
+    下载完成后，所有进程都会收到相同的本地（临时）目录以供读取。
 
-    Once all processes have finished working with the checkpoint, the temporary directory
-    is cleaned up.
+    一旦所有进程完成检查点工作，临时目录就会被清理。
