@@ -46,10 +46,9 @@ deprecation period to provide users with an opportunity to migrate their code.
 稳定版
 ~~~~~~
 
-A *stable* component **must** be fully-supported over the lifetime of the major
-API version. Because users expect such stability from components marked stable,
-there **must** be no breaking changes to these components within a major version
-(excluding extraordinary circumstances).
+*稳定* 组件 **必须** 在主要 API 版本的生命周期内得到全面支持。
+由于用户期望标记为稳定的组件具有这样的稳定​​性，
+因此在主要版本中这些组件 **必须** 不得有重大更改（特殊情况除外）。
 
 Docstrings
 ----------
@@ -66,4 +65,4 @@ Docstrings
 
 .. autofunction:: ray.util.annotations.Deprecated
 
-Undecorated functions can be generally assumed to not be part of the Ray public API.
+未修饰的函数通常可以被假定为不是 Ray 公共 API 的一部分。

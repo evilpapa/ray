@@ -7,86 +7,83 @@ Ray Tune 关键概念
 .. TODO: should we introduce checkpoints as well?
 .. TODO: should we at least mention "Stopper" classes here?
 
-Let's quickly walk through the key concepts you need to know to use Tune.
-If you want to see practical tutorials right away, go visit our :ref:`user guides <tune-guides>`.
-In essence, Tune has six crucial components that you need to understand.
+让我们快速了解一下使用 Tune 所需了解的关键概念。
+如果您想立即查看实用教程，请访问我们的 :ref:`用户指南 <tune-guides>`。
+实际上，Tune 有六个您需要了解的关键组件。
 
-First, you define the hyperparameters you want to tune in a `search space` and pass them into a `trainable`
-that specifies the objective you want to tune.
-Then you select a `search algorithm` to effectively optimize your parameters and optionally use a
-`scheduler` to stop searches early and speed up your experiments.
-Together with other configuration, your `trainable`, search algorithm, and scheduler are passed into ``Tuner``,
-which runs your experiments and creates `trials`.
-The `Tuner` returns a `ResultGrid` to inspect your experiment results.
-The following figure shows an overview of these components, which we cover in detail in the next sections.
+首先，在 `搜索空间` 中定义你调整的超参数，并将它们传递到要调整的 `trainable` 对象中。
+然后选择一个 `搜索算法` 来有效优化参数，并可选择
+使用 `scheduler` 来提前停止搜索并加快实验速度。
+与其他配置一起， 你的 `trainable` 、搜索算法和调度程序被传递到  ``Tuner`` ，它将创建并运行您的  `trials`。
+`Tuner`  返回 `ResultGrid` 以检查您的实验结果。
+下图显示了这些组件的概述，我们将在下一节中详细介绍。
 
 .. image:: images/tune_flow.png
 
 .. _tune_60_seconds_trainables:
 
-Ray Tune Trainables
+Ray Tune 可训练项
 -------------------
 
-In short, a :ref:`Trainable <trainable-docs>` is an object that you can pass into a Tune run.
-Ray Tune has two ways of defining a `trainable`, namely the :ref:`Function API <tune-function-api>`
-and the :ref:`Class API <tune-class-api>`.
-Both are valid ways of defining a `trainable`, but the Function API is generally recommended and is used
-throughout the rest of this guide.
+简而言之， :ref:`Trainable <trainable-docs>` 是可以传递到 Tune 运行的对象。
+Ray Tune 有两种定义 `trainable` 的方法，即， :ref:`函数 API <tune-function-api>`
+和 :ref:`类 API <tune-class-api>`。
+两者都是定义 `trainable` 的有效方法，但通常建议使用 Function API，
+并在本指南的其余部分中使用。
 
-Let's say we want to optimize a simple objective function like ``a (x ** 2) + b`` in which ``a`` and ``b`` are the
-hyperparameters we want to tune to `minimize` the objective.
-Since the objective also has a variable ``x``, we need to test for different values of ``x``.
-Given concrete choices for ``a``, ``b`` and ``x`` we can evaluate the objective function and get a `score` to minimize.
+假设我们要优化一个简单的目标函数 ``a (x ** 2) + b`` ，如其中 ``a`` 和 ``b`` 是我们要调整目标  `minimize`  的超参数。
+由于目标也有一个变量 ``x``，我们需要测试 ``x`` 不同的值。
+给定的 ``a``、 ``b`` 和 ``x``具体的选择，我们可以评估目标函数并得到最小化 `score` 。
 
 .. tab-set::
 
-    .. tab-item:: Function API
+    .. tab-item:: 函数 API
 
-        With the :ref:`the function-based API <tune-function-api>` you create a function (here called ``trainable``) that
-        takes in a dictionary of hyperparameters.
-        This function computes a ``score`` in a "training loop" and `reports` this score back to Tune:
+        使用 :ref:`基于函数的 API <tune-function-api>` ，您可以创建一个函数（此处称为 ``trainable``），
+        该函数接受超参数字典。
+        此函数在“训练循环”中计算  ``score`` 值，并 `reports` 分数给 Tune：
 
         .. literalinclude:: doc_code/key_concepts.py
             :language: python
             :start-after: __function_api_start__
             :end-before: __function_api_end__
 
-        Note that we use ``session.report(...)`` to report the intermediate ``score`` in the training loop, which can be useful
-        in many machine learning tasks.
-        If you just want to report the final ``score`` outside of this loop, you can simply return the score at the
-        end of the ``trainable`` function with ``return {"score": score}``.
-        You can also use ``yield {"score": score}`` instead of ``session.report()``.
+        注意，我们使用 ``session.report(...)`` 来报告训练循环中的中间结果 ``score`` ，
+        这在许多机器学习任务中都很有用。
+        如果您只想报告此循环之外的最终结果 ``score``， 则只需使用在结尾使用 ``return {"score": score}`` 返回 ``trainable`` 函数的分数。
+        你也可以使用 ``yield {"score": score}`` 代替  ``session.report()``。
 
-    .. tab-item:: Class API
+    .. tab-item:: 类 API
 
-        Here's an example of specifying the objective function using the :ref:`class-based API <tune-class-api>`:
+        以下是使用 :ref:`基于类的 API <tune-class-api>` 指定目标函数的示例：
 
         .. literalinclude:: doc_code/key_concepts.py
             :language: python
             :start-after: __class_api_start__
             :end-before: __class_api_end__
 
-        .. tip:: ``session.report`` can't be used within a ``Trainable`` class.
+        .. tip:: ``session.report`` 不能在 ``Trainable`` 类上使用。
 
-Learn more about the details of :ref:`Trainables here <trainable-docs>`
-and :ref:`have a look at our examples <tune-general-examples>`.
-Next, let's have a closer look at what the ``config`` dictionary is that you pass into your trainables.
+在此处了解有关 :ref:`Trainables here <trainable-docs>` 的详细信息，
+并 :ref:`查看我们的示例 <tune-general-examples>`。
+接下来，让我们仔细看看你传到 trainable 的 ``config`` 字典。
 
 .. _tune-key-concepts-search-spaces:
 
-Tune Search Spaces
+调整搜索空间
 ------------------
 
-To optimize your *hyperparameters*, you have to define a *search space*.
-A search space defines valid values for your hyperparameters and can specify
-how these values are sampled (e.g. from a uniform distribution or a normal
-distribution).
+为了优化 *超参数*，你必须定义一个 *搜索空间*。
+搜索空间定义超参数的有效值，并可以指定如何
+对这些值进行采样（例如从均匀分布或正态分布中采样）。
 
-Tune offers various functions to define search spaces and sampling methods.
-:ref:`You can find the documentation of these search space definitions here <tune-search-space>`.
 
-Here's an example covering all search space functions. Again,
-:ref:`here is the full explanation of all these functions <tune-search-space>`.
+
+Tune 提供各种函数来定义搜索空间和采样方法。
+:ref:`您可以在此处找到这些搜索空间定义的文档 <tune-search-space>`。
+
+以下是涵盖所有搜索空间函数的示例。再次重申，
+:ref:`以下是所有这些函数的完整解释 <tune-search-space>`。
 
 .. literalinclude:: doc_code/key_concepts.py
     :language: python
@@ -95,32 +92,32 @@ Here's an example covering all search space functions. Again,
 
 .. _tune_60_seconds_trials:
 
-Tune Trials
+调优试验
 -----------
 
-You use :ref:`Tuner.fit <tune-run-ref>` to execute and manage hyperparameter tuning and generate your `trials`.
-At a minimum, your ``Tuner`` call takes in a trainable as first argument, and a ``param_space`` dictionary
-to define the search space.
+您使用 :ref:`Tuner.fit <tune-run-ref>` 来执行和管理超参数调整并生成您的 `trials`。
+至少，您的 ``Tuner`` 调用将接受一个 trainable 作为第一个参数，以及一个 ``param_space`` 字典
+来定义搜索空间。
 
-The ``Tuner.fit()`` function also provides many features such as :ref:`logging <tune-logging>`,
-:ref:`checkpointing <tune-trial-checkpoint>`, and :ref:`early stopping <tune-stopping-ref>`.
-In the example, minimizing ``a (x ** 2) + b``, a simple Tune run with a simplistic search space for ``a`` and ``b``
-looks like this:
+``Tuner.fit()`` 函数还提供了许多功能，例如 :ref:`日志记录 <tune-logging>`、
+:ref:`检查点 <tune-trial-checkpoint>`、和 :ref:`早起停止 <tune-stopping-ref>`。
+在最小化的示例 ``a (x ** 2) + b`` 中，一个简单的 Tune 运行，具有 ``a`` 和 ``b`` 的简单搜索空间，
+如下所示：
 
 .. literalinclude:: doc_code/key_concepts.py
     :language: python
     :start-after: __run_tunable_start__
     :end-before: __run_tunable_end__
 
-``Tuner.fit`` will generate a couple of hyperparameter configurations from its arguments,
-wrapping them into :ref:`Trial objects <trial-docstring>`.
+``Tuner.fit`` 将从其参数中生成几个超参数配置，并将它们包装到
+:ref:`Trial 对象 <trial-docstring>` 中。
 
-Trials contain a lot of information.
-For instance, you can get the hyperparameter configuration using (``trial.config``), the trial ID (``trial.trial_id``),
-the trial's resource specification (``resources_per_trial`` or ``trial.placement_group_factory``) and many other values.
+试验包含大量信息。
+例如，您可以使用 ( ``trial.config``)、试验 ID (``trial.trial_id``），
+试验的资源规范 (``resources_per_trial`` 或 ``trial.placement_group_factory``) 以及许多其他值来获取超参数配置。
 
-By default ``Tuner.fit`` will execute until all trials stop or error.
-Here's an example output of a trial run:
+默认的， ``Tuner.fit`` 将执行直到所有试验停止或出错。
+以下是试运行的示例输出：
 
 .. TODO: how to make sure this doesn't get outdated?
 .. code-block:: bash
@@ -138,10 +135,10 @@ Here's an example output of a trial run:
     +----------------------+----------+---------------------+-----------+--------+--------+----------------+-------+
 
 
-You can also easily run just 10 trials by specifying the number of samples (``num_samples``).
-Tune automatically :ref:`determines how many trials will run in parallel <tune-parallelism>`.
-Note that instead of the number of samples, you can also specify a time budget in seconds through ``time_budget_s``,
-if you set ``num_samples=-1``.
+您还可以通过指定样本数量（ ``num_samples`` ）轻松运行 10 次试验。
+Tune 会自动 :ref:`确定将并行运行多少次试验 <tune-parallelism>`。
+请注意，除了样本数量的设置，如果你设置了 ``num_samples=-1``， 
+你也可以通过  ``time_budget_s`` （以秒为单位）指定时间预算。
 
 .. literalinclude:: doc_code/key_concepts.py
     :language: python
@@ -149,79 +146,79 @@ if you set ``num_samples=-1``.
     :end-before: __run_tunable_samples_end__
 
 
-Finally, you can use more interesting search spaces to optimize your hyperparameters
-via Tune's :ref:`search space API <tune-default-search-space>`, like using random samples or grid search.
-Here's an example of uniformly sampling between ``[0, 1]`` for ``a`` and ``b``:
+最后，你可以通过 Tune 的 :ref:`搜索空间 API API <tune-default-search-space>` 使用更有趣的搜索空间来优化超参数，
+例如使用随机样本或网格搜索。
+以下是 ``a`` 和 ``b`` 在 ``[0, 1]`` 之间均匀采样的示例：
 
 .. literalinclude:: doc_code/key_concepts.py
     :language: python
     :start-after: __search_space_start__
     :end-before: __search_space_end__
 
-To learn more about the various ways of configuring your Tune runs,
-check out the :ref:`Tuner API reference <tune-run-ref>`.
+要了解有关配置 Tune 运行的各种方法的更多信息，
+查看 :ref:`Tuner API 参考 <tune-run-ref>`。
 
 .. _search-alg-ref:
 
-Tune Search Algorithms
+调整搜索算法
 ----------------------
 
-To optimize the hyperparameters of your training process, you use
-a :ref:`Search Algorithm <tune-search-alg>` which suggests hyperparameter configurations.
-If you don't specify a search algorithm, Tune will use random search by default, which can provide you
-with a good starting point for your hyperparameter optimization.
+为了优化训练过程的超参数，您可以使用
+:ref:`搜索算法 <tune-search-alg>` 来建议超参数配置。
+如果您未指定搜索算法，Tune 将默认使用随机搜索，这可以
+为您的超参数优化提供一个良好的起点。
 
-For instance, to use Tune with simple Bayesian optimization through the ``bayesian-optimization`` package
-(make sure to first run ``pip install bayesian-optimization``), we can define an ``algo`` using ``BayesOptSearch``.
-Simply pass in a ``search_alg`` argument to ``tune.TuneConfig``, which is taken in by ``Tuner``:
+例如，要通过 ``bayesian-optimization`` 包使用 Tune 进行简单的贝叶斯优化（请确保首先运行 ``pip install bayesian-optimization`` ），
+我们可以定义一个使用 ``BayesOptSearch`` 的  ``algo`` 。
+只需将其通过一个 ``search_alg`` 参数传递给 ``tune.TuneConfig``，该参数由 ``Tuner`` 接收：
 
 .. literalinclude:: doc_code/key_concepts.py
     :language: python
     :start-after: __bayes_start__
     :end-before: __bayes_end__
 
-Tune has Search Algorithms that integrate with many popular **optimization** libraries,
-such as :ref:`Nevergrad <nevergrad>`, :ref:`HyperOpt <tune-hyperopt>`, or :ref:`Optuna <tune-optuna>`.
-Tune automatically converts the provided search space into the search
-spaces the search algorithms and underlying libraries expect.
-See the :ref:`Search Algorithm API documentation <tune-search-alg>` for more details.
+Tune 具有与许多流行的 **优化** 库集成的搜索算法，
+例如 :ref:`Nevergrad <nevergrad>`、 :ref:`HyperOpt <tune-hyperopt>` 或 :ref:`Optuna <tune-optuna>`。
+ Tune 会自动将提供的搜索空间转换为
+ 搜索算法和底层库期望的搜索空间。
+有关更多详细信息，请参阅 :ref:`搜索算法 API 文档 <tune-search-alg>` 。
 
-Here's an overview of all available search algorithms in Tune:
+以下是 Tune 中所有可用搜索算法的概述：
 
 .. list-table::
    :widths: 5 5 2 10
    :header-rows: 1
 
    * - SearchAlgorithm
-     - Summary
-     - Website
-     - Code Example
+     - 概括
+     - 网站
+     - 代码示例
    * - :ref:`Random search/grid search <tune-basicvariant>`
-     - Random search/grid search
+     - 随机搜索/网格搜索
      -
      - :doc:`/tune/examples/includes/tune_basic_example`
    * - :ref:`AxSearch <tune-ax>`
-     - Bayesian/Bandit Optimization
+     - 贝叶斯/赌博机优化
      - [`Ax <https://ax.dev/>`__]
      - :doc:`/tune/examples/includes/ax_example`
    * - :ref:`BlendSearch <BlendSearch>`
-     - Blended Search
+     - 混合搜索
      - [`Bs <https://github.com/microsoft/FLAML/tree/main/flaml/tune>`__]
      - :doc:`/tune/examples/includes/blendsearch_example`
    * - :ref:`CFO <CFO>`
-     - Cost-Frugal hyperparameter Optimization
+     - 低成本超参数优化
      - [`Cfo <https://github.com/microsoft/FLAML/tree/main/flaml/tune>`__]
      - :doc:`/tune/examples/includes/cfo_example`
    * - :ref:`DragonflySearch <Dragonfly>`
-     - Scalable Bayesian Optimization
+     - 可扩展贝叶斯优化
      - [`Dragonfly <https://dragonfly-opt.readthedocs.io/>`__]
      - :doc:`/tune/examples/includes/dragonfly_example`
    * - :ref:`HyperOptSearch <tune-hyperopt>`
-     - Tree-Parzen Estimators
+     - Tree-Parzen 估计量
      - [`HyperOpt <http://hyperopt.github.io/hyperopt>`__]
      - :doc:`/tune/examples/hyperopt_example`
    * - :ref:`BayesOptSearch <bayesopt>`
-     - Bayesian Optimization
+     - 贝叶斯优化
      - [`BayesianOptimization <https://github.com/fmfn/BayesianOptimization>`__]
      - :doc:`/tune/examples/includes/bayesopt_example`
    * - :ref:`TuneBOHB <suggest-TuneBOHB>`
@@ -229,41 +226,40 @@ Here's an overview of all available search algorithms in Tune:
      - [`BOHB <https://github.com/automl/HpBandSter>`__]
      - :doc:`/tune/examples/includes/bohb_example`
    * - :ref:`NevergradSearch <nevergrad>`
-     - Gradient-free Optimization
+     - 无梯度优化
      - [`Nevergrad <https://github.com/facebookresearch/nevergrad>`__]
      - :doc:`/tune/examples/includes/nevergrad_example`
    * - :ref:`OptunaSearch <tune-optuna>`
-     - Optuna search algorithms
+     - Optuna 搜索算法
      - [`Optuna <https://optuna.org/>`__]
      - :doc:`/tune/examples/optuna_example`
    * - :ref:`SigOptSearch <sigopt>`
-     - Closed source
+     - 闭源
      - [`SigOpt <https://sigopt.com/>`__]
      - :doc:`/tune/examples/includes/sigopt_example`
 
-.. note:: Unlike :ref:`Tune's Trial Schedulers <tune-schedulers>`,
-    Tune Search Algorithms cannot affect or stop training processes.
-    However, you can use them together to early stop the evaluation of bad trials.
+.. note:: 不同 :ref:`Tune 的试验调度程序 <tune-schedulers>` 不同，
+    Tune 搜索算法不能影响或停止训练过程。
+    但是，你可以将它们一起使用，以尽早停止对不良试验的评估。
 
-In case you want to implement your own search algorithm, the interface is easy to implement,
-you can :ref:`read the instructions here <byo-algo>`.
+如果您想实现自己的搜索算法，该界面很容易实现，
+您可以 :ref:`阅读此处的说明 <byo-algo>`。
 
-Tune also provides helpful utilities to use with Search Algorithms:
+Tune 还提供了与搜索算法一起使用的有用实用程序：
 
- * :ref:`repeater`: Support for running each *sampled hyperparameter* with multiple random seeds.
- * :ref:`limiter`: Limits the amount of concurrent trials when running optimization.
- * :ref:`shim`: Allows creation of the search algorithm object given a string.
+ * :ref:`repeater`: 支持使用多个随机种子运行每个 *采样超参数* 。
+ * :ref:`limiter`: 限制运行优化时并发试验的次数。
+ * :ref:`shim`: 允许根据给定的字符串创建搜索算法对象。
 
-Note that in the example above we  tell Tune to ``stop`` after ``20`` training iterations.
-This way of stopping trials with explicit rules is useful, but in many cases we can do even better with
-`schedulers`.
+请注意，在上面的例子中，我们告诉 Tune 在 ``20`` 次训练迭代后 ``stop``。
+这种使用明确规则停止试验的方法很有用，但在许多情况下，我们可以使用 `schedulers` 做得更好。
 
 .. _schedulers-ref:
 
-Tune Schedulers
+调整调度
 ---------------
 
-To make your training process more efficient, you can use a :ref:`Trial Scheduler <tune-schedulers>`.
+为了提高训练过程的效率，您可以使用 :ref:`Trial Scheduler <tune-schedulers>`。
 For instance, in our ``trainable`` example minimizing a function in a training loop, we used ``session.report()``.
 This reported `incremental` results, given a hyperparameter configuration selected by a search algorithm.
 Based on these reported results, a Tune scheduler can decide whether to stop the trial early or not.

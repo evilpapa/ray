@@ -4,33 +4,30 @@
 =================
 
 
-`Dask <https://dask.org/>`__ is a Python parallel computing library geared towards scaling analytics and
-scientific computing workloads. It provides `big data collections
-<https://docs.dask.org/en/latest/user-interfaces.html>`__ that mimic the APIs of
-the familiar `NumPy <https://numpy.org/>`__ and `Pandas <https://pandas.pydata.org/>`__ libraries,
-allowing those abstractions to represent
-larger-than-memory data and/or allowing operations on that data to be run on a multi-machine cluster,
-while also providing automatic data parallelism, smart scheduling,
-and optimized operations. Operations on these collections create a task graph, which is
-executed by a scheduler.
+`Dask <https://dask.org/>`__ 是一个 Python 并行计算库，旨在扩展分析和科学计算工作负载。
+他提供了 `大数据集合
+<https://docs.dask.org/en/latest/user-interfaces.html>`__ 模仿熟悉的
+ `NumPy <https://numpy.org/>`__ 和 `Pandas <https://pandas.pydata.org/>`__ 库，
+允许这些抽象表示大于内存的数据和/或允许在多机集群上运行对该数据的操作，
+同时还提供自动数据并行、智能调度和优化操作。
+对这些集合的操作会创建一个任务图，该任务图由调度程序执行。
 
-Ray provides a scheduler for Dask (`dask_on_ray`) which allows you to build data
-analyses using Dask's collections and execute
-the underlying tasks on a Ray cluster.
+Ray 为 Dask 提供了一个调度程序 (`dask_on_ray`) ，允许您使用 Dask 的集合构建数据分析
+并在 Ray 集群上执行底层任务。
 
-`dask_on_ray` uses Dask's scheduler API, which allows you to
-specify any callable as the scheduler that you would like Dask to use to execute your
-workload. Using the Dask-on-Ray scheduler, the entire Dask ecosystem can be executed on top of Ray.
+`dask_on_ray` 使用 Dask 的调度程序 API，
+它允许您指定任何可调用函数作为您希望 Dask 用来执行工作负载的调度程序。
+使用 Dask-on-Ray 调度程序，整个 Dask 生态系统都可以在 Ray 之上执行。
 
 .. note::
-   We always ensure that the latest Dask versions are compatible with Ray nightly.
-   The table below shows the latest Dask versions that are tested with Ray versions.
+   我们始终确保最新的 Dask 版本与 Ray Nightly 兼容。
+   下表显示了与 Ray 版本一起测试的最新 Dask 版本。
 
-  .. list-table:: Latest Dask versions for each Ray version.
+  .. list-table:: 每个 Ray 版本的最新 Dask 版本。
      :header-rows: 1
 
-     * - Ray Version
-       - Dask Version
+     * - Ray 版本
+       - Dask 版本
      * - ``2.7.0``
        - | ``2022.2.0 (Python version < 3.8)``
          | ``2022.10.1 (Python version >= 3.8)``
@@ -82,27 +79,26 @@ Scheduler
 
 .. _dask-on-ray-scheduler:
 
-The Dask-on-Ray scheduler can execute any valid Dask graph, and can be used with
-any Dask `.compute() <https://docs.dask.org/en/latest/api.html#dask.compute>`__
-call.
-Here's an example:
+Dask-on-Ray 调度程序可以执行任何有效的 Dask 图，并且可以与任何 Dask `.compute() <https://docs.dask.org/en/latest/api.html#dask.compute>`__
+调用一起使用。
+这是一个例子：
 
 .. literalinclude:: doc_code/dask_on_ray_scheduler_example.py
     :language: python
 
 .. note::
-  For execution on a Ray cluster, you should *not* use the
+  要在 Ray 集群上执行，您 *不应* 使用
   `Dask.distributed <https://distributed.dask.org/en/latest/quickstart.html>`__
-  client; simply use plain Dask and its collections, and pass ``ray_dask_get``
-  to ``.compute()`` calls, set the scheduler in one of the other ways detailed `here <https://docs.dask.org/en/latest/scheduling.html#configuration>`__, or use our ``enable_dask_on_ray`` configuration helper. Follow the instructions for
-  :ref:`using Ray on a cluster <cluster-index>` to modify the
-  ``ray.init()`` call.
+  客户端； 只需使用普通的 Dask 及其集合，并传递 ``ray_dask_get``
+  到 ``.compute()`` 调用，在 `此处 <https://docs.dask.org/en/latest/scheduling.html#configuration>`__ 以其他详述的方式之一设置调度程序，或使用我们的 ``enable_dask_on_ray`` 配置助手。按照
+  :ref:`在集群上使用 Ray <cluster-index>` 来修改
+  ``ray.init()`` 调用。
 
-Why use Dask on Ray?
+为什么在 Ray 上使用 Dask ？
 
-1. To take advantage of Ray-specific features such as the
-      :ref:`launching cloud clusters <cluster-index>` and
-      :ref:`shared-memory store <memory>`.
+1. 要利用 Ray 特有的功能，例如
+      :ref:`启动云集群 <cluster-index>` 和
+      :ref:`共享内存存储 <memory>`。
 2. If you'd like to use Dask and Ray libraries in the same application without having two different clusters.
 3. If you'd like to create data analyses using the familiar NumPy and Pandas APIs provided by Dask and execute them on a fast, fault-tolerant distributed task execution system geared towards production, like Ray.
 

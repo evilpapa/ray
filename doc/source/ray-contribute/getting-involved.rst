@@ -17,58 +17,56 @@
     debugging
     profiling
 
-Ray is more than a framework for distributed applications but also an active community of developers,
-researchers, and folks that love machine learning.
+Ray 不仅仅是一个分布式应用程序的框架，它还是一个由
+开发人员、研究人员和热爱机器学习的人们组成的活跃社区。
 
-.. tip:: Ask questions on `our forum <https://discuss.ray.io/>`_! The
-  community is extremely active in helping people succeed in building their
-  Ray applications.
+.. tip:: `在我们的论坛 <https://discuss.ray.io/>`_提问！ 
+  社区非常活跃，致力于帮助人们成功构建他们的 Ray 应用程序。
 
-You can join (and Star!) us on `on GitHub`_.
+您可以在 `GitHub`_` 上加入我们（并加星标！） 。
 
-.. _`on GitHub`: https://github.com/ray-project/ray
+.. _`GitHub`: https://github.com/ray-project/ray
 
-Contributing to Ray
+贡献给 Ray
 -------------------
 
-We welcome (and encourage!) all forms of contributions to Ray, including and not limited to:
+我们欢迎（并鼓励！）对 Ray 的所有形式的贡献，包括但不限于：
 
-- Code reviewing of patches and PRs.
-- Pushing patches.
-- Documentation and examples.
-- Community participation in forums and issues.
-- Code readability and code comments to improve readability.
-- Test cases to make the codebase more robust.
-- Tutorials, blog posts, talks that promote the project.
-- Features and major changes via Ray Enhancement Proposals (REP): https://github.com/ray-project/enhancements
+- 补丁和 PR 的代码审查。
+- 推送补丁。
+- 文档和示例。
+- 参与论坛社区和问题讨论。
+- 代码可读性并通过代码注释来提高可读性。
+- 测试用例使代码库更加健壮。
+- 教程、博客文章、推广项目的演讲。
+- 通过 Ray 增强提案 (REP) 实现的功能和主要变化： https://github.com/ray-project/enhancements
 
-What can I work on?
+我可以做什么？
 -------------------
 
-We use Github to track issues, feature requests, and bugs. Take a look at the
-ones labeled `"good first issue" <https://github.com/ray-project/ray/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22>`__ for a place to start.
+我们使用 Github 来跟踪问题、功能请求和错误。请查看标记为
+`"good first issue" <https://github.com/ray-project/ray/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22>`__ 作为起点。
 
-Setting up your development environment
+设置你的开发环境
 ---------------------------------------
 
-To edit the Ray source code, you'll want to checkout the repository and also build Ray from source. Follow :ref:`these instructions for building <building-ray>` a local copy of Ray to easily make changes.
+要编辑 Ray 源代码，您需要签出存储库并从源代码构建 Ray。 按照 :ref:`这些说明构建 <building-ray>` Ray 的本地副本以轻松进行更改。
 
-Submitting and Merging a Contribution
+提交并合并贡献
 -------------------------------------
 
-There are a couple steps to merge a contribution.
+合并贡献有几个步骤。
 
-1. First merge the most recent version of master into your development branch.
+1. 首先将最新版本的 master 合并到您的开发分支中。
 
    .. code:: bash
 
      git remote add upstream https://github.com/ray-project/ray.git
      git pull . upstream/master
 
-2. Make sure all existing `tests <getting-involved.html#testing>`__ and `linters <getting-involved.html#lint-and-formatting>`__ pass.
-   Run ``setup_hooks.sh`` to create a git hook that will run the linter before you push your changes.
-3. If introducing a new feature or patching a bug, be sure to add new test cases
-   in the relevant file in ``ray/python/ray/tests/``.
+2. 确保所有现有 `tests <getting-involved.html#testing>`__ 和 `linters <getting-involved.html#lint-and-formatting>`__ 均已通过。
+   运行 ``setup_hooks.sh`` 以创建一个 git hook，它将在推送更改之前运行 linter。
+3. 如果引入新功能或修补错误，请确保在 ``ray/python/ray/tests/`` 相关文件中添加新的测试用例。
 4. Document the code. Public functions need to be documented, and remember to provide an usage
    example if applicable. See ``doc/README.md`` for instructions on editing and building public documentation.
 5. Address comments on your PR. During the review
