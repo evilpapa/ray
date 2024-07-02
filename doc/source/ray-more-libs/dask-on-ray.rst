@@ -99,19 +99,19 @@ Dask-on-Ray 调度程序可以执行任何有效的 Dask 图，并且可以与�
 1. 要利用 Ray 特有的功能，例如
       :ref:`启动云集群 <cluster-index>` 和
       :ref:`共享内存存储 <memory>`。
-2. If you'd like to use Dask and Ray libraries in the same application without having two different clusters.
-3. If you'd like to create data analyses using the familiar NumPy and Pandas APIs provided by Dask and execute them on a fast, fault-tolerant distributed task execution system geared towards production, like Ray.
+2. 如果您想在同一个应用程序中使用 Dask 和 Ray 库，而无需两个不同的集群。
+3. 如果您想使用 Dask 提供的熟悉的 NumPy 和 Pandas API 创建数据分析，并在面向生产的快速、容错分布式任务执行系统（如 Ray）上执行它们。
 
-Dask-on-Ray is an ongoing project and is not expected to achieve the same performance as using Ray directly. All `Dask abstractions <https://docs.dask.org/en/latest/user-interfaces.html>`__ should run seamlessly on top of Ray using this scheduler, so if you find that one of these abstractions doesn't run on Ray, please `open an issue <https://github.com/ray-project/ray/issues/new/choose>`__.
+Dask-on-Ray 是一个正在进行的项目，预计不会达到与直接使用 Ray 相同的性能。 所有 `Dask 抽象 <https://docs.dask.org/en/latest/user-interfaces.html>`__ 都应该使用此调度程序在 Ray 上无缝运行，因此如果您发现其中一个抽象无法在 Ray 上运行，请 `打开一个问题 <https://github.com/ray-project/ray/issues/new/choose>`__。
 
-Best Practice for Large Scale workloads
+大规模工作负载的最佳实践
 ---------------------------------------
-For Ray 1.3, the default scheduling policy is to pack tasks to the same node as much as possible.
-It is more desirable to spread tasks if you run a large scale / memory intensive Dask on Ray workloads.
+对于 Ray 1.3，默认调度策略是尽可能将任务打包到同一节点。
+如果您在 Ray 工作负载上运行大规模/内存密集型 Dask，则更希望分散任务。
 
-In this case, there are two recommended setup.
-- Reducing the config flag `scheduler_spread_threshold` to tell the scheduler to prefer spreading tasks across the cluster instead of packing.
-- Setting the head node's `num-cpus` to 0 so that tasks are not scheduled on a head node.
+在这种情况下，有两种推荐的设置。
+- 减少配置 `scheduler_spread_threshold` 标志以告诉调度程序优先在集群中分散任务而不是打包。
+- 将头节点设置 `num-cpus` 为 0，以便不在头节点上安排任务。
 
 .. code-block:: bash
 
@@ -121,38 +121,30 @@ In this case, there are two recommended setup.
   # Worker node.
   RAY_scheduler_spread_threshold=0.0 ray start --address=[head-node-address]
 
-Out-of-Core Data Processing
+核心外数据处理
 ---------------------------
 
 .. _dask-on-ray-out-of-core:
 
-Processing datasets larger than cluster memory is supported via Ray's :ref:`object spilling <object-spilling>`: if
-the in-memory object store is full, objects will be spilled to external storage (local disk by
-default). This feature is available but off by default in Ray 1.2, and is on by default
-in Ray 1.3+. Please see your Ray version's object spilling documentation for steps to enable and/or configure
-object spilling.
+通过 Ray 的 :ref:`对象溢出 <object-spilling>`，可以支持处理大于集群内存的数据集： 如果内存中的对象存储已满，对象将溢出到外部存储（默认情况下为本地磁盘）。此功能可用，但在 Ray 1.2 中默认关闭，在 Ray 1.3+ 中默认开启。请参阅您的 Ray 版本的对象溢出文档，了解启用和/或配置对象溢出的步骤。
 
-Persist
+持久化
 -------
 
 .. _dask-on-ray-persist:
 
-Dask-on-Ray patches `dask.persist()
-<https://docs.dask.org/en/latest/api.html#dask.persist>`__  in order to match `Dask
-Distributed's persist semantics
-<https://distributed.dask.org/en/latest/manage-computation.html#client-persist>`__; namely, calling `dask.persist()` with a Dask-on-Ray
-scheduler will submit the tasks to the Ray cluster and return Ray futures inlined in the
-Dask collection. This is nice if you wish to compute some base collection (such as
-a Dask array), followed by multiple different downstream computations (such as
-aggregations): those downstream computations will be faster since that base collection
-computation was kicked off early and referenced by all downstream computations, often
-via shared memory.
+Dask-on-Ray 修补了 `dask.persist()
+<https://docs.dask.org/en/latest/api.html#dask.persist>`__  以匹配 `Dask
+分布式持久语义
+<https://distributed.dask.org/en/latest/manage-computation.html#client-persist>`__；即， 使用 Dask-on-Ray 调度程序进行 `dask.persist()` 将把任务提交给 Ray 集群并返回内联的 Ray 特性的 Dask 集合。 
+如果您希望计算一些基础集合（例如 Dask 数组），然后进行多个不同的下游计算（例如聚合），那么这很好：
+这些下游计算将更快，因为该基础集合计算很早就启动并被所有下游计算引用，通常通过共享内存。
 
 .. literalinclude:: doc_code/dask_on_ray_persist_example.py
     :language: python
 
 
-Annotations, Resources, and Task Options
+注释、资源和任务选项
 ----------------------------------------
 
 .. _dask-on-ray-annotations:
