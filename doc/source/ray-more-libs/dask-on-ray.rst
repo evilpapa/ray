@@ -150,104 +150,92 @@ Dask-on-Ray 修补了 `dask.persist()
 .. _dask-on-ray-annotations:
 
 
-Dask-on-Ray supports specifying resources or any other Ray task option via `Dask's
-annotation API <https://docs.dask.org/en/stable/api.html#dask.annotate>`__. This
-annotation context manager can be used to attach resource requests (or any other Ray task
-option) to specific Dask operations, with the annotations funneling down to the
-underlying Ray tasks. Resource requests and other Ray task options can also be specified
-globally via the ``.compute(ray_remote_args={...})`` API, which will
-serve as a default for all Ray tasks launched via the Dask workload. Annotations on
-individual Dask operations will override this global default.
+Dask-on-Ray 支持通过 `Dask 注解
+ API <https://docs.dask.org/en/stable/api.html#dask.annotate>`__ 指定资源或任何其他 Ray 任务选项 。
+This此注释上下文管理器可用于将资源请求（或任何其他 Ray 任务选项）附加到特定的 Dask 操作，注释将汇集到底层 Ray 任务。
+资源请求和其他 Ray 任务选项也可以通过 ``.compute(ray_remote_args={...})`` API 全局指定，
+这将作为通过 Dask 工作负载启动的所有 Ray 任务的默认值。
+单个 Dask 操作上的注释将覆盖此全局默认值。
 
 .. literalinclude:: doc_code/dask_on_ray_annotate_example.py
     :language: python
 
-Note that you may need to disable graph optimizations since it can break annotations,
-see `this Dask issue <https://github.com/dask/dask/issues/7036>`__.
+请注意，您可能需要禁用图形优化，因为它可能会破坏注释，
+请参阅 `此 Dask 问题 <https://github.com/dask/dask/issues/7036>`__。
 
-Custom optimization for Dask DataFrame shuffling
+Dask DataFrame shuffle 的自定义优化
 ------------------------------------------------
 
 .. _dask-on-ray-shuffle-optimization:
 
-Dask-on-Ray provides a Dask DataFrame optimizer that leverages Ray's ability to
-execute multiple-return tasks in order to speed up shuffling by as much as 4x on Ray.
-Simply set the `dataframe_optimize` configuration option to our optimizer function, similar to how you specify the Dask-on-Ray scheduler:
+Dask-on-Ray 提供了一个 Dask DataFrame 优化器，它利用 Ray 执行多返回任务的能力，
+从而将 Ray 上的 shuffling 速度提高 4 倍。
+只需将配置选项 `dataframe_optimize` 设置为我们的优化器函数，类似于指定 Dask-on-Ray 调度程序的方式：
 
 .. literalinclude:: doc_code/dask_on_ray_shuffle_optimization.py
     :language: python
 
-Callbacks
+回调
 ---------
 
 .. _dask-on-ray-callbacks:
 
-Dask's `custom callback abstraction <https://docs.dask.org/en/latest/diagnostics-local.html#custom-callbacks>`__
-is extended with Ray-specific callbacks, allowing the user to hook into the
-Ray task submission and execution lifecycles.
-With these hooks, implementing Dask-level scheduler and task introspection,
-such as progress reporting, diagnostics, caching, etc., is simple.
+Dask 的 `自定义毁掉抽象 <https://docs.dask.org/en/latest/diagnostics-local.html#custom-callbacks>`__
+通过 Ray 特定的回调进行了扩展，允许用户 hook 到 Ray 任务提交和执行生命周期。
+借助这些 hook ，实现 Dask 级调度程序和
+任务自省（例如进度报告、诊断、缓存等）非常简单。
 
-Here's an example that measures and logs the execution time of each task using
-the ``ray_pretask`` and ``ray_posttask`` hooks:
+下面是使用  ``ray_pretask``  和 ``ray_posttask`` 钩子测量和记录每个任务执行时间的示例：
 
 .. literalinclude:: doc_code/dask_on_ray_callbacks.py
     :language: python
     :start-after: __timer_callback_begin__
     :end-before: __timer_callback_end__
 
-The following Ray-specific callbacks are provided:
+提供了以下特定于 Ray 的回调：
 
-   1. :code:`ray_presubmit(task, key, deps)`: Run before submitting a Ray
-      task. If this callback returns a non-`None` value, a Ray task will _not_
-      be created and this value will be used as the would-be task's result
-      value.
-   2. :code:`ray_postsubmit(task, key, deps, object_ref)`: Run after submitting
-      a Ray task.
-   3. :code:`ray_pretask(key, object_refs)`: Run before executing a Dask task
-      within a Ray task. This executes after the task has been submitted,
-      within a Ray worker. The return value of this task will be passed to the
-      ray_posttask callback, if provided.
-   4. :code:`ray_posttask(key, result, pre_state)`: Run after executing a Dask
-      task within a Ray task. This executes within a Ray worker. This callback
-      receives the return value of the ray_pretask callback, if provided.
-   5. :code:`ray_postsubmit_all(object_refs, dsk)`: Run after all Ray tasks
-      have been submitted.
-   6. :code:`ray_finish(result)`: Run after all Ray tasks have finished
-      executing and the final result has been returned.
+   1. :code:`ray_presubmit(task, key, deps)`: 在提交 Ray 任务之前运行。
+      如果此回调返回非 `None` 值，Ray 任务将 _不会_，并且该值将用作即将执行的任务的结果值。
+   2. :code:`ray_postsubmit(task, key, deps, object_ref)`: 提交 Ray 任务后运行。
+   3. :code:`ray_pretask(key, object_refs)`: 在 Ray 任务中执行 Dask 任务之前运行。
+      这将在任务提交后在 Ray 工作器中执行。
+      此任务的返回值将传递给 ray_posttask 回调（如果提供）。
+   4. :code:`ray_posttask(key, result, pre_state)`: 在 Ray 任务中执行 Dask 任务后运行。
+      这将在 Ray 工作器中执行。
+      此回调接收 ray_pretask 回调的返回值（如果提供）。
+   5. :code:`ray_postsubmit_all(object_refs, dsk)`: 所有 Ray 任务均已提交后运行。
+   6. :code:`ray_finish(result)`: 所有 Ray 任务均执行完毕并返回最终结果后运行。
 
-See the docstring for
-:meth:`RayDaskCallback.__init__() <ray.util.dask.callbacks.RayDaskCallback>.__init__`
-for further details about these callbacks, their arguments, and their return
-values.
+有关这些回调、它们的参数和返回值的更多详细信息，请参阅文档字符串
+:meth:`RayDaskCallback.__init__() <ray.util.dask.callbacks.RayDaskCallback>.__init__`。
 
-When creating your own callbacks, you can use
+创建自己的回调时，您可以直接使用
 :class:`RayDaskCallback <ray.util.dask.callbacks.RayDaskCallback>`
-directly, passing the callback functions as constructor arguments:
+，将回调函数作为构造函数参数传递：
 
 .. literalinclude:: doc_code/dask_on_ray_callbacks.py
     :language: python
     :start-after: __ray_dask_callback_direct_begin__
     :end-before: __ray_dask_callback_direct_end__
 
-or you can subclass it, implementing the callback methods that you need:
+或者你可以将其子类化，实现你需要的回调方法：
 
 .. literalinclude:: doc_code/dask_on_ray_callbacks.py
     :language: python
     :start-after: __ray_dask_callback_subclass_begin__
     :end-before: __ray_dask_callback_subclass_end__
 
-You can also specify multiple callbacks:
+您还可以指定多个回调：
 
 .. literalinclude:: doc_code/dask_on_ray_callbacks.py
     :language: python
     :start-after: __multiple_callbacks_begin__
     :end-before: __multiple_callbacks_end__
 
-Combining Dask callbacks with an actor yields simple patterns for stateful data
-aggregation, such as capturing task execution statistics and caching results.
-Here is an example that does both, caching the result of a task if its
-execution time exceeds some user-defined threshold:
+将 Dask 回调与 Actor 结合起来，可以产生简单的状态数据聚合模式，
+例如捕获任务执行统计信息和缓存结果。
+下面是一个同时执行这两个操作的示例，
+如果任务的执行时间超过某个用户定义的阈值，则缓存任务的结果：
 
 .. literalinclude:: doc_code/dask_on_ray_callbacks.py
     :language: python
@@ -255,11 +243,11 @@ execution time exceeds some user-defined threshold:
     :end-before: __caching_actor_end__
 
 .. note::
-  The existing Dask scheduler callbacks (``start``, ``start_state``,
-  ``pretask``, ``posttask``, ``finish``) are also available, which can be used to
-  introspect the Dask task to Ray task conversion process, but note that the ``pretask``
-  and ``posttask`` hooks are executed before and after the Ray task is *submitted*, not
-  executed, and that ``finish`` is executed after all Ray tasks have been
-  *submitted*, not executed.
+  现有的 Dask 调度程序回调 (``start``、 ``start_state``、
+  ``pretask``、 ``posttask``、 ``finish``) 同样可用，可用于
+  自省 Dask 任务到 Ray 任务的转换过程， 但请注意， ``pretask``
+  和 ``posttask`` 钩子是在 Ray 任务 *提交* 之前和之后执行的，而不是
+  运行中执行， ``finish`` 是在所有 Ray 任务
+  *提交* 之后执行，而不是执行时执行。
 
-This callback API is currently unstable and subject to change.
+此回调 API 目前不稳定，可能会发生变化。
