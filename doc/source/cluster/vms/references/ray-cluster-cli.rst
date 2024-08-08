@@ -1,22 +1,21 @@
 .. _cluster-commands:
 
-Cluster Launcher Commands
+集群启动器命令
 =========================
 
-This document overviews common commands for using the Ray cluster launcher.
-See the :ref:`Cluster Configuration <cluster-config>` docs on how to customize the configuration file.
+本文档概述了使用 Ray 集群启动器的常用命令。
+参考 :ref:`集群配置 <cluster-config>` 文档，了解如何自定义配置文件。
 
-Launching a cluster (``ray up``)
+启动集群 (``ray up``)
 --------------------------------
 
-This will start up the machines in the cloud, install your dependencies and run
-any setup commands that you have, configure the Ray cluster automatically, and
-prepare you to scale your distributed system. See :ref:`the documentation
-<ray-up-doc>` for ``ray up``. The example config files can be accessed `here <https://github.com/ray-project/ray/tree/master/python/ray/autoscaler>`_.
+这将启动云中的机器，安装依赖项并运行您拥有的任何设置命令，
+自动配置 Ray 集群，并为您扩展分布式系统做好准备。 参考 ``ray up`` :ref:`文档
+<ray-up-doc>`。示例配置文件可在 `这里 <https://github.com/ray-project/ray/tree/master/python/ray/autoscaler>`_ 访问。
 
-.. tip:: The worker nodes will start only after the head node has finished
-         starting. To monitor the progress of the cluster setup, you can run
-         `ray monitor <cluster yaml>`.
+.. tip:: 工作节点仅在头节点启动完成后才会启动。
+         要监控集群设置的进度，您可以运行
+         `ray monitor <cluster yaml>`。
 
 .. code-block:: shell
 
@@ -29,49 +28,47 @@ prepare you to scale your distributed system. See :ref:`the documentation
     # Tear down the cluster.
     $ ray down ray/python/ray/autoscaler/$BACKEND/example-full.yaml
 
-Updating an existing cluster (``ray up``)
+更新现有集群 (``ray up``)
 -----------------------------------------
 
-If you want to update your cluster configuration (add more files, change dependencies), run ``ray up`` again on the existing cluster.
+如果您想更新集群配置（添加更多文件、更改依赖项），请在现有集群上再次运行 ``ray up`` 。
 
-This command checks if the local configuration differs from the applied
-configuration of the cluster. This includes any changes to synced files
-specified in the ``file_mounts`` section of the config. If so, the new files
-and config will be uploaded to the cluster. Following that, Ray
-services/processes will be restarted.
+此命令检查本地配置是否与集群的应用配置不同。
+这包括对配置文件中 ``file_mounts`` 部分中指定的同步文件的任何更改。
+如果是，则新文件和配置将上传到集群。之后，Ray 服务/进程将重新启动。
 
-.. tip:: Don't do this for the cloud provider specifications (e.g., change from
-         AWS to GCP on a running cluster) or change the cluster name (as this
-         will just start a new cluster and orphan the original one).
+.. tip:: 不要针对云提供商规范（例如，在运行中的集群上
+         从 AWS 更改为 GCP）或更改集群名称（因为
+         这将启动一个新集群并使原始集群变为孤立）。
 
 
-You can also run ``ray up`` to restart a cluster if it seems to be in a bad
-state (this will restart all Ray services even if there are no config changes).
+如果集群看起来处于不良状态，您还可以运行 ``ray up`` 以重新启动
+集群（即使没有配置更改，这也将重新启动所有 Ray 服务）。
 
-Running ``ray up`` on an existing cluster will do all the following:
+在现有集群上运行 ``ray up`` 将执行以下所有操作：
 
-* If the head node matches the cluster specification, the filemounts will be
-  reapplied and the ``setup_commands`` and ``ray start`` commands will be run.
-  There may be some caching behavior here to skip setup/file mounts.
-* If the head node is out of date from the specified YAML (e.g.,
-  ``head_node_type`` has changed on the YAML), then the out-of-date node will
-  be terminated and a new node will be provisioned to replace it. Setup/file
-  mounts/``ray start`` will be applied.
-* After the head node reaches a consistent state (after ``ray start`` commands
-  are finished), the same above procedure will be applied to all the worker
-  nodes. The ``ray start`` commands tend to run a ``ray stop`` + ``ray start``,
-  so this will kill currently working jobs.
+* 如果头节点与集群规范匹配，则将重新应用文件挂载
+  并运行 ``setup_commands`` 和 ``ray start`` 命令。
+  此处可能存在一些缓存行为以跳过设置/文件挂载。
+* 如果头节点与指定的 YAML 不符（例如，
+  ``head_node_type`` 在 YAML 上已发生更改），则将终止过期的节点，
+  并配置新节点来替换它。 设置/文件
+  挂载/``ray start`` 会应用。
+* 当头节点达到一致状态后（ ``ray start`` 命令
+  完成后），上述相同过程将应用于所有工作
+  节点。``ray start`` 命令倾向于运行 ``ray stop`` + ``ray start``，
+  因此这将终止当前正在运行的作业。
 
-If you don't want the update to restart services (e.g. because the changes
-don't require a restart), pass ``--no-restart`` to the update call.
+如果您不希望更新重新启动服务（例如因为更改
+不需要重新启动），请传递 ``--no-restart`` 到更新调用。
 
-If you want to force re-generation of the config to pick up possible changes in
-the cloud environment, pass ``--no-config-cache`` to the update call.
+如果您想强制重新生成配置以获取云环境中
+可能的变化，请传递 ``--no-config-cache`` 到更新调用。
 
-If you want to skip the setup commands and only run ``ray stop``/``ray start``
-on all nodes, pass ``--restart-only`` to the update call.
+如果您想跳过设置命令并仅在所有节点上运行 ``ray stop``/ ``ray start``
+请传递 ``--restart-only`` 到更新调用。
 
-See :ref:`the documentation <ray-up-doc>` for ``ray up``.
+请参阅的 ``ray up`` :ref:`文档 <ray-up-doc>` 。
 
 .. code-block:: shell
 
@@ -79,10 +76,10 @@ See :ref:`the documentation <ray-up-doc>` for ``ray up``.
     $ ray up ray/python/ray/autoscaler/$BACKEND/example-full.yaml \
         --max-workers=N --no-restart
 
-Running shell commands on the cluster (``ray exec``)
+在集群上运行 shell 命令 (``ray exec``)
 ----------------------------------------------------
 
-You can use ``ray exec`` to conveniently run commands on clusters. See :ref:`the documentation <ray-exec-doc>` for ``ray exec``.
+您可以使用 ``ray exec`` 来方便地在集群上运行命令。请参阅 ``ray exec`` :ref:`文档 <ray-exec-doc>` 。
 
 
 .. code-block:: shell
@@ -106,25 +103,24 @@ You can use ``ray exec`` to conveniently run commands on clusters. See :ref:`the
     # Run a command in a screen (experimental)
     $ ray exec cluster.yaml 'echo "hello world"' --screen
 
-If you want to run applications on the cluster that are accessible from a web
-browser (e.g., Jupyter notebook), you can use the ``--port-forward``. The local
-port opened is the same as the remote port.
+如果要在集群上运行可以通过 Web 浏览器访问的
+应用程序（例如 Jupyter Notebook），则可以使用 ``--port-forward``。打开的本地端口
+与远程端口相同。
 
 .. code-block:: shell
 
     $ ray exec cluster.yaml --port-forward=8899 'source ~/anaconda3/bin/activate tensorflow_p36 && jupyter notebook --port=8899'
 
-.. note:: For Kubernetes clusters, the ``port-forward`` option cannot be used
-          while executing a command. To port forward and run a command you need
-          to call ``ray exec`` twice separately.
+.. note:: 对于 Kubernetes 集群， ``port-forward`` 选项在
+          命令执行时无法使用。 要进行端口转发并运行命令，您需要
+          分别调用两次 ``ray exec`` 命令。
 
-Running Ray scripts on the cluster (``ray submit``)
+在集群上运行 Ray 脚本 (``ray submit``)
 ---------------------------------------------------
 
-You can also use ``ray submit`` to execute Python scripts on clusters. This
-will ``rsync`` the designated file onto the head node cluster and execute it
-with the given arguments. See :ref:`the documentation <ray-submit-doc>` for
-``ray submit``.
+您还可以使用 ``ray submit`` 在集群上执行 Python 脚本。 这会
+将 ``rsync`` 指定的文件放到头节点集群上并使用
+给定的参数执行它。参考 ``ray submit`` :ref:`文档 <ray-submit-doc>` 。
 
 .. code-block:: shell
 
@@ -137,12 +133,12 @@ with the given arguments. See :ref:`the documentation <ray-submit-doc>` for
     $ ray submit cluster.yaml script.py -- --arg1 --arg2 --arg3
 
 
-Attaching to a running cluster (``ray attach``)
+连接到正在运行的集群 (``ray attach``)
 -----------------------------------------------
 
-You can use ``ray attach`` to attach to an interactive screen session on the
-cluster. See :ref:`the documentation <ray-attach-doc>` for ``ray attach`` or
-run ``ray attach --help``.
+你可以使用 ``ray attach`` 连接到集群上的交互式屏幕会话。
+请参阅 ``ray attach`` :ref:`文档 <ray-attach-doc>` 或
+运行 ``ray attach --help``。
 
 .. code-block:: shell
 
@@ -157,11 +153,11 @@ run ``ray attach --help``.
 
 .. _ray-rsync:
 
-Synchronizing files from the cluster (``ray rsync-up/down``)
+从集群同步文件 (``ray rsync-up/down``)
 ------------------------------------------------------------
 
-To download or upload files to the cluster head node, use ``ray rsync_down`` or
-``ray rsync_up``:
+要下载或上传文件到簇头节点，请使用 ``ray rsync_down`` 或
+``ray rsync_up``：
 
 .. code-block:: shell
 
@@ -170,46 +166,46 @@ To download or upload files to the cluster head node, use ``ray rsync_down`` or
 
 .. _monitor-cluster:
 
-Monitoring cluster status (``ray dashboard/status``)
+监视群集状态 (``ray dashboard/status``)
 -----------------------------------------------------
 
-The Ray also comes with an online dashboard. The dashboard is accessible via
-HTTP on the head node (by default it listens on ``localhost:8265``). You can
-also use the built-in ``ray dashboard`` to set up port forwarding
-automatically, making the remote dashboard viewable in your local browser at
-``localhost:8265``.
+Ray 还带有一个在线仪表板。仪表板可通过头节点上
+的 HTTP 访问（默认情况下，它监听 ``localhost:8265``）。您还可以使用
+内置功能  ``ray dashboard``  自动设置端口转发，
+使远程仪表板可在本地浏览器中查看
+``localhost:8265``。
 
 .. code-block:: shell
 
     $ ray dashboard cluster.yaml
 
-You can monitor cluster usage and auto-scaling status by running (on the head node):
+您可以通过运行（在头节点上）来监视集群使用情况和自动扩展状态：
 
 .. code-block:: shell
 
     $ ray status
 
-To see live updates to the status:
+要查看状态的实时更新：
 
 .. code-block:: shell
 
     $ watch -n 1 ray status
 
-The Ray autoscaler also reports per-node status in the form of instance tags.
-In your cloud provider console, you can click on a Node, go to the "Tags" pane,
-and add the ``ray-node-status`` tag as a column. This lets you see per-node
-statuses at a glance:
+Ray 自动缩放器还以实例标签的形式报告每个节点的状态。
+在云提供商控制台中，您可以单击某个节点，转到“标签”窗格，
+然后将标签 ``ray-node-status`` 添加为一列。 这样
+您就可以一目了然地查看每个节点的状态：
 
 .. image:: /images/autoscaler-status.png
 
-Common Workflow: Syncing git branches
+常见工作流程：同步 git 分支
 -------------------------------------
 
-A common use case is syncing a particular local git branch to all workers of
-the cluster. However, if you just put a `git checkout <branch>` in the setup
-commands, the autoscaler won't know when to rerun the command to pull in
-updates. There is a nice workaround for this by including the git SHA in the
-input (the hash of the file will change if the branch is updated):
+一个常见的用例是将特定的本地 git 分支同步到集群的所有
+工作器。但是，如果您只是在设置命令中输入 `git checkout <branch>` ，
+自动缩放器将不知道何时重新运行命令以提取更新。
+有一个很好的解决方法，即在输入中
+包含 git SHA（如果分支更新，文件的哈希值将发生变化）：
 
 .. code-block:: yaml
 
@@ -221,12 +217,12 @@ input (the hash of the file will change if the branch is updated):
         - test -e <REPO_NAME> || git clone https://github.com/<REPO_ORG>/<REPO_NAME>.git
         - cd <REPO_NAME> && git fetch && git checkout `cat /tmp/current_branch_sha`
 
-This tells ``ray up`` to sync the current git branch SHA from your personal
-computer to a temporary file on the cluster (assuming you've pushed the branch
-head already). Then, the setup commands read that file to figure out which SHA
-they should checkout on the nodes. Note that each command runs in its own
-session. The final workflow to update the cluster then becomes just this:
+这告诉 ``ray up`` 将当前 git 分支 SHA 从您的个人计算机同步到
+集群上的临时文件（假设您已经推送了分支头）。
+然后，设置命令读取该文件以确定节点上应该检出哪个 SHA。
+请注意，每个命令都在自己的会话中运行。
+然后更新集群的最终工作流程就变成了这样：
 
-1. Make local changes to a git branch
-2. Commit the changes with ``git commit`` and ``git push``
-3. Update files on your Ray cluster with ``ray up``
+1. 对 git 分支进行本地更改
+2. 使用 ``git commit`` 和 ``git push`` 提交更改
+3. 在你的 Ray 集群使用 ``ray up`` 更新文件

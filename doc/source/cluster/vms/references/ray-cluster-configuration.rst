@@ -1,11 +1,11 @@
 .. _cluster-config:
 
-Cluster YAML Configuration Options
+集群 YAML 配置项目
 ==================================
 
-The cluster configuration is defined within a YAML file that will be used by the Cluster Launcher to launch the head node, and by the Autoscaler to launch worker nodes. Once the cluster configuration is defined, you will need to use the :ref:`Ray CLI <ray-cluster-cli>` to perform any operations such as starting and stopping the cluster.
+集群配置在 YAML 文件中定义，Cluster Launcher 将使用该文件启动头节点，Autoscaler 将使用该文件启动工作节点。定义集群配置后，您将需要使用 :ref:`Ray CLI <ray-cluster-cli>` 执行任何操作，例如启停集群。
 
-Syntax
+语法
 ------
 
 .. parsed-literal::
@@ -44,7 +44,7 @@ Syntax
     :ref:`worker_start_ray_commands <cluster-configuration-worker-start-ray-commands>`:
         - str
 
-Custom types
+自定义类型
 ------------
 
 .. _cluster-configuration-docker-type:
@@ -69,7 +69,7 @@ Docker
 
 .. _cluster-configuration-auth-type:
 
-Auth
+认证
 ~~~~
 
 .. tab-set::
@@ -104,7 +104,7 @@ Auth
 
 .. _cluster-configuration-provider-type:
 
-Provider
+提供商
 ~~~~~~~~
 
 .. tab-set::
@@ -153,7 +153,7 @@ Provider
 
 .. _cluster-configuration-security-group-type:
 
-Security Group
+安全组
 ~~~~~~~~~~~~~~
 
 .. tab-set::
@@ -168,7 +168,7 @@ Security Group
 
 .. _cluster-configuration-vsphere-config-type:
 
-vSphere Config
+vSphere 配置
 ~~~~~~~~~~~~~~
 
 .. tab-set::
@@ -178,13 +178,13 @@ vSphere Config
         .. parsed-literal::
 
             :ref:`credentials <cluster-configuration-vsphere-credentials>`:
-                :ref:`vSphere Credentials <cluster-configuration-vsphere-credentials-type>`
+                :ref:`vSphere 凭证 <cluster-configuration-vsphere-credentials-type>`
             :ref:`frozen_vm <cluster-configuration-vsphere-frozen-vm>`:
                 :ref:`vSphere Frozen VM Configs <cluster-configuration-vsphere-frozen-vm-configs>`
 
 .. _cluster-configuration-vsphere-credentials-type:
 
-vSphere Credentials
+vSphere 凭证
 ~~~~~~~~~~~~~~~~~~~
 
 .. tab-set::
@@ -199,7 +199,7 @@ vSphere Credentials
 
 .. _cluster-configuration-vsphere-frozen-vm-configs:
 
-vSphere Frozen VM Configs
+vSphere Frozen VM 配置
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. tab-set::
@@ -217,15 +217,15 @@ vSphere Frozen VM Configs
 .. _cluster-configuration-node-types-type:
 
 
-Node types
+节点类型
 ~~~~~~~~~~
 
-The ``available_nodes_types`` object's keys represent the names of the different node types.
+``available_nodes_types`` 对象的键代表不同节点类型的名称。
 
-Deleting a node type from ``available_node_types`` and updating with :ref:`ray up <ray-up-doc>` will cause the autoscaler to scale down all nodes of that type.
-In particular, changing the key of a node type object will
-result in removal of nodes corresponding to the old key; nodes with the new key name will then be
-created according to cluster configuration and Ray resource demands.
+从 ``available_node_types`` 删除节点类型并使用 :ref:`ray up <ray-up-doc>` 进行更新将导致自动扩缩器缩减该类型的所有节点。
+具体而言，更改节点类型对象的键将导致
+删除与旧键相对应的节点；
+然后会根据集群配置和 Ray 资源需求创建具有新键名称的节点。
 
 .. parsed-literal::
     <node_type_1_name>:
@@ -245,27 +245,27 @@ created according to cluster configuration and Ray resource demands.
 
 .. _cluster-configuration-node-config-type:
 
-Node config
+节点配置
 ~~~~~~~~~~~
 
-Cloud-specific configuration for nodes of a given node type.
+针对给定节点类型的节点的云特定配置。
 
-Modifying the ``node_config`` and updating with :ref:`ray up <ray-up-doc>` will cause the autoscaler to scale down all existing nodes of the node type;
-nodes with the newly applied ``node_config`` will then be created according to cluster configuration and Ray resource demands.
+修改 ``node_config`` 并使用 :ref:`ray up <ray-up-doc>` 更新将导致自动缩放器缩小节点类型的所有现有节点；
+节点会根据新应用的 ``node_config`` 创建，根据集群配置和 Ray 资源需求。
 
 .. tab-set::
 
     .. tab-item:: AWS
 
-        A YAML object which conforms to the EC2 ``create_instances`` API in `the AWS docs <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.ServiceResource.create_instances>`_.
+        符合 `AWS 文档 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.ServiceResource.create_instances>`_ EC2 ``create_instances`` API 的 YAML 对象。
 
     .. tab-item:: Azure
 
-        A YAML object as defined in `the deployment template <https://docs.microsoft.com/en-us/azure/templates/microsoft.compute/virtualmachines>`_ whose resources are defined in `the Azure docs <https://docs.microsoft.com/en-us/azure/templates/>`_.
+       `Azure 文档 <https://docs.microsoft.com/en-us/azure/templates/>`_ 资源定义的 `部署模板 <https://docs.microsoft.com/en-us/azure/templates/microsoft.compute/virtualmachines>`_  YAML 对象。
 
     .. tab-item:: GCP
 
-        A YAML object as defined in `the GCP docs <https://cloud.google.com/compute/docs/reference/rest/v1/instances>`_.
+        `GCP 文档 <https://cloud.google.com/compute/docs/reference/rest/v1/instances>`_ 定义的 YAML 对象。
 
     .. tab-item:: vSphere
 
@@ -281,7 +281,7 @@ nodes with the newly applied ``node_config`` will then be created according to c
 
 .. _cluster-configuration-node-docker-type:
 
-Node Docker
+节点 Docker
 ~~~~~~~~~~~
 
 .. parsed-literal::
@@ -295,7 +295,7 @@ Node Docker
 
 .. _cluster-configuration-resources-type:
 
-Resources
+资源
 ~~~~~~~~~
 
 .. parsed-literal::
@@ -310,7 +310,7 @@ Resources
 
 .. _cluster-configuration-file-mounts-type:
 
-File mounts
+文件挂载
 ~~~~~~~~~~~
 
 .. parsed-literal::
@@ -318,7 +318,7 @@ File mounts
     <path2_on_remote_machine>: str # Path 2 on local machine
     ...
 
-Properties and Definitions
+属性和定义
 --------------------------
 
 .. _cluster-configuration-cluster-name:
@@ -326,7 +326,7 @@ Properties and Definitions
 ``cluster_name``
 ~~~~~~~~~~~~~~~~
 
-The name of the cluster. This is the namespace of the cluster.
+集群的名称。这是集群的命名空间。
 
 * **Required:** Yes
 * **Importance:** High
@@ -339,7 +339,7 @@ The name of the cluster. This is the namespace of the cluster.
 ``max_workers``
 ~~~~~~~~~~~~~~~
 
-The maximum number of workers the cluster will have at any given time.
+集群在任何给定时间内拥有的最大工作器数量。
 
 * **Required:** No
 * **Importance:** High

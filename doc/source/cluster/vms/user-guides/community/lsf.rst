@@ -1,18 +1,18 @@
 .. _ray-LSF-deploy:
 
-Deploying on LSF
+部署在 LSF
 ================
 
-This document describes a couple high-level steps to run Ray clusters on LSF.
+本文档介绍了在 LSF 上运行 Ray 集群的几个高级步骤。
 
-1) Obtain desired nodes from LSF scheduler using bsub directives.
-2) Obtain free ports on the desired nodes to start ray services like dashboard, GCS etc.
-3) Start ray head node on one of the available nodes.
-4) Connect all the worker nodes to the head node.
-5) Perform port forwarding to access ray dashboard.
+1) 使用 bsub 指令从 LSF 调度程序获取所需的节点。
+2) 在所需节点上获取空闲端口以启动射线服务，如仪表板、GCS 等。
+3) 在其中一个可用节点上启动 Ray 头节点。
+4) 将所有工作节点连接到头节点。
+5) 执行端口转发以访问 ray 仪表板。
 
-Steps 1-4 have been automated and can be easily run as a script, please refer to below github repo to access script and run sample workloads:
+步骤 1-4 已经自动化，可以轻松作为脚本运行，请参考以下 github repo 访问脚本并运行示例工作负载：
 
-- `ray_LSF`_ Ray with LSF. Users can start up a Ray cluster on LSF, and run DL workloads through that either in a batch or interactive mode.
+- `ray_LSF`_ Ray LSF。 用户可以在 LSF 上启动 Ray 集群，并通过该集群以批处理或交互模式运行 DL 工作负载。
 
 .. _`ray_LSF`: https://github.com/IBMSpectrumComputing/ray-integration

@@ -1,56 +1,56 @@
 .. _vms-autoscaling:
 
-Configuring Autoscaling
+配置自动缩放
 =======================
 
-This guide explains how to configure the Ray autoscaler using the Ray cluster launcher.
-The Ray autoscaler is a Ray cluster process that automatically scales a cluster up and down based on resource demand.
-The autoscaler does this by adjusting the number of nodes in the cluster based on the resources required by tasks, actors or placement groups.
+本指南介绍如何使用 Ray 集群启动器配置 Ray 自动扩缩器。
+Ray 自动扩缩器是一个 Ray 集群进程，可根据资源需求自动扩缩集群。
+自动扩缩器通过根据任务、actor 或放置组所需的资源调整集群中的节点数量来实现此目的。
 
-Note that the autoscaler only considers logical resource requests for scaling (i.e., those specified in ``@ray.remote`` and displayed in `ray status`), not physical machine utilization. If a user tries to launch an actor, task, or placement group but there are insufficient resources, the request will be queued. The autoscaler adds nodes to satisfy resource demands in this queue.
-The autoscaler also removes nodes after they become idle for some time.
-A node is considered idle if it has no active tasks, actors, or objects.
+注意，自动缩放器仅考虑逻辑资源请求（即 `ray status` 中显示的 ``@ray.remote`` 请求），而不考虑物理机器利用率。如果用户尝试启动 actor、任务或放置组但资源不足，则请求将排队。自动缩放器会在此队列中添加节点以满足资源需求。
+自动缩放器还会在节点空闲一段时间后将其删除。
+如果节点没有活动任务、actor 或对象，则该节点被视为空闲。
 
 .. tip::
-  **When to use Autoscaling?**
+  **何时使用自动缩放？**
 
-  Autoscaling can reduce workload costs, but adds node launch overheads and can be tricky to configure.
-  We recommend starting with non-autoscaling clusters if you're new to Ray.
+  自动扩展可以降低工作负载成本，但会增加节点启动开销，并且配置起来可能比较棘手。
+  如果您是 Ray 新手，我们建议您从非自动扩展集群开始。
 
-Cluster Config Parameters
+集群配置参数
 -------------------------
 
-The following options are available in your cluster config file.
-It is recommended that you set these before launching your cluster, but you can also modify them at run-time by updating the cluster config.
+集群配置文件中有以下选项。
+建议您在启动集群之前设置这些选项，但您也可以在运行时通过更新集群配置来修改它们。
 
-`max_workers[default_value=2, min_value=0]`: The max number of cluster worker nodes to launch. Note that this does not include the head node.
+`max_workers[default_value=2, min_value=0]`: 要启动的集群工作节点的最大数量。请注意，这不包括头节点。
 
-`min_workers[default_value=0, min_value=0]`: The min number of cluster worker nodes to launch, regardless of utilization. Note that this does not include the head node. This number must be less than the ``max_workers``.
+`min_workers[default_value=0, min_value=0]`: 无论利用率如何，都要启动的集群工作节点的最小数量。请注意，这不包括头节点。此数字必须小于 ``max_workers``。
 
 .. note::
 
-  If `max_workers` is modified at runtime, the autoscaler will immediately remove nodes until this constraint
-  is satisfied. This may disrupt running workloads.
+  如果 `max_workers` 在运行时修改，自动缩放器将立即删除节点，直到满足此约束为止。
+  这可能会中断正在运行的工作负载。
 
-If you are using more than one node type, you can also set min and max workers for each individual type:
+如果您使用多个节点类型，您还可以为每种类型设置最小和最大 worker：
 
-`available_node_types.<node_type_name>.max_workers[default_value=cluster max_workers, min_value=0]`: The maximum number of worker nodes of a given type to launch. This number must be less than or equal to the `max_workers` for the cluster.
+`available_node_types.<node_type_name>.max_workers[default_value=cluster max_workers, min_value=0]`: 要启动的给定类型的工作节点的最大数量。此数量必须小于或等于集群的 `max_workers` 数量。
 
 
-`available_node_types.<node_type_name>.min_workers[default_value=0, min_value=0]`: The minimum number of worker nodes of a given type to launch, regardless of utilization. The sum of `min_workers` across all node types must be less than or equal to the `max_workers` for the cluster.
+`available_node_types.<node_type_name>.min_workers[default_value=0, min_value=0]`: 无论利用率如何，要启动的给定类型的工作节点的最小数量。 所有节点类型的  `min_workers`  总和必须小于或等于集群的 `max_workers` 。
 
-Upscaling and downscaling speed
+缩放速度
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If needed, you can also control the rate at which nodes should be added to or removed from the cluster. For applications with many short-lived tasks, you may wish to adjust the upscaling and downscaling speed to be more conservative.
+如果需要，您还可以控制向集群添加或从集群中删除节点的速率。对于具有许多短期任务的应用程序，您可能希望将升级和降级速度调整得更为保守。
 
-`upscaling_speed[default_value=1.0, min_value=1.0]`: The number of nodes allowed to be pending as a multiple of the current number of nodes. The higher the value, the more aggressive upscaling will be. For example, if this is set to 1.0, the cluster can grow in size by at most 100% at any time, so if the cluster currently has 20 nodes, at most 20 pending
-launches are allowed. The minimum number of pending launches is 5 regardless of this setting.
+`upscaling_speed[default_value=1.0, min_value=1.0]`: 允许待处理的节点数，是当前节点数的倍数。值越高，升级越积极。例如，如果将其设置为 1.0，则集群的大小可以随时增加最多 100%，因此如果集群当前有 20 个节点，则最多允许 20 次待启动。
+无论此设置如何，待启动的最小数量都是 5。
 
-`idle_timeout_minutes[default_value=5, min_value=0]`: The number of minutes that need to pass before an idle worker node is removed by the
-autoscaler. The smaller the value, the more aggressive downscaling will be. Worker nodes are considered idle when they hold no active tasks, actors, or referenced objects (either in-memory or spilled to disk). This parameter does not affect the head node.
+`idle_timeout_minutes[default_value=5, min_value=0]`: 自动缩放程序移除空闲工作节点之前需要经过的分钟数。
+值越小，缩减幅度越大。当工作节点不包含任何活动任务、参与者或引用对象（无论是内存中还是溢出到磁盘）时，它们被视为空闲。此参数不会影响头节点。
 
-Programmatic Scaling
+程序化缩放
 --------------------
 
-For more information on programmatic access to the autoscaler, see the :ref:`Programmatic Cluster Scaling Guide <ref-autoscaler-sdk>`.
+有关以编程方式访问自动扩缩器的更多信息，请参阅《 :ref:`编程式集群扩缩指南 <ref-autoscaler-sdk>`》。

@@ -1,18 +1,18 @@
 .. _ray-Spark-deploy:
 
-Deploying on Spark Standalone cluster
+部署在独立的 Spark 集群上
 =====================================
 
-This document describes a couple high-level steps to run Ray clusters on `Spark Standalone cluster <https://spark.apache.org/docs/latest/spark-standalone.html>`_.
+本文档介绍了在 `Spark 独立集群<https://spark.apache.org/docs/latest/spark-standalone.html>`_ 上运行 Ray 集群的几个高级步骤。
 
-Running a basic example
+运行基础示例
 -----------------------
 
-This is a spark application example code that starts Ray cluster on spark,
-and then execute ray application code, then shut down initiated ray cluster.
+这是一个 spark 应用程序示例代码，它在 spark 上启动 ray 集群，
+然后执行 ray 应用程序代码，然后关闭启动的 ray 集群。
 
-1) Create a python file that contains a spark application code,
-Assuming the python file name is 'ray-on-spark-example1.py'.
+1) 创建一个包含spark应用程序代码的python文件，
+假设python文件名为“ray-on-spark-example1.py”。
 
 .. code-block:: python
 
@@ -44,7 +44,7 @@ Assuming the python file name is 'ray-on-spark-example1.py'.
         # will also be terminated.
         shutdown_ray_cluster()
 
-2) Submit the spark application above to spark standalone cluster.
+2) 将上面的spark应用程序提交到spark standalone集群。
 
 .. code-block:: bash
 
@@ -53,14 +53,14 @@ Assuming the python file name is 'ray-on-spark-example1.py'.
       --master spark://{spark_master_IP}:{spark_master_port} \
       path/to/ray-on-spark-example1.py
 
-Creating a long running ray cluster on spark cluster
+在 Spark 集群上创建长期运行的 Ray 集群
 ----------------------------------------------------
 
-This is a spark application example code that starts a long running Ray cluster on spark.
-The created ray cluster can be accessed by remote python processes.
+这是一个 spark 应用程序示例代码，它在 spark 上启动一个长时间运行的 ray 集群。
+创建的 ray 集群可以被远程 python 进程访问。
 
-1) Create a python file that contains a spark application code,
-Assuming the python file name is 'long-running-ray-cluster-on-spark.py'.
+1) 创建一个包含spark应用程序代码的python文件，
+假设python文件名为“long-running-ray-cluster-on-spark.py”。
 
 .. code-block:: python
 
@@ -86,7 +86,7 @@ Assuming the python file name is 'long-running-ray-cluster-on-spark.py'.
         while True:
             time.sleep(10)
 
-2) Submit the spark application above to spark standalone cluster.
+2) 将上面的spark应用程序提交到spark standalone集群。
 
 .. code-block:: bash
 

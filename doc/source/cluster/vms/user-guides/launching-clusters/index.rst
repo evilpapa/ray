@@ -1,11 +1,11 @@
 .. _launching-vm-clusters:
 
-Launching Ray Clusters on AWS, GCP, Azure, vSphere, On-Prem
+在 AWS、GCP、Azure、vSphere、On-Prem 上启动 Ray 集群
 ===========================================================
 
-In this section, you can find guides for launching Ray clusters in various clouds or on-premises.
+在本节中，您可以找到在各种云或本地启动 Ray 集群的指南。
 
-Table of Contents
+目录
 -----------------
 
 .. toctree::

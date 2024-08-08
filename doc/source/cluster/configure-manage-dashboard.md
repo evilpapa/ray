@@ -183,63 +183,63 @@ ray.init(include_dashboard=False)
 (observability-visualization-setup)=
 ## 将 Grafana 可视化嵌入到 Ray 仪表盘
 
-For the enhanced Ray Dashboard experience, like {ref}`viewing time-series metrics<dash-metrics-view>` together with logs, Job info, etc., set up Prometheus and Grafana and integrate them with Ray Dashboard.
+为了增强 Ray Dashboard 体验，例如 {ref}`查看时间序列指标<dash-metrics-view>` 以及日志、作业信息等，请设置 Prometheus 和 Grafana 并将它们与 Ray Dashboard 集成。
 
-### Setting up Prometheus
-To render Grafana visualizations, you need Prometheus to scrape metrics from Ray Clusters. Follow {ref}`the instructions <prometheus-setup>` to set up your Prometheus server and start to scrape system and application metrics from Ray Clusters.
+### 设置 Prometheus
+要呈现 Grafana 可视化效果，您需要 Prometheus 从 Ray 集群中抓取指标。按照 {ref}`说明 <prometheus-setup>` 设置您的 Prometheus 服务器并开始从 Ray 集群中抓取系统和应用程序指标。
 
 
-### Setting up Grafana
-Grafana is a tool that supports advanced visualizations of Prometheus metrics and allows you to create custom dashboards with your favorite metrics. Follow {ref}`the instructions <grafana>` to set up Grafana.
+### 设置 Grafana
+Grafana 是一款支持 Prometheus 指标高级可视化的工具，可让您使用自己喜欢的指标创建自定义仪表板。按照 {ref}`说明 <grafana>` 设置 Grafana。
 
 
 (embed-grafana-in-dashboard)=
-### Embedding Grafana visualizations into Ray Dashboard
-To view embedded time-series visualizations in Ray Dashboard, the following must be set up:
+### 将 Grafana 可视化嵌入到 Ray 仪表盘
+要在 Ray Dashboard 中查看嵌入的时间序列可视化，必须进行以下设置：
 
-1. The head node of the cluster is able to access Prometheus and Grafana.
-2. The browser of the dashboard user is able to access Grafana. 
+1. 集群的头节点能够访问 Prometheus 和 Grafana。
+2. 仪表板用户的浏览器能够访问 Grafana。
 
-Configure these settings using the `RAY_GRAFANA_HOST`, `RAY_PROMETHEUS_HOST`, `RAY_PROMETHEUS_NAME`, and `RAY_GRAFANA_IFRAME_HOST` environment variables when you start the Ray Clusters.
+启动 Ray Clusters 时，使用 `RAY_GRAFANA_HOST`、 `RAY_PROMETHEUS_HOST`、 `RAY_PROMETHEUS_NAME` 及 `RAY_GRAFANA_IFRAME_HOST` 环境变量进行配置。
 
-* Set `RAY_GRAFANA_HOST` to an address that the head node can use to access Grafana. Head node does health checks on Grafana on the backend.
-* Set `RAY_PROMETHEUS_HOST` to an address the head node can use to access Prometheus.
-* Set `RAY_PROMETHEUS_NAME` to select a different data source to use for the Grafana dashboard panles to use. Default is "Prometheus".
-* Set `RAY_GRAFANA_IFRAME_HOST` to an address that the user's browsers can use to access Grafana and embed visualizations. If `RAY_GRAFANA_IFRAME_HOST` is not set, Ray Dashboard uses the value of `RAY_GRAFANA_HOST`.
+* 设置 `RAY_GRAFANA_HOST` 为头节点可用于访问 Grafana 的地址。头节点在后端对 Grafana 进行健康检查。
+* 设置 `RAY_PROMETHEUS_HOST` 头节点可以用来访问 Prometheus 的地址。
+* 设置 `RAY_PROMETHEUS_NAME` 选择 Grafana 仪表板面板使用的其他数据源。默认为“Prometheus”。
+* 设置 `RAY_GRAFANA_IFRAME_HOST` 为用户浏览器可用于访问 Grafana 并嵌入可视化的地址。如果 `RAY_GRAFANA_IFRAME_HOST` 未设置，Ray Dashboard 将使用 `RAY_GRAFANA_HOST` 的值。
 
-For example, if the IP of the head node is 55.66.77.88 and Grafana is hosted on port 3000. Set the value to `RAY_GRAFANA_HOST=http://55.66.77.88:3000`.
-* If you start a single-node Ray Cluster manually, make sure these environment variables are set and accessible before you start the cluster or as a prefix to the `ray start ...` command, e.g., `RAY_GRAFANA_HOST=http://55.66.77.88:3000 ray start ...`
-* If you start a Ray Cluster with {ref}`VM Cluster Launcher <cloud-vm-index>`, the environment variables should be set under `head_start_ray_commands` as a prefix to the `ray start ...` command.
-* If you start a Ray Cluster with {ref}`KubeRay <kuberay-index>`, refer to this {ref}`tutorial <kuberay-prometheus-grafana>`.
+例如，如果头节点的 IP 是 55.66.77.88 并且 Grafana 托管在端口 3000 上。将值设置为 `RAY_GRAFANA_HOST=http://55.66.77.88:3000`。
+* 如果手动启动单节点 Ray 集群，请确保这些环境变量在启动集群之前或作为命令 `ray start ...` 前缀前进行设置并可访问，例如 `RAY_GRAFANA_HOST=http://55.66.77.88:3000 ray start ...`
+* 如果使用 VM Cluster Launcher {ref}`VM Cluster Launcher <cloud-vm-index>` 启动 Ray Cluster，则应将环境变量设置在 `head_start_ray_commands` 之下，作为 `ray start ...` 命令的前缀。
+* 如果通过 {ref}`KubeRay <kuberay-index>` 启动集群，参考 {ref}`教程 <kuberay-prometheus-grafana>`。
 
-If all the environment variables are set properly, you should see time-series metrics in {ref}`Ray Dashboard <observability-getting-started>`.
+如果所有环境变量都设置正确，您应该在 {ref}`Ray Dashboard <observability-getting-started>` 中看到时间序列指标。
 
 :::{note}
-If you use a different Prometheus server for each Ray Cluster and use the same Grafana server for all Clusters, set the `RAY_PROMETHEUS_NAME` environment variable to different values for each Ray Cluster and add these datasources in Grafana. Follow {ref}`these instructions <grafana>` to set up Grafana.
+如果您为每个 Ray 集群使用不同的 Prometheus 服务器，并对所有集群使用相同的 Grafana 服务器，需为每个 Ray 集群设置不同的 `RAY_PROMETHEUS_NAME` 环境变量值，并添加这些数据源到 Grafana。按照 {ref}`这些说明 <grafana>` 设置 Grafana。
 :::
 
-#### Alternate Prometheus host location
-By default, Ray Dashboard assumes Prometheus is hosted at `localhost:9090`. You can choose to run Prometheus on a non-default port or on a different machine. In this case, make sure that Prometheus can scrape the metrics from your Ray nodes following instructions {ref}`here <scrape-metrics>`.
+#### 备用 Prometheus 主机
+默认情况下，Ray Dashboard 假定 Prometheus 托管在 `localhost:9090`。您可以选择在非默认端口或其他机器上运行 Prometheus。 这种情况下，请确保 Prometheus 可以按照 {ref}`此处的 <scrape-metrics>` 说明从您的 Ray 节点抓取指标。
 
-Then, configure `RAY_PROMETHEUS_HOST` environment variable properly as stated above. For example, if Prometheus is hosted at port 9000 on a node with ip 55.66.77.88, set `RAY_PROMETHEUS_HOST=http://55.66.77.88:9000`.
+然后，按照上述步骤正确配置 `RAY_PROMETHEUS_HOST` 环境变量。 例如，如果 Prometheus 托管在 IP 为 55.66.77.88 的节点的端口 9000 上，则设置 `RAY_PROMETHEUS_HOST=http://55.66.77.88:9000`。
 
 
-#### Alternate Grafana host location
-By default, Ray Dashboard assumes Grafana is hosted at `localhost:3000` You can choose to run Grafana on a non-default port or on a different machine as long as the head node and the browsers of dashboard users can access it.
+#### 备用 Grafana 主机
+默认情况下，Ray Dashboard 假定 Grafana 托管在 `localhost:3000` 您可以选择在非默认端口或其他机器上运行 Grafana，只要头节点和仪表板用户的浏览器可以访问它。
 
-If Grafana is exposed with NGINX ingress on a Kubernetes cluster, the following line should be present in the Grafana ingress annotation:
+如果 Grafana 在 Kubernetes 集群上使用 NGINX 入口公开，则 Grafana 入口注释中应该存在以下行：
 
 ```yaml
 nginx.ingress.kubernetes.io/configuration-snippet: |
     add_header X-Frame-Options SAMEORIGIN always;
 ```
 
-When both Grafana and the Ray Cluster are on the same Kubernetes cluster, set `RAY_GRAFANA_HOST` to the external URL of the Grafana ingress.
+当 Grafana 和 Ray Cluster 都在同一个 Kubernetes 集群上时，设置`RAY_GRAFANA_HOST` 为 Grafana ingress 的外部 URL。
 
 
 
-#### User authentication for Grafana
-When the Grafana instance requires user authentication, the following settings have to be in its [configuration file](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/) to correctly embed in Ray Dashboard:
+#### Grafana 的用户身份认证
+当 Grafana 实例需要用户身份验证时，其配置文件 [配置文件](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/) 必须包含以下设置才能正确嵌入 Ray Dashboard：
 
 ```ini
   [security]
@@ -248,38 +248,38 @@ When the Grafana instance requires user authentication, the following settings h
   cookie_samesite = none
 ```
 
-#### Troubleshooting
+#### 故障排除
 
-##### Dashboard message: either Prometheus or Grafana server is not deteced
-If you have followed the instructions above to set up everything, run the connection checks below in your browser:
-* check Head Node connection to Prometheus server: add `api/prometheus_health` to the end of Ray Dashboard URL (for example: http://127.0.0.1:8265/api/prometheus_health)and visit it.
-* check Head Node connection to Grafana server: add `api/grafana_health` to the end of Ray Dashboard URL (for example: http://127.0.0.1:8265/api/grafana_health) and visit it.
-* check browser connection to Grafana server: visit the URL used in `RAY_GRAFANA_IFRAME_HOST`.
-
-
-##### Getting an error that says `RAY_GRAFANA_HOST` is not setup
-If you have set up Grafana , check that:
-* You've included the protocol in the URL (e.g., `http://your-grafana-url.com` instead of `your-grafana-url.com`).
-* The URL doesn't have a trailing slash (e.g., `http://your-grafana-url.com` instead of `http://your-grafana-url.com/`).
-
-##### Certificate Authority (CA error)
-You may see a CA error if your Grafana instance is hosted behind HTTPS. Contact the Grafana service owner to properly enable HTTPS traffic.
+##### 仪表板消息：未检测到 Prometheus 或 Grafana 服务器
+如果您已按照上述说明设置所有设置，请在浏览器中运行以下连接检查：
+* 检查 Head Node 是否连接到 Prometheus：添加 `api/prometheus_health` 到 Ray Dashboard URL (例如： http://127.0.0.1:8265/api/prometheus_health) 末尾并访问它。
+* 检查头节点与 Grafana 服务器的连接：添加 `api/grafana_health` 到 Ray Dashboard URL (例如： http://127.0.0.1:8265/api/grafana_health) 末尾并访问它。
+* 检查浏览器与 Grafana 服务器的连接：访问 `RAY_GRAFANA_IFRAME_HOST` 中使用的 URL。
 
 
-## Viewing built-in Dashboard API metrics
+##### 收到 `RAY_GRAFANA_HOST` 未设置错误提示
+如果您已设置 Grafana，请检查：
+* 您已在 URL 协议中包含了（例如，`http://your-grafana-url.com` 而不是 `your-grafana-url.com`）。
+* URL 没有反斜杠（例如， `http://your-grafana-url.com` 而不是 `http://your-grafana-url.com/`）。
 
-Dashboard is powered by a server that serves both the UI code and the data about the cluster via API endpoints.
-Ray emits basic Prometheus metrics for each API endpoint:
+##### 证书颁发机构（CA 错误）
+如果您的 Grafana 实例托管在 HTTPS 后面，您可能会看到 CA 错误。请联系 Grafana 服务所有者以正确启用 HTTPS 流量。
 
-`ray_dashboard_api_requests_count_requests_total`: Collects the total count of requests. This is tagged by endpoint, method, and http_status.
 
-`ray_dashboard_api_requests_duration_seconds_bucket`: Collects the duration of requests. This is tagged by endpoint and method.
+## 查看内置 Dashboard API 指标
 
-For example, you can view the p95 duration of all requests with this query:
+Dashboard 由一个服务器提供支持，该服务器通过 API 端点提供 UI 代码和有关集群的数据。
+Ray 为每个 API 端点发出基本的 Prometheus 指标：
+
+`ray_dashboard_api_requests_count_requests_total`: 收集请求总数。按端点、方法和 http_status 标记。
+
+`ray_dashboard_api_requests_duration_seconds_bucket`: 收集请求的持续时间。这是按端点和方法标记的。
+
+例如，您可以使用以下查询查看所有请求的 p95 持续时间：
 
 ```text
 
 histogram_quantile(0.95, sum(rate(ray_dashboard_api_requests_duration_seconds_bucket[5m])) by (le))
 ```
 
-You can query these metrics from the Prometheus or Grafana UI. Find instructions above for how to set these tools up.
+您可以从 Prometheus 或 Grafana UI 查询这些指标。请参阅上文以了解如何设置这些工具。

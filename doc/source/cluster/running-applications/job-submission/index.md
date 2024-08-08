@@ -2,42 +2,42 @@
 
 # Ray Job 概述
 
-Once you have deployed a Ray cluster (on [VMs](vm-cluster-quick-start) or [Kubernetes](kuberay-quickstart)), you are ready to run a Ray application!
+一旦部署了 Ray 集群（在 [VMs](vm-cluster-quick-start) 或 [Kubernetes](kuberay-quickstart)），您就可以运行 Ray 应用程序了！
 ![A diagram that shows three ways of running a job on a Ray cluster.](../../images/ray-job-diagram.svg "Three ways of running a job on a Ray cluster.")
 
 ## Ray Jobs API
 
-The recommended way to run a job on a Ray cluster is to use the *Ray Jobs API*, which consists of a CLI tool, Python SDK, and a REST API.
+在 Ray 集群上运行作业的推荐方法是使用 *Ray Jobs API*，它由 CLI 工具、Python SDK 和 REST API 组成。
 
-The Ray Jobs API allows you to submit locally developed applications to a remote Ray Cluster for execution.
-It simplifies the experience of packaging, deploying, and managing a Ray application.
+Ray Jobs API 允许您将本地开发的应用程序提交到远程 Ray 集群执行。
+它简化了打包、部署和管理 Ray 应用程序的体验。
 
-A submission to the Ray Jobs API consists of:
+Ray Jobs API 的提交包括：
 
-1. An entrypoint command, like `python my_script.py`, and
-2. A [runtime environment](runtime-environments), which specifies the application's file and package dependencies.
+1. 入口点命令，例如 `python my_script.py`，以及
+2. 一个 [运行时环境](runtime-environments)，指定应用程序的文件和包依赖项。
 
-A job can be submitted by a remote client that lives outside of the Ray Cluster.
-We will show this workflow in the following user guides.
+作业可以由 Ray Cluster 之外的远程客户端提交。
+我们将在以下用户指南中展示此工作流程。
 
-After a job is submitted, it runs once to completion or failure, regardless of the original submitter's connectivity.
-Retries or different runs with different parameters should be handled by the submitter.
-Jobs are bound to the lifetime of a Ray cluster, so if the cluster goes down, all running jobs on that cluster will be terminated.
+作业提交后，无论原始提交者的连通性如何，它都会运行一次，直到完成或失败。
+重试或使用不同参数的不同运行应由提交者处理。
+作业与 Ray 集群的生命周期绑定，因此如果集群发生故障，该集群上所有正在运行的作业都将终止。
 
-To get started with the Ray Jobs API, check out the [quickstart](jobs-quickstart) guide, which walks you through the CLI tools for submitting and interacting with a Ray Job.
-This is suitable for any client that can communicate over HTTP to the Ray Cluster.
-If needed, the Ray Jobs API also provides APIs for [programmatic job submission](ray-job-sdk) and [job submission using REST](ray-job-rest-api).
+要开始使用 Ray Jobs API，请查看 [快速入门](jobs-quickstart) 指南，其中将引导您了解用于提交 Ray Job 和与 Ray Job 交互的 CLI 工具。
+这适用于任何可以通过 HTTP 与 Ray Cluster 通信的客户端。
+如果需要，Ray Jobs API 还提供用于 [程序化 job 提交](ray-job-sdk) 及 [使用 REST 接口提交 job](ray-job-rest-api)。
 
-## Running Jobs Interactively
+## 以交互方式运行 Job
 
-If you would like to run an application *interactively* and see the output in real time (for example, during development or debugging), you can:
+如果您想以 *交互方式* 运行应用程序并实时查看输出（例如，在开发或调试期间），您可以：
 
-- (Recommended) Run your script directly on a cluster node (e.g. after SSHing into the node using [`ray attach`](ray-attach-doc)), or
-- (For Experts only) Use [Ray Client](ray-client-ref) to run a script from your local machine while maintaining a connection to the cluster.
+- （推荐） 直接在集群节点上运行脚本（例如，使用 [`ray attach`](ray-attach-doc) SSH 进入节点后），或者
+- （仅限专家）使用 [Ray Client](ray-client-ref) 从本地机器运行脚本，同时保持与集群的连接。
 
-Note that jobs started in these ways are not managed by the Ray Jobs API, so the Ray Jobs API will not be able to see them or interact with them (with the exception of `ray job list` and `JobSubmissionClient.list_jobs()`).
+请注意，以这些方式启动的作业不受 Ray Jobs API 管理，因此 Ray Jobs API 将无法看到它们或与它们交互 （ `ray job list` 和 `JobSubmissionClient.list_jobs()` 除外）。
 
-## Contents
+## 内容
 
 ```{toctree}
 :maxdepth: '1'

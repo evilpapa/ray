@@ -1,13 +1,13 @@
 .. _ref-cluster-setup:
 
-Community Supported Cluster Managers
+社区支持的集群管理器
 ====================================
 
 .. note::
 
-    If you're using AWS, Azure, GCP or vSphere you can use the :ref:`Ray cluster launcher <cluster-index>` to simplify the cluster setup process.
+    如果您使用 AWS、Azure、GCP 或 vSphere，则可以使用 :ref:`Ray 集群启动器 <cluster-index>` 来简化集群设置过程。
 
-The following is a list of community supported cluster managers.
+以下是社区支持的集群管理器列表。
 
 .. toctree::
    :maxdepth: 2
@@ -19,11 +19,11 @@ The following is a list of community supported cluster managers.
 
 .. _ref-additional-cloud-providers:
 
-Using a custom cloud or cluster manager
+使用自定义云或集群管理器
 =======================================
 
-The Ray cluster launcher currently supports AWS, Azure, GCP, Aliyun, vSphere and Kuberay out of the box. To use the Ray cluster launcher and Autoscaler on other cloud providers or cluster managers, you can implement the `node_provider.py <https://github.com/ray-project/ray/tree/master/python/ray/autoscaler/node_provider.py>`_ interface (100 LOC).
-Once the node provider is implemented, you can register it in the `provider section <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/local/example-full.yaml#L18>`_ of the cluster launcher config.
+Ray 集群启动器目前开箱即用地支持 AWS、Azure、GCP、阿里云、vSphere 和 Kuberay。要在其他云提供商或集群管理器上使用 Ray 集群启动器和 Autoscaler，您可以实现 `node_provider.py <https://github.com/ray-project/ray/tree/master/python/ray/autoscaler/node_provider.py>`_ 接口 (100 LOC)。
+实现节点提供程序后，您可以在集群启动器配置的 `提供商 <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/local/example-full.yaml#L18>`_ 注册它。
 
 .. code-block:: yaml
 
@@ -31,5 +31,5 @@ Once the node provider is implemented, you can register it in the `provider sect
       type: "external"
       module: "my.module.MyCustomNodeProvider"
 
-You can refer to `AWSNodeProvider <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/_private/aws/node_provider.py#L95>`_, `KuberayNodeProvider <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/_private/kuberay/node_provider.py#L148>`_ and
- `LocalNodeProvider <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/_private/local/node_provider.py#L166>`_ for more examples.
+您可以参考 `AWSNodeProvider <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/_private/aws/node_provider.py#L95>`_、 `KuberayNodeProvider <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/_private/kuberay/node_provider.py#L148>`_ 和
+ `LocalNodeProvider <https://github.com/ray-project/ray/blob/master/python/ray/autoscaler/_private/local/node_provider.py#L166>`_ 提供的更多示例。

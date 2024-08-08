@@ -1,17 +1,17 @@
 (vm-logging)=
-# Log Persistence
+# 日志持久化
 
-Logs are useful for troubleshooting Ray applications and Clusters. For example, you may want to access system logs if a node terminates unexpectedly.
+日志对于排除 Ray 应用程序和集群故障非常有用。例如，如果节点意外终止，您可能希望访问系统日志。
 
-Ray does not provide a native storage solution for log data. Users need to manage the lifecycle of the logs by themselves. The following sections provide instructions on how to collect logs from Ray Clusters running on VMs.
+Ray 不提供日志数据的原生存储解决方案。用户需要自行管理日志的生命周期。以下部分提供了有关如何从运行在虚拟机上的 Ray 集群收集日志的说明。
 
-## Ray log directory
-By default, Ray writes logs to files in the directory `/tmp/ray/session_*/logs` on each Ray node's file system, including application logs and system logs. Learn more about the {ref}`log directory and log files <logging-directory>` and the {ref}`log rotation configuration <log-rotation>` before you start to collect logs.
+## Ray 日志目录
+默认情况下，Ray 将日志写入每个 Ray 节点文件系统上的 `/tmp/ray/session_*/logs` 目录中的文件中，包括应用程序日志和系统日志。 在开始收集日志之前，详细了解 {ref}`日志目录和日志文件 <logging-directory>` and the {ref}`日志轮换配置 <log-rotation>` 。
 
 
 ## Log processing tools
 
-A number of open source log processing tools are available, such as [Vector][Vector], [FluentBit][FluentBit], [Fluentd][Fluentd], [Filebeat][Filebeat], and [Promtail][Promtail].
+有许多开源日志处理工具可用，例如 [Vector][Vector]、 [FluentBit][FluentBit]、 [Fluentd][Fluentd]、 [Filebeat][Filebeat] 及 [Promtail][Promtail]。
 
 [Vector]: https://vector.dev/
 [FluentBit]: https://docs.fluentbit.io/manual
@@ -19,10 +19,10 @@ A number of open source log processing tools are available, such as [Vector][Vec
 [Fluentd]: https://docs.fluentd.org/
 [Promtail]: https://grafana.com/docs/loki/latest/clients/promtail/
 
-## Log collection
+## 日志收集
 
-After choosing a log processing tool based on your needs, you may need to perform the following steps:
+根据您的需求选择日志处理工具后，您可能需要执行以下步骤：
 
-1. Ingest log files on each node of your Ray Cluster as sources.
-2. Parse and transform the logs. You may want to use {ref}`Ray's structured logging <structured-logging>` to simplify this step.
-3. Ship the transformed logs to log storage or management systems.
+1. 将 Ray Cluster 中每个节点上的日志文件作为源进行提取。
+2. 解析并转换日志。您可能希望使用 {ref}`Ray 结构化日志 <structured-logging>` 来简化此步骤。
+3. 将转换后的日志运送至日志存储或管理系统。

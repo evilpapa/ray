@@ -1,37 +1,37 @@
 .. _vm-cluster-quick-start:
 
-Getting Started
+入门
 ===============
 
-This quick start demonstrates the capabilities of the Ray cluster. Using the Ray cluster, we'll take a sample application designed to run on a laptop and scale it up in the cloud. Ray will launch clusters and scale Python with just a few commands.
+此快速入门演示了 Ray 集群的功能。使用 Ray 集群，我们将采用一个设计为在笔记本电脑上运行的示例应用程序，并将其扩展到云中。Ray 将仅使用几个命令启动集群并扩展 Python。
 
-For launching a Ray cluster manually, you can refer to the :ref:`on-premise cluster setup <on-prem>` guide.
+要手动启动 Ray 集群，您可以参考 :ref:`本地集群设置 <on-prem>` 指南。
 
-About the demo
+关于演示
 --------------
 
-This demo will walk through an end-to-end flow:
+此演示将介绍端到端流程：
 
-1. Create a (basic) Python application.
-2. Launch a cluster on a cloud provider.
-3. Run the application in the cloud.
+1. 创建一个（基本）Python 应用程序。
+2. 在云提供商上启动集群。
+3. 在云中运行该应用程序。
 
-Requirements
+要求
 ~~~~~~~~~~~~
 
-To run this demo, you will need:
+要运行此演示，您需要：
 
-* Python installed on your development machine (typically your laptop), and
-* an account at your preferred cloud provider (AWS, GCP, Azure, Aliyun, or vSphere).
+* 在你的开发机器（通常是笔记本电脑）上安装 Python，并且
+* 具有您首选的云提供商 (AWS、GCP、Azure、阿里云或 vSphere) 的帐户。
 
-Setup
+设置
 ~~~~~
 
-Before we start, you will need to install some Python dependencies as follows:
+在开始之前，您需要安装一些 Python 依赖项，如下所示：
 
 .. tabs::
 
-   .. tab:: Ray Team Supported
+   .. tab:: Ray 团队支持
 
       .. tabs::
 
@@ -47,7 +47,7 @@ Before we start, you will need to install some Python dependencies as follows:
 
                 $ pip install -U "ray[default]" google-api-python-client
 
-   .. tab:: Community Supported
+   .. tab:: 社区支持
 
       .. tabs::
 
@@ -63,7 +63,7 @@ Before we start, you will need to install some Python dependencies as follows:
 
                 $ pip install -U "ray[default]" aliyun-python-sdk-core aliyun-python-sdk-ecs
             
-            Aliyun Cluster Launcher Maintainers (GitHub handles): @zhuangzhuang131419, @chenk008
+            阿里云集群启动器维护者（GitHub 账号）：@zhuangzhuang131419、@chenk008
 
          .. tab:: vSphere
 
@@ -71,14 +71,14 @@ Before we start, you will need to install some Python dependencies as follows:
 
                 $ pip install -U "ray[default]" "git+https://github.com/vmware/vsphere-automation-sdk-python.git"
 
-            vSphere Cluster Launcher Maintainers (GitHub handles): @LaynePeng, @roshankathawate, @JingChen23
+            vSphere Cluster Launcher 维护者（GitHub 帐号）：@LaynePeng、@roshankathawate、@JingChen23
 
 
-Next, if you're not set up to use your cloud provider from the command line, you'll have to configure your credentials:
+接下来，如果您尚未设置从命令行使用云提供商，则必须配置您的凭据：
 
 .. tabs::
 
-   .. tab:: Ray Team Supported
+   .. tab:: Ray 团队支持
 
       .. tabs::
 
@@ -90,20 +90,20 @@ Next, if you're not set up to use your cloud provider from the command line, you
 
             Set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable as described in `the GCP docs <https://cloud.google.com/docs/authentication/getting-started>`_.
 
-   .. tab:: Community Supported
+   .. tab:: 社区支持
 
       .. tabs::
 
          .. tab:: Azure
 
-            Log in using ``az login``, then configure your credentials with ``az account set -s <subscription_id>``.
+            使用 ``az login`` 登录，然后使用 ``az account set -s <subscription_id>`` 配置凭证。
 
          .. tab:: Aliyun
 
-            Obtain and set the AccessKey pair of the Aliyun account as described in `the docs <https://www.alibabacloud.com/help/en/doc-detail/175967.htm>`__.
+            按照 `文档 <https://www.alibabacloud.com/help/en/doc-detail/175967.htm>`__ 获取并设置阿里云账户的 AccessKey 对。
 
-            Make sure to grant the necessary permissions to the RAM user and set the AccessKey pair in your cluster config file.
-            Refer to the provided `aliyun/example-full.yaml </ray/python/ray/autoscaler/aliyun/example-full.yaml>`__ for a sample cluster config.
+            确保向 RAM 用户授予必要的权限并在集群配置文件中设置 AccessKey 对。
+            请参阅提供的 `aliyun/example-full.yaml </ray/python/ray/autoscaler/aliyun/example-full.yaml>`__ 以获取示例集群配置。
 
          .. tab:: vSphere
 
@@ -114,10 +114,10 @@ Next, if you're not set up to use your cloud provider from the command line, you
                 $ export VSPHERE_PASSWORD=password # Enter your password
 
 
-Create a (basic) Python application
+创建一个（基本）Python 应用
 -----------------------------------
 
-We will write a simple Python application that tracks the IP addresses of the machines that its tasks are executed on:
+我们将编写一个简单的 Python 应用程序来跟踪执行其任务的机器的 IP 地址：
 
 .. code-block:: python
 
@@ -133,9 +133,9 @@ We will write a simple Python application that tracks the IP addresses of the ma
     ip_addresses = [f() for _ in range(10000)]
     print(Counter(ip_addresses))
 
-Save this application as ``script.py`` and execute it by running the command ``python script.py``. The application should take 10 seconds to run and output something similar to ``Counter({'127.0.0.1': 10000})``.
+将此应用程序另存为 ``script.py`` 并通过运行 ``python script.py``命令来执行它。该应用程序应需要 10 秒钟才能运行并输出类似于 ``Counter({'127.0.0.1': 10000})`` 的内容。
 
-With some small changes, we can make this application run on Ray (for more information on how to do this, refer to :ref:`the Ray Core Walkthrough <core-walkthrough>`):
+通过一些小的改动，我们可以让这个应用程序在 Ray 上运行（有关如何执行此操作的更多信息，请参阅 :ref:`the Ray Core Walkthrough <core-walkthrough>`):
 
 .. code-block:: python
 
@@ -157,7 +157,7 @@ With some small changes, we can make this application run on Ray (for more infor
     ip_addresses = ray.get(object_ids)
     print(Counter(ip_addresses))
 
-Finally, let's add some code to make the output more interesting:
+最后，让我们添加一些代码，使输出更有趣：
 
 .. code-block:: python
 
@@ -187,7 +187,7 @@ Finally, let's add some code to make the output more interesting:
     for ip_address, num_tasks in Counter(ip_addresses).items():
         print('    {} tasks on {}'.format(num_tasks, ip_address))
 
-Running ``python script.py`` should now output something like:
+运行 ``python script.py`` 应该输出类似的内容：
 
 .. parsed-literal::
 
@@ -198,16 +198,16 @@ Running ``python script.py`` should now output something like:
     Tasks executed
         10000 tasks on 127.0.0.1
 
-Launch a cluster on a cloud provider
+在云服务上启动集群
 ------------------------------------
 
-To start a Ray Cluster, first we need to define the cluster configuration. The cluster configuration is defined within a YAML file that will be used by the Cluster Launcher to launch the head node, and by the Autoscaler to launch worker nodes.
+要启动 Ray 集群，首先我们需要定义集群配置。集群配置在 YAML 文件中定义，Cluster Launcher 将使用该文件启动头节点，Autoscaler 将使用该文件启动工作节点。
 
-A minimal sample cluster configuration file looks as follows:
+最小示例集群配置文件如下所示：
 
 .. tabs::
 
-   .. tab:: Ray Team Supported
+   .. tab:: Ray 团队支持
 
       .. tabs::
 
@@ -228,7 +228,7 @@ A minimal sample cluster configuration file looks as follows:
                     type: gcp
                     region: us-west1
 
-   .. tab:: Community Supported
+   .. tab:: 社区支持
 
       .. tabs::
 
@@ -256,9 +256,9 @@ A minimal sample cluster configuration file looks as follows:
 
          .. tab:: Aliyun
 
-            Please refer to `example-full.yaml </ray/python/ray/autoscaler/aliyun/example-full.yaml>`__. 
+            参考 `example-full.yaml </ray/python/ray/autoscaler/aliyun/example-full.yaml>`__。
 
-            Make sure your account balance is not less than 100 RMB, otherwise you will receive the error `InvalidAccountStatus.NotEnoughBalance`.
+            确保账户余额不少于 100 人民币，否则会收到 `InvalidAccountStatus.NotEnoughBalance` 错误。
 
          .. tab:: vSphere
 
@@ -266,21 +266,21 @@ A minimal sample cluster configuration file looks as follows:
                :language: yaml
 
 
-Save this configuration file as ``config.yaml``. You can specify a lot more details in the configuration file: instance types to use, minimum and maximum number of workers to start, autoscaling strategy, files to sync, and more. For a full reference on the available configuration properties, please refer to the :ref:`cluster YAML configuration options reference <cluster-config>`.
+将此配置文件另存为 ``config.yaml``。您可以在配置文件中指定更多详细信息：要使用的实例类型、要启动的最小和最大工作程序数量、自动扩展策略、要同步的文件等。有关可用配置属性的完整参考，请参阅 :ref:`集群 YAML 配置项参考 <cluster-config>`。
 
-After defining our configuration, we will use the Ray cluster launcher to start a cluster on the cloud, creating a designated "head node" and worker nodes. To start the Ray cluster, we will use the :ref:`Ray CLI <ray-cluster-cli>`. Run the following command:
+定义配置后，我们将使用 Ray 集群启动器在云上启动集群，创建指定的“头节点”和工作节点。要启动 Ray 集群，我们将使用:ref:`Ray CLI <ray-cluster-cli>`。运行以下命令：
 
 .. code-block:: shell
 
     $ ray up -y config.yaml
 
-Running applications on a Ray Cluster
+在 Ray Cluster 上运行应用
 -------------------------------------
 
-We are now ready to execute an application on our Ray Cluster.
-``ray.init()`` will now automatically connect to the newly created cluster.
+我们现在准备在 Ray Cluster 上执行应用程序。
+``ray.init()`` 现在将自动连接到新创建的集群。
 
-As a quick example, we execute a Python command on the Ray Cluster that connects to Ray and exits:
+作为一个简单的例子，我们在连接到 Ray 并退出的 Ray Cluster 上执行一个 Python 命令：
 
 .. code-block:: shell
 
@@ -288,7 +288,7 @@ As a quick example, we execute a Python command on the Ray Cluster that connects
     2022-08-10 11:23:17,093 INFO worker.py:1312 -- Connecting to existing Ray cluster at address: <remote IP address>:6379...
     2022-08-10 11:23:17,097 INFO worker.py:1490 -- Connected to Ray cluster.
 
-You can also optionally get a remote shell using ``ray attach`` and run commands directly on the cluster. This command will create an SSH connection to the head node of the Ray Cluster.
+您还可以  ``ray attach``  选择使用远程 shell 并直接在集群上运行命令。 此命令将创建与 Ray 集群头节点的 SSH 连接。
 
 .. code-block:: shell
 
@@ -298,14 +298,14 @@ You can also optionally get a remote shell using ``ray attach`` and run commands
     # Now on the head node...
     $ python -c "import ray; ray.init()"
 
-For a full reference on the Ray Cluster CLI tools, please refer to :ref:`the cluster commands reference <cluster-commands>`.
+有关 Ray Cluster CLI 工具的完整参考，请参阅 :ref:`集群命令参考 <cluster-commands>`。
 
-While these tools are useful for ad-hoc execution on the Ray Cluster, the recommended way to execute an application on a Ray Cluster is to use :ref:`Ray Jobs <jobs-quickstart>`. Check out the :ref:`quickstart guide <jobs-quickstart>` to get started!
+虽然这些工具对于在 Ray Cluster 上临时执行很有用，但在 Ray Cluster 上执行应用程序的推荐方法是使用 :ref:`Ray Jobs <jobs-quickstart>`。查看 :ref:`快速入门指南 <jobs-quickstart>` 以开始使用！
 
-Deleting a Ray Cluster
+删除 Ray 集群
 ----------------------
 
-To shut down your cluster, run the following command:
+要关闭集群，请运行以下命令：
 
 .. code-block:: shell
 

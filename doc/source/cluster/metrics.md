@@ -1,38 +1,38 @@
 (collect-metrics)=
 # 指标收集和监控
-Metrics are useful for monitoring and troubleshooting Ray applications and Clusters. For example, you may want to access a node's metrics if it terminates unexpectedly.
+指标对于监控和排除 Ray 应用程序和集群故障非常有用。例如，如果节点意外终止，您可能想要访问该节点的指标。
 
-Ray records and emits time-series metrics using the [Prometheus format](https://prometheus.io/docs/instrumenting/exposition_formats/). Ray does not provide a native storage solution for metrics. Users need to manage the lifecycle of the metrics by themselves. This page provides instructions on how to collect and monitor metrics from Ray Clusters.
+Ray 使用 [Prometheus 格式](https://prometheus.io/docs/instrumenting/exposition_formats/) 记录和发出时间序列指标。Ray 不提供指标的原生存储解决方案。用户需要自行管理指标的生命周期。本页面提供了有关如何从 Ray 集群收集和监控指标的说明。
 
 
-## System and application metrics
-Ray exports metrics if you use `ray[default]` or {ref}`other installation commands <installation>` that include Dashboard component. Dashboard agent process is responsible for aggregating and reporting metrics to the endpoints for Prometheus to scrape.
+## 系统和应用程序指标
+如果您使用 `ray[default]` 或 {ref}`其他安装命令 <installation>` 包含了仪表盘组件，Ray 会导出指标。表板代理进程负责汇总指标并将其报告给端点，以供 Prometheus 抓取。
 
-**System metrics**: Ray exports a number of system metrics. View {ref}`system metrics <system-metrics>` for more details about the emitted metrics.
+**系统指标**: Ray 导出许多系统指标。 查看 {ref}`系统指标 <system-metrics>` 以获取有关所发出指标的更多详细信息。
 
-**Application metrics**: Application-specific metrics are useful for monitoring your application states. View {ref}`adding application metrics <application-level-metrics>` for how to record metrics.
+**应用程序指标**: 特定于应用程序的指标对于监控应用程序状态非常有用。 查看 {ref}`添加应用指标 <application-level-metrics>` 以了解如何记录指标。
 
 (prometheus-setup)=
-## Setting up your Prometheus server
-Use Prometheus to scrape metrics from Ray Clusters. Ray doesn't start Prometheus servers for users. Users need to decide where to host and configure it to scrape the metrics from Clusters.
+## 设置 Prometheus server
+使用 Prometheus 从 Ray 集群中抓取指标。Ray 不会为用户启动 Prometheus 服务器。用户需要决定托管位置并进行配置以从集群中抓取指标。
 
 ```{admonition} Tip
 :class: tip
-The instructions below describe one way of setting up Prometheus on your local machine. View [Prometheus documentation](https://prometheus.io/docs/introduction/overview/) for the best strategy to set up your Prometheus server.
+以下说明介绍了在本地机器上设置 Prometheus 的一种方法。查看 [Prometheus 文档](https://prometheus.io/docs/introduction/overview/) ，了解设置 Prometheus 服务器的最佳策略。
 
-For KubeRay users, follow [these instructions](kuberay-prometheus-grafana) to set up Prometheus.
+对于 KubeRay 用户，请按照 [以下说明](kuberay-prometheus-grafana) 设置 Prometheus。
 ```
 
-First, [download Prometheus](https://prometheus.io/download/). Make sure to download the correct binary for your operating system. (For example, Darwin for macOS X.)
+首先， [下载 Prometheus](https://prometheus.io/download/)。确保下载适合您操作系统的正确二进制文件。（例如，适用于 macOS X 的 Darwin。）
 
-Then, unzip the archive into a local directory using the following command:
+然后，使用以下命令将档案解压到本地目录中：
 
 ```bash
 tar xvfz prometheus-*.tar.gz
 cd prometheus-*
 ```
 
-Ray provides a Prometheus config that works out of the box. After running Ray, you can find the config at `/tmp/ray/session_latest/metrics/prometheus/prometheus.yml`.
+Ray 提供了开箱即用的 Prometheus 配置。运行 Ray 后，您可以在 `/tmp/ray/session_latest/metrics/prometheus/prometheus.yml` 找到该配置。
 
 ```yaml
 global:
@@ -47,63 +47,63 @@ scrape_configs:
     - '/tmp/ray/prom_metrics_service_discovery.json'
 ```
 
-Next, start Prometheus:
+接下来启动 Prometheus：
 
 ```shell
 ./prometheus --config.file=/tmp/ray/session_latest/metrics/prometheus/prometheus.yml
 ```
 ```{admonition} Note
 :class: note
-If you are using macOS, you may receive an error at this point about trying to launch an application where the developer has not been verified. See the "Troubleshooting" guide below to fix the issue.
+如果您使用的是 macOS，此时您可能会收到有关尝试启动开发人员尚未验证的应用程序的错误。请参阅下面的“故障排除”指南以修复此问题。
 ```
 
-Now, you can access Ray metrics from the default Prometheus URL, `http://localhost:9090`.
+现在，您可以从默认的 Prometheus URL `http://localhost:9090` 访问 Ray 指标。
 
 
-### Troubleshooting
-#### Using Ray configurations in Prometheus with Homebrew on macOS X
-Homebrew installs Prometheus as a service that is automatically launched for you.
-To configure these services, you cannot simply pass in the config files as command line arguments.
+### Troubles故障排除hooting
+#### 在 macOS X 上通过 Homebrew 在 Prometheus 中使用 Ray 配置
+Homebrew 将 Prometheus 安装为自动启动的服务。
+要配置这些服务，您不能简单地将配置文件作为命令行参数传入。
 
-Instead, change the --config-file line in `/usr/local/etc/prometheus.args` to read `--config.file /tmp/ray/session_latest/metrics/prometheus/prometheus.yml`.
+相反，将 --config-file 行修改为 `/usr/local/etc/prometheus.args` 来读取 `--config.file /tmp/ray/session_latest/metrics/prometheus/prometheus.yml`。
 
-You can then start or restart the services with `brew services start prometheus`.
+然后您可以使用 `brew services start prometheus` 启动或重启服务。
 
 
-#### macOS does not trust the developer to install Prometheus
-You may receive the following error:
+#### macOS 不信任开发人员安装 Prometheus
+您可能会收到以下错误：
 
 ![trust error](https://raw.githubusercontent.com/ray-project/Images/master/docs/troubleshooting/prometheus-trusted-developer.png)
 
-When downloading binaries from the internet, macOS requires that the binary be signed by a trusted developer ID.
-Many developers are not on macOS's trusted list. Users can manually override this requirement.
+从互联网下载二进制文件时，macOS 要求二进制文件由受信任的开发人员 ID 签名。
+许多开发人员不在 macOS 的受信任列表中。用户可以手动覆盖此要求。
 
-See [these instructions](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) for how to override the restriction and install or run the application.
+请参阅 [这些说明](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac) 以了解如何覆盖限制并安装或运行应用程序。
 
-#### Loading Ray Prometheus configurations with Docker Compose
-In the Ray container, the symbolic link "/tmp/ray/session_latest/metrics" points to the latest active Ray session. However, Docker does not support the mounting of symbolic links on shared volumes and you may fail to load the Prometheus configuration files.
+#### 使用 Docker Compose 加载 Ray Prometheus 配置
+在 Ray 容器中，软链 "/tmp/ray/session_latest/metrics" 指向最新的活跃 Ray 会话。但是，Docker 不支持在共享卷上挂载符号链接，并且您可能无法加载 Prometheus 配置文件。
 
-To fix this issue, employ an automated shell script for seamlessly transferring the Prometheus configurations from the Ray container to a shared volume. To ensure a proper setup, mount the shared volume on the respective path for the container, which contains the recommended configurations to initiate the Prometheus servers.
+要解决此问题，请使用自动化 shell 脚本将 Prometheus 配置从 Ray 容器无缝传输到共享卷。为确保正确设置，请将共享卷挂载到容器的相应路径上，其中包含启动 Prometheus 服务器的推荐配置。
 
 (scrape-metrics)=
-## Scraping metrics
-Ray runs a metrics agent per node to export system and application metrics. Each metrics agent collects metrics from the local
-node and exposes them in a Prometheus format. You can then scrape each endpoint to access the metrics.
+## 抓取指标
+Ray 在每个节点上运行一个指标代理来导出系统和应用程序指标。每个指标代理从本地节点
+收集指标并以 Prometheus 格式公开它们。然后，您可以抓取每个端点以访问指标。
 
-To scrape the endpoints, we need to ensure service discovery, which allows Prometheus to find the metrics agents' endpoints on each node.
+为了抓取端点，我们需要确保服务发现，这允许 Prometheus 在每个节点上找到指标代理的端点。
 
-### Auto-discovering metrics endpoints
+### 自动发现指标端点。
 
-You can allow Prometheus to dynamically find the endpoints to scrape by using Prometheus' [file based service discovery](https://prometheus.io/docs/guides/file-sd/#installing-configuring-and-running-prometheus).
-Use auto-discovery to export Prometheus metrics when using the Ray {ref}`cluster launcher <vm-cluster-quick-start>`, as node IP addresses can often change as the cluster scales up and down.
+您可以允许 Prometheus 使用 Prometheus 的 [基于文件的服务发现](https://prometheus.io/docs/guides/file-sd/#installing-configuring-and-running-prometheus) 功能动态查找要抓取的端点。
+使用 Ray {ref}`cluster launcher <vm-cluster-quick-start>`时，请使用自动发现功能导出 Prometheus 指标，因为节点 IP 地址通常会随着集群的扩大和缩小而发生变化。
 
-Ray auto-generates a Prometheus [service discovery file](https://prometheus.io/docs/guides/file-sd/#installing-configuring-and-running-prometheus) on the head node to facilitate metrics agents' service discovery. This function allows you to scrape all metrics in the cluster without knowing their IPs. The following information guides you on the setup.
+Ray 在头节点上自动生成 Prometheus [服务发现文件](https://prometheus.io/docs/guides/file-sd/#installing-configuring-and-running-prometheus) ，以方便指标代理的服务发现。 此功能允许您抓取集群中的所有指标，而无需知道它们的 IP。以下信息将指导您进行设置。
 
-The service discovery file is generated on the {ref}`head node <cluster-head-node>`. On this node, look for ``/tmp/ray/prom_metrics_service_discovery.json`` (or the eqiuvalent file if using a custom Ray ``temp_dir``). Ray periodically updates this file with the addresses of all metrics agents in the cluster.
+服务发现文件在 {ref}`头节点 <cluster-head-node>`。 在此节点上，查找 ``/tmp/ray/prom_metrics_service_discovery.json`` （或如果使用自定义 Ray ``temp_dir``，则查找等效文件）。 Ray 会定期使用集群中所有指标代理的地址更新此文件。
 
-Ray automatically produces a Prometheus config, which scrapes the file for service discovery found at `/tmp/ray/session_latest/metrics/prometheus/prometheus.yml`. You can choose to use this config or modify your own config to enable this behavior. See the details of the config below. Find the full documentation [here](https://prometheus.io/docs/prometheus/latest/configuration/configuration/).
+Ray 会自动生成一个 Prometheus 配置，它会抓取在 `/tmp/ray/session_latest/metrics/prometheus/prometheus.yml`处找到的文件以进行服务发现。 您可以选择使用此配置或修改自己的配置以启用此行为。 请参阅下面的配置详细。完整的文档可以在 [这里](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) 找到。
 
-With this config, Prometheus automatically updates the addresses that it scrapes based on the contents of Ray's service discovery file.
+通过此配置，Prometheus 会根据 Ray 的服务发现文件的内容自动更新其抓取的地址。
 
 ```yaml
 # Prometheus config file
@@ -121,12 +121,12 @@ scrape_configs:
     - '/tmp/ray/prom_metrics_service_discovery.json'
 ```
 
-### Manually discovering metrics endpoints
+### 手动发现指标端点
 
-If you know the IP addresses of the nodes in your Ray Cluster, you can configure Prometheus to read metrics from a static list of endpoints.
-Set a fixed port that Ray should use to export metrics.  If you're using the VM Cluster Launcher, pass ``--metrics-export-port=<port>`` to ``ray start``.  If you're using KubeRay, specify ``rayStartParams.metrics-export-port`` in the RayCluster configuration file. You must specify the port on all nodes in the cluster.
+如果您知道 Ray 集群中节点的 IP 地址，则可以将 Prometheus 配置为从静态端点列表中读取指标。
+设置 Ray 应该用来导出指标的固定端口。如果您使用的是 VM Cluster Launcher，请传递 ``--metrics-export-port=<port>`` 给 ``ray start``。 如果您使用的是 KubeRay，请在 RayCluster 配置文件中指定 ``rayStartParams.metrics-export-port``。 您必须在集群中的所有节点上指定端口。
 
-If you do not know the IP addresses of the nodes in your Ray Cluster, you can also programmatically discover the endpoints by reading the Ray Cluster information. The following example uses a Python script and the {py:obj}`ray.nodes` API to find the metrics agents' URLs, by combining the ``NodeManagerAddress`` with the ``MetricsExportPort``.
+如果您不知道 Ray Cluster 中节点的 IP 地址，也可以通过读取 Ray Cluster 信息以编程方式发现端点。 以下示例使用 Python 脚本和 {py:obj}`ray.nodes` API 通过结合 ``NodeManagerAddress`` 和 ``MetricsExportPort`` 来查找指标代理的 URL。
 
 ```python
 # On a cluster node:
@@ -169,93 +169,93 @@ to Prometheus.
 """
 ```
 
-## Processing and exporting metrics
-If you need to process and export metrics into other storage or management systems, check out open source metric processing tools like [Vector][Vector].
+## 处理和导出指标
+如果您需要处理并将指标导出到其他存储或管理系统，请查看 [Vector][Vector] 等开源指标处理工具。
 
 [Vector]: https://vector.dev/
 
 
-## Monitoring metrics
-To visualize and monitor collected metrics, there are 3 common paths:
+## 监控指标
+要可视化和监控收集到的指标，有 3 种常见途径：
 
-1. **Simplist**: Use Grafana with Ray-provided configurations, which include default Grafana dashboards showing some of the most valuable metrics for debugging Ray applications.
-2. **Recommended**: Use Ray Dashboard which embeds Grafana visualizations and look at metrics together with logs, Job info and so on in a single pane of glass.
-3. **Manual**: Set up Grafana or other tools like CloudWatch, Cloud Monitoring, and Datadog from scratch.
+1. **Simplist**: 将 Grafana 与 Ray 提供的配置一起使用，其中包括默认的 Grafana 仪表板，显示一些用于调试 Ray 应用程序的最有价值的指标。
+2. **推荐**: 使用嵌入 Grafana 可视化功能的 Ray Dashboard，并在单一窗口内查看指标以及日志、作业信息等。
+3. **手动**: 从头开始设置 Grafana 或其他工具，如 CloudWatch、Cloud Monitoring 和 Datadog。
 
-Here are some instructions for each of the paths:
+以下是针对每条路径的一些说明：
 
 (grafana)=
-### Simplist: Setting up Grafana with Ray-provided configurations
-Grafana is a tool that supports advanced visualizations of Prometheus metrics and allows you to create custom dashboards with your favorite metrics. 
+### Simplist: 使用 Ray 提供的配置设置 Grafana
+Grafana 是一种支持 Prometheus 指标高级可视化的工具，允许您使用自己喜欢的指标创建自定义仪表板。
 
 ::::{tab-set}
 
-:::{tab-item} Creating a new Grafana server
+:::{tab-item} 创建一个新的 Granafa 服务器
 
 ```{admonition} Note
 :class: note
-The instructions below describe one way of starting a Grafana server on a macOS machine. Refer to the [Grafana documentation](https://grafana.com/docs/grafana/latest/setup-grafana/start-restart-grafana/#start-the-grafana-server) for how to start Grafana servers in different systems. 
+以下说明介绍了在 macOS 计算机上启动 Grafana 服务器的一种方法。请参阅 [Grafana 文档](https://grafana.com/docs/grafana/latest/setup-grafana/start-restart-grafana/#start-the-grafana-server) ，了解如何在不同系统中启动 Grafana 服务器。
 
-For KubeRay users, follow [these instructions](kuberay-prometheus-grafana) to set up Grafana.
+针对 KubeRay 用户，请按照 [以下说明](kuberay-prometheus-grafana) 设置 Grafana。
 ```
 
-First, [download Grafana](https://grafana.com/grafana/download). Follow the instructions on the download page to download the right binary for your operating system.
+首先， [下载 Grafana](https://grafana.com/grafana/download). 。按照下载页面上的说明下载适合您操作系统的二进制文件。
 
-Go to the location of the binary and run Grafana using the built-in configuration found in the `/tmp/ray/session_latest/metrics/grafana` folder.
+转到二进制文件的位置 `/tmp/ray/session_latest/metrics/grafana` 并使用文件夹中的内置配置运行 Granafa。
 
 ```shell
 ./bin/grafana-server --config /tmp/ray/session_latest/metrics/grafana/grafana.ini web
 ```
 
-Access Grafana using the default grafana URL, `http://localhost:3000`.
-See the default dashboard by going to dashboards -> manage -> Ray -> Default Dashboard. The same {ref}`metric graphs <system-metrics>` are accessible in {ref}`Ray Dashboard <observability-getting-started>` after you integrate Grafana with Ray Dashboard.
+访问 Grafana 默认的 grafana URL `http://localhost:3000`。
+转到仪表板 -> 管理 -> Ray -> 默认仪表板查看默认仪表板。将 Grafana 与 Ray Dashboard 集成后，可以在 {ref}`Ray Dashboard <observability-getting-started>` 访问相同的 {ref}`指标图表 <system-metrics>`。
 
 ```{admonition} Note
 :class: note
-If this is your first time using Grafana, login with the username: `admin` and password `admin`.
+如果这是您第一次使用 Grafana，请使用用户名 `admin` 和密码 `admin` 登录。
 ```
 
 
 ![grafana login](images/graphs.png)
 
-**Troubleshooting**
-***Using Ray configurations in Grafana with Homebrew on macOS X***
+**故障排查**
+***在 macOS X 上通过 Homebrew 在 Grafana 中使用 Ray 配置进行故障排除***
 
-Homebrew installs Grafana as a service that is automatically launched for you.
-Therefore, to configure these services, you cannot simply pass in the config files as command line arguments.
+Homebrew 将 Grafana 安装为自动启动的服务。
+因此，要配置这些服务，您不能简单地将配置文件作为命令行参数传入。
 
-Instead, update the `/usr/local/etc/grafana/grafana.ini` file so that it matches the contents of `/tmp/ray/session_latest/metrics/grafana/grafana.ini`.
+相反，更新 `/usr/local/etc/grafana/grafana.ini` 文件以便它与 `/tmp/ray/session_latest/metrics/grafana/grafana.ini` 的内容相匹配。
 
-You can then start or restart the services with `brew services start grafana` and `brew services start prometheus`.
+然后您可以使用 `brew services start grafana` 和 `brew services start prometheus` 启动或重启服务。
 
-***Loading Ray Grafana configurations with Docker Compose***
-In the Ray container, the symbolic link "/tmp/ray/session_latest/metrics" points to the latest active Ray session. However, Docker does not support the mounting of symbolic links on shared volumes and you may fail to load the Grafana configuration files and default dashboards.
+***使用 Docker Compose 加载 Ray Grafana 配置***
+在 Ray 容器中，符号链接 "/tmp/ray/session_latest/metrics" 指向最新的活动 Ray 会话。但是，Docker 不支持在共享卷上安装符号链接，因此您可能无法加载 Grafana 配置文件和默认仪表板。
 
-To fix this issue, employ an automated shell script for seamlessly transferring the necessary Grafana configurations and dashboards from the Ray container to a shared volume. To ensure a proper setup, mount the shared volume on the respective path for the container, which contains the recommended configurations and default dashboards to initiate Grafana servers.
+要解决此问题，请使用自动化 shell 脚本将必要的 Grafana 配置和仪表板从 Ray 容器无缝传输到共享卷。为确保正确设置，请将共享卷挂载到容器的相应路径上，其中包含用于启动 Grafana 服务器的推荐配置和默认仪表板。
 
 :::
 
-:::{tab-item} Using an existing Grafana server
+:::{tab-item} 使用现有的 Grafana 服务器
 
-After your Grafana server is running, start a Ray Cluster and find the Ray-provided default Grafana dashboard JSONs at `/tmp/ray/session_latest/metrics/grafana/dashboards`. [Copy the JSONs over and import the Grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard) to your Grafana.
+在您的 Grafana 服务器运行后，启动 Ray 集群并在 `/tmp/ray/session_latest/metrics/grafana/dashboards` 处找到 Ray 提供的默认 Grafana 仪表板 JSON。[复制 JSON 并将 Grafana 仪表板导入](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard) 到您的 Granafa。
 
-If Grafana reports that the datasource is not found, [add a datasource variable](https://grafana.com/docs/grafana/latest/dashboards/variables/add-template-variables/?pg=graf&plcmt=data-sources-prometheus-btn-1#add-a-data-source-variable). The datasource's name must be the same as value in the `RAY_PROMETHEUS_NAME` environment. By default, `RAY_PROMETHEUS_NAME` equals `Prometheus`.
+如果 Grafana 报告未找到数据源， [请添加数据源变量](https://grafana.com/docs/grafana/latest/dashboards/variables/add-template-variables/?pg=graf&plcmt=data-sources-prometheus-btn-1#add-a-data-source-variable)。数据源的名称必须与环境中 `RAY_PROMETHEUS_NAME` 的值相同。默认情况下 `RAY_PROMETHEUS_NAME` 为 `Prometheus`。
 :::
 
 ::::
 
 
 
-### Recommended: Use Ray Dashboard with embedded Grafana visualizations
-1. Follow the instructions above to set up Grafana with Ray-provided visualizations
-2. View {ref}`configuring and managing Ray Dashboard <embed-grafana-in-dashboard>` for how to embed Grafana visualizations into Dashboard
-3. View {ref}`Dashboard's metrics view<dash-metrics-view>` for how to inspect the metrics in Ray Dashboard.
+### 推荐：使用带有嵌入式 Grafana 可视化的 Ray Dashboard
+1. 按照上述说明使用 Ray 提供的可视化功能设置 Grafana
+2. 查看 {ref}`配置和管理 Ray Dashboard <embed-grafana-in-dashboard>` 以了解如何将 Grafana 可视化嵌入到 Dashboard 中
+3. 查看 {ref}`Dashboard 的指标视图 <dash-metrics-view>` ，了解如何检查 Ray Dashboard 中的指标。
 
 
-### Manual: Set up Grafana, or other tools like CloudWatch, Cloud Monitoring and Datadog from scratch
-Refer to the documentation of these tools for how to query and visualize the metrics.
+### 手动：设置 Grafana 或其他工具，如 CloudWatch、Cloud Monitoring 和 Datadog
+请参阅这些工具的文档以了解如何查询和可视化指标。
 
 ```{admonition} Tip
 :class: tip
-If you need to write Prometheus queries manually, check out the Prometheus queries in Ray-provided Grafana dashboard JSON at `/tmp/ray/session_latest/metrics/grafana/dashboards/default_grafana_dashboard.json` for inspiration.
+如果您需要手动编写 Prometheus 查询，请查看 Ray 提供的 Grafana 仪表板 JSON 中的 Prometheus 查询，从 `/tmp/ray/session_latest/metrics/grafana/dashboards/default_grafana_dashboard.json` 获取灵感。
 ```

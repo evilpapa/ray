@@ -1,139 +1,130 @@
 .. _vms-large-cluster:
 
-Best practices for deploying large clusters
+部署大型集群的最佳实践
 -------------------------------------------
 
-This section aims to document best practices for deploying Ray clusters at
-large scale.
+本节旨在记录大规模部署 Ray 集群的
+最佳实践。
 
-Networking configuration
+网络配置
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-End users should only need to directly interact with the head node of the
-cluster. In particular, there are 2 services which should be exposed to users:
+最终用户只需要直接与集群的头节点交互。
+具体来说，有 2 个服务应该向用户公开：
 
-1. The dashboard
-2. The Ray client server
+1. 仪表板
+2. Ray 客户端服务器
 
 .. note::
 
-  While users only need 2 ports to connect to a cluster, the nodes within a
-  cluster require a much wider range of ports to communicate.
+  然用户只需要 2 个端口即可连接到集群，但集群内的节点
+  需要更广泛的端口进行通信。
 
-  See :ref:`Ray port configuration <Ray-ports>` for a comprehensive list.
+  参考 :ref:`Ray 端口配置 <Ray-ports>` 以获取完整列表。
 
-  Applications (such as :ref:`Ray Serve <Rayserve>`) may also require
-  additional ports to work properly.
+  应用 (诸如 :ref:`Ray Serve <Rayserve>`) 可能还需要
+  额外的端口才能正常工作。
 
-System configuration
+系统配置
 ^^^^^^^^^^^^^^^^^^^^
 
-There are a few system level configurations that should be set when using Ray
-at a large scale.
+大规模使用 Ray 时，需要设置一些系统级配置。
 
-* Make sure ``ulimit -n`` is set to at least 65535. Ray opens many direct
-  connections between worker processes to avoid bottlenecks, so it can quickly
-  use a large number of file descriptors.
-* Make sure ``/dev/shm`` is sufficiently large. Most ML/RL applications rely
-  heavily on the plasma store. By default, Ray will try to use ``/dev/shm`` for
-  the object store, but if it is not large enough (i.e. ``--object-store-memory``
-  > size of ``/dev/shm``), Ray will write the plasma store to disk instead, which
-  may cause significant performance problems.
-* Use NVMe SSDs (or other high performance storage) if possible. If
-  :ref:`object spilling <object-spilling>` is enabled Ray will spill objects to
-  disk if necessary. This is most commonly needed for data processing
-  workloads.
+* 确保 ``ulimit -n`` 设置为至少 65535。
+  Ray 在工作进程之间打开许多直接连接以避免瓶颈，
+  因此它可以快速使用大量文件描述符。
+* 确保 ``/dev/shm`` 足够大。大多数 ML/RL 应用程序严重依赖等离子存储。
+  默认情况下，Ray 将尝试使  ``/dev/shm`` 作为对象存储，
+  但如果它不够大（即 ``--object-store-memory`` > ``/dev/shm`` 的大小），
+  Ray 将把等离子存储写入磁盘，这可能会导致严重的性能问题。
+* 如果可能，请使用 NVMe SSD（或其他高性能存储）。如果启用了
+  :ref:`对象溢出 <object-spilling>` ，Ray 会在必要时将对象溢出到磁盘。
+  这对于数据处理工作负载最常见。
 
 .. _vms-large-cluster-configure-head-node:
 
-Configuring the head node
+配置头节点
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In addition to the above changes, when deploying a large cluster, Ray's
-architecture means that the head node has extra stress due to
-additional system processes running on it like GCS.
+除了上述变化之外，在部署大型集群时，
+Ray 的架构意味着头节点
+会因为在其上运行的额外系统进程（如 GCS）而承受额外的压力。
 
-* A good starting hardware specification for the head node is 8 CPUs and 32 GB memory.
-  The actual hardware specification depends on the workload and the size of the cluster.
-  Metrics that are useful for deciding the hardware specification are
-  CPU usage, memory usage, and network bandwidth usage.
-* Make sure the head node has sufficient bandwidth. The most heavily stressed
-  resource on the head node is outbound bandwidth. For large clusters (see the
-  scalability envelope), we recommend using machines networking characteristics
-  at least as good as an r5dn.16xlarge on AWS EC2.
-* Set ``resources: {"CPU": 0}`` on the head node.
-  (For Ray clusters deployed using KubeRay,
-  set ``rayStartParams: {"num-cpus": "0"}``.
-  See the :ref:`configuration guide for KubeRay clusters <kuberay-num-cpus>`.)
-  Due to the heavy networking load (and the GCS and dashboard processes), we
-  recommend setting the quantity of logical CPU resources to 0 on the head node
-  to avoid scheduling additional tasks on it.
+* 头节点的良好起始硬件规格是 8 个 CPU 和 32 GB 内存。
+  实际硬件规格取决于工作负载和集群的大小。
+  有助于确定硬件规格的指标包括 CPU 使用率、内存使用率和网络带宽使用率。
+* 确保头节点具有足够的带宽。
+  头节点上压力最大的资源是出站带宽。
+  对于大型集群（请参阅可扩展性范围），
+  我们建议使用网络特性至少与 AWS EC2 上的 r5dn.16xlarge 一样好的机器。
+* 在头节点设置 ``resources: {"CPU": 0}`` 。
+  (使用 Kuberay 启动的 Ray 集群
+  设置 ``rayStartParams: {"num-cpus": "0"}``。
+  参考 :ref:`KubeRay 集群配置指引 <kuberay-num-cpus>`.)
+  由于网络负载较重（以及 GCS 和仪表板进程），
+  我们建议在头节点上将逻辑 CPU 资源数量设置为 0，
+  以避免在其上安排额外的任务。
 
-Configuring the autoscaler
+配置自动缩放
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For large, long running clusters, there are a few parameters that can be tuned.
+对于大型、长期运行的集群，有一些参数可以调整。
 
-* Ensure your quotas for node types are set correctly.
-* For long running clusters, set the ``AUTOSCALER_MAX_NUM_FAILURES`` environment
-  variable to a large number (or ``inf``) to avoid unexpected autoscaler
-  crashes. The variable can be set by prepending \ ``export AUTOSCALER_MAX_NUM_FAILURES=inf;``
-  to the head node's Ray start command.
-  (Note: you may want a separate mechanism to detect if the autoscaler
-  errors too often).
-* For large clusters, consider tuning ``upscaling_speed`` for faster
-  autoscaling.
+* 确保节点类型的配额设置正确。
+* 对于长时间运行的集群，请将 ``AUTOSCALER_MAX_NUM_FAILURES`` 环境变量
+  设置为较大的数字（或 ``inf``），以避免自动缩放程序意外崩溃。
+  可以通过将变量  ``export AUTOSCALER_MAX_NUM_FAILURES=inf;`` 添加到头节点
+  的 Ray start 命令前面来设置变量。
+  （注意：您可能需要一个单独的机制来检测自动缩放程序是否过于频繁地出错）。
+* 对于大型集群，请考虑调整 ``upscaling_speed`` 以实现
+  更快的自动扩展。
 
-Picking nodes
+选择节点
 ^^^^^^^^^^^^^
 
-Here are some tips for how to set your ``available_node_types`` for a cluster,
-using AWS instance types as a concrete example.
+以下是有关如何设置 ``available_node_types`` 集群的一些提示，
+使用 AWS 实例类型作为具体示例。
 
-General recommendations with AWS instance types:
+有关 AWS 实例类型的一般建议：
 
-**When to use GPUs**
+**何时使用 GPU**
 
-* If you’re using some RL/ML framework
-* You’re doing something with tensorflow/pytorch/jax (some framework that can
-  leverage GPUs well)
+* 如果你正在使用一些 RL/ML 框架
+* 您正在使用 tensorflow/pytorch/jax（一些可以很好地
+  利用 GPU 的框架）做一些事情
 
-**What type of GPU?**
+**什么类型的 GPU？**
 
-* The latest gen GPU is almost always the best bang for your buck (p3 > p2, g4
-  > g3), for most well designed applications the performance outweighs the
-  price. (The instance price may be higher, but you use the instance for less
-  time.)
-* You may want to consider using older instances if you’re doing dev work and
-  won’t actually fully utilize the GPUs though.
-* If you’re doing training (ML or RL), you should use a P instance. If you’re
-  doing inference, you should use a G instance. The difference is
-  processing:VRAM ratio (training requires more memory).
+* 最新一代 GPU 几乎总是物有所值（p3 > p2，g4 > g3），
+  对于大多数设计良好的应用程序来说，
+  性能胜过价格。（实例
+  价格可能更高，但您使用实例的时间更短。）
+* 如果您正在进行开发工作并且实际上不会充分利用 GPU，
+  您可能需要考虑使用较旧的实例。
+* 果您正在进行训练（ML 或 RL），
+  则应使用 P 实例。
+  如果您正在进行推理，则应使用 G 实例。
+  区别在于处理：VRAM 比率（训练需要更多内存）。
 
-**What type of CPU?**
+**什么类型的 CPU？**
 
-* Again stick to the latest generation, they’re typically cheaper and faster.
-* When in doubt use M instances, they have typically have the highest
-  availability.
-* If you know your application is memory intensive (memory utilization is full,
-  but cpu is not), go with an R instance
-* If you know your application is CPU intensive go with a C instance
-* If you have a big cluster, make the head node an instance with an n (r5dn or
-  c5n)
+* 再次坚持使用最新一代，它们通常更便宜且更快。
+* 如有疑问，请使用 M 个实例，它们通常具有最高的可用性。
+* 如果你知道你的应用程序是内存密集型的（内存利用率已满，但 CPU 尚未满），请使用 R 实例
+* 如果你知道你的应用程序是 CPU 密集型的，那么就使用 C 实例
+* 如果您有一个大型集群，请将头节点设为具有 n 的实例（r5dn 或 c5n）
 
-**How many CPUs/GPUs?**
+**有多少个 CPU/GPU？**
 
-* Focus on your CPU:GPU ratio first and look at the utilization (Ray dashboard
-  should help with this). If your CPU utilization is low add GPUs, or vice
-  versa.
-* The exact ratio will be very dependent on your workload.
-* Once you find a good ratio, you should be able to scale up and and keep the
-  same ratio.
-* You can’t infinitely scale forever. Eventually, as you add more machines your
-  performance improvements will become sub-linear/not worth it. There may not
-  be a good one-size fits all strategy at this point.
+* 首先关注您的 CPU：GPU 比率，
+  然后查看利用率（Ray 仪表板应该会对此有所帮助）。
+  如果您的 CPU 利用率较低，请添加 GPU，反之亦然。
+* 具体比例将取决于您的工作量。
+* 一旦找到好的比例，您就应该能够扩大规模并保持相同的比例。
+* 您无法永远无限扩展。最终，随着您添加更多机器，
+  您的性能改进将变得次线性/不值得。目前可能没有一个适合所有情况的策略。
 
 .. note::
 
-   If you're using RLlib, check out :ref:`the RLlib scaling guide
-   <rllib-scaling-guide>` for RLlib specific recommendations.
+   如果您正在使用 RLlib，请查看 :ref:`RLlib 扩展指南
+   <rllib-scaling-guide>` 以获取有关 RLlib 的具体建议。

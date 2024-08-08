@@ -1,6 +1,6 @@
 .. _ray-yarn-deploy:
 
-Deploying on YARN
+在 YARN 上部署
 =================
 
 .. warning::

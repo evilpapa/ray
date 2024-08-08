@@ -1,27 +1,27 @@
 .. _jobs-quickstart:
 
 =================================
-Quickstart Using the Ray Jobs CLI
+使用 Ray Jobs CLI 快速入门
 =================================
 
 
-In this guide, we will walk through the Ray Jobs CLI commands available for submitting and interacting with a Ray Job.
+在本指南中，我们将介绍用于提交和与 Ray Job 交互的 Ray Jobs CLI 命令。
 
-To use the Jobs API programmatically via a Python SDK instead of a CLI, see :ref:`ray-job-sdk`.
+要通过 Python SDK 而不是 CLI 以编程方式使用作业 API，请参阅 :ref:`ray-job-sdk`。
 
-Setup
+设置
 -----
 
-Ray Jobs is available in versions 1.9+ and requires a full installation of Ray. You can do this by running:
+Ray Jobs 适用于 1.9 及以上版本，需要完整安装 Ray。你可以运行以下命令执行此操作：
 
 .. code-block:: shell
 
     pip install "ray[default]"
 
-See the :ref:`installation guide <installation>` for more details on installing Ray.
+查看 :ref:`安装指引 <installation>` 获取更多详细信息。
 
-To submit a job, we also need to be able to send HTTP requests to a Ray Cluster.
-For convenience, this guide will assume that you are using a local Ray Cluster, which we can start by running:
+要提交作业，我们还需要能够向 Ray 集群发送 HTTP 请求。
+为方便起见，本指南假设您使用的是本地 Ray 集群，我们可以通过运行以下命令来启动它：
 
 .. code-block:: shell
 
@@ -30,15 +30,15 @@ For convenience, this guide will assume that you are using a local Ray Cluster, 
     # 2022-08-10 09:54:57,664   INFO services.py:1476 -- View the Ray dashboard at http://127.0.0.1:8265
     # ...
 
-This will create a Ray head node on our local machine that we can use for development purposes.
-Note the Ray Dashboard URL that is printed when starting or connecting to a Ray Cluster; we will use this URL later to submit a job.
-For more details on production deployment scenarios, check out the guides for deploying Ray on :ref:`VMs <vm-cluster-quick-start>` and :ref:`Kubernetes <kuberay-quickstart>`.
+这将在我们的本地机器上创建一个 Ray 头节点，我们可以将其用于开发目的。
+请注意启动或连接到 Ray 集群时打印的 Ray 仪表板 URL；我们稍后将使用此 URL 提交作业。
+有关生产部署场景的更多详细信息，请查看在 :ref:`VMs <vm-cluster-quick-start>` 和 :ref:`Kubernetes <kuberay-quickstart>` 上部署 Ray 的指南。
 
 
-Submitting a job
+提交作业
 ----------------
 
-Let's start with a sample script that can be run locally. The following script uses Ray APIs to submit a task and print its return value:
+让我们从一个可以在本地运行的示例脚本开始。以下脚本使用 Ray API 提交任务并打印其返回值：
 
 .. code-block:: python
 
@@ -53,16 +53,16 @@ Let's start with a sample script that can be run locally. The following script u
     ray.init()
     print(ray.get(hello_world.remote()))
 
-Create an empty working directory with the above Python script inside a file named ``script.py``. 
+创建一个空的工作目录，其中包含名为 ``script.py`` 的 Python 脚本。
 
 .. code-block:: bash
 
   | your_working_directory
   | ├── script.py
 
-Next, we will find the HTTP address of the Ray Cluster to which we can submit a job request.
-Jobs are submitted to the same address used by the **Ray Dashboard**.
-By default, this uses port 8265.
+接下来，我们将找到可以向其提交作业请求的 Ray 集群的 HTTP 地址。
+作业提交到 **Ray Dashboard** 相同的地址。
+默认情况下，此地址为端口 8265。
 
 If you are using a local Ray Cluster (``ray start --head``), you can connect directly at ``http://127.0.0.1:8265``.
 If you are using a Ray Cluster started on VMs or Kubernetes, you can follow the instructions there for setting up network access from a client. See :ref:`Using a Remote Cluster <jobs-remote-cluster>` for tips.

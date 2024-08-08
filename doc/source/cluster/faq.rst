@@ -16,79 +16,79 @@ Ray 集群是否支持多租户？
 原因是 Ray 目前仍然缺少生产中多租户的一些功能：
 
 * Ray 不提供强大的资源隔离：
-  Ray :ref:`resources <core-resources>` are logical and they don't limit the physical resources a task or actor can use while running.
-  This means simultaneous jobs can interfere with each other and makes them less reliable to run in production.
+  Ray :ref:`资源 <core-resources>` 是合乎逻辑的，它们不会限制任务或 actor 在运行时可以使用的物理资源。
+  这意味着同时进行的作业可能会相互干扰，从而降低它们在生产环境中运行的可靠性。
 
 * Ray 不支持优先级：所有作业、任务和 actor 都有相同的优先级，因此无法在负载下对重要作业进行优先排序。
 
 * Ray 不支持访问控制：job 对 Ray 集群及其内的所有资源具有完全访问权。
 
-On the other hand, you can run the same job multiple times using the same cluster to save the cluster startup time.
+另一方面，您可以使用同一个集群多次运行同一个作业，以节省集群启动时间。
 
 .. note::
-    A Ray :ref:`namespace <namespaces-guide>` is just a logical grouping of jobs and named actors. Unlike a Kubernetes namespace, it doesn't provide any other multi-tenancy functions like resource quotas.
+    Ray :ref:`命名空间 <namespaces-guide>` 是作业和命名 actor 的逻辑分组。与 Kubernetes 命名空间不同，它不提供任何其他多租户功能，例如资源配额。
 
 
-I have multiple Ray users. What's the right way to deploy Ray for them?
+我有多个 Ray 用户。为他们部署 Ray 的正确方法是什么？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It's recommended to start a Ray cluster for each user so that their workloads are isolated.
+建议为每个用户启动一个 Ray 集群，以便隔离他们的工作负载。
 
-What is the difference between ``--node-ip-address`` and ``--address``?
+``--node-ip-address`` 和 ``--address`` 之间有什么区别？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When starting a head node on a machine with more than one network address, you
-may need to specify the externally-available address so worker nodes can
-connect. This is done with:
+在具有多个网络地址的计算机上启动头节点时，可能需要指定外部可用的地址，
+以便工作节点可以连接。
+这是通过以下方式完成的：
 
 .. code:: bash
 
     ray start --head --node-ip-address xx.xx.xx.xx --port nnnn``
 
-Then when starting the worker node, use this command to connect to the head node:
+然后在启动工作节点时，使用此命令连接到头节点：
 
 .. code:: bash
 
     ray start --address xx.xx.xx.xx:nnnn
 
-What does a worker node failure to connect look like?
+工作节点连接失败是什么样的？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If the worker node cannot connect to the head node, you should see this error
+如果工作节点无法连接到头节点，您应该会看到此错误
 
     Unable to connect to GCS at xx.xx.xx.xx:nnnn. Check that (1) Ray GCS with
     matching version started successfully at the specified address, and (2)
     there is no firewall setting preventing access.
 
-The most likely cause is that the worker node cannot access the IP address
-given. You can use ``ip route get xx.xx.xx.xx`` on the worker node to start
-debugging routing issues.
+最可能的原因是工作节点无法访问给定的 IP 地址。您可以在
+工作节点上使用 ``ip route get xx.xx.xx.xx`` 以开始
+调试路由问题。
 
-You may also see failures in the log like
+您可能还会在日志中看到类似的失败信息
 
     This node has an IP address of xx.xx.xx.xx, while we can not found the
     matched Raylet address. This maybe come from when you connect the Ray
     cluster with a different IP address or connect a container.
 
-which can be caused by overloading the head node with too many simultaneous
-connections. The solution for this is to start the worker nodes more slowly.
+这可能是由于过多同时连接导致头节点过载所致。
+解决方案是更慢地启动工作节点。
 
-I am having problems getting my SLURM cluster to work
+我在运行 SLURM 集群时遇到了问题
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There seem to be a class of issues starting ray on SLURM clusters.  While we
-have not been able to pin down the exact causes (as of June 2023), work has
-been done to mitigate some of the resource contention. Some of the issues
-reported:
+在 SLURM 集群上，似乎存在一类问题。
+虽然我们无法确定确切原因（截至 2023 年 6 月），
+但已采取措施缓解部分资源争用问题。
+报告的一些问题如下：
 
-* Using a machine with a large number of CPUs, and starting one worker per CPU
-  together with OpenBLAS (as used in NumPy) may allocate too many threads. This
-  is an `known OpenBLAS limitation`_ and can be mitigated by limiting OpenBLAS
-  to one thread per process as explained in the link.
+* 使用具有大量 CPU 的机器，并为每个 CPU 启动一个工作器以及 OpenBLAS（如 NumPy 中使用的）
+  可能会分配过多的线程。 
+  这是 `已知的 OpenBLAS 限制`_ ，可以通过将 OpenBLAS 限制为
+  每个进程一个线程来缓解，如链接中所述。
 
-* Resource allocation is not what was expected: usually too many CPUs per node
-  were allocated. Best practice is to verify your SLURM configuration without
-  starting ray to verify that the allocations are as expected. For more
-  detailed information see :ref:`ray-slurm-deploy`.
+* 资源分配不符合预期：通常每个节点分配了过多的 CPU。
+  最佳做法是在不启动 ray 的情况下验证您的 SLURM 配置，
+  以验证分配是否符合预期。
+  有关更多详细信息，请参阅 :ref:`ray-slurm-deploy`。
 
-.. _`known OpenBLAS limitation`: https://github.com/xianyi/OpenBLAS/wiki/faq#how-can-i-use-openblas-in-multi-threaded-applications  
+.. _`已知的 OpenBLAS 限制`: https://github.com/xianyi/OpenBLAS/wiki/faq#how-can-i-use-openblas-in-multi-threaded-applications  

@@ -1,11 +1,11 @@
 (vm-cluster-api-references)=
 
-# API References
+# API 参考
 
-The following pages provide reference documentation for using Ray Clusters on virtual machines.
+以下页面提供了在虚拟机上使用 Ray Clusters 的参考文档。
 
 ```{toctree}
-:caption: "Reference documentation for Ray Clusters on VMs:"
+:caption: "虚拟机上的 Ray 集群的参考文档："
 :maxdepth: '2'
 :name: ray-clusters-vms-reference
 
