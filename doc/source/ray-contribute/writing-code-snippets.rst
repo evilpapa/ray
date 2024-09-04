@@ -11,20 +11,21 @@
 本页描述了如何编写代码片段以便在 CI 中进行测试。
 
 .. note::
-    The examples in this guide use reStructuredText. If you're writing
-    Markdown, use MyST syntax. To learn more, read the
-    `MyST documentation <https://myst-parser.readthedocs.io/en/latest/syntax/roles-and-directives.html#directives-a-block-level-extension-point>`_.
+    本指南中的示例使用 reStructuredText。如果您
+    正在编写 Markdown，请使用 MyST 语法。
+    要了解更多信息，请阅读
+    `MyST 文档 <https://myst-parser.readthedocs.io/en/latest/syntax/roles-and-directives.html#directives-a-block-level-extension-point>`_.
 
 -----------------
-Types of examples
+示例类型
 -----------------
 
-There are three types of examples: *doctest-style*, *code-output-style*, and *literalinclude*.
+有三种类型的例子： *doctest-style*, *code-output-style*, 和 *literalinclude*.
 
-*doctest-style* examples
+*doctest-style* 示例
 ========================
 
-*doctest-style* examples mimic interactive Python sessions. ::
+*doctest-style* 样式的示例模拟交互式 Python 会话。 ::
 
     .. doctest::
 
@@ -35,7 +36,7 @@ There are three types of examples: *doctest-style*, *code-output-style*, and *li
         >>> is_even(1)
         False
 
-They're rendered like this:
+它们的渲染如下：
 
 .. doctest::
 
@@ -48,7 +49,7 @@ They're rendered like this:
 
 .. tip::
 
-    If you're writing docstrings, exclude `.. doctest::` to simplify your code. ::
+    如果您正在编写文档字符串，请排除 `.. doctest::` 以简化您的代码。 ::
 
         Example:
             >>> def is_even(x):
@@ -58,10 +59,10 @@ They're rendered like this:
             >>> is_even(1)
             False
 
-*code-output-style* examples
+*code-output-style* 示例
 ============================
 
-*code-output-style* examples contain ordinary Python code. ::
+*code-output-style* 示例包含普通的 Python 代码。 ::
 
     .. testcode::
 
@@ -76,7 +77,7 @@ They're rendered like this:
         True
         False
 
-They're rendered like this:
+它们的渲染如下：
 
 .. testcode::
 
@@ -91,10 +92,10 @@ They're rendered like this:
     True
     False
 
-*literalinclude* examples
+*literalinclude* 示例
 =========================
 
-*literalinclude* examples display Python modules. ::
+*literalinclude* 示例显示 Python 模块。 ::
 
     .. literalinclude:: ./doc_code/example_module.py
         :language: python
@@ -104,7 +105,7 @@ They're rendered like this:
 .. literalinclude:: ./doc_code/example_module.py
     :language: python
 
-They're rendered like this:
+它们的渲染如下：
 
 .. literalinclude:: ./doc_code/example_module.py
     :language: python
@@ -112,20 +113,20 @@ They're rendered like this:
     :end-before: __is_even_end__
 
 ---------------------------------------
-Which type of example should you write?
+你应该写哪种类型的例子？
 ---------------------------------------
 
-There's no hard rule about which style you should use. Choose the style that best
-illustrates your API.
+对于应该使用哪种风格，并没有硬性规定。选择
+最能体现你的 API 的风格。
 
 .. tip::
-    If you're not sure which style to use, use *code-block-style*.
+    如果您不确定使用哪种样式，请使用 *code-block-style*。
 
-When to use *doctest-style*
+何时使用 *doctest-style*
 ===========================
 
-If you're writing a small example that emphasizes object representations, or if you
-want to print intermediate objects, use *doctest-style*. ::
+如果您正在编写一个强调对象表示的小示例，或者
+想要打印中间对象，请使用 *doctest-style*. ::
 
     .. doctest::
 
@@ -138,10 +139,10 @@ want to print intermediate objects, use *doctest-style*. ::
         >>> ds.take(5)
         [{'id': 0}, {'id': 1}, {'id': 2}, {'id': 3}, {'id': 4}]
 
-When to use *code-block-style*
+何时使用 *code-block-style*
 ==============================
 
-If you're writing a longer example, or if object representations aren't relevant to your example, use *code-block-style*. ::
+如果您正在编写更长的示例，或者对象表示与您的示例不相关，请使用 *code-block-style*. ::
 
     .. testcode::
 
@@ -176,34 +177,34 @@ If you're writing a longer example, or if object representations aren't relevant
            }
         )
 
-When to use *literalinclude*
+何时使用 *literalinclude*
 ============================
-If you're writing an end-to-end examples and your examples doesn't contain outputs, use
+如果您正在编写端到端示例并且您的示例不包含输出，请使用
 *literalinclude*.
 
 -----------------------------------
-How to handle hard-to-test examples
+如何处理难以测试的示例？
 -----------------------------------
 
-When is it okay to not test an example?
+什么时候可以不测试示例？
 =======================================
 
-You don't need to test examples that depend on external systems like Weights and Biases.
+您不需要测试依赖于外部系统（如权重和偏差）的示例。
 
-Skipping *doctest-style* examples
+跳过 *doctest-style* 示例
 =================================
 
-To skip a *doctest-style* example, append `# doctest: +SKIP` to your Python code. ::
+要跳过 *doctest-style* 示例，请将 `# doctest: +SKIP` 附加到你的 Python 代码中。 ::
 
     .. doctest::
 
         >>> import ray
         >>> ray.data.read_images("s3://private-bucket")  # doctest: +SKIP
 
-Skipping *code-block-style* examples
+跳过 *code-block-style* 示例
 ====================================
 
-To skip a *code-block-style* example, add `:skipif: True` to the `testoutput` block. ::
+要跳过 *code-block-style* 示例，请将 `:skipif: True` 添加到 `testoutput` 代码块。 ::
 
     .. testcode::
         :skipif: True
@@ -216,15 +217,15 @@ To skip a *code-block-style* example, add `:skipif: True` to the `testoutput` bl
         )
 
 ----------------------------------------------
-How to handle long or non-determnistic outputs
+如何处理长输出或非确定性输出
 ----------------------------------------------
 
-If your Python code is non-deterministic, or if your output is excessively long, you may want to skip all or part of an output.
+如果您的 Python 代码是不确定的，或者您的输出过长，您可能需要跳过全部或部分输出。
 
-Ignoring *doctest-style* outputs
+忽略 *doctest-style* 输出
 ================================
 
-To ignore parts of a *doctest-style* output, replace problematic sections with ellipses. ::
+要忽略 *doctest-style* 的部分输出，请用省略号替换有问题的部分。 ::
 
     >>> import ray
     >>> ray.data.read_images("s3://anonymous@ray-example-data/image-datasets/simple")
@@ -234,13 +235,13 @@ To ignore parts of a *doctest-style* output, replace problematic sections with e
        schema={image: numpy.ndarray(shape=(32, 32, 3), dtype=uint8)}
     )
 
-To ignore an output altogether, write a *code-block-style* snippet. Don't use `# doctest: +SKIP`.
+要完全忽略输出，请编写 *code-block-style* 代码块。不要使用 `# doctest: +SKIP`。
 
-Ignoring *code-block-style* outputs
+忽略 *code-block-style* 输出
 ===================================
 
-If parts of your output are long or non-deterministic, replace problematic sections
-with ellipses. ::
+如果输出的某些部分很长或者不确定，请用省略号
+替换有问题的部分。 ::
 
     .. testcode::
 
@@ -256,8 +257,8 @@ with ellipses. ::
            schema={image: numpy.ndarray(shape=(32, 32, 3), dtype=uint8)}
         )
 
-If your output is nondeterministic and you want to display a sample output, add
-`:options: +MOCK`. ::
+如果您的输出是不确定的并且您想要显示示例输出，请添加
+`:options: +MOCK`。 ::
 
     .. testcode::
 
@@ -269,8 +270,8 @@ If your output is nondeterministic and you want to display a sample output, add
 
         0.969461416250246
 
-If your output is hard to test and you don't want to display a sample output, exclude
-the ``testoutput``. ::
+如果您的输出难以测试并且您不想显示示例输出，请排除
+``testoutput``. ::
 
     .. testcode::
 
@@ -278,16 +279,16 @@ the ``testoutput``. ::
 
 
 ------------------------------
-How to test examples with GPUs
+如何使用 GPU 测试示例
 ------------------------------
 
-To configure Bazel to run an example with GPUs, complete the following steps:
+要配置 Bazel 以使用 GPU 运行示例，请完成以下步骤：
 
-#. Open the corresponding ``BUILD`` file. If your example is in the ``doc/`` folder,
-   open ``doc/BUILD``. If your example is in the ``python/`` folder, open a file like
-   ``python/ray/train/BUILD``.
+#. 打开相应的 ``BUILD`` 文件。 如果您的示例在 ``doc/`` 文件夹，
+   打开 ``doc/BUILD``。如果您的示例在 ``python/`` 文件夹，打开
+   ``python/ray/train/BUILD``。
 
-#. Locate the ``doctest`` rule. It looks like this: ::
+#. 找到 ``doctest`` 规则。它看起来像这样： ::
 
     doctest(
         files = glob(
@@ -297,7 +298,7 @@ To configure Bazel to run an example with GPUs, complete the following steps:
         tags = ["team:none"]
     )
 
-#. Add the file that contains your example to the list of excluded files. ::
+#. 将包含示例的文件添加到排除文件列表中。 ::
 
     doctest(
         files = glob(
@@ -307,7 +308,7 @@ To configure Bazel to run an example with GPUs, complete the following steps:
         tags = ["team:none"]
     )
 
-#. If it doesn't already exist, create a ``doctest`` rule with ``gpu`` set to ``True``. ::
+#. 如果尚不存在，请创建一个设置 ``gpu`` 为 ``True`` 的 ``doctest`` 规则。 ::
 
     doctest(
         files = [],
@@ -315,7 +316,7 @@ To configure Bazel to run an example with GPUs, complete the following steps:
         gpu = True
     )
 
-#. Add the file that contains your example to the GPU rule. ::
+#. 将包含示例的文件添加到 GPU 规则。 ::
 
     doctest(
         files = ["source/data/requires-gpus.rst"]
@@ -324,19 +325,19 @@ To configure Bazel to run an example with GPUs, complete the following steps:
         gpu = True
     )
 
-For a practical example, see ``doc/BUILD`` or ``python/ray/train/BUILD``.
+有关实际示例，请参见 ``doc/BUILD`` 或者 ``python/ray/train/BUILD``。
 
 ----------------------------
-How to locally test examples
+如何本地测试示例
 ----------------------------
 
-To locally test examples, install the Ray fork of `pytest-sphinx`.
+要在本地测试示例，请安装 Ray fork `pytest-sphinx`。
 
 .. code-block:: bash
 
     pip install git+https://github.com/ray-project/pytest-sphinx
 
-Then, run pytest on a module, docstring, or user guide.
+然后，在模块、文档字符串或用户指南上运行 pytest。
 
 .. code-block:: bash
 

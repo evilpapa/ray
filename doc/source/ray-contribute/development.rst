@@ -125,22 +125,22 @@
 构建 Ray（仅 Python）
 --------------------------
 
-.. note:: Unless otherwise stated, directory and file paths are relative to the project root directory.
+.. note:: 除非另有说明，目录和文件路径都是相对于项目根目录的。
 
-RLlib, Tune, Autoscaler, and most Python files do not require you to build and compile Ray. Follow these instructions to develop Ray's Python files locally without building Ray.
+RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和编译 Ray。按照这些说明在本地开发 Ray 的 Python 文件，而无需构建 Ray。
 
-1. Make sure you have a clone of Ray's git repository as explained above.
+1. 如上所述，确保您克隆了 Ray 的 git 存储库。
 
-2. Make sure you activate the Python (virtual) environment as described above.
+2. 确保如上所述激活 Python（虚拟）环境。
 
-3. Pip install the **latest Ray wheels.** See :ref:`install-nightlies` for instructions.
+3. 使用 Pip 安装 **最新的 Ray wheels.** 参考 :ref:`install-nightlies` 说明。
 
 .. code-block:: shell
 
-    # For example, for Python 3.8:
+    # 例如，对于 Python 3.8:
     pip install -U https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl
 
-4. Replace Python files in the installed package with your local editable copy. We provide a simple script to help you do this: ``python python/ray/setup-dev.py``. Running the script will remove the  ``ray/tune``, ``ray/rllib``, ``ray/autoscaler`` dir (among other directories) bundled with the ``ray`` pip package, and replace them with links to your local code. This way, changing files in your git clone will directly affect the behavior of your installed Ray.
+4. 用本地的已编辑拷贝版本替换安装包重的 Python 文件。我们提供了一个简单的脚本来帮助你完成操作： ``python python/ray/setup-dev.py``。运行此脚本会移除 ``ray`` pip 包绑定的  ``ray/tune``， ``ray/rllib``， ``ray/autoscaler`` 文件夹 （在其他文件夹），并替换为本地代码链接。这种方法，在你 git 克隆中改变文件会直接影响于你安装的 Ray 的行为。
 
 .. code-block:: shell
 
@@ -148,14 +148,14 @@ RLlib, Tune, Autoscaler, and most Python files do not require you to build and c
     # with your local `ray/python/ray/<package>`.
     python python/ray/setup-dev.py
 
-.. note:: [Advanced] You can also optionally skip creating symbolic link for directories of your choice.
+.. note:: [高级] 您还可以选择跳过为您选择的目录创建符号链接。
 
 .. code-block:: shell
 
     # This links all folders except "_private" and "dashboard" without user prompt.
     python setup-dev.py -y --skip _private dashboard
 
-.. warning:: Do not run ``pip uninstall ray`` or ``pip install -U`` (for Ray or Ray wheels) if setting up your environment this way. To uninstall or upgrade, you must first ``rm -rf`` the pip-installation site (usually a directory at the ``site-packages/ray`` location), then do a pip reinstall (see the command above), and finally run the above ``setup-dev.py`` script again.
+.. warning:: （对于 Ray 或 Ray wheel）如果使用此方法设置你的环境，请不要运行 ``pip uninstall ray`` 或 ``pip install -U`` 。要卸载或者升级，你首先必须运行 ``rm -rf`` 删除 pip 安装 site （通常为 ``site-packages/ray`` 路径），然后使用 pip 重新安装（参考上面的命令），最终重新运行上面的 ``setup-dev.py`` 脚本。
 
 .. code-block:: shell
 
@@ -163,12 +163,12 @@ RLlib, Tune, Autoscaler, and most Python files do not require you to build and c
     rm -rf <package path>/site-packages/ray # Path will be in the output of `setup-dev.py`.
     pip uninstall ray # or `pip install -U <wheel>`
 
-Preparing to build Ray on Linux
+准备在 Linux 上构建 Ray
 -------------------------------
 
-.. tip:: If you are only editing Tune/RLlib/Autoscaler files, follow instructions for :ref:`python-develop` to avoid long build times.
+.. tip:: 如果您仅编辑 Tune/RLlib/Autoscaler 文件，请按照 :ref:`python-develop` 的说明进行操作，以避免较长的构建时间。
 
-To build Ray on Ubuntu, run the following commands:
+要在 Ubuntu 上构建 Ray，请运行以下命令：
 
 .. code-block:: bash
 
@@ -189,21 +189,21 @@ To build Ray on Ubuntu, run the following commands:
   nvm use 14
 
 
-For RHELv8 (Redhat EL 8.0-64 Minimal), run the following commands:
+对于 RHELv8（Redhat EL 8.0-64 Minimal），运行以下命令：
 
 .. code-block:: bash
 
   sudo yum groupinstall 'Development Tools'
   sudo yum install psmisc
 
-In RedHat, install Bazel manually from this link: https://docs.bazel.build/versions/main/install-redhat.html
+在 RedHat 中，从此链接手动安装 Bazel： https://docs.bazel.build/versions/main/install-redhat.html
 
-Preparing to build Ray on MacOS
+准备在 MacOS 上构建 Ray
 -------------------------------
 
-.. tip:: Assuming you already have Brew and Bazel installed on your mac and you also have grpc and protobuf installed on your mac consider removing those (grpc and protobuf) for smooth build through the commands ``brew uninstall grpc``, ``brew uninstall protobuf``. If you have built the source code earlier and it still fails with errors like ``No such file or directory:``, try cleaning previous builds on your host by running the commands ``brew uninstall binutils`` and ``bazel clean --expunge``.
+.. tip:: 假设您已经在 Mac 上安装了 Brew 和 Bazel，并且还在 Mac 上安装了 grpc 和 protobuf，请先考虑便通过命令``brew uninstall grpc``， ``brew uninstall protobuf``删除它们（grpc 和 protobuf） , 以顺利构建。如果您之前已经构建了源代码但仍然出现类似 ``No such file or directory:``，的错误，请尝试通过运行命令 ``brew uninstall binutils`` 和 ``bazel clean --expunge`` 清理主机上的先前构建。
 
-To build Ray on MacOS, first install these dependencies:
+要在 MacOS 上构建 Ray，首先安装以下依赖项：
 
 .. code-block:: bash
 
@@ -213,40 +213,40 @@ To build Ray on MacOS, first install these dependencies:
   # Install Bazel.
   ray/ci/env/install-bazel.sh
 
-Building Ray on Linux & MacOS (full)
+在 Linux 和 MacOS 上构建 Ray（完整版）
 ------------------------------------
 
-Make sure you have a local clone of Ray's git repository as explained above. You will also need to install NodeJS_ to build the dashboard.
+确保您拥有 Ray 的 git 存储库的本地克隆，如上所述。您还需要安装 NodeJS_ 来构建仪表板。
 
-Enter into the project directory, for example:
+进入项目目录，如：
 
 .. code-block:: shell
 
     cd ray
 
-Now you can build the dashboard. From inside of your local Ray project directory enter into the dashboard client directory:
+现在您可以构建仪表板。从本地 Ray 项目目录内部进入仪表板客户端目录：
 
 .. code-block:: bash
 
   cd dashboard/client
 
-Then you can install the dependencies and build the dashboard:
+然后您可以安装依赖项并构建仪表板：
 
 .. code-block:: bash
 
   npm ci
   npm run build
 
-After that, you can now move back to the top level Ray directory:
+此后，您现在可以返回到顶级 Ray 目录：
 
 .. code-block:: shell
 
   cd ../..
 
 
-Now let's build Ray for Python. Make sure you activate any Python virtual (or conda) environment you could be using as described above.
+现在让我们为 Python 构建 Ray。确保您激活了可以使用的任何 Python（或 conda） 虚拟环境，如上所述。
 
-Enter into the ``python/`` directory inside of the Ray project directory and install the project with ``pip``:
+进入Ray 项目 ``python/`` 目录并使用以下 ``pip`` 命令安装项目：
 
 .. code-block:: bash
 
@@ -258,38 +258,38 @@ Enter into the ``python/`` directory inside of the Ray project directory and ins
   # export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
   pip install -e . --verbose  # Add --user if you see a permission denied error.
 
-The ``-e`` means "editable", so changes you make to files in the Ray
-directory will take effect without reinstalling the package.
+``-e`` 意味着 “可编辑”，因此您对 Ray 目录中的文件所做的更改
+将生效，而无需重新安装该包。
 
-.. warning:: if you run ``python setup.py install``, files will be copied from the Ray directory to a directory of Python packages (``/lib/python3.6/site-packages/ray``). This means that changes you make to files in the Ray directory will not have any effect.
+.. warning:: 如果你运行 ``python setup.py install`` 文件将从 Ray 目录复制到 Python 包目录 （``/lib/python3.6/site-packages/ray``）。这意味着你对 Ray 目录中的文件所做的更改不会产生任何效果。
 
 .. tip::
 
-  If your machine is running out of memory during the build or the build is causing other programs to crash, try adding the following line to ``~/.bazelrc``:
+  如果您的机器在构建过程中内存不足或构建导致其他程序崩溃，请尝试将以下行添加到 ``~/.bazelrc``:
 
   ``build --local_ram_resources=HOST_RAM*.5 --local_cpu_resources=4``
 
-  The ``build --disk_cache=~/bazel-cache`` option can be useful to speed up repeated builds too.
+  该 ``build --disk_cache=~/bazel-cache`` 选项对于加速重复构建也很有用。
 
 .. note::
-  Warning: If you run into an error building protobuf, switching from miniconda to anaconda might help.
+  Warning: 如果您在构建 protobuf 时遇到错误，从 miniconda 切换到 anaconda 可能会有所帮助。
 
 .. _NodeJS: https://nodejs.org
 
-Building Ray on Windows (full)
+在 Windows 上构建 Ray（完整版）
 ------------------------------
 
-**Requirements**
+**要求**
 
-The following links were correct during the writing of this section. In case the URLs changed, search at the organizations' sites.
+在撰写本节时，以下链接是正确的。如果 URL 发生变化，请在相应的组织网站上搜索。
 
 - Bazel 4.2 (https://github.com/bazelbuild/bazel/releases/tag/4.2.1)
-- Microsoft Visual Studio 2019 (or Microsoft Build Tools 2019 - https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
+- Microsoft Visual Studio 2019 (或 Microsoft Build Tools 2019 - https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
 - JDK 15 (https://www.oracle.com/java/technologies/javase-jdk15-downloads.html)
 - Miniconda 3 (https://docs.conda.io/en/latest/miniconda.html)
-- git for Windows, version 2.31.1 or later (https://git-scm.com/download/win)
+- git for Windows, version 2.31.1 或更新版本 (https://git-scm.com/download/win)
 
-You can also use the included script to install Bazel:
+您还可以使用附带的脚本来安装 Bazel：
 
 .. code-block:: bash
 
@@ -298,30 +298,30 @@ You can also use the included script to install Bazel:
   # (Windows users: please manually place Bazel in your PATH, and point
   # BAZEL_SH to MSYS2's Bash: ``set BAZEL_SH=C:\Program Files\Git\bin\bash.exe``)
 
-**Steps**
+**步骤**
 
-1. Enable Developer mode on Windows 10 systems. This is necessary so git can create symlinks.
+1. 在 Windows 10 系统上启用开发者模式。这是必要的，以便 git 可以创建符号链接。
 
-   1. Open Settings app;
-   2. Go to "Update & Security";
-   3. Go to "For Developers" on the left pane;
-   4. Turn on "Developer mode".
+   1. 打开设置应用程序；
+   2. 转到“更新和安全”；
+   3. 转到左侧窗格中的“面向开发人员”；
+   4. 打开“开发者模式”。
 
-2. Add the following Miniconda subdirectories to PATH. If Miniconda was installed for all users, the following paths are correct. If Miniconda is installed for a single user, adjust the paths accordingly.
+2. 将以下 Miniconda 子目录添加到 PATH。如果 Miniconda 是为所有用户安装的，则以下路径是正确的。如果 Miniconda 是为单个用户安装的，请相应调整路径。
 
    - ``C:\ProgramData\Miniconda3``
    - ``C:\ProgramData\Miniconda3\Scripts``
    - ``C:\ProgramData\Miniconda3\Library\bin``
 
-3. Define an environment variable ``BAZEL_SH`` to point to ``bash.exe``. If git for Windows was installed for all users, bash's path should be ``C:\Program Files\Git\bin\bash.exe``. If git was installed for a single user, adjust the path accordingly.
+3. 定义一个环境变量 ``BAZEL_SH`` 指向 ``bash.exe``。如果为所有用户安装了 Windows 版 git，则 bash 的路径应为 ``C:\Program Files\Git\bin\bash.exe``。如果为单个用户安装了 git，请相应调整路径。
 
-4. Bazel 4.2 installation. Go to Bazel 4.2 release web page and download
-bazel-4.2.1-windows-x86_64.exe. Copy the exe into the directory of your choice.
-Define an environment variable BAZEL_PATH to full exe path (example:
-``set BAZEL_PATH=C:\bazel\bazel.exe``). Also add the Bazel directory to the
-``PATH`` (example: ``set PATH=%PATH%;C:\bazel``)
+4. Bazel 4.2 安装。 转到 Bazel 4.2 发布网页并
+下载 bazel-4.2.1-windows-x86_64.exe。将 exe 复制到您选择的目录中。
+将环境变量 BAZEL_PATH 定义为完整的 exe 路径（例如：
+``set BAZEL_PATH=C:\bazel\bazel.exe``）。还将 Bazel 目录添加到
+ ``PATH`` （例如： ``set PATH=%PATH%;C:\bazel`` ）
 
-5. Download ray source code and build it.
+5. 下载 Ray 源码并构建。
 
 .. code-block:: shell
 
@@ -330,90 +330,84 @@ Define an environment variable BAZEL_PATH to full exe path (example:
   cd ray\python
   pip install -e . --verbose
 
-Environment variables that influence builds
+影响构建的环境变量
 --------------------------------------------
 
-You can tweak the build with the following environment variables (when running ``pip install -e .`` or ``python setup.py install``):
+您可以使用以下环境变量来调整构建（运行 ``pip install -e .`` 或 ``python setup.py install`` ）：
 
-- ``RAY_INSTALL_JAVA``: If set and equal to ``1``, extra build steps will be executed
-  to build java portions of the codebase
-- ``RAY_INSTALL_CPP``: If set and equal to ``1``, ``ray-cpp`` will be installed
-- ``RAY_DISABLE_EXTRA_CPP``: If set and equal to ``1``, a regular (non -
-  ``cpp``) build will not provide some ``cpp`` interfaces
-- ``SKIP_BAZEL_BUILD``: If set and equal to ``1``, no Bazel build steps will be
-  executed
-- ``SKIP_THIRDPARTY_INSTALL``: If set will skip installation of third-party
-  python packages
-- ``RAY_DEBUG_BUILD``: Can be set to ``debug``, ``asan``, or ``tsan``. Any
-  other value will be ignored
-- ``BAZEL_ARGS``: If set, pass a space-separated set of arguments to Bazel. This can be useful
-  for restricting resource usage during builds, for example. See https://bazel.build/docs/user-manual
-  for more information about valid arguments.
-- ``IS_AUTOMATED_BUILD``: Used in CI to tweak the build for the CI machines
-- ``SRC_DIR``: Can be set to the root of the source checkout, defaults to
-  ``None`` which is ``cwd()``
-- ``BAZEL_SH``: used on Windows to find a ``bash.exe``, see below
-- ``BAZEL_PATH``: used on Windows to find ``bazel.exe``, see below
-- ``MINGW_DIR``: used on Windows to find ``bazel.exe`` if not found in ``BAZEL_PATH``
+- ``RAY_INSTALL_JAVA``: 如果设置等于 ``1``，将执行额外的构建步骤
+  来构建代码库的 Java 部分
+- ``RAY_INSTALL_CPP``: 如果设置等于 ``1``， ``ray-cpp`` 将安装
+- ``RAY_DISABLE_EXTRA_CPP``: 如果设置等于 ``1``，则常规（非
+  ``cpp``）构建将不会提供某些 ``cpp`` 接口
+- ``SKIP_BAZEL_BUILD``: 如果设置等于 ``1``，则不会执行任何 Bazel 构建步骤
+- ``SKIP_THIRDPARTY_INSTALL``: 如果设置将跳过第三方python包的安装
+- ``RAY_DEBUG_BUILD``: 可以设置为 ``debug``， ``asan`` 或 ``tsan``。任何其他值将被忽略
+- ``BAZEL_ARGS``: 如果已设置，则将一组以空格分隔的参数传递给 Bazel。例如，
+  这对于限制构建期间的资源使用非常有用。 有关有效参数的更多信息，请参阅 https://bazel.build/docs/user-manual
+- ``IS_AUTOMATED_BUILD``: 用于在 CI 中调整 CI 机器的构建
+- ``SRC_DIR``: 可以设置为源签出的根，默认是 ``cwd()`` 的 ``None``
+- ``BAZEL_SH``: 在 Windows 上用于查找 ``bash.exe``，见下文
+- ``BAZEL_PATH``: 在 Windows 上用于查找 ``bash.exe``，见下文
+- ``MINGW_DIR``: 在 Windows 上用于查找 ``bazel.exe``， 如果在 ``BAZEL_PATH`` 中没有找到
 
-Installing additional dependencies for development
+安装用于开发的额外依赖项
 --------------------------------------------------
 
-Dependencies for the linter (``scripts/format.sh``) can be installed with:
+可以使用以下命令  (``scripts/format.sh``)  安装 linter ：
 
 .. code-block:: shell
 
  pip install -r python/requirements/lint-requirements.txt
 
-Dependencies for running Ray unit tests under ``python/ray/tests`` can be installed with:
+可以使用以下命令安装运行 Ray 单元测试 ``python/ray/tests`` 的依赖项：
 
 .. code-block:: shell
 
  pip install -c python/requirements.txt -r python/requirements/test-requirements.txt
 
-Requirement files for running Ray Data / ML library tests are under ``python/requirements/``.
+运行 Ray Data / ML 库测试的要求文件位于 ``python/requirements/`` 下。
 
-Fast, Debug, and Optimized Builds
+快速、调试和优化构建
 ---------------------------------
 
-Currently, Ray is built with optimizations, which can take a long time and
-interfere with debugging. To perform fast, debug, or optimized builds, you can
-run the following (via ``-c`` ``fastbuild``/``dbg``/``opt``, respectively):
+目前，Ray 的构建经过了优化，这可能需要很长时间
+并且会干扰调试。 要执行快速、调试或优化构建，您可以运行
+以下命令 （分别通过 ``-c`` ``fastbuild`` / ``dbg`` / ``opt``）：
 
 .. code-block:: shell
 
  bazel build -c fastbuild //:ray_pkg
 
-This will rebuild Ray with the appropriate options (which may take a while).
-If you need to build all targets, you can use ``"//:all"`` instead of
-``//:ray_pkg``.
+这将使用适当的选项重建 Ray（可能需要一段时间）。如果您需要
+构建所有目标，则可以使用 ``"//:all"`` 替代
+``//:ray_pkg``。
 
-To make this change permanent, you can add an option such as the following
-line to your user-level ``~/.bazelrc`` file (not to be confused with the
-workspace-level ``.bazelrc`` file):
+为了使此更改永久生效，您可以向用户级 ``~/.bazelrc`` 文件（不要与工作区级文件 ``.bazelrc`` 混淆）
+添加如下行选项：
 
 .. code-block:: shell
 
  build --compilation_mode=fastbuild
 
-If you do so, remember to revert this change, unless you want it to affect
-all of your development in the future.
+如果您这样做，请记住撤消此更改，除非您希望它影响
+您将来的所有开发。
 
-Using ``dbg`` instead of ``fastbuild`` generates more debug information,
-which can make it easier to debug with a debugger like ``gdb``.
+使用 ``dbg`` 代替 ``fastbuild`` 会生成更多的调试信息，
+这样可以更容易地使用像 ``gdb`` 的调试器进行调试。
 
-Building the Docs
+构建文档
 -----------------
 
-To learn more about building the docs refer to `Contributing to the Ray Documentation`_.
+要了解有关构建文档的更多信息，请参阅 `为 Ray 文档做出贡献`_。
 
-.. _Contributing to the Ray Documentation: https://docs.ray.io/en/master/ray-contribute/docs.html
+.. _为 Ray 文档做出贡献: https://docs.ray.io/en/master/ray-contribute/docs.html
 
-Using a local repository for dependencies
+使用本地存储库来获取依赖
 -----------------------------------------
 
-If you'd like to build Ray with custom dependencies (for example, with a
-different version of Cython), you can modify your ``.bzl`` file as follows:
+如果您想使用自定义依赖项构建 Ray（例如，
+使用不同版本的 Cython），您可以按如下方式修改 ``.bzl`` 文件：
 
 .. code-block:: python
 
@@ -429,18 +423,23 @@ different version of Cython), you can modify your ``.bzl`` file as follows:
 This replaces the existing ``http_archive`` rule with one that references a
 sibling of your Ray directory (named ``cython``) using the build file
 provided in the Ray repository (``bazel/BUILD.cython``).
+这将使用 Ray 存储库（名为 ``cython`` ）中提供的构建文件
+（ ``bazel/BUILD.cython`` ），将现有 ``http_archive`` 规则替换为引用 Ray 目录的
+同级规则。
 If the dependency already has a Bazel build file in it, you can use
 ``native.local_repository`` instead, and omit ``build_file``.
+如果依赖项中已包含 Bazel 构建文件，则可以改用 
+``native.local_repository``，并省略  ``build_file``。
 
-To test switching back to the original rule, change ``False`` to ``True``.
+要测试切换回原始规则，请更改 ``False`` 为 ``True``。
 
 .. _`PR template`: https://github.com/ray-project/ray/blob/master/.github/PULL_REQUEST_TEMPLATE.md
 
-Troubleshooting
+故障排除
 ---------------
 
-If importing Ray (``python3 -c "import ray"``) in your development clone results
-in this error:
+如果在开发克隆中导入 Ray ( ``python3 -c "import ray"``) 导致
+此错误：
 
 .. code-block:: python
 
@@ -458,7 +457,7 @@ in this error:
       from . import _psutil_osx as cext
   ImportError: cannot import name '_psutil_osx' from partially initialized module 'psutil' (most likely due to a circular import) (.../ray/python/ray/thirdparty_files/psutil/__init__.py)
 
-Then you should run the following commands:
+然后您应该运行以下命令：
 
 .. code-block:: bash
 

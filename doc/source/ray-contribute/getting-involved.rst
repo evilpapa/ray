@@ -67,86 +67,85 @@ Ray 不仅仅是一个分布式应用程序的框架，它还是一个由
 2. 确保所有现有 `tests <getting-involved.html#testing>`__ 和 `linters <getting-involved.html#lint-and-formatting>`__ 均已通过。
    运行 ``setup_hooks.sh`` 以创建一个 git hook，它将在推送更改之前运行 linter。
 3. 如果引入新功能或修补错误，请确保在 ``ray/python/ray/tests/`` 相关文件中添加新的测试用例。
-4. Document the code. Public functions need to be documented, and remember to provide an usage
-   example if applicable. See ``doc/README.md`` for instructions on editing and building public documentation.
-5. Address comments on your PR. During the review
-   process you may need to address merge conflicts with other changes. To resolve merge conflicts,
-   run ``git pull . upstream/master`` on your branch (please do not use rebase, as it is less
-   friendly to the GitHub review tool. All commits will be squashed on merge.)
-6. Reviewers will merge and approve the pull request; be sure to ping them if
-   the pull request is getting stale.
+4. 记录代码。公共函数需要记录，并记得提供使用示例（如果适用）。
+   请参阅 ``doc/README.md`` 获取有关编辑和构建公共文档的说明。
+5. 处理 PR 上的评论。在审核过程中，
+   您可能需要解决与其他更改的合并冲突。要解决合并冲突，
+   请在您的分支上运行 ``git pull . upstream/master`` （请不要使用 rebase，因为
+   它对 GitHub 审核工具不太友好。合并时所有提交都将被压缩。）
+6. 审阅者将合并并批准拉取请求；如果拉取请求变得陈旧，
+   请务必 ping 他们。
 
-PR Review Process
+PR 审核流程
 -----------------
 
-For contributors who are in the ``ray-project`` organization:
+对于 ``ray-project`` 组织内的贡献者：
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- When you first create a PR, add an reviewer to the `assignee` section.
-- Assignees will review your PR and add the `@author-action-required` label if further actions are required.
-- Address their comments and remove the `@author-action-required` label from the PR.
-- Repeat this process until assignees approve your PR.
-- Once the PR is approved, the author is in charge of ensuring the PR passes the build. Add the `test-ok` label if the build succeeds.
-- Committers will merge the PR once the build is passing.
+- 首次创建 PR 时，请向该 `assignee` 部分添加审阅者。
+- 受让人将审查您的 PR ，如果需要进一步操作，请添加添加标签 `@author-action-required` 。
+- 解决他们的评论并从 PR 中删除 `@author-action-required` 标签。
+- 重复此过程，直到受让人批准您的 PR。
+- 一旦 PR 获得批准，作者将负责确保 PR 通过构建。如果构建成功，则添加标签 `test-ok` 。
+- 一旦构建通过，提交者将合并 PR。
 
-For contributors who are not in the ``ray-project`` organization:
+对于不属于该 ``ray-project`` 组织的贡献者：
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Your PRs will have assignees shortly. Assignees of PRs will be actively engaging with contributors to merge the PR.
-- Please actively ping assignees after you address your comments!
+- 您的 PR 很快就会有受让人。PR 的受让人将积极与贡献者合作以合并 PR。
+- 请在提出您的评论后主动联系受让人！
 
-Testing
+测试
 -------
 
-Even though we have hooks to run unit tests automatically for each pull request,
-we recommend you to run unit tests locally beforehand to reduce reviewers’
-burden and speedup review process.
+尽管我们有钩子可以为每个拉取请求自动运行单元测试，
+但我们建议您事先在本地运行单元测试，
+以减轻审阅者的负担并加快审阅过程。
 
-If you are running tests for the first time, you can install the required dependencies with:
+如果您是第一次运行测试，可以使用以下命令安装所需的依赖项：
 
 .. code-block:: shell
 
     pip install -c python/requirements.txt -r python/requirements/test-requirements.txt
 
-Testing for Python development
+Python 开发测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The full suite of tests is too large to run on a single machine. However, you can run individual relevant Python test files. Suppose that one of the tests in a file of tests, e.g., ``python/ray/tests/test_basic.py``, is failing. You can run just that test file locally as follows:
-
+完整的测试套件太大，无法在一台机器上运行。但是，您可以运行单独的相关 Python 测试文件。假设测试集中的某个测试文件（例如 ``python/ray/tests/test_basic.py`` 失败。您可以按如下方式在本地运行该测试文件：
 
 .. code-block:: shell
 
     # Directly calling `pytest -v ...` may lose import paths.
     python -m pytest -v -s python/ray/tests/test_basic.py
 
-This will run all of the tests in the file. To run a specific test, use the following:
+这将运行文件中的所有测试。要运行特定测试，请使用以下命令：
 
 .. code-block:: shell
 
     # Directly calling `pytest -v ...` may lose import paths.
     python -m pytest -v -s test_file.py::name_of_the_test
 
-Testing for C++ development
+针对 C++ 开发进行测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To compile and run all C++ tests, you can run:
+要编译并运行所有 C++ 测试，您可以运行：
 
 .. code-block:: shell
 
  bazel test $(bazel query 'kind(cc_test, ...)')
 
-Alternatively, you can also run one specific C++ test. You can use:
+或者，您也可以运行一个特定的 C++ 测试。您可以使用：
 
 .. code-block:: shell
 
  bazel test $(bazel query 'kind(cc_test, ...)') --test_filter=ClientConnectionTest --test_output=streamed
 
-Code Style
+代码风格
 ----------
 
-In general, we follow the `Google style guide <https://google.github.io/styleguide/>`__ for C++ code and the `Black code style <https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html>`__ for Python code. Python imports follow `PEP8 style <https://peps.python.org/pep-0008/#imports>`__. However, it is more important for code to be in a locally consistent style than to strictly follow guidelines. Whenever in doubt, follow the local code style of the component.
+一般情况下，我们遵循 `Google 代码规范 <https://google.github.io/styleguide/>`__ 来编写 C++ 代码，遵循 `Black 代码风格 <https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html>`__ 来编写 Python 代码。Python 导入遵循 `PEP8 风格 <https://peps.python.org/pep-0008/#imports>`__。然而，代码保持局部一致的风格比严格遵循指南更为重要。如有疑问，请遵循组件的局部代码风格。
 
-For Python documentation, we follow a subset of the `Google pydoc format <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`__. The following code snippets demonstrate the canonical Ray pydoc formatting:
+对于 Python 文档，我们遵循 `Google pydoc 格式 <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`__。以下代码片段演示了规范的 Ray pydoc 格式：
 
 .. testcode::
 
@@ -225,28 +224,28 @@ For Python documentation, we follow a subset of the `Google pydoc format <https:
 
             self.attr1 = self.attr1 + 1
 
-See :ref:`this <writing-code-snippets_ref>` for more details about how to write code snippets in docstrings.
+有关如何在文档字符串中编写代码片段的更多详细信息，请参阅 :ref:`此内容 <writing-code-snippets_ref>` 。
 
-Lint and Formatting
+Lint 和 格式化
 ~~~~~~~~~~~~~~~~~~~
 
-We also have tests for code formatting and linting that need to pass before merge.
+我们还需要进行合并前的代码格式和 linting 测试。
 
-* For Python formatting, install the `required dependencies <https://github.com/ray-project/ray/blob/master/python/requirements/lint-requirements.txt>`_ first with:
+* 对于 Python 格式化，请首先安装 `依赖项 <https://github.com/ray-project/ray/blob/master/python/requirements/lint-requirements.txt>`_ ：
 
 .. code-block:: shell
 
   pip install -r python/requirements/lint-requirements.txt
 
-* If developing for C++, you will need `clang-format <https://www.kernel.org/doc/html/latest/process/clang-format.html>`_ version ``12`` (download this version of Clang from `here <http://releases.llvm.org/download.html>`_)
+* 如果使用 C++ 进行开发，您将需要 `clang-format <https://www.kernel.org/doc/html/latest/process/clang-format.html>`_ 版本 ``12`` (从 `这里 <http://releases.llvm.org/download.html>`_ 下载此版本的 Clang)
 
-You can run the following locally:
+您可以在本地运行以下命令：
 
 .. code-block:: shell
 
     scripts/format.sh
 
-An output like the following indicates failure:
+类似下面的输出表示失败：
 
 .. code-block:: shell
 
@@ -255,36 +254,36 @@ An output like the following indicates failure:
    * branch                master     -> FETCH_HEAD
   python/ray/util/sgd/tf/tf_runner.py:4:1: F401 'numpy as np' imported but unused  # Below is the failure
 
-In addition, there are other formatting and semantic checkers for components like the following (not included in ``scripts/format.sh``):
+此外，还有其他格式和语义检查器，用于检查下列组件（未包含在 ``scripts/format.sh``）：
 
-* Python README format:
+* Python README 格式：
 
 .. code-block:: shell
 
     cd python
     python setup.py check --restructuredtext --strict --metadata
 
-* Python & Docs banned words check
+* Python 和文档禁用词检查
 
 .. code-block:: shell
 
     ./ci/lint/check-banned-words.sh
 
-* Bazel format:
+* Bazel 格式：
 
 .. code-block:: shell
 
     ./ci/lint/bazel-format.sh
 
-* clang-tidy for C++ lint, requires ``clang`` and ``clang-tidy`` version 12 to be installed:
+* clang-tidy 用于 C++ lint，需要安装 ``clang`` 和 ``clang-tidy`` 版本 12 ：
 
 .. code-block:: shell
 
     ./ci/lint/check-git-clang-tidy-output.sh
 
-You can run ``setup_hooks.sh`` to create a git hook that will run the linter before you push your changes.
+您可以运行 ``setup_hooks.sh`` 创建一个 git hook，它将在您推送更改之前运行 linter。
 
-Understanding CI test jobs
+了解 CI 测试作业
 --------------------------
 
 The Ray project automatically runs continuous integration (CI) tests once a PR

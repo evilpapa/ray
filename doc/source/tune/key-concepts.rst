@@ -260,7 +260,7 @@ Tune 还提供了与搜索算法一起使用的有用实用程序：
 ---------------
 
 为了提高训练过程的效率，您可以使用 :ref:`Trial Scheduler <tune-schedulers>`。
-For instance, in our ``trainable`` example minimizing a function in a training loop, we used ``session.report()``.
+比如，在我们的 ``trainable`` 示例中 minimizing a function in a training loop, 我们使用 ``session.report()``。
 This reported `incremental` results, given a hyperparameter configuration selected by a search algorithm.
 Based on these reported results, a Tune scheduler can decide whether to stop the trial early or not.
 If you don't specify a scheduler, Tune will use a first-in-first-out (FIFO) scheduler by default, which simply
