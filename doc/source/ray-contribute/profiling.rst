@@ -1,38 +1,38 @@
 .. _ray-core-internal-profiling:
 
-Profiling for Ray Developers
+Ray 开发人员的分析
 ============================
 
-This guide helps contributors to the Ray project analyze Ray performance.
+本指南帮助 Ray 项目的贡献者分析 Ray 的性能。
 
-Getting a stack trace of Ray C++ processes
+获取 Ray C++ 进程的堆栈跟踪
 ------------------------------------------
 
-You can use the following GDB command to view the current stack trace of any
-running Ray process (e.g., raylet). This can be useful for debugging 100% CPU
-utilization or infinite loops (simply run the command a few times to see what
-the process is stuck on).
+您可以使用以下 GDB 命令查看任何
+正在运行的 Ray 进程（例如 raylet）的当前堆栈跟踪。
+这对于调试 100% CPU 利用率或无限循环非常
+有用（只需运行该命令几次即可查看进程卡在了哪里）。
 
 .. code-block:: shell
 
  sudo gdb -batch -ex "thread apply all bt" -p <pid>
 
-Note that you can find the pid of the raylet with ``pgrep raylet``.
+请注意，您可以使用 ``pgrep raylet`` 找到 raylet 的 pid 。
 
-Installation
+安装
 ------------
 
-These instructions are for Ubuntu only. Attempts to get ``pprof`` to correctly
-symbolize on Mac OS have failed.
+这些说明仅适用于 Ubuntu。 
+``pprof`` 在 Mac OS 上正确符号化的尝试失败。
 
 .. code-block:: bash
 
   sudo apt-get install google-perftools libgoogle-perftools-dev
 
-Launching the to-profile binary
+启动 to-profile 二进制文件
 -------------------------------
 
-If you want to launch Ray in profiling mode, define the following variables:
+如果您想以分析模式启动 Ray，请定义以下变量：
 
 .. code-block:: bash
 
@@ -40,27 +40,27 @@ If you want to launch Ray in profiling mode, define the following variables:
   export PERFTOOLS_LOGFILE=/tmp/pprof.out
 
 
-The file ``/tmp/pprof.out`` will be empty until you let the binary run the
-target workload for a while and then ``kill`` it via ``ray stop`` or by
-letting the driver exit.
+``/tmp/pprof.out`` 将保持空状态，
+直到您让二进制文件运行目标工作负载一段时间，
+然后通过 ``ray stop``  ``kill`` 掉它，或者让 driver 使其退出。
 
-Memory Profiling
+内存分析
 ----------------
-If you want to run memory profiling on Ray core components, you can use Jemalloc (https://github.com/jemalloc/jemalloc).
-Ray supports environment variables to override LD_PRELOAD on core components.
+如果要在 Ray 核心组件上运行内存分析，可以使用 Jemalloc （https://github.com/jemalloc/jemalloc）。
+Ray 支持环境变量来覆盖核心组件上的 LD_PRELOAD。
 
-You can find the component name from `ray_constants.py`. For example, if you'd like to profile gcs_server, 
-search `PROCESS_TYPE_GCS_SERVER` in `ray_constants.py`. You can see the value is `gcs_server`.
+您可以从 `ray_constants.py` 中找到组件名称。例如，如果您要分析 gcs_server，
+请在 `ray_constants.py` 搜索 `PROCESS_TYPE_GCS_SERVER`。你可以看到 `gcs_server` 的值。
 
-Users are supposed to provide 3 env vars for memory profiling.
+用户应该提供 3 个环境变量来进行内存分析。
 
-- RAY_JEMALLOC_LIB_PATH: The path to the jemalloc shared library `.so`.
-- RAY_JEMALLOC_CONF: The MALLOC_CONF of jemalloc (comma separated).
-- RAY_JEMALLOC_PROFILE: Comma separated Ray components to run Jemalloc `.so`. e.g., ("raylet,gcs_server"). Note that the components should match the process type in `ray_constants.py`. (It means "RAYLET,GCS_SERVER" won't work).
+- RAY_JEMALLOC_LIB_PATH: jemalloc共享库 `.so` 的路径。
+- RAY_JEMALLOC_CONF: jemalloc 的 MALLOC_CONF（以逗号分隔）。
+- RAY_JEMALLOC_PROFILE: 以逗号分隔的 Ray 组件，用于运行 Jemalloc `.so`。例如（“raylet,gcs_server”）。请注意，组件应与 `ray_constants.py` 中的进程类型匹配。（这意味着“RAYLET,GCS_SERVER”不起作用）。
 
 .. code-block:: bash
 
-  # Install jemalloc
+  # 安装 jemalloc
   wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2 
   tar -xf jemalloc-5.2.1.tar.bz2 
   cd jemalloc-5.2.1 
@@ -79,11 +79,11 @@ Users are supposed to provide 3 env vars for memory profiling.
   # You should be able to see the following logs.
   2021-10-20 19:45:08,175	INFO services.py:622 -- Jemalloc profiling will be used for gcs_server. env vars: {'LD_PRELOAD': '/Users/sangbincho/jemalloc-5.2.1/lib/libjemalloc.so', 'MALLOC_CONF': 'prof:true,lg_prof_interval:33,lg_prof_sample:17,prof_final:true,prof_leak:true'}
 
-Visualizing the CPU profile
+配置可视化 CPU
 ---------------------------
 
-The output of ``pprof`` can be visualized in many ways. Here we output it as a
-zoomable ``.svg`` image displaying the call graph annotated with hot paths.
+``pprof`` 的输出可以通过多种方式进行可视化。在这里，我们将其输出为
+可缩放的 ``.svg`` 图像，显​​示带有热路径注释的调用图。
 
 .. code-block:: bash
 
@@ -97,25 +97,24 @@ zoomable ``.svg`` image displaying the call graph annotated with hot paths.
   # into subtrees.
   google-pprof -focus=epoll_wait -svg $RAYLET /tmp/pprof.out > /tmp/pprof.svg
 
-Here's a snapshot of an example svg output, taken from the official
-documentation:
+以下是取自官方文档的示例 svg 输出的快照：
 
 .. image:: http://goog-perftools.sourceforge.net/doc/pprof-test-big.gif
 
-Running Microbenchmarks
+运行微基准测试
 -----------------------
 
-To run a set of single-node Ray microbenchmarks, use:
+要运行一组单节点 Ray 微基准测试，请使用：
 
 .. code-block:: bash
 
   ray microbenchmark
 
-You can find the microbenchmark results for Ray releases in the `GitHub release logs <https://github.com/ray-project/ray/tree/master/release/release_logs>`__.
+您可以在 `GitHub 发布日志中 <https://github.com/ray-project/ray/tree/master/release/release_logs>`__ 找到 Ray 版本的微基准测试结果。
 
-References
+参考
 ----------
 
-- The `pprof documentation <http://goog-perftools.sourceforge.net/doc/cpu_profiler.html>`_.
-- A `Go version of pprof <https://github.com/google/pprof>`_.
-- The `gperftools <https://github.com/gperftools/gperftools>`_, including libprofiler, tcmalloc, and other goodies.
+- `pprof 文档 <http://goog-perftools.sourceforge.net/doc/cpu_profiler.html>`_.
+- `pprof 的 Go 版本 <https://github.com/google/pprof>`_.
+- `gperftools <https://github.com/gperftools/gperftools>`_ ，包括 libprofiler、tcmalloc 和其他好东西。

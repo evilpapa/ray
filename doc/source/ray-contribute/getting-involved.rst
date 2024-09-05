@@ -286,48 +286,47 @@ Lint 和 格式化
 了解 CI 测试作业
 --------------------------
 
-The Ray project automatically runs continuous integration (CI) tests once a PR
-is opened using `Buildkite <https://buildkite.com/ray-project/>`_ with
-multiple CI test jobs.
+一旦使用具有多个 CI 测试作业的 `Buildkite <https://buildkite.com/ray-project/>`_ 打开 PR，
+Ray 项目就会自动运行持续集成 (CI) 测试。
 
-The `CI`_ test folder contains all integration test scripts and they
-invoke other test scripts via ``pytest``, ``bazel``-based test or other bash
-scripts. Some of the examples include:
+`CI`_ 测试文件夹包含所有集成测试脚本，
+它们通过基于 ``pytest``, ``bazel`` 基准测试和其他 bash 测试脚本。
+一些示例包括： 
 
-* Raylet integration tests commands:
+* Raylet 集成测试命令：
     * ``bazel test //:core_worker_test``
 
-* Bazel test command:
+* Bazel 测试命令：
     * ``bazel test --build_tests_only //:all``
 
-* Ray serving test commands:
+* Ray 服务测试命令：
     * ``pytest python/ray/serve/tests``
     * ``python python/ray/serve/examples/echo_full.py``
 
-If a CI build exception doesn't appear to be related to your change,
-please visit `this link <https://flakey-tests.ray.io/>`_ to
-check recent tests known to be flaky.
+如果 CI 构建异常似乎与您的更改无关，
+请访问 `此链接 <https://flakey-tests.ray.io/>`_ 
+检查已知不可靠的最新测试。
 
 .. _`CI`: https://github.com/ray-project/ray/tree/master/ci
 
 
-API compatibility style guide
+API 兼容性样式指南
 -----------------------------
 
-Ray provides stability guarantees for its public APIs in Ray core and libraries, which are described in the :ref:`API Stability guide <api-stability>`.
+Ray 为 Ray 核心和库中的公共 API 提供稳定性保证，这些保证在 :ref:`API 稳定性指南 <api-stability>` 有描述。
 
-It's hard to fully capture the semantics of API compatibility into a single annotation (for example, public APIs may have "experimental" arguments). For more granular stability contracts, those can be noted in the pydoc (e.g., "the ``random_shuffle`` option is experimental"). When possible, experimental arguments should also be prefixed by underscores in Python (e.g., `_owner=`).
+很难将 API 兼容性的语义完全捕获到单个注释中（例如，公共 API 可能具有 “实验性” 参数）。对于更细粒度的稳定性合同，可以在 pydoc 中注明（例如，“该 ``random_shuffle`` 选项是实验性的”）。 如果可能，实验性参数也应在 Python 中以下划线为前缀（例如， `_owner=`）。
 
-**Other recommendations**:
+**其他建议**:
 
-In Python APIs, consider forcing the use of kwargs instead of positional arguments (with the ``*`` operator). Kwargs are easier to keep backwards compatible than positional arguments, e.g. imagine if you needed to deprecate "opt1" below, it's easier with forced kwargs:
+在 Python API 中，考虑强制使用 kwargs 而不是位置参数（使用 ``*`` 运算符）。与位置参数相比，kwargs 更容易保持向后兼容，例如，想象一下，如果您需要在下面弃用“opt1”，那么强制使用 kwargs 会更容易：
 
 .. code-block:: python
 
     def foo_bar(file, *, opt1=x, opt2=y)
         pass
 
-For callback APIs, consider adding a ``**kwargs`` placeholder as a "forward compatibility placeholder" in case more args need to be passed to the callback in the future, e.g.:
+对于回调 API，考虑添加一个 ``**kwargs`` 占位符作为“前向兼容占位符”，以防将来需要将更多参数传递给回调，例如：
 
 .. code-block:: python
 
@@ -336,18 +335,17 @@ For callback APIs, consider adding a ``**kwargs`` placeholder as a "forward comp
 
 
 
-Becoming a Reviewer
+成为审阅者
 -------------------
 
-We identify reviewers from active contributors. Reviewers are individuals who
-not only actively contribute to the project and are also willing
-to participate in the code review of new contributions.
-A pull request to the project has to be reviewed by at least one reviewer in order to be merged.
-There is currently no formal process, but active contributors to Ray will be
-solicited by current reviewers.
+我们从活跃贡献者中识别审阅者。审阅者是不仅积极为项目做出贡献，
+而且愿意参与新贡献的代码审查的个人。
+项目的拉取请求必须由至少一名审阅者审阅才能合并。
+目前没有正式的流程，
+但 Ray 的活跃贡献者将由当前审阅者征集。
 
 
-More Resources for Getting Involved
+更多参与资源
 -----------------------------------
 
 .. include:: ../ray-contribute/involvement.rst
@@ -355,4 +353,4 @@ More Resources for Getting Involved
 
 .. note::
 
-    These tips are based off of the TVM `contributor guide <https://github.com/dmlc/tvm>`__.
+    这些提示基于 TVM `贡献指南 <https://github.com/dmlc/tvm>`__。
