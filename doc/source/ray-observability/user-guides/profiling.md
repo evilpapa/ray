@@ -50,13 +50,13 @@ memray 是 Python 的内存分析器。它可以跟踪 Python 代码、原生扩
 
 (profiling-gpu)=
 ## GPU 分析
-针对 GPU 工作负载（例如分布式训练）的 GPU 和 GRAM 分析。这可以帮助您分析性能和调试内存问题。
+针对 GPU 工作负载「例如分布式训练」的 GPU 和 GRAM 分析。这可以帮助您分析性能和调试内存问题。
 - 与 Ray Train 一起使用时，PyTorch 分析器受到开箱即用的支持
 - NVIDIA Nsight 系统尚未原生支持。在此功能请求中留下您的评论 [以获取 Nisght 系统支持](https://github.com/ray-project/ray/issues/19631)。
 
 (profiling-pytoch-profiler)=
 ### PyTorch 分析器
-PyTorch Profiler 是一个允许在训练和推理期间收集性能指标（尤其是 GPU 指标）的工具。
+PyTorch Profiler 是一个允许在训练和推理期间收集性能指标「尤其是 GPU 指标」的工具。
 
 以下是 {ref}`将 PyTorch Profiler 与 Ray Train 或 Ray Data 结合使用的步骤 <performance-debugging-gpu-profiling>`。
 

@@ -40,7 +40,7 @@
 * 符合 POSIX 标准的网络文件存储，例如网络文件系统 (NFS) 和弹性文件服务 (EFS)：当您希望以低延迟跨不同节点访问工件或依赖项时，此方法非常有用。例如，在不同 Ray 任务上训练的不同模型的实验日志。
 * 云存储，例如 AWS Simple Storage Service (S3) 或 GCP Google Storage (GS)：此方法对于需要高吞吐量访问的大型工件或数据集非常有用。
 
-Ray 的 AI 库（例如 Ray Data、Ray Train 和 Ray Tune）具有开箱即用的功能，可以从云存储和本地或网络存储中读取和写入。
+Ray 的 AI 库「例如 Ray Data、Ray Train 和 Ray Tune」具有开箱即用的功能，可以从云存储和本地或网络存储中读取和写入。
 ### Driver 脚本
 
 在集群的头节点上运行主脚本或驱动程序脚本。 Ray Core 和库程序通常假设驱动程序位于头节点上并利用本地存储。例如，Ray Tune 默认在头节点生成日志文件。
@@ -53,7 +53,7 @@ Ray 的 AI 库（例如 Ray Data、Ray Train 和 Ray Tune）具有开箱即用�
 
 ### 依赖项
 
-对于本地依赖项，例如，如果您正在使用单一存储库或外部依赖项（例如 pip 包），请使用以下选项之一：
+对于本地依赖项，例如，如果您正在使用单一存储库或外部依赖项「例如 pip 包」，请使用以下选项之一：
 
 * 将代码并将软件包安装到 NFS 上。好处是您可以快速与其余代码库和依赖项进行交互，而无需每次都跨集群传送。
 * 通过 [Ray Job Submission Client](ray.job_submission.JobSubmissionClient) 使用 [runtime env](runtime-environments)，它可以从 S3 拉取代码或将代码从本地工作目录发送到远程集群。

@@ -206,11 +206,11 @@ Ray 数据支持广泛的预处理操作，可用于在训练之前转换数据�
 输入及分割数据
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-你的预处理数据集可以通过 ``datasets`` 参数传递给 Ray Train Trainer（例如：:class:`~ray.train.torch.TorchTrainer`）。
+你的预处理数据集可以通过 ``datasets`` 参数传递给 Ray Train Trainer「例如：:class:`~ray.train.torch.TorchTrainer`」。
 
 传入 Trainer ``datasets`` 的数据集可以通过在每个分布式训练工作节点上运行的 ``train_loop_per_worker`` 中调用 :meth:`ray.train.get_dataset_shard` 来访问。
 
-所有数据集默认都会被分割（即分片）到训练工作节点上。 :meth:`~ray.train.get_dataset_shard` 将返回数据集的 ``1/n`` 部分，其中 ``n`` 是训练工作节点的数量。
+所有数据集默认都会被分割「即分片」到训练工作节点上。 :meth:`~ray.train.get_dataset_shard` 将返回数据集的 ``1/n`` 部分，其中 ``n`` 是训练工作节点的数量。
 
 .. note::
 
@@ -343,9 +343,9 @@ Ray 数据支持广泛的预处理操作，可用于在训练之前转换数据�
     my_trainer.fit()
 
 
-完全自定义（高级）
+完全自定义「高级」
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-对于默认配置类未覆盖的用例，您还可以完全自定义输入数据集的拆分方式。定义一个自定义 :class:`DataConfig <ray.train.DataConfig>` 类（DeveloperAPI）。:class:`DataConfig <ray.train.DataConfig>` 类负责在节点之间共享设置和拆分数据。
+对于默认配置类未覆盖的用例，您还可以完全自定义输入数据集的拆分方式。定义一个自定义 :class:`DataConfig <ray.train.DataConfig>` 类「DeveloperAPI」。:class:`DataConfig <ray.train.DataConfig>` 类负责在节点之间共享设置和拆分数据。
 
 .. testcode::
 
@@ -416,7 +416,7 @@ Ray 数据支持广泛的预处理操作，可用于在训练之前转换数据�
 
 Ray Data 有两种随机改组方法：
 
-1. 在每个训练 worker 上对数据块进行随机化。这需要更少的通信，但牺牲了一些随机性（即，出现在同一数据块中的行更有可能在迭代顺序中靠近彼此）。
+1. 在每个训练 worker 上对数据块进行随机化。这需要更少的通信，但牺牲了一些随机性「即，出现在同一数据块中的行更有可能在迭代顺序中靠近彼此」。
 2. 全局洗牌，这更昂贵。这将完全使行迭代顺序与原始数据集顺序解耦，但代价是更多的计算、I/O 和通信。
 
 对于大多数情况来说，选项 1 就足够了。
@@ -609,7 +609,7 @@ Ray Data 有两种随机改组方法：
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 如果你在 GPU 上训练并且有一个昂贵的 CPU 预处理操作，这种方法可能会成为训练吞吐量的瓶颈。
 
-如果你的预处理数据集小到可以放入 Ray 对象存储内存中（默认情况下这是总集群 RAM 的 30%），通过在预处理数据集上调用 :meth:`materialize() <ray.data.Dataset.materialize>` 来在 Ray 的内置对象存储中 *materialize* 预处理数据集。此方法告诉 Ray Data 计算整个预处理数据并将其固定在 Ray 对象存储内存中。结果是，当重复迭代数据集时，不需要重新运行预处理操作。但是，如果预处理数据太大而无法放入 Ray 对象存储内存中，这种方法会大大降低性能，因为数据需要溢出到磁盘并从磁盘读回。
+如果你的预处理数据集小到可以放入 Ray 对象存储内存中「默认情况下这是总集群 RAM 的 30%」，通过在预处理数据集上调用 :meth:`materialize() <ray.data.Dataset.materialize>` 来在 Ray 的内置对象存储中 *materialize* 预处理数据集。此方法告诉 Ray Data 计算整个预处理数据并将其固定在 Ray 对象存储内存中。结果是，当重复迭代数据集时，不需要重新运行预处理操作。但是，如果预处理数据太大而无法放入 Ray 对象存储内存中，这种方法会大大降低性能，因为数据需要溢出到磁盘并从磁盘读回。
 
 你希望在每个 epoch 运行的转换，例如随机化，应该在 materialize 调用之后。
 

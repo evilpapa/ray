@@ -20,10 +20,10 @@
 什么是内存不足错误？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-内存是一种有限的资源。当进程请求内存而操作系统无法分配内存时，操作系统会执行一个例程，通过杀死内存使用率较高的进程（通过 SIGKILL）来释放内存，
+内存是一种有限的资源。当进程请求内存而操作系统无法分配内存时，操作系统会执行一个例程，通过杀死内存使用率较高的进程「通过 SIGKILL」来释放内存，
 以避免操作系统变得不稳定。该例程称为 `Linux OOM killer <https://www.kernel.org/doc/gorman/html/understand/understand016.html>`_ 。
 
-Linux 内存不足杀手的常见问题之一是 SIGKILL 在 Ray 没有注意到的情况下杀死进程。由于 SIGKILL 无法由进程处理，Ray 很难发出正确的错误消息并采取正确的容错措施。为了解决这个问题，Ray（从 Ray 2.2 开始）有一个应用程序级 :ref:`内存监控器 <ray-oom-monitor>`，
+Linux 内存不足杀手的常见问题之一是 SIGKILL 在 Ray 没有注意到的情况下杀死进程。由于 SIGKILL 无法由进程处理，Ray 很难发出正确的错误消息并采取正确的容错措施。为了解决这个问题，Ray「从 Ray 2.2 开始」有一个应用程序级 :ref:`内存监控器 <ray-oom-monitor>`，
 它持续监视主机的内存使用情况，并在 Linux 内存不足杀手执行之前杀死 Ray Workers。
 
 .. _troubleshooting-out-of-memory-how-to-detect:
@@ -31,7 +31,7 @@ Linux 内存不足杀手的常见问题之一是 SIGKILL 在 Ray 没有注意到
 检测内存不足错误
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果 Linux 内存不足终止程序终止任务或 Actor，Ray Worker 进程将无法捕获并显示确切的根本原因，因为进程无法处理 SIGKILL。如果您从已死亡的工作线程执行的任务和 actor 调用 ``ray.get``，它会引发异常并显示以下错误消息之一（这表明工作线程被意外终止）。
+如果 Linux 内存不足终止程序终止任务或 Actor，Ray Worker 进程将无法捕获并显示确切的根本原因，因为进程无法处理 SIGKILL。如果您从已死亡的工作线程执行的任务和 actor 调用 ``ray.get``，它会引发异常并显示以下错误消息之一「这表明工作线程被意外终止」。
 
 .. code-block:: bash
 
@@ -46,7 +46,7 @@ Linux 内存不足杀手的常见问题之一是 SIGKILL 在 Ray 没有注意到
 .. image:: ../../images/dmsg.png
     :align: center
 
-如果 Ray 的内存监视器杀死了该工作线程，则会自动重试（有关详细信息，请参阅 :ref:`链接 <ray-oom-retry-policy>` ）。
+如果 Ray 的内存监视器杀死了该工作线程，则会自动重试「有关详细信息，请参阅 :ref:`链接 <ray-oom-retry-policy>` 」。
 如果任务或参与者无法重试，当您调用 ``ray.get`` 时，它们会引发异常并带有更清晰的错误消息
 
 .. code-block:: bash

@@ -299,7 +299,7 @@ Ray Data 与 :ref:`Ray Train <train-docs>` 集成，可轻松摄取数据以进�
 
 .. caution::
 
-    Torch 张量在 GPU 设备上无法序列化并写入磁盘。在保存数据之前将张量转换为 CPU（ ``tensor.to("cpu")``）。
+    Torch 张量在 GPU 设备上无法序列化并写入磁盘。在保存数据之前将张量转换为 CPU「 ``tensor.to("cpu")``」。
 
 .. tab-set::
 

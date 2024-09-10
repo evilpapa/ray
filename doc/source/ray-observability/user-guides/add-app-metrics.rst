@@ -11,7 +11,7 @@ Ray 在 :ref:`ray.util.metrics <custom-metric-api-ref>` 中提供了一个方便
 .. literalinclude:: ../doc_code/metrics_example.py
    :language: python
 
-脚本运行时，指标将导出到 ``localhost:8080`` （这是 Prometheus 配置为抓取的端点）。
+脚本运行时，指标将导出到 ``localhost:8080`` 「这是 Prometheus 配置为抓取的端点」。
 在浏览器中打开它。您应该看到以下输出：
 
 .. code-block:: none

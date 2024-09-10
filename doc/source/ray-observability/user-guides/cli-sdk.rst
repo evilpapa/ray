@@ -49,7 +49,7 @@ Ray 状态 CLI 和 SDK
 
 .. tip:: 提供有关使用 Ray state API 的反馈 - `反馈表 <https://forms.gle/gh77mwjEskjhN8G46>`_!
 
-使用 Ray State API 通过 CLI 或 Python SDK（开发人员 API）访问 Ray 的当前状态（快照）。
+使用 Ray State API 通过 CLI 或 Python SDK「开发人员 API」访问 Ray 的当前状态「快照」。
 
 .. note::
 
@@ -104,7 +104,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
@@ -126,7 +126,7 @@ Ray 状态 CLI 和 SDK
             0   task_running_300_seconds  RUNNING: 2      NORMAL_TASK
             1   Actor.__init__            FINISHED: 2     ACTOR_CREATION_TASK
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -141,7 +141,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
@@ -160,7 +160,7 @@ Ray 状态 CLI 和 SDK
             0  31405554844820381c2f0f8501000000  Actor                 96956  ALIVE
             1  f36758a9f8871a9ca993b1d201000000  Actor                 96955  ALIVE
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -176,7 +176,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
@@ -196,7 +196,7 @@ Ray 状态 CLI 和 SDK
             serialized_runtime_env: '{}'
             state: ALIVE
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -209,7 +209,7 @@ Ray 状态 CLI 和 SDK
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
@@ -224,7 +224,7 @@ Ray 状态 CLI 和 SDK
             :actor_name:Actor
             Actor created
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -239,7 +239,7 @@ Ray 状态 CLI 和 SDK
 ~~~~~~~~~~~~~
 Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **资源** 的 **状态**。 它还支持 **logs** API 来访问日志。
 
-- **states**: 对应资源的集群状态。状态由不可变元数据（例如，Actor 的名称）和可变状态（例如，Actor 的调度状态或 pid）组成。
+- **states**: 对应资源的集群状态。状态由不可变元数据「例如，Actor 的名称」和可变状态「例如，Actor 的调度状态或 pid」组成。
 - **resources**: Ray 创建的资源。例如，actor、任务、对象、占位组等。
 - **summary**: 返回资源汇总视图的 API。
 - **list**: 返回每个资源实体的 API。
@@ -253,22 +253,22 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 按类型获取实体状态的摘要
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-返回给定 Ray 实体（对象、Actor、任务）的汇总信息。
+返回给定 Ray 实体「对象、Actor、任务」的汇总信息。
 建议首先通过摘要 API 开始监控状态。
-当您发现异常情况时（例如，长时间运行的Actor、长时间未调度的任务），
+当您发现异常情况时「例如，长时间运行的Actor、长时间未调度的任务」，
 您可以使用 ``list`` 或 ``get`` API 来获取单个异常实体的更多详细信息。
 
 **汇总所有 actor**
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray summary actors
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -283,13 +283,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray summary tasks
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -309,13 +309,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray summary objects
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -334,26 +334,26 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 获取资源列表。可能的资源包括：
 
-- :ref:`Actors <actor-guide>` 例如 Actor ID、状态、PID、death_cause ( :class:`output schema <ray.util.state.common.ActorState>`）
+- :ref:`Actors <actor-guide>` 例如 Actor ID、状态、PID、death_cause ( :class:`output schema <ray.util.state.common.ActorState>`」
 - :ref:`Tasks <ray-remote-functions>` 例如名称、调度状态、类型、运行时环境信息 (:class:`output schema <ray.util.state.common.TaskState>`)
 - :ref:`Objects <objects-in-ray>`, 例如对象 ID、调用点、引用类型 ( (:class:`output schema <ray.util.state.common.ObjectState>`)
 - :ref:`Jobs <jobs-overview>`,例如开始/结束时间、入口点、状态 (:class:`output schema <ray.util.state.common.JobState>`)
 - :ref:`Placement Groups <ray-placement-group-doc-ref>`, 例如名称、捆绑包、统计信息 (:class:`output schema <ray.util.state.common.PlacementGroupState>`)
-- 节点（Ray 工作节点），例如节点 ID、节点 IP、节点状态 (:class:`output schema <ray.util.state.common.NodeState>`)
-- Workers（Ray 工作进程），例如工作 ID、类型、退出类型和详细信息 (:class:`output schema <ray.util.state.common.WorkerState>`)
+- 节点「Ray 工作节点」，例如节点 ID、节点 IP、节点状态 (:class:`output schema <ray.util.state.common.NodeState>`)
+- Workers「Ray 工作进程」，例如工作 ID、类型、退出类型和详细信息 (:class:`output schema <ray.util.state.common.WorkerState>`)
 - :ref:`运行时环境 <runtime-environments>`, 例如运行时环境、创建时间、节点 (:class:`output schema <ray.util.state.common.RuntimeEnvState>`)
 
 **列出所有节点**
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list nodes
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -364,13 +364,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list placement-groups
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -384,13 +384,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list objects -f pid=<PID> -f reference_type=LOCAL_REFERENCE
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -401,13 +401,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list actors -f state=ALIVE
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -418,13 +418,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list tasks -f state=RUNNING
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -435,13 +435,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list tasks -f state!=RUNNING
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -452,13 +452,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list tasks -f state=RUNNING -f name="task_running_300_seconds()"
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -471,13 +471,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray list tasks --detail
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
 
@@ -487,20 +487,20 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 有关命令的更多详细信息，请参阅 :ref:`state CLI 参考 <state-api-cli-ref>` 的 ``ray list`` 命令。
 
 
-获取特定实体（任务、actor 等）的状态
+获取特定实体「任务、actor 等」的状态
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **获取任务的状态**
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray get tasks <TASK_ID>
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -512,13 +512,13 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray get nodes <NODE_ID>
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -529,7 +529,7 @@ Ray State API 允许您通过 **summary**、 **list** 和 **get** API访问 **�
 有关命令的更多详细信息，请参阅 :ref:`状态 CLI 参考 <state-api-cli-ref>` 的 ``ray get`` 命令。
 
 
-获取特定实体（任务、actor 等）的日志
+获取特定实体「任务、actor 等」的日志
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. _state-api-log-doc:
@@ -540,13 +540,13 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray logs cluster
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -562,7 +562,7 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
@@ -571,7 +571,7 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
             # `ray logs cluster` is alias to `ray logs` when querying with globs.
             ray logs gcs_server.out --node-id <NODE_ID>
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -586,7 +586,7 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
@@ -596,7 +596,7 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
             ray logs cluster raylet.out --node-ip <NODE_IP> --follow
 
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -612,13 +612,13 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray logs actor --id=<ACTOR_ID> --follow
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -634,13 +634,13 @@ State API 还允许您访问 Ray 日志。请注意，您无法从死节点访�
 
 .. tabs::
 
-    .. group-tab:: CLI （推荐）
+    .. group-tab:: CLI 「推荐」
 
         .. code-block:: bash
 
             ray logs worker --pid=<PID> --follow
 
-    .. group-tab:: Python SDK （内部开发 API）
+    .. group-tab:: Python SDK 「内部开发 API」
 
         .. testcode::
             :skipif: True
@@ -666,14 +666,14 @@ CLI 返回部分结果并提供警告消息。在以下情况下，API 可能会
 
 **查询失败**
 
-状态 API 查询“数据源”（例如，GCS、raylet 等）以获取并构建集群的快照。
-然而，数据源有时不可用（例如，源已关闭或过载）。
-在这种情况下，API 返回集群的部分（不完整）快照，并通过警告消息通知用户输出不完整。
+状态 API 查询“数据源”「例如，GCS、raylet 等」以获取并构建集群的快照。
+然而，数据源有时不可用「例如，源已关闭或过载」。
+在这种情况下，API 返回集群的部分「不完整」快照，并通过警告消息通知用户输出不完整。
 所有警告都通过 Python 的 ``warnings`` 库打印，可以抑制它们。
 
 **数据截断**
 
-当返回的实体数（行数）太大（> 100K）时，状态 API 会截断输出数据以确保系统稳定性（发生这种情况时，无法选择截断的数据）。
+当返回的实体数「行数」太大「> 100K」时，状态 API 会截断输出数据以确保系统稳定性「发生这种情况时，无法选择截断的数据」。
 当发生截断时， Python 的 ``warnings`` 模块会通知它。
 
 **垃圾收集资源**

@@ -8,7 +8,7 @@ Ray Tune: 超参数调优
     :align: center
 
 Tune 是一个 Python 库，用于执行任何规模的实验和超参数调整。
-您可以通过运行最先进的算法（:ref:`以人群为基础的训练 （PBT） <tune-scheduler-pbt>` 和 :ref:`HyperBand/ASHA <tune-scheduler-hyperband>`）来调整您最喜欢的机器学习框架（例如 :ref:`PyTorch <tune-pytorch-cifar-ref>`、 :ref:`XGBoost <tune-xgboost-ref>`、 :doc:`Scikit-Learn <examples/tune-sklearn>`、 :doc:`TensorFlow and Keras <examples/tune_mnist_keras>` 以及 :doc:`more <examples/index>`) 。
+您可以通过运行最先进的算法「:ref:`以人群为基础的训练 「PBT」 <tune-scheduler-pbt>` 和 :ref:`HyperBand/ASHA <tune-scheduler-hyperband>`」来调整您最喜欢的机器学习框架「例如 :ref:`PyTorch <tune-pytorch-cifar-ref>`、 :ref:`XGBoost <tune-xgboost-ref>`、 :doc:`Scikit-Learn <examples/tune-sklearn>`、 :doc:`TensorFlow and Keras <examples/tune_mnist_keras>` 以及 :doc:`more <examples/index>`) 。
 Tune 还与各种其他超参数优化工具集成，包括 :doc:`Ax <examples/ax_example>`、 :doc:`BayesOpt <examples/bayesopt_example>`、 :doc:`BOHB <examples/bohb_example>`、 :doc:`Dragonfly <examples/dragonfly_example>`、 :doc:`FLAML <examples/flaml_example>`、 :doc:`Hyperopt <examples/hyperopt_example>`、 :doc:`Nevergrad <examples/nevergrad_example>`、 :doc:`Optuna <examples/optuna_example>` 以及 :doc:`SigOpt <examples/sigopt_example>`。
 
 **单击以下选项卡可查看各种机器学习框架的代码示例：**:
@@ -65,7 +65,7 @@ Tune 还与各种其他超参数优化工具集成，包括 :doc:`Ax <examples/a
 
         要使用 Optuna 调整 PyTorch 模型，您需要将模型包装在一个目标函数中，
         您可以访问该函数的 ``config`` 来选择超参数。
-        在下面的示例中，我们仅调整模型优化器的  ``momentum`` 和 学习率（ ``lr`` ）参数，
+        在下面的示例中，我们仅调整模型优化器的  ``momentum`` 和 学习率「 ``lr`` 」参数，
         但您可以调整所需的任何其他模型参数。
         定义搜索空间后，您只需初始化对象 ``OptunaSearch`` 并将其传递给 ``run``。
         告诉 Ray Tune 您要优化哪个指标以及是否要最大化或最小化它很重要。
@@ -214,7 +214,7 @@ Tune 还与各种其他超参数优化工具集成，包括 :doc:`Ax <examples/a
     使用 Tune，您只需 :ref:`添加一些代码片段 <tune-tutorial>` 即可优化模型。
 
     此外，Tune 从您的代码训练工作流程中删除了样板，
-    支持 :ref:`实验结果的多种存储选项（NFS、云存储） <tune-storage-options>` 以及
+    支持 :ref:`实验结果的多种存储选项「NFS、云存储」 <tune-storage-options>` 以及
     :ref:`将结果记录到 <tune-logging>` MLflow 和 TensorBoard 等工具中，同时还具有高度可定制性。
 
 .. dropdown:: 开箱即用的多 GPU 和分布式训练
@@ -234,21 +234,21 @@ Tune 还与各种其他超参数优化工具集成，包括 :doc:`Ax <examples/a
 
     在这种情况下，Tune 实际上允许您增强现有工作流程。
     Tune 的 :ref:`搜索算法 <tune-search-alg>` 各种流行的超参数调整库集成
-    （参见 :ref:`示例 <tune-examples-ref>`），并允许您无缝扩展优化过程 - 而不会牺牲性能。
+    「参见 :ref:`示例 <tune-examples-ref>`」，并允许您无缝扩展优化过程 - 而不会牺牲性能。
 
 使用 Tune 的项目
 -------------------
 
 以下是一些利用 Tune 的热门开源存储库和研究项目。
-欢迎提交拉取请求以添加（或请求删除）列出的项目。
+欢迎提交拉取请求以添加「或请求删除」列出的项目。
 
 - `Softlearning <https://github.com/rail-berkeley/softlearning>`_: Softlearning 是一个强化学习框架，用于在连续域中训练最大熵策略。包括 Soft Actor-Critic 算法的官方实现。
 - `Flambe <https://github.com/asappresearch/flambe>`_: 一个用于加速研究及其生产进程的 ML 框架。请参阅 `flambe.ai <https://flambe.ai>`_。
 - `基于种群的增强 <https://github.com/arcelien/pba>`_: 基于种群的增强 (PBA) 是一种快速高效地学习用于神经网络训练的数据增强函数的算法。PBA 可在计算量少一千倍的情况下，达到 CIFAR 上最先进的结果。
-- `Kakao 的 Fast AutoAugment <https://github.com/kakaobrain/fast-autoaugment>`_: Fast AutoAugment（已在 NeurIPS 2019 上接受）使用基于密度匹配的更有效的搜索策略来学习增强策略。
+- `Kakao 的 Fast AutoAugment <https://github.com/kakaobrain/fast-autoaugment>`_: Fast AutoAugment「已在 NeurIPS 2019 上接受」使用基于密度匹配的更有效的搜索策略来学习增强策略。
 - `Allentune <https://github.com/allenai/allentune>`_: 来自 AllenAI 的 AllenNLP 超参数搜索。
 - `machinable <https://github.com/frthjf/machinable>`_: 用于机器学习研究的模块化配置系统。请参阅 `machinable.org <https://machinable.org>`_。
-- `NeuroCard <https://github.com/neurocard/neurocard>`_: NeuroCard（已在 VLDB 2021 上被接受）是一种用于多表连接查询的神经基数估计器。它使用最先进的深度密度模型来学习关系数据库表之间的相关性。
+- `NeuroCard <https://github.com/neurocard/neurocard>`_: NeuroCard「已在 VLDB 2021 上被接受」是一种用于多表连接查询的神经基数估计器。它使用最先进的深度密度模型来学习关系数据库表之间的相关性。
 
 
 
@@ -262,7 +262,7 @@ Tune 还与各种其他超参数优化工具集成，包括 :doc:`Ax <examples/a
 - [博客] `使用 Ray Tune 在 TensorFlow 中进行简单的超参数和架构搜索 <http://louiskirsch.com/ai/ray-tune>`_
 - [幻灯片] `在 RISECamp 2019 上的演讲 <https://docs.google.com/presentation/d/1v3IldXWrFNMK-vuONlSdEuM82fuGTrNUDuwtfx4axsQ/edit?usp=sharing>`_
 - [视频] `在 RISECamp 2018 上的演讲 <https://www.youtube.com/watch?v=38Yd_dXW51Q>`_
-- [视频] `现代超参数优化指南 （PyData LA 2019） <https://www.youtube.com/watch?v=10uz5U3Gy6E>`_ (`幻灯片 <https://speakerdeck.com/richardliaw/a-modern-guide-to-hyperparameter-optimization>`_)
+- [视频] `现代超参数优化指南 「PyData LA 2019」 <https://www.youtube.com/watch?v=10uz5U3Gy6E>`_ (`幻灯片 <https://speakerdeck.com/richardliaw/a-modern-guide-to-hyperparameter-optimization>`_)
 
 引用 Tune
 -----------

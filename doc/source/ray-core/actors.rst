@@ -4,8 +4,8 @@
 Actors
 ======
 
-Actor 扩展了 Ray API 从函数（tasks）到类。
-一个 actor 是一个有状态的 worker（或者服务）。
+Actor 扩展了 Ray API 从函数「tasks」到类。
+一个 actor 是一个有状态的 worker「或者服务」。
 当一个新的 actor 被实例化时，一个新的 worker 被创建，actor 的方法被调度到这个特定的 worker 上，并且可以访问和修改这个 worker 的状态。
 
 .. tab-set::
@@ -115,7 +115,7 @@ Actor 扩展了 Ray API 从函数（tasks）到类。
 
 .. _actor-resource-guide:
 
-你可以在 actor 上指定所需的资源（查看 :ref:`resource-requirements` 获取更多信息）。
+你可以在 actor 上指定所需的资源「查看 :ref:`resource-requirements` 获取更多信息」。
 
 .. tab-set::
 
@@ -270,7 +270,7 @@ Actor 扩展了 Ray API 从函数（tasks）到类。
 传递 Actor 句柄
 ----------------------------
 
-Actor 句柄可以传递给其他任务。我们可以定义使用 actor 句柄的远程函数（或 actor 方法）。
+Actor 句柄可以传递给其他任务。我们可以定义使用 actor 句柄的远程函数「或 actor 方法」。
 
 .. tab-set::
 
@@ -400,7 +400,7 @@ Actor 句柄可以传递给其他任务。我们可以定义使用 actor 句柄�
 当在这个阶段成功取消时，调用 ``ray.get(actor_task_ref)`` 会
 产生一个 :class:`TaskCancelledError <ray.exceptions.TaskCancelledError>`。
 
-**运行中的 Actor 任务（普通 Actor，线程 Actor）**:
+**运行中的 Actor 任务「普通 Actor，线程 Actor」**:
 针对单进程和多线程类别的 Actor，Ray 提供了中断机制。
 
 **运行中的异步 Actor 任务**:
@@ -444,10 +444,10 @@ worker 和 actor 之间有何不同？
 
 Worker 却别于任务和 actor。任何 "Ray worker" 都是 1. 要么用于执行多个 Ray 任务，2. 作为一个专用的 Ray actor 启动。
 
-* **Tasks**: 当 Ray 在一台机器上启动时，会自动启动一些 Ray workers（默认情况下每个 CPU 一个）。它们将被用于执行任务（类似于进程池）。如果你使用 `num_cpus=2` 执行 8 个任务，而总的 CPU 数量是 16 (`ray.cluster_resources()["CPU"] == 16`)，16 个 worker 将会有 8 个闲置。
+* **Tasks**: 当 Ray 在一台机器上启动时，会自动启动一些 Ray workers「默认情况下每个 CPU 一个」。它们将被用于执行任务「类似于进程池」。如果你使用 `num_cpus=2` 执行 8 个任务，而总的 CPU 数量是 16 (`ray.cluster_resources()["CPU"] == 16`)，16 个 worker 将会有 8 个闲置。
 
 * **Actor**: 
-一个 Ray Actor 也是一个 "Ray worker"，但是在运行时实例化（在 `actor_cls.remote()` 时）。所有的方法都将在同一个进程中运行，使用相同的资源（在定义 Actor 时指定）。请注意，与任务不同，运行 Ray Actor 的 Python 进程不会被重用，并且在 Actor 被删除时将被终止。
+一个 Ray Actor 也是一个 "Ray worker"，但是在运行时实例化「在 `actor_cls.remote()` 时」。所有的方法都将在同一个进程中运行，使用相同的资源「在定义 Actor 时指定」。请注意，与任务不同，运行 Ray Actor 的 Python 进程不会被重用，并且在 Actor 被删除时将被终止。
 
 要最大化利用资源，你需要最大化 worker 的工作时间。
 你还需要分配足够的集群资源，以便你所有需要的 actor 都能运行，

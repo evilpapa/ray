@@ -73,11 +73,11 @@ ray job logs 'raysubmit_xxxxxxxxxxxxxxxx' --address http://127.0.0.1:8265 --foll
 如果您是 Kubernetes 新手，并且计划在托管的 Kubernetes 服务上部署 Ray 工作负载，
 我们建议您先查看本 {ref}`入门指南 <kuberay-k8s-setup>` 。
 
-没有必要使用具有那么多 RAM 的集群来运行此示例（以下命令中每个节点的 RAM 大于 30GB）。 请随意
+没有必要使用具有那么多 RAM 的集群来运行此示例「以下命令中每个节点的 RAM 大于 30GB」。 请随意
 更新选项 `machine-type` 和资源需求 `ray-cluster.gpu.yaml` 。
 
-在第一个命令中，我们创建了了一个 `gpu-cluster-1` Kubernetes 集群，它有一个 CPU 节点 （`e2-standard-8`: 8 vCPU; 32 GB 内存）。在第二个命令，
-我们添加了一个新节点 （`n1-standard-8`: 8 vCPU; 30 GB 内存）带有一个 GPU (`nvidia-tesla-t4`) 到集群。
+在第一个命令中，我们创建了了一个 `gpu-cluster-1` Kubernetes 集群，它有一个 CPU 节点 「`e2-standard-8`: 8 vCPU; 32 GB 内存」。在第二个命令，
+我们添加了一个新节点 「`n1-standard-8`: 8 vCPU; 30 GB 内存」带有一个 GPU (`nvidia-tesla-t4`) 到集群。
 
 ```shell
 # Step 1: Set up a Kubernetes cluster on GCP.
@@ -105,7 +105,7 @@ kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container
 * `gcloud container clusters get-credentials <your-cluster-name> --region <your-region> --project <your-project>` ([链接](https://cloud.google.com/sdk/gcloud/reference/container/clusters/get-credentials))
 * `kubectl config use-context` ([链接](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/))
 
-第一个命令将把 KubeRay（ray-operator）部署到你的 Kubernetes 集群。第二个命令将在 KubeRay 的帮助下创建一个 ray 集群。
+第一个命令将把 KubeRay「ray-operator」部署到你的 Kubernetes 集群。第二个命令将在 KubeRay 的帮助下创建一个 ray 集群。
 
 第三个命令用于将 `ray-head` pod  的 8265 端口映射到 **127.0.0.1:8265**。您可以检查
 **127.0.0.1:8265** 以查看仪表板。最后一个命令用于通过提交一个简单的作业来测试您的 Ray 集群。

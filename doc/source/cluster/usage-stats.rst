@@ -3,7 +3,7 @@
 使用统计收集
 ======================
 
-从 Ray 1.13 开始，Ray 默认收集使用统计数据（由选择退出提示保护）。
+从 Ray 1.13 开始，Ray 默认收集使用统计数据「由选择退出提示保护」。
 开源 Ray 工程团队将使用这些数据来更好地了解如何改进我们的库和核心 API，以及如何确定错误修复和增强功能的优先级。
 
 以下是我们收集政策的指导原则：
@@ -22,7 +22,7 @@
 收集哪些数据？
 -----------------------
 
-我们收集非敏感数据，以帮助我们了解 Ray 的使用方式（例如，使用了哪些 Ray 库）。
+我们收集非敏感数据，以帮助我们了解 Ray 的使用方式「例如，使用了哪些 Ray 库」。
 **个人身份数据绝不会收集。** 请查看 UsageStatsToReport 类以查看我们收集的数据。
 
 .. _usage-disable:
@@ -31,11 +31,11 @@
 -----------------
 在启动集群之前，有多种方法可以禁用使用情况统计信息收集：
 
-#. Ad向启动 Ray 集群的命令添加 ``--disable-usage-stats`` 选项（例如 ``ray start --head --disable-usage-stats`` :ref:`命令 <ray-start-doc>`）。
+#. Ad向启动 Ray 集群的命令添加 ``--disable-usage-stats`` 选项「例如 ``ray start --head --disable-usage-stats`` :ref:`命令 <ray-start-doc>`」。
 
 #. 运行 :ref:`ray disable-usage-stats <ray-disable-usage-stats-doc>` 以禁用所有未来集群的收集。这不会影响当前正在运行的集群。在后台，此命令会将 ``{"usage_stats": true}`` 写入全局配置文件 ``~/.ray/config.json`` 。
 
-#. 设置环境变量 ``RAY_USAGE_STATS_ENABLED`` 为 0 （例如， ``RAY_USAGE_STATS_ENABLED=0 ray start --head`` :ref:`命令 <ray-start-doc>`）。
+#. 设置环境变量 ``RAY_USAGE_STATS_ENABLED`` 为 0 「例如， ``RAY_USAGE_STATS_ENABLED=0 ray start --head`` :ref:`命令 <ray-start-doc>`」。
 
 #. 如果你在使用 `KubeRay <https://github.com/ray-project/kuberay/>`_，你可以添加 ``disable-usage-stats: 'true'`` 到 ``.spec.[headGroupSpec|workerGroupSpecs].rayStartParams.``。
 

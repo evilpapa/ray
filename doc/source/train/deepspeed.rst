@@ -72,8 +72,8 @@ DeepSpeed 入门
 
 .. tip::
 
-    要使用纯 PyTorch 运行 DeepSpeed，您 **无需** 在训练函数中提供任何其他 Ray Train 实用程序（例
-    如 :meth:`~ray.train.torch.prepare_model` 或 :meth:`~ray.train.torch.prepare_data_loader` ）。
+    要使用纯 PyTorch 运行 DeepSpeed，您 **无需** 在训练函数中提供任何其他 Ray Train 实用程序「例
+    如 :meth:`~ray.train.torch.prepare_model` 或 :meth:`~ray.train.torch.prepare_data_loader` 」。
     相反，继续像往常一样使用 `deepspeed.initialize() <https://deepspeed.readthedocs.io/en/latest/initialize.html>`_ 为分布式训练做好一切准备。
 
 使用其他框架运行 DeepSpeed

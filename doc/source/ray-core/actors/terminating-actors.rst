@@ -122,7 +122,7 @@
 
         此方法通常不需要，因为 actor 会自动进行垃圾回收。
         ``ObjectRef`` 的结果可以等待 actor 退出时
-        获得（在其上调用 ``ray.get()`` 会引发 ``RayActorError``）。
+        获得「在其上调用 ``ray.get()`` 会引发 ``RayActorError``」。
 
     .. tab-item:: Java
 
@@ -132,7 +132,7 @@
 
         垃圾回收的实现尚未完成，因此这是目前唯一优雅终止 actor 的方法。
         任务的结果是一个 ``ObjectRef``，
-        可以等待 actor 退出（在其上调用 ``ObjectRef::get`` 会引发 ``RayActorException``）。
+        可以等待 actor 退出「在其上调用 ``ObjectRef::get`` 会引发 ``RayActorException``」。
 
     .. tab-item:: C++
 
@@ -142,7 +142,7 @@
 
         垃圾回收的实现尚未完成，因此这是目前唯一优雅终止 actor 的方法。
         任务的结果是一个 ``ObjectRef``，
-        可以等待 actor 退出（在其上调用 ``ObjectRef::get`` 会引发 ``RayActorException``）。
+        可以等待 actor 退出「在其上调用 ``ObjectRef::get`` 会引发 ``RayActorException``」。
 
 注意，这种终止方法会等待任何先前提交的任务执行完毕，然后使用 sys.exit 优雅地退出进程。
 

@@ -7,184 +7,179 @@ classes:
   class-img-top: pt-2 w-75 d-block mx-auto fixed-height-img
 
 projects:
-  - name: Classy Vision Integration
+  - name: Classy Vision 集成
     section_title: Classy Vision
-    description: Classy Vision is a new end-to-end, PyTorch-based framework for
-      large-scale training of state-of-the-art image and video classification models.
-      The library features a modular, flexible design that allows anyone to train
-      machine learning models on top of PyTorch using very simple abstractions.
+    description: Classy Vision 是一个基于 PyTorch 的
+      全新端到端框架，用于大规模训练最先进的图像和视频分类模型。
+      该库采用模块化、灵活的设计，任何人都可以使用
+      非常简单的抽象在 PyTorch 上训练机器学习模型。
     website: https://github.com/facebookresearch/ClassyVision/blob/main/tutorials/ray_aws.ipynb
     repo: https://github.com/facebookresearch/ClassyVision
     image: ../images/classyvision.png
-  - name: Dask Integration
+  - name: Dask 集成
     section_title: Dask
-    description: Dask provides advanced parallelism for analytics, enabling performance
-      at scale for the tools you love. Dask uses existing Python APIs and data
-      structures to make it easy to switch between Numpy, Pandas,
-      Scikit-learn to their Dask-powered equivalents.
+    description: Dask 为分析提供了高级并行性，使您
+      喜爱的工具能够大规模地发挥性能。Dask 使用现有的 Python API 和数据
+      结构，可以轻松地在 Numpy、Pandas、
+      Scikit-learn 和 Dask 支持的同类产品之间切换。
     website: dask-on-ray
     repo: https://github.com/dask/dask
     image: ../images/dask.png
-  - name: Flambé Integration
+  - name: Flambé 集成
     section_title: Flambé
-    description: Flambé is a machine learning experimentation framework built to
-      accelerate the entire research life cycle. Flambé’s main objective is to
-      provide a unified interface for prototyping models, running experiments
-      containing complex pipelines, monitoring those experiments in real-time,
-      reporting results, and deploying a final model for inference.
+    description: Flambé 是一个机器学习实验框架，
+      旨在加速整个研究生命周期。 Flambé 的主要目标是提供统一的界面，
+      用于原型设计模型、运行包含复杂管道的实验、实时监控这些实验、
+      报告结果以及部署最终模型进行推理。
     website: https://github.com/asappresearch/flambe
     repo: https://github.com/asappresearch/flambe
     image: ../images/flambe.png
-  - name: Flyte Integration
+  - name: Flyte 集成
     section_title: Flyte
-    description: Flyte is a Kubernetes-native workflow automation platform for complex,
-      mission-critical data and ML processes at scale. It has been battle-tested
-      at Lyft, Spotify, Freenome, and others and is truly open-source.
+    description: Flyte 是一个 Kubernetes 原生工作流自动化平台，
+      适用于大规模复杂、任务关键型数据和 ML 流程。它已在 Lyft、
+      Spotify、Freenome 等公司经过实战测试，是真正的开源平台。
     website: https://flyte.org/
     repo: https://github.com/flyteorg/flyte
     image: ../images/flyte.png
-  - name: Horovod Integration
+  - name: Horovod 集成
     section_title: Horovod
-    description: Horovod is a distributed deep learning training framework for
-      TensorFlow, Keras, PyTorch, and Apache MXNet. The goal of
-      Horovod is to make distributed deep learning fast and easy to use.
+    description: Horovod 是适用于
+      TensorFlow、Keras、PyTorch 和 Apache MXNet 的分布式深度学习训练框架。Horovod 的目标
+      是让分布式深度学习变得快速且易于使用。
     website: https://horovod.readthedocs.io/en/stable/ray_include.html
     repo: https://github.com/horovod/horovod
     image: ../images/horovod.png
-  - name: Hugging Face Transformers Integration
+  - name: Hugging Face Transformers 集成
     section_title: Hugging Face Transformers
-    description: State-of-the-art Natural Language Processing for
-      Pytorch and TensorFlow 2.0. It integrates with Ray for distributed
-      hyperparameter tuning of transformer models.
+    description: 适用于 Pytorch 和 TensorFlow 2.0 的
+      最先进的自然语言处理。
+      它与 Ray 集成，用于对 Transformer 模型进行分布式超参数调整。
     website: https://huggingface.co/transformers/master/main_classes/trainer.html#transformers.Trainer.hyperparameter_search
     repo: https://github.com/huggingface/transformers
     image: ../images/hugging.png
-  - name: Intel Analytics Zoo Integration
+  - name: Intel Analytics Zoo 集成
     section_title: Intel Analytics Zoo
-    description: Analytics Zoo seamlessly scales TensorFlow, Keras and PyTorch
-      to distributed big data (using Spark, Flink & Ray).
+    description: Analytics Zoo 将 TensorFlow、Keras 和 PyTorch 
+      无缝扩展到分布式大数据「使用 Spark、Flink 和 Ray」。
     website: https://analytics-zoo.github.io/master/#ProgrammingGuide/rayonspark/
     repo: https://github.com/intel-analytics/analytics-zoo
     image: ../images/zoo.png
-  - name: NLU Integration
+  - name: NLU 集成
     section_title: John Snow Labs' NLU
-    description: The power of 350+ pre-trained NLP models, 100+ Word Embeddings,
-      50+ Sentence Embeddings, and 50+ Classifiers in 46 languages
-      with 1 line of Python code.
+    description: 仅用 1 行 Python 代码即可
+      实现 46 种语言的 350 多个预训练 NLP 模型、100 多个词嵌入、
+      50 多个句子嵌入和 50 多个分类器的强大功能。
     website: https://nlu.johnsnowlabs.com/docs/en/predict_api#modin-dataframe
     repo: https://github.com/JohnSnowLabs/nlu
     image: ../images/nlu.png
-  - name: Ludwig Integration
+  - name: Ludwig 集成
     section_title: Ludwig AI
-    description: Ludwig is a toolbox that allows users to train and test deep learning
-      models without the need to write code. With Ludwig, you can train a deep learning
-      model on Ray in zero lines of code, automatically leveraging Dask on Ray for data
-      preprocessing, Horovod on Ray for distributed training, and Ray Tune for
-      hyperparameter optimization.
+    description: Ludwig 是一个工具箱，它允许用户训练和测试深度学习模型，
+      而无需编写代码。借助 Ludwig，您可以在零行代码的情况下在 Ray 上训练深度学习模型，
+      自动利用 Ray 上的 Dask 进行数据预处理、Ray 上的 Horovod 进行分布式训练
+      以及 Ray Tune 进行超参数优化。
     website: https://medium.com/ludwig-ai/ludwig-ai-v0-4-introducing-declarative-mlops-with-ray-dask-tabnet-and-mlflow-integrations-6509c3875c2e
     repo: https://github.com/ludwig-ai/ludwig
     image: ../images/ludwig.png
-  - name: MARS Integration
+  - name: MARS 集成
     section_title: MARS
-    description: Mars is a tensor-based unified framework for large-scale data
-      computation which scales Numpy, Pandas and Scikit-learn. Mars can scale in to
-      a single machine, and scale out to a cluster with thousands of machines.
+    description: Mars 是一个基于张量的统一大规模数据计算框架，
+      可以扩展 Numpy、Pandas 和 Scikit-learn。
+      Mars 可以向内扩展到单台机器，也可以向外扩展到数千台机器的集群。
     website: mars-on-ray
     repo: https://github.com/mars-project/mars
     image: ../images/mars.png
   - name: Modin Integration
     section_title: Modin
-    description: Scale your pandas workflows by changing one line of code.
-      Modin transparently distributes the data and computation so that all you need
-      to do is continue using the pandas API as you were before installing Modin.
+    description: 通过更改一行代码即可扩展您的 pandas 工作流程。
+      Modin 透明地分发数据和计算，因此您需要做的就是继续使用 pandas API，
+      就像在安装 Modin 之前一样。
     website: https://github.com/modin-project/modin
     repo: https://github.com/modin-project/modin
     image: ../images/modin.png
   - name: Prefect Integration
     section_title: Prefect
-    description: Prefect is an open source workflow orchestration platform in Python.
-      It allows you to easily define, track and schedule workflows in Python. This
-      integration makes it easy to run a Prefect workflow on a Ray cluster in a
-      distributed way.
+    description: Prefect 是一个用 Python 编写的开源工作流编排平台。
+      它允许您使用 Python 轻松定义、跟踪和调度工作流。
+      此集成让您可以轻松地以分布式方式
+      在 Ray 集群上运行 Prefect 工作流。
     website: https://github.com/PrefectHQ/prefect-ray
     repo: https://github.com/PrefectHQ/prefect-ray
     image: ../images/prefect.png
-  - name: PyCaret Integration
+  - name: PyCaret 集成
     section_title: PyCaret
-    description: PyCaret is an open source low-code machine learning library in Python
-      that aims to reduce the hypothesis to insights cycle time in a ML experiment.
-      It enables data scientists to perform end-to-end experiments quickly
-      and efficiently.
+    description: PyCaret 是一个用 Python 编写的开源低代码机器学习库，
+      旨在缩短机器学习实验中从假设到洞察的周期时间。
+      它使数据科学家能够快速高效地进行端到端实验。
     website: https://github.com/pycaret/pycaret
     repo: https://github.com/pycaret/pycaret
     image: ../images/pycaret.png
-  - name: RayDP Integration
+  - name: RayDP 集成
     section_title: Spark on Ray (RayDP)
-    description: RayDP ("Spark on Ray") enables you to easily use Spark inside a
-      Ray program. You can use Spark to read the input data, process the data using
-      SQL, Spark DataFrame, or Pandas (via Koalas) API, extract and transform features
-      using Spark MLLib, and use RayDP Estimator API for distributed training
-      on the preprocessed dataset.
+    description: RayDP ("Spark on Ray") 「“Spark on Ray”」可让您轻松地
+      在 Ray 程序中使用 Spark。
+      您可以使用 Spark 读取输入数据，使用 SQL、Spark DataFrame 或 Pandas「通过 Koalas」API 处理数据，
+      使用 Spark MLLib 提取和转换特征，并使用 RayDP Estimator API 对
+      预处理后的数据集进行分布式训练。
     website: https://github.com/Intel-bigdata/oap-raydp
     repo: https://github.com/Intel-bigdata/oap-raydp
     image: ../images/intel.png
-  - name: Scikit Learn Integration
+  - name: Scikit Learn 集成
     section_title: Scikit Learn
-    description: Scikit-learn is a free software machine learning library for
-      the Python programming language. It features various classification,
-      regression and clustering algorithms including support vector machines,
-      random forests, gradient boosting, k-means and DBSCAN, and is designed to
-      interoperate with the Python numerical and scientific libraries NumPy and SciPy.
+    description: Scikit-learn 是 Python 编程语言的免费软件机器学习库。
+      它具有各种分类、回归和聚类算法，
+      包括支持向量机、随机森林、梯度提升、k-means 和 DBSCAN，
+      并且旨在与 Python 数值和科学库 NumPy 和 SciPy 互操作。
     website: https://docs.ray.io/en/master/joblib.html
     repo: https://github.com/scikit-learn/scikit-learn
     image: ../images/scikit.png
-  - name: Seldon Alibi Integration
+  - name: Seldon Alibi 集成
     section_title: Seldon Alibi
-    description: Alibi is an open source Python library aimed at machine learning model
-      inspection and interpretation. The focus of the library is to provide high-quality
-      implementations of black-box, white-box, local and global explanation methods for
-      classification and regression models.
+    description: Alibi 是一个开源 Python 库，
+      旨在用于机器学习模型检查和解释。
+      该库的重点是为分类和回归模型提供黑盒、
+      白盒、局部和全局解释方法的高质量实现。
     website: https://github.com/SeldonIO/alibi
     repo: https://github.com/SeldonIO/alibi
     image: ../images/seldon.png
-  - name: Sematic Integration
+  - name: Sematic 集成
     section_title: Sematic
-    description: Sematic is an open-source ML pipelining tool written in Python.
-      It enables users to write end-to-end pipelines that can seamlessly transition between
-      your laptop and the cloud, with rich visualizations, traceability,
-      reproducibility, and usability as first-class citizens. This integration
-      enables dynamic allocation of Ray clusters within Sematic pipelines.
+    description: Sematic 是一款用 Python 编写的开源 ML 流水线工具。
+      它使用户能够编写端到端管道，
+      这些管道可以在笔记本电脑和云之间无缝转换，并具有丰富的可视化、
+      可追溯性、可重复性和可用性等一流功能。
+      这种集成支持在 Sematic 管道内动态分配 Ray 集群。
     website: https://docs.sematic.dev/integrations/ray
     repo: https://github.com/sematic-ai/sematic
     image: ../images/sematic.png
-  - name: spaCy Integration
+  - name: spaCy 集成
     section_title: spaCy
-    description: spaCy is a library for advanced Natural Language Processing in Python
-      and Cython. It's built on the very latest research, and was designed from
-      day one to be used in real products.
+    description: spaCy 是一个用于 Python 和 Cython 的高级自然语言处理库。
+      它基于最新研究成果构建，
+      从第一天开始就被设计用于实际产品。
     website: https://pypi.org/project/spacy-ray/
     repo: https://github.com/explosion/spacy-ray
     image: ../images/spacy.png
-  - name: XGBoost Integration
+  - name: XGBoost 集成
     section_title: XGBoost
-    description: XGBoost is a popular gradient boosting library for classification
-      and regression. It is one of the most popular tools in data science and
-      workhorse of many top-performing Kaggle kernels.
+    description: XGBoost 是一个流行的梯度提升库，用于分类和回归。
+      它是数据科学中最受欢迎的工具之一，
+      也是许多性能最佳的 Kaggle 内核的主力。
     website: https://github.com/ray-project/xgboost_ray
     repo: https://github.com/ray-project/xgboost_ray
     image: ../images/xgboost_logo.png
-  - name: LightGBM Integration
+  - name: LightGBM 集成
     section_title: LightGBM
-    description: LightGBM is a high-performance gradient boosting library for
-      classification and regression. It is designed to be distributed and efficient.
+    description: LightGBM 是一个用于分类和回归的高性能梯度提升库。
+      它被设计为分布式和高效的。
     website: https://github.com/ray-project/lightgbm_ray
     repo: https://github.com/ray-project/lightgbm_ray
     image: ../images/lightgbm_logo.png
-  - name: Volcano Integration
+  - name: Volcano 集成
     section_title: Volcano
-    description: Volcano is system for running high-performance workloads 
-      on Kubernetes. It features powerful batch scheduling capabilities required by ML
-      and other data-intensive workloads.
+    description: Volcano 是一个在 Kubernetes 上运行高性能工作负载的系统。
+      它具有机器学习和其他数据密集型工作负载所需的强大批处理调度功能。
     website: https://github.com/volcano-sh/volcano/releases/tag/v1.7.0
     repo: https://github.com/volcano-sh/volcano/
     image: ./images/volcano.png

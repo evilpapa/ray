@@ -18,7 +18,7 @@
 IPython 将每个单元的输出无限期地存储在本地 Python 变量中。
 这会导致 Ray 固定对象，即使您的应用程序实际上可能没有使用它们。
 因此，显式调用 ``print`` 或者 ``repr`` 比让 Notebook 自动生成输出更好。
-另一个选择是使用以下命令完全禁用 IPython 缓存（从 bash/zsh 运行）：
+另一个选择是使用以下命令完全禁用 IPython 缓存「从 bash/zsh 运行」：
 
 .. code-block:: console
 
@@ -39,7 +39,7 @@ Jupyter Notebook 更适合第一种情况。
 4. 转发端口。
 假设 Notebook 在 EC2 实例上运行，则应转发 Notebook 端口和 Ray Dashboard 端口。
 默认端口分别为 8888 和 8265。如果默认端口不可用，则端口数量会增加。
-您可以使用以下命令转发它们（从 bash/zsh 运行）：
+您可以使用以下命令转发它们「从 bash/zsh 运行」：
 
 .. code-block:: console
 

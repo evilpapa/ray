@@ -9,7 +9,7 @@
 默认情况下，Ray 日志文件存储在 `/tmp/ray/session_*/logs` 目录中。参阅下面的 {ref}`日志目录中的日志文件 <logging-directory-structure>` 以了解它们在日志文件夹中的组织方式。
 
 :::{note}
-Ray 使用 ``/tmp/ray`` （对于 Linux 和 macOS）作为默认临时目录。要更改临时目录和日志记录目录，请在调用 ``ray start`` 或 ``ray.init()`` 时指定它。
+Ray 使用 ``/tmp/ray`` 「对于 Linux 和 macOS」作为默认临时目录。要更改临时目录和日志记录目录，请在调用 ``ray start`` 或 ``ray.init()`` 时指定它。
 :::
 
 新的 Ray 会话会在临时目录中创建一个新文件夹。最新的会话文件夹符号链接到 `/tmp/ray/session_latest`。这是一个临时目录示例：
@@ -44,7 +44,7 @@ Ray 使用 ``/tmp/ray`` （对于 Linux 和 macOS）作为默认临时目录。�
 - ``job-driver-[submission_id].log``: 使用 {ref}`Ray Jobs API <jobs-overview>` 提交的作业的标准输出。
 - ``worker-[worker_id]-[job_id]-[pid].[out|err]``: Ray driver 和 worker 的 Python 或 Java 部分。来自任务或 actor 的所有 stdout 和 stderr 都会流式传输到这些文件。请注意，job_id 是驱动程序的 ID。
 
-### 系统（组件）日志
+### 系统「组件」日志
 - ``dashboard.[log|err]``: Ray Dashboard 的日志文件。 ``.log`` 文件包含从仪表板记录器生成的日志。 ``.err`` 件包含从仪表板打印的 stdout 和 stderr。它们通常是空的，除非仪表板意外崩溃。
 - ``dashboard_agent.log``: 每个 Ray 节点都有一个仪表板代理。这是代理的日志文件。
 - ``gcs_server.[out|err]``: GCS 服务器是管理 Ray 集群元数据的无状态服务器。它只存在于头节点中。
@@ -60,14 +60,14 @@ Ray 使用 ``/tmp/ray`` （对于 Linux 和 macOS）作为默认临时目录。�
 - ``redis.[out|err]``: Redis 日志文件。
 - ``runtime_env_agent.log``: 每个 Ray 节点都有一个代理来管理 {ref}`运行时环境 <runtime-environments>` 的创建、删除和缓存。
   这是代理的日志文件，包含创建或删除请求以及缓存命中和未命中的日志。
-  有关实际安装的日志（例如 ``pip install`` 日志），请参阅该文件 ``runtime_env_setup-[job_id].log``（见下文）。
+  有关实际安装的日志「例如 ``pip install`` 日志」，请参阅该文件 ``runtime_env_setup-[job_id].log``「见下文」。
 - ``runtime_env_setup-ray_client_server_[port].log``:  {ref}`Ray Client <ray-client-ref>` 连接 job 的 {ref}`运行时环境 <runtime-environments>` 安装日志。
 - ``runtime_env_setup-[job_id].log``: 任务，actor，job 的 {ref}`运行时环境 <runtime-environments>` 安装日志。仅当安装了运行时环境时此文件才存在。
 
 
 (log-redirection-to-driver)=
 ## 将工作日志重定向到驱动程序
-默认情况下，任务和 Actor 的 Worker 标准输出和标准错误流到 Ray 驱动程序（调用 ``ray.init`` 的入口点脚本）。它帮助用户将分布式 Ray 应用程序的日志聚合在一个位置。
+默认情况下，任务和 Actor 的 Worker 标准输出和标准错误流到 Ray 驱动程序「调用 ``ray.init`` 的入口点脚本」。它帮助用户将分布式 Ray 应用程序的日志聚合在一个位置。
 
 ```{literalinclude} ../doc_code/app_logging.py
 ```
@@ -112,7 +112,7 @@ ray.init(log_to_driver=False)
 
 ## 日志去重
 
-默认情况下，Ray 会删除跨多个进程冗余出现的日志。每条日志消息的第一个实例总是立即打印。但是，相同模式的后续日志消息（忽略带有数字成分的单词）将被缓冲最多五秒并批量打印。例如，对于以下代码片段：
+默认情况下，Ray 会删除跨多个进程冗余出现的日志。每条日志消息的第一个实例总是立即打印。但是，相同模式的后续日志消息「忽略带有数字成分的单词」将被缓冲最多五秒并批量打印。例如，对于以下代码片段：
 
 ```python
 import ray
@@ -142,7 +142,7 @@ ray.get([task.remote() for _ in range(100)])
 
 
 
-## 分布式进度条（tqdm）
+## 分布式进度条「tqdm」
 
 在 Ray 远程任务或 Actor 中使用 [tqdm](https://tqdm.github.io)时，您可能会注意到进度条输出已损坏。为了避免此问题，请使用 Ray 分布式 tqdm ``ray.experimental.tqdm_ray`` 实现:
 
@@ -158,7 +158,7 @@ ray.get([task.remote() for _ in range(100)])
 限制：
 
 - 仅支持 tqdm 功能的子集。有关更多详细信息，请参阅 ray_tqdm [实现](https://github.com/ray-project/ray/blob/master/python/ray/experimental/tqdm_ray.py) 。
-- 如果每秒更新次数超过几千次（更新不是批量的），性能可能会很差。
+- 如果每秒更新次数超过几千次「更新不是批量的」，性能可能会很差。
 
 默认的，当使用 `tqdm_ray` 时，自带 print 会使用 `ray.experimental.tqdm_ray.safe_print` 补丁。
 这可以避免驱动程序打印语句上的进度条损坏。要禁用此功能，请设置 `RAY_TQDM_PATCH_PRINT=0` 。
@@ -411,9 +411,9 @@ logging_setup_func()
 (log-rotation)=
 ## Log 切割
 
-Ray 支持日志文件的日志轮转。请注意，并非所有组件都支持日志轮换。 （Raylet、Python 和 Java 工作日志不切割）。
+Ray 支持日志文件的日志轮转。请注意，并非所有组件都支持日志轮换。 「Raylet、Python 和 Java 工作日志不切割」。
 
-默认情况下，日志在达到 512MB (maxBytes) 时轮换，并且最多有五个备份文件 (backupCount)。索引附加到所有备份文件中（例如， `raylet.out.1`）
+默认情况下，日志在达到 512MB (maxBytes) 时轮换，并且最多有五个备份文件 (backupCount)。索引附加到所有备份文件中「例如， `raylet.out.1`」
 要更改日志轮换配置，请指定环境变量。例如，
 
 ```bash
@@ -421,7 +421,7 @@ RAY_ROTATION_MAX_BYTES=1024; ray start --head # Start a ray instance with maxByt
 RAY_ROTATION_BACKUP_COUNT=1; ray start --head # Start a ray instance with backupCount 1.
 ```
 
-日志文件（包括其备份）的最大大小为 `RAY_ROTATION_MAX_BYTES * RAY_ROTATION_BACKUP_COUNT + RAY_ROTATION_MAX_BYTES`
+日志文件「包括其备份」的最大大小为 `RAY_ROTATION_MAX_BYTES * RAY_ROTATION_BACKUP_COUNT + RAY_ROTATION_MAX_BYTES`
 
 
 ## 日志持久化

@@ -19,7 +19,7 @@ runtime_env = {"working_dir": (
 }
 ```
 
-但是，私有托管的依赖项（例如私有 GitHub 存储库）需要身份验证。一种常见的身份验证方法是将凭据插入 URI 本身：
+但是，私有托管的依赖项「例如私有 GitHub 存储库」需要身份验证。一种常见的身份验证方法是将凭据插入 URI 本身：
 
 ```python
 runtime_env = {"working_dir": (
@@ -32,13 +32,13 @@ runtime_env = {"working_dir": (
 在此示例中， `personal_access_token` 是用于验证此 URI 的秘密凭证。虽然 Ray 可以使用经过验证的 URI 成功访问您的依赖项，但 **您不应在 URI 中包含秘密凭证** ，原因有二：
 
 1. Ray 可能会记录您在 `runtime_env` 中使用的 URI，这意味着 Ray 日志可能包含您的凭据。
-2. Ray 将您的远程依赖包存储在本地目录中，并使用远程 URI 的解析版本（包括您的凭据）作为目录的名称。
+2. Ray 将您的远程依赖包存储在本地目录中，并使用远程 URI 的解析版本「包括您的凭据」作为目录的名称。
 
 简而言之，您的远程 URI 不被视为机密，因此它不应包含机密信息。相反，请使用文件 `netrc` 文件。
 
 ## 在虚拟机上运行：netrc 文件
 
-[netrc 文件](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html) 包含Ray 用于自动登录远程服务器的凭据。在此文件中（而不是在远程 URI 中）设置您的凭据：
+[netrc 文件](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html) 包含Ray 用于自动登录远程服务器的凭据。在此文件中「而不是在远程 URI 中」设置您的凭据：
 
 ```bash
 # "$HOME/.netrc"

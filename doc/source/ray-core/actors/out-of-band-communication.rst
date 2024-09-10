@@ -28,7 +28,7 @@ HTTP 服务器
 
         .. literalinclude:: ../doc_code/actor-http-server.py
 
-类似地，您也可以公开其他类型的服务器（例如，gRPC 服务器）。
+类似地，您也可以公开其他类型的服务器「例如，gRPC 服务器」。
 
 限制
 -----------

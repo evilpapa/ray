@@ -80,7 +80,7 @@ kubectl delete ingress ray-cluster-ingress
 
 ### 先决条件
 
-* 创建 GKE 集群并确保您已安装 kubectl 工具并经过身份验证以与 GKE 集群进行通信。请参阅 [教程](kuberay-gke-gpu-cluster-setup) ，了解如何使用 GPU 创建 GKE 集群的示例。 （本部分不需要 GPU。）
+* 创建 GKE 集群并确保您已安装 kubectl 工具并经过身份验证以与 GKE 集群进行通信。请参阅 [教程](kuberay-gke-gpu-cluster-setup) ，了解如何使用 GPU 创建 GKE 集群的示例。 「本部分不需要 GPU。」
 
 * 了解 <https://cloud.google.com/kubernetes-engine/docs/concepts/ingress> 中的概念可能会有所帮助。
 

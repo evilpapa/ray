@@ -15,7 +15,7 @@ Ray 目前允许在以下调试器中启动进程：
 - tmux
 
 要使用以上工具，请确保您的机器上已经安装了这些
-工具（已知 MacOS 上的 gdb 和 valgrind 存在问题）。
+工具「已知 MacOS 上的 gdb 和 valgrind 存在问题」。
 之后，您可以通过添加以下环境
 变量 ``RAY_{PROCESS_NAME}_{DEBUGGER}=1`` 启动 ray 进程：
 例如，如果你想在 ``valgrind`` 中启动 raylet，

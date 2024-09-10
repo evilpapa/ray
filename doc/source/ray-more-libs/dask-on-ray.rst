@@ -100,7 +100,7 @@ Dask-on-Ray 调度程序可以执行任何有效的 Dask 图，并且可以与�
       :ref:`启动云集群 <cluster-index>` 和
       :ref:`共享内存存储 <memory>`。
 2. 如果您想在同一个应用程序中使用 Dask 和 Ray 库，而无需两个不同的集群。
-3. 如果您想使用 Dask 提供的熟悉的 NumPy 和 Pandas API 创建数据分析，并在面向生产的快速、容错分布式任务执行系统（如 Ray）上执行它们。
+3. 如果您想使用 Dask 提供的熟悉的 NumPy 和 Pandas API 创建数据分析，并在面向生产的快速、容错分布式任务执行系统「如 Ray」上执行它们。
 
 Dask-on-Ray 是一个正在进行的项目，预计不会达到与直接使用 Ray 相同的性能。 所有 `Dask 抽象 <https://docs.dask.org/en/latest/user-interfaces.html>`__ 都应该使用此调度程序在 Ray 上无缝运行，因此如果您发现其中一个抽象无法在 Ray 上运行，请 `打开一个问题 <https://github.com/ray-project/ray/issues/new/choose>`__。
 
@@ -126,7 +126,7 @@ Dask-on-Ray 是一个正在进行的项目，预计不会达到与直接使用 R
 
 .. _dask-on-ray-out-of-core:
 
-通过 Ray 的 :ref:`对象溢出 <object-spilling>`，可以支持处理大于集群内存的数据集： 如果内存中的对象存储已满，对象将溢出到外部存储（默认情况下为本地磁盘）。此功能可用，但在 Ray 1.2 中默认关闭，在 Ray 1.3+ 中默认开启。请参阅您的 Ray 版本的对象溢出文档，了解启用和/或配置对象溢出的步骤。
+通过 Ray 的 :ref:`对象溢出 <object-spilling>`，可以支持处理大于集群内存的数据集： 如果内存中的对象存储已满，对象将溢出到外部存储「默认情况下为本地磁盘」。此功能可用，但在 Ray 1.2 中默认关闭，在 Ray 1.3+ 中默认开启。请参阅您的 Ray 版本的对象溢出文档，了解启用和/或配置对象溢出的步骤。
 
 持久化
 -------
@@ -137,7 +137,7 @@ Dask-on-Ray 修补了 `dask.persist()
 <https://docs.dask.org/en/latest/api.html#dask.persist>`__  以匹配 `Dask
 分布式持久语义
 <https://distributed.dask.org/en/latest/manage-computation.html#client-persist>`__；即， 使用 Dask-on-Ray 调度程序进行 `dask.persist()` 将把任务提交给 Ray 集群并返回内联的 Ray 特性的 Dask 集合。 
-如果您希望计算一些基础集合（例如 Dask 数组），然后进行多个不同的下游计算（例如聚合），那么这很好：
+如果您希望计算一些基础集合「例如 Dask 数组」，然后进行多个不同的下游计算「例如聚合」，那么这很好：
 这些下游计算将更快，因为该基础集合计算很早就启动并被所有下游计算引用，通常通过共享内存。
 
 .. literalinclude:: doc_code/dask_on_ray_persist_example.py

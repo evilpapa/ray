@@ -3,7 +3,7 @@
 处理张量
 ====================
 
-N 维数组（即张量）在 ML 工作负载中无处不在。本指南
+N 维数组「即张量」在 ML 工作负载中无处不在。本指南
 描述了处理此类数据的限制和最佳实践。
 
 张量数据表示
@@ -99,7 +99,7 @@ Ray Data 将张量表示为
     ds.map_batches(batch_increase_brightness)
 
 除了 NumPy ndarrays，Ray Data 还将返回的 NumPy ndarrays 列表和
-实现 ``__array__`` 的对象（例如， ``torch.Tensor``）视为张量数据。
+实现 ``__array__`` 的对象「例如， ``torch.Tensor``」视为张量数据。
 
 有关转换数据的更多信息，请阅读
 :ref:`转换数据 <transforming_data>`。

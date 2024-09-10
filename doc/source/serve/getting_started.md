@@ -2,36 +2,36 @@
 
 # 入门
 
-This tutorial will walk you through the process of writing and testing a Ray Serve application. It will show you how to
+本教程将引导您完成编写和测试 Ray Serve 应用程序的过程。它将向您展示如何
 
-* convert a machine learning model to a Ray Serve deployment
-* test a Ray Serve application locally over HTTP
-* compose multiple-model machine learning models together into a single application
+* 将机器学习模型转换为 Ray Serve 部署
+* 通过 HTTP 在本地测试 Ray Serve 应用程序
+* 将多模型机器学习模型组合成一个应用程序
 
-We'll use two models in this tutorial:
+在本教程中我们将使用两个模型：
 
-* [HuggingFace's TranslationPipeline](https://huggingface.co/docs/transformers/main_classes/pipelines#transformers.TranslationPipeline) as a text-translation model
-* [HuggingFace's SummarizationPipeline](https://huggingface.co/docs/transformers/v4.21.0/en/main_classes/pipelines#transformers.SummarizationPipeline) as a text-summarizer model
+* [HuggingFace 的 TranslationPipeline](https://huggingface.co/docs/transformers/main_classes/pipelines#transformers.TranslationPipeline) 作为文本翻译模型
+* [HuggingFace 的 SummarizationPipeline](https://huggingface.co/docs/transformers/v4.21.0/en/main_classes/pipelines#transformers.SummarizationPipeline) 作为文本摘要模型
 
-You can also follow along using your own models from any Python framework.
+您还可以使用任何 Python 框架中的自己的模型来进行操作。
 
-After deploying those two models, we'll test them with HTTP requests.
+部署这两个模型后，我们将使用 HTTP 请求对它们进行测试。
 
 :::{tip}
-If you have suggestions on how to improve this tutorial,
-    please [let us know](https://github.com/ray-project/ray/issues/new/choose)!
+如果您对如何改进本教程有任何建议，
+    请 [告诉我们](https://github.com/ray-project/ray/issues/new/choose)！
 :::
 
-To run this example, you will need to install the following:
+要运行此示例，您需要安装以下内容：
 
 ```bash
 pip install "ray[serve]" transformers requests torch
 ```
 
 
-## Text Translation Model (before Ray Serve)
+## 文本翻译模型「Ray Serve 之前」
 
-First, let's take a look at our text-translation model. Here's its code:
+首先，我们来看看我们的文本翻译模型。以下是它的代码：
 
 ```{literalinclude} ../serve/doc_code/getting_started/models.py
 :start-after: __start_translation_model__
@@ -39,17 +39,17 @@ First, let's take a look at our text-translation model. Here's its code:
 :language: python
 ```
 
-The Python file, called `model.py`, uses the `Translator` class to translate English text to French.
+这个名为 `model.py`的 Python 文件，使用 `Translator` 类将英文文本翻译成法语。
 
-- The `self.model` variable inside `Translator`'s `__init__` method
-  stores a function that uses the [t5-small](https://huggingface.co/t5-small)
-  model to translate text.
-- When `self.model` is called on English text, it returns translated French text
-  inside a dictionary formatted as `[{"translation_text": "..."}]`.
-- The `Translator`'s `translate` method extracts the translated text by indexing into the dictionary.
+- `Translator` 中 `__init__` 方法的 `self.model` 变量
+  存储了一个使用 [t5-small](https://huggingface.co/t5-small)
+  模型翻译文本的函数。
+- 当 `self.model` 对英文文本调用时，它会返回格式
+  为 `[{"translation_text": "..."}]` 字典的法语翻译文本。
+- `Translator` 的 `translate` 方法通过索引字典来提取翻译的文本。
 
-You can copy-paste this script and run it locally. It translates `"Hello world!"`
-into `"Bonjour Monde!"`.
+您可以复制粘贴此脚本并在本地运行。它会转换 `"Hello world!"`
+为 `"Bonjour Monde!"`。
 
 ```console
 $ python model.py
@@ -57,21 +57,20 @@ $ python model.py
 Bonjour Monde!
 ```
 
-Keep in mind that the `TranslationPipeline` is an example ML model for this
-tutorial. You can follow along using arbitrary models from any
-Python framework. Check out our tutorials on scikit-learn,
-PyTorch, and Tensorflow for more info and examples:
+请记住，`TranslationPipeline` 是本教程的一个示例 ML 模型。
+您可以使用任何 Python 框架中的任意模型进行操作。
+查看我们关于 scikit-learn、PyTorch 和 Tensorflow 的教程以获取更多信息和示例：
 
 - {ref}`serve-ml-models-tutorial`
 
 (converting-to-ray-serve-application)=
-## Converting to a Ray Serve Application
+## 转换为 Ray Serve 应用
 
-In this section, we'll deploy the text translation model using Ray Serve, so
-it can be scaled up and queried over HTTP. We'll start by converting
-`Translator` into a Ray Serve deployment.
+在本节中，我们将使用 Ray Serve 部署文本翻译模型，
+以便可以对其进行扩展并通过 HTTP 进行查询。 我们将首先转换
+`Translator` 为 Ray Serve 部署。
 
-First, we open a new Python file and import `ray` and `ray.serve`:
+首先，我们打开一个新的 Python 文件并导入 `ray` 和 `ray.serve`：
 
 ```{literalinclude} ../serve/doc_code/getting_started/model_deployment.py
 :start-after: __import_start__
@@ -79,7 +78,7 @@ First, we open a new Python file and import `ray` and `ray.serve`:
 :language: python
 ```
 
-After these imports, we can include our model code from above:
+导入这些之后，我们可以从上面包含我们的模型代码：
 
 ```{literalinclude} ../serve/doc_code/getting_started/model_deployment.py
 :start-after: __model_start__
@@ -87,14 +86,14 @@ After these imports, we can include our model code from above:
 :language: python
 ```
 
-The `Translator` class has two modifications:
-1. It has a decorator, `@serve.deployment`.
-2. It has a new method, `__call__`.
+`Translator` 类有两处修改：
+1. 它有一个装饰器， `@serve.deployment`。
+2. 它有一种新方法， `__call__`。
 
-The decorator converts `Translator` from a Python class into a Ray Serve `Deployment` object.
+装饰器将 `Translator` Python 类转换成 Ray Serve `Deployment` 对象。
 
-Each deployment stores a single Python function or class that you write and uses
-it to serve requests. You can scale and configure each of your deployments independently using
+每个部署都会存储您编写的单个 Python 函数或类，并使用
+它来处理请求。 You can scale and configure each of your deployments independently using
 parameters in the `@serve.deployment` decorator. The example configures a few common parameters:
 
 * `num_replicas`: an integer that determines how many copies of our deployment process run in Ray. Requests are load balanced across these replicas, allowing you to scale your deployments horizontally.

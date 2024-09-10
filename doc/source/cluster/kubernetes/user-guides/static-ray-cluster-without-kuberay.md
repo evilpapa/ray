@@ -1,10 +1,10 @@
 (deploy-a-static-ray-cluster-without-kuberay)=
 
-# （高级）在没有 KubeRay 的情况下部署静态 Ray 集群
+# 「高级」在没有 KubeRay 的情况下部署静态 Ray 集群
 
 Ray 的这种部署方法不再需要使用 CustomResourceDefinitions (CRD)。
 相比之下，CRD 是使用 KubeRay 的先决条件。 
-KubeRay operator 是其关键组件之一，通过监视 Kubernetes 事件（创建/删除/更新）来管理 Ray 集群资源。
+KubeRay operator 是其关键组件之一，通过监视 Kubernetes 事件「创建/删除/更新」来管理 Ray 集群资源。
 尽管 KubeRay 运算符可以在单个名称空间内运行，但 CRD 的使用具有集群范围内的范围。
 如果没有必要的 Kubernetes 管理员权限来部署 KubeRay，本文档介绍了一种在不使用 KubeRay 的情况下将静态 Ray 集群部署到 Kubernetes 的方法。
 但需要注意的是，这种部署方式缺少 KubeRay 提供的内置自动伸缩功能。
@@ -38,7 +38,7 @@ KubeRay operator 是其关键组件之一，通过监视 Kubernetes 事件（创
 ! kind create cluster
 ```
 
-要执行本指南中的示例，请确保您的 Kubernetes 集群（或本地 Kind 集群）可以处理 3 个 CPU 和 3Gi 内存的额外资源请求。
+要执行本指南中的示例，请确保您的 Kubernetes 集群「或本地 Kind 集群」可以处理 3 个 CPU 和 3Gi 内存的额外资源请求。
 另外，请确保您的 Kubernetes 集群和 Kubectl 版本至少为 1.19。
 
 ### 部署 Redis 以实现容错
@@ -167,7 +167,7 @@ Ray 通过头节点上的 Dashboard 服务器接收作业请求。
 # service-ray-cluster              ClusterIP   10.92.118.20   <none>        6380/TCP,8265/TCP,10001/TCP...     XXs
 ```
 
-现在我们有了服务的名称，我们可以使用端口转发来访问 Ray Dashboard 端口（默认为 8265）。
+现在我们有了服务的名称，我们可以使用端口转发来访问 Ray Dashboard 端口「默认为 8265」。
 
 ```
 # Execute this in a separate shell.

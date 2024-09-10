@@ -62,8 +62,8 @@ Ray Tune 入门
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 下面，我们定义一个函数，用于训练 Pytorch 模型多个 epoch。
-此函数将在后台单独的 :ref:`Ray Actor （进程） <actor-guide>` 上执行，
-因此我们需要将模型的性能反馈给 Tune（位于主 Python 进程上）。
+此函数将在后台单独的 :ref:`Ray Actor 「进程」 <actor-guide>` 上执行，
+因此我们需要将模型的性能反馈给 Tune「位于主 Python 进程上」。
 
 为此，我们在训练函数中调用 :ref:`session.report <tune-function-docstring>` ，
 将性能值发送回 Tune。由于该函数是在单独的进程上执行的，

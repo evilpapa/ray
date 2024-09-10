@@ -2,7 +2,7 @@
 
 # TLS 身份验证
 
-ay 可以配置为在其 gRPC 通道上使用 TLS。这意味着连接到 Ray head 将需要一组适当的凭据，并且各个进程（客户端、head、workers）之间交换的数据将被加密([Ray 文档](https://docs.ray.io/en/latest/ray-core/configure.html?highlight=tls#tls-authentication)）。
+ay 可以配置为在其 gRPC 通道上使用 TLS。这意味着连接到 Ray head 将需要一组适当的凭据，并且各个进程「客户端、head、workers」之间交换的数据将被加密([Ray 文档](https://docs.ray.io/en/latest/ray-core/configure.html?highlight=tls#tls-authentication)」。
 
 本文档提供了生成用于配置 KubeRay 的公私密钥对和 CA 证书的详细说明。
 
@@ -15,8 +15,8 @@ ay 可以配置为在其 gRPC 通道上使用 TLS。这意味着连接到 Ray he
 为了充分理解本文档，强烈建议您充分理解以下概念：
 
 * 私钥/公钥
-* CA （证书颁发机构）
-* CSR （证书签名请求）
+* CA 「证书颁发机构」
+* CSR 「证书签名请求」
 * 自签名证书
 
 这个 [YouTube 视频](https://youtu.be/T4Df5_cojAs) 是一个好的开始。
@@ -82,7 +82,7 @@ kubectl create secret generic ca-tls --from-file=ca.key --from-file=ca.crt
 # 步骤 2: 为 Ray Pods 创建单独的私钥和自签名证书
 
 在 [ray-cluster.tls.yaml](https://github.com/ray-project/kuberay/blob/v1.0.0-rc.0/ray-operator/config/samples/ray-cluster.tls.yaml) 中，
-每个 Ray Pod（头和工作线程）在其 init 容器中生成自己的私钥文件 ( `tls.key`) 和自签名证书文件 ( `tls.crt`)。
+每个 Ray Pod「头和工作线程」在其 init 容器中生成自己的私钥文件 ( `tls.key`) 和自签名证书文件 ( `tls.crt`)。
 我们为每个 Pod 生成单独的文件，因为 worker Pod 没有确定性的 DNS 名称，并且我们无法在不同的 Pod 之间使用相同的证书。
 
 在 YAML 文件中，您将找到一个名为 `tls` 的 ConfigMap 包含两个 shell 脚本：
@@ -121,9 +121,9 @@ IP.2 = $POD_IP
 要在 Ray 集群中启用 TLS 身份验证，请设置以下环境变量：
 
 - `RAY_USE_TLS`: 1 或 0 表示使用/不使用 TLS。如果将此设置为 1，则必须设置以下所有环境变量。默认值：0。
-- `RAY_TLS_SERVER_CERT`: 向其他端点提供的证书文件的位置，以实现相互身份验证（即  `tls.crt` ）。
-- `RAY_TLS_SERVER_KEY`: 私钥文件的位置，它是向其他端点证明您是给定证书的授权用户的加密手段（即 `tls.key`）。
-- `RAY_TLS_CA_CERT`: CA 证书文件的位置，允许 TLS 确定端点的证书是否已由正确的机构签名（即 `ca.crt`）。
+- `RAY_TLS_SERVER_CERT`: 向其他端点提供的证书文件的位置，以实现相互身份验证「即  `tls.crt` 」。
+- `RAY_TLS_SERVER_KEY`: 私钥文件的位置，它是向其他端点证明您是给定证书的授权用户的加密手段「即 `tls.key`」。
+- `RAY_TLS_CA_CERT`: CA 证书文件的位置，允许 TLS 确定端点的证书是否已由正确的机构签名「即 `ca.crt`」。
 
 有关如何使用 TLS 身份验证配置 Ray 的更多信息，请参阅 [Ray 文档](https://docs.ray.io/en/latest/ray-core/configure.html#tls-authentication)。
 

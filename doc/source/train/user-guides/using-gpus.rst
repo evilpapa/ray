@@ -27,7 +27,7 @@
 ----------
 要使用 GPU，请传递 ``use_gpu=True`` 给 :class:`~ray.train.ScalingConfig`。
 这将为每个训练 worker 请求一个 GPU。在下面的示例中，
-训练将在 8 个 GPU 上运行（8 个工作器，每个工作器使用一个 GPU）。
+训练将在 8 个 GPU 上运行「8 个工作器，每个工作器使用一个 GPU」。
 
 .. code-block:: python
 
@@ -43,7 +43,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 设置 ``use_gpu=True`` 后，Ray Train 将自动在您的训练函数中设置环境变量，
 以便可以检测和使用 GPU
-（例如 ``CUDA_VISIBLE_DEVICES``）。
+「例如 ``CUDA_VISIBLE_DEVICES``」。
 
 您可以通过 :meth:`ray.train.torch.get_device` 获取关联的设备。
 
@@ -112,7 +112,7 @@
     )
 
 
-设置通信后端（PyTorch）
+设置通信后端「PyTorch」
 -------------------------------------------
 
 .. note::
@@ -120,7 +120,7 @@
     这是一个高级设置。大多数情况下，您无需更改此设置。
 
 你可以通过将 :class:`~ray.train.torch.TorchConfig` 传递给 :class:`~ray.train.torch.TorchTrainer`来
-设置 PyTorch 分布式通信后端（例如 GLOO 或 NCCL）。
+设置 PyTorch 分布式通信后端「例如 GLOO 或 NCCL」。
 
 参阅 `PyTorch API 参考 <https://pytorch.org/docs/stable/distributed.html#torch.distributed.init_process_group>`__
 以了解有效选项。

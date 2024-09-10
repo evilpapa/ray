@@ -93,7 +93,7 @@ kubectl exec -it $HEAD_POD -- python -c "import ray; ray.init(); print(ray.clust
 ### Method 2: 通过 [ray job 提交 SDK](jobs-quickstart) 提交 Ray job 到 RayCluster
 
 与方法 1 不同，此方法不需要您在 Ray head pod 中执行命令。
-相反，您可以使用 [Ray 作业提交 SDK](jobs-quickstart) 通过 Ray 监听作业请求的 Ray Dashboard 端口（默认为 8265）将 Ray 作业提交到 RayCluster。
+相反，您可以使用 [Ray 作业提交 SDK](jobs-quickstart) 通过 Ray 监听作业请求的 Ray Dashboard 端口「默认为 8265」将 Ray 作业提交到 RayCluster。
 KubeRay operator 针对 Ray head Pod 配置了 [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) 。
 
 ```sh
@@ -103,7 +103,7 @@ kubectl get service raycluster-kuberay-head-svc
 # raycluster-kuberay-head-svc   ClusterIP   10.96.93.74   <none>        8265/TCP,8080/TCP,8000/TCP,10001/TCP,6379/TCP   15m
 ```
 
-现在我们有了服务的名称，我们可以使用端口转发来访问 Ray Dashboard 端口（默认为 8265）。
+现在我们有了服务的名称，我们可以使用端口转发来访问 Ray Dashboard 端口「默认为 8265」。
 
 ```sh
 # Execute this in a separate shell.

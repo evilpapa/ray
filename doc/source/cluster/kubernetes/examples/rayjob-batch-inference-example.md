@@ -10,7 +10,7 @@
 
 您必须拥有一个正在运行的 Kubernetes 集群，并配置 `kubectl` 以使用它，并且有可用的 GPU。此示例提供了在 Google Kubernetes Engine (GKE) 上设置必要 GPU 的简短教程，但您可以使用任何带有 GPU 的 Kubernetes 集群。
 
-## 步骤 0: 在 GKE 上创建 Kubernetes 集群（可选）
+## 步骤 0: 在 GKE 上创建 Kubernetes 集群「可选」
 
 如果您已经拥有带有 GPU 的 Kubernetes 集群，则可以跳过此步骤。
 

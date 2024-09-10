@@ -3,14 +3,14 @@
 
 .. _ray-placement-group-doc-ref:
 
-占位组允许用户原子地跨多个节点保留资源组（即，帮派调度）。
-然后可以使用他们来调度尽可能靠近的 Ray 任务和 actor 以获得局部性（PACK）或分散（SPREAD）。
+占位组允许用户原子地跨多个节点保留资源组「即，帮派调度」。
+然后可以使用他们来调度尽可能靠近的 Ray 任务和 actor 以获得局部性「PACK」或分散「SPREAD」。
 占位组通常用于帮派调度 actor，但也支持任务。
 
 以下是一些真实用例：
 
-- **分布式机器学习训练** 分布式训练（诸如：:ref:`Ray Train <train-docs>` 和 :ref:`Ray Tune <tune-main>`）使用占位组 API 来实现帮派调度。在这些设置中，一个试验的所有资源必须同时可用。帮派调度是实现深度学习训练的全有或全无调度的关键技术。
-- **分布式训练的容错能力** 占位组可用于配置容错能力。在 Ray Tune 中，将单个试验的相关资源打包在一起可能是有益的，以便节点故障影响较少的试验。在支持弹性训练的库中（例如：XGBoost-Ray），将资源分布在多个节点上有助于确保即使节点死机，训练也会继续进行。
+- **分布式机器学习训练** 分布式训练「诸如：:ref:`Ray Train <train-docs>` 和 :ref:`Ray Tune <tune-main>`」使用占位组 API 来实现帮派调度。在这些设置中，一个试验的所有资源必须同时可用。帮派调度是实现深度学习训练的全有或全无调度的关键技术。
+- **分布式训练的容错能力** 占位组可用于配置容错能力。在 Ray Tune 中，将单个试验的相关资源打包在一起可能是有益的，以便节点故障影响较少的试验。在支持弹性训练的库中「例如：XGBoost-Ray」，将资源分布在多个节点上有助于确保即使节点死机，训练也会继续进行。
 
 关键概念
 ------------
@@ -27,12 +27,12 @@
 
 **占位组** 会从集群预留资源。预留资源只能被使用 :ref:`PlacementGroupSchedulingStrategy <ray-placement-group-schedule-tasks-actors-ref>` 的任务或 actor 使用。
 
-- 占位组由一串捆绑包组成。例如，``{"CPU": 1} * 4`` 意味着您想要预留 4 个 1 CPU 的捆绑包（即，它预留了 4 个 CPU）。
+- 占位组由一串捆绑包组成。例如，``{"CPU": 1} * 4`` 意味着您想要预留 4 个 1 CPU 的捆绑包「即，它预留了 4 个 CPU」。
 - 捆绑包然后根据 :ref:`placement strategies <pgroup-strategy>` 在集群的节点上放置。
 - 创建占位组后，任务或 actor 可以根据占位组甚至在单个捆绑包上调度。
 
 Create a Placement Group (Reserve Resources)
-创建占位组（预留资源）
+创建占位组「预留资源」
 --------------------------------------------
 
 你可以使用 :func:`ray.util.placement_group() <ray.util.placement_group.placement_group>` 创建占位组。
@@ -45,7 +45,7 @@ Create a Placement Group (Reserve Resources)
 - ``CPU`` 对应于 :func:`ray.remote <ray.remote>` 中使用的 ``num_cpus``。
 - ``GPU`` 对应于 :func:`ray.remote <ray.remote>` 中使用的 ``num_gpus``。
 - ``memory`` 对应于 :func:`ray.remote <ray.remote>` 中使用的 ``memory``。
-- 其他资源对应于 :func:`ray.remote <ray.remote>` 中使用的 ``resources``（例如，``ray.init(resources={"disk": 1})`` 可以有 ``{"disk": 1}`` 的捆绑包）。
+- 其他资源对应于 :func:`ray.remote <ray.remote>` 中使用的 ``resources``「例如，``ray.init(resources={"disk": 1})`` 可以有 ``{"disk": 1}`` 的捆绑包」。
 
 占位组调度是异步的。`ray.util.placement_group` 立即返回。
 
@@ -98,7 +98,7 @@ Create a Placement Group (Reserve Resources)
 你可以使用以下两个 API 之一阻塞程序，直到占位组准备就绪：
 
 * :func:`ready <ray.util.placement_group.PlacementGroup.ready>`，兼容 ``ray.get``
-* :func:`wait <ray.util.placement_group.PlacementGroup.wait>`，阻塞程序直到占位组准备就绪）
+* :func:`wait <ray.util.placement_group.PlacementGroup.wait>`，阻塞程序直到占位组准备就绪」
 
 .. tab-set::
 
@@ -164,7 +164,7 @@ Create a Placement Group (Reserve Resources)
     :align: center
 
 占位组是自动创建的；如果一个捆绑包无法适合当前节点，整个占位组将无法准备就绪，也不会预留资源。
-为了说明这一点，让我们创建另一个需要 ``{"CPU":1}, {"GPU": 2}`` 的占位组（2 个捆绑包）。
+为了说明这一点，让我们创建另一个需要 ``{"CPU":1}, {"GPU": 2}`` 的占位组「2 个捆绑包」。
 
 .. tab-set::
 
@@ -230,7 +230,7 @@ Ray 自动调度器会自动扩展集群，以确保可以根据需要放置挂�
 
 .. _ray-placement-group-schedule-tasks-actors-ref:
 
-将任务和 actor 调度到占位组（使用预留资源）
+将任务和 actor 调度到占位组「使用预留资源」
 ----------------------------------------------------------------------
 
 上一节中，我们创建了一个占位组，从一个 2 CPU 和 2 GPU 的节点中预留了 ``{"CPU": 1, "GPU: 1"}``。
@@ -307,19 +307,19 @@ Ray 自动调度器会自动扩展集群，以确保可以根据需要放置挂�
 
   但你使用带有占位组的 actor，请始终指定 ``num_cpus``。
 
-  当你不指定（例如，``num_cpus=0``）时，占位组选项被忽略，任务和 actor 不使用预留资源。
+  当你不指定「例如，``num_cpus=0``」时，占位组选项被忽略，任务和 actor 不使用预留资源。
   
-  注意默认的情况下（没有传递参数给 ``ray.remote``），
+  注意默认的情况下「没有传递参数给 ``ray.remote``」，
 
   - Ray 任务需要 1 个 CPU
   - Ray actor 需要在调度后需要 1 个 CPU。但在创建后，它占用 0 个 CPU。
 
-  当调度一个无需资源和需要占位组的 actor，占位组必须被创建（因为它需要 1 个 CPU 来调度）。
+  当调度一个无需资源和需要占位组的 actor，占位组必须被创建「因为它需要 1 个 CPU 来调度」。
   但是，当 actor 被调度时，它会使用占位组的资源。
 
-actor 现在已调度！一个捆绑包可以被多个任务和 actor 使用（即，捆绑包到任务（或 actor）是一对多的关系）。
+actor 现在已调度！一个捆绑包可以被多个任务和 actor 使用「即，捆绑包到任务「或 actor」是一对多的关系」。
 这种情况下，由于 actor 使用 1 个 CPU，1 个 CPU 会从捆绑包被占用。你可以从 CLI 命令 ``ray status`` 验证这一点。
-你能看到 1 个 CPU 被占位组预留，1.0 被使用（由我们创建的 actor）。
+你能看到 1 个 CPU 被占位组预留，1.0 被使用「由我们创建的 actor」。
 
 .. code-block:: bash
 
@@ -366,7 +366,7 @@ actor 现在已调度！一个捆绑包可以被多个任务和 actor 使用（�
 由于还有 1 个 GPU，让我们创建一个需要 1 个 GPU 的新 actor。
 这次，我们还指定了 ``placement_group_bundle_index``。在占位组中，每个捆绑包都有一个“索引”。
 比如，一个包含 2 个捆绑包的占位组 ``[{"CPU": 1}, {"GPU": 1}]`` 有索引 0 捆绑包 ``{"CPU": 1}`` 和索引 1 捆绑包 ``{"GPU": 1}``。
-由于我们只有 1 个捆绑包，我们只有索引 0。如果你不指定捆绑包，actor（或任务）将被调度到一个具有未分配预留资源的随机捆绑包。
+由于我们只有 1 个捆绑包，我们只有索引 0。如果你不指定捆绑包，actor「或任务」将被调度到一个具有未分配预留资源的随机捆绑包。
 
 .. tab-set::
 
@@ -436,7 +436,7 @@ Ray 支持四种占位组策略。默认调度策略是 ``PACK``。
 **PACK**
 
 所有提供的捆绑包尽可能地放置在单个节点上。
-如果无法严格打包（即，某些捆绑包无法放置在节点上），捆绑包可以放置在其他节点上。
+如果无法严格打包「即，某些捆绑包无法放置在节点上」，捆绑包可以放置在其他节点上。
 
 **STRICT_SPREAD**
 
@@ -445,17 +445,17 @@ Ray 支持四种占位组策略。默认调度策略是 ``PACK``。
 **SPREAD**
 
 每个捆绑包尽可能地分散到不同的节点上。
-如果无法严格分散（即，某些捆绑包无法放置在不同的节点上），捆绑包可以放置在重叠的节点上。
+如果无法严格分散「即，某些捆绑包无法放置在不同的节点上」，捆绑包可以放置在重叠的节点上。
 
-移除占位组（释放预留资源）
+移除占位组「释放预留资源」
 -------------------------------------------------
 
-默认的，占位组的生命周期是由创建占位组的驱动程序控制的（除非你将其设置为 :ref:`detached placement group <placement-group-detached>`）。
+默认的，占位组的生命周期是由创建占位组的驱动程序控制的「除非你将其设置为 :ref:`detached placement group <placement-group-detached>`」。
 当占位组是从一个 :ref:`detached actor <actor-lifetimes>` 创建的，生命周期是由分离的 actor 控制的。
 在 Ray，驱动程序是调用 ``ray.init`` 的 Python 脚本。
 
-当创建占位组的驱动程序或分离的 actor 退出，预留资源（捆绑包）从占位组中被释放。
-要手动释放预留资源，使用 :func:`remove_placement_group <ray.util.remove_placement_group>` API（这也是一个异步 API）。
+当创建占位组的驱动程序或分离的 actor 退出，预留资源「捆绑包」从占位组中被释放。
+要手动释放预留资源，使用 :func:`remove_placement_group <ray.util.remove_placement_group>` API「这也是一个异步 API」。
 
 .. note::
 
@@ -526,7 +526,7 @@ Ray 提供了几个有用的工具来检查占位组状态和资源使用。
 
     .. tab-item:: Ray State API
 
-      :ref:`Ray state API <state-api-overview-ref>` 是一个 CLI 工具，用于检查 Ray 资源（任务、actor、占位组等）的状态。
+      :ref:`Ray state API <state-api-overview-ref>` 是一个 CLI 工具，用于检查 Ray 资源「任务、actor、占位组等」的状态。
 
       ``ray list placement-groups`` 提供了占位组的元数据和调度状态。
       ``ray list placement-groups --detail`` 提供了更详细的统计信息和调度状态。
@@ -690,7 +690,7 @@ Ray 提供了几个有用的工具来检查占位组状态和资源使用。
 在 Dead 节点重新调度捆绑包
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果节点上包含占位组的某些捆绑包的节点死机，所有捆绑包都将通过 GCS（例如：尝试再次分配资源） 在不同的节点上重新调度。
+如果节点上包含占位组的某些捆绑包的节点死机，所有捆绑包都将通过 GCS「例如：尝试再次分配资源」 在不同的节点上重新调度。
 这意味着占位组的初始创建是“原子的”，但一旦创建，可能会出现部分占位组。
 重新调度捆绑包比其他占位组调度具有更高的调度优先级。
 
@@ -698,12 +698,12 @@ Ray 提供了几个有用的工具来检查占位组状态和资源使用。
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 如果没有足够的资源来调度部分丢失的捆绑包，占位组将等待，假设 Ray Autoscaler 将启动一个新节点来满足资源需求。
-如果无法提供额外的资源（例如，您不使用 Autoscaler 或 Autoscaler 达到资源限制），占位组将无限期地保持部分创建状态。
+如果无法提供额外的资源「例如，您不使用 Autoscaler 或 Autoscaler 达到资源限制」，占位组将无限期地保持部分创建状态。
 
 使用捆绑包的任务和 actor 的容错能力
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-一旦捆绑包恢复，使用任务和 actor 的捆绑包（预留资源）将根据其 :ref:`fault tolerant policy <fault-tolerance>` 重新调度。
+一旦捆绑包恢复，使用任务和 actor 的捆绑包「预留资源」将根据其 :ref:`fault tolerant policy <fault-tolerance>` 重新调度。
 
 API 参考
 -------------

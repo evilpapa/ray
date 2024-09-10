@@ -21,7 +21,7 @@ Ray 的一个资源是一个键值对，其中键表示资源名称，值是一�
 Ray 资源是 **逻辑** 的，不需要与物理资源一一对应。
 比如，你可以通过 ``ray start --head --num-cpus=0`` 来启动一个没有逻辑 CPU 的 Ray head 节点。
 
-甚至在物理上有八个 CPU 的情况下（这样可以告诉 Ray 调度器不要在 head 节点上调度任何需要逻辑 CPU 资源的任务或 actor，主要是为了保留 head 节点用于运行 Ray 系统进程。）。
+甚至在物理上有八个 CPU 的情况下「这样可以告诉 Ray 调度器不要在 head 节点上调度任何需要逻辑 CPU 资源的任务或 actor，主要是为了保留 head 节点用于运行 Ray 系统进程。」。
 他们主要用于调度期间的准入控制。
 
 实际上资源是逻辑的，这有几个影响：
@@ -33,7 +33,7 @@ Ray 资源是 **逻辑** 的，不需要与物理资源一一对应。
 - Ray 不提供任务或 actor 的 CPU 隔离。
   比如，Ray 不会专门保留一个物理 CPU 并将 ``num_cpus=1`` 的任务固定在上面。
   Ray 会让操作系统调度和运行任务。
-  如果需要，你可以使用操作系统 API（如 ``sched_setaffinity``）将任务固定到一个物理 CPU 上。
+  如果需要，你可以使用操作系统 API「如 ``sched_setaffinity``」将任务固定到一个物理 CPU 上。
 - Ray 提供 *visible devices* 形式的 :ref:`GPU <gpu-support>` 隔离，通过自动设置 ``CUDA_VISIBLE_DEVICES`` 环境变量，大多数 ML 框架将遵守这个环境变量来分配 GPU。
 
 .. figure:: ../images/physical_resources_vs_logical_resources.svg
@@ -67,10 +67,10 @@ Ray 资源是 **逻辑** 的，不需要与物理资源一一对应。
 
     Ray **不会在启动后动态更新资源容量**。
 
-- **逻辑 CPU 数量（``num_cpus``）**：设置为机器/容器的 CPU 数量。
-- **逻辑 GPU 数量（``num_gpus``）**：设置为机器/容器的 GPU 数量。
-- **内存（``memory``）**：设置为 ray 运行时启动时的 "可用内存" 的 70%。
-- **对象存储内存（``object_store_memory``）**：设置为 ray 运行时启动时的 "可用内存" 的 30%。请注意，对象存储内存不是逻辑资源，用户不能用它来调度。
+- **逻辑 CPU 数量「``num_cpus``」**：设置为机器/容器的 CPU 数量。
+- **逻辑 GPU 数量「``num_gpus``」**：设置为机器/容器的 GPU 数量。
+- **内存「``memory``」**：设置为 ray 运行时启动时的 "可用内存" 的 70%。
+- **对象存储内存「``object_store_memory``」**：设置为 ray 运行时启动时的 "可用内存" 的 30%。请注意，对象存储内存不是逻辑资源，用户不能用它来调度。
 
 然而，你可以通过手动指定预定义资源的数量和添加自定义资源来覆盖这些默认值。
 这里有几种方法，取决于你如何启动 Ray 集群：
@@ -127,18 +127,18 @@ Ray 资源是 **逻辑** 的，不需要与物理资源一一对应。
 指定任务或 actor 的资源需求
 ----------------------------------------------
 
-Ray 允许指定任务或 actor 的逻辑资源需求（例如 CPU、GPU 和自定义资源）。
+Ray 允许指定任务或 actor 的逻辑资源需求「例如 CPU、GPU 和自定义资源」。
 任务和 actor 会在调度时使用资源需求来决定在哪个节点上运行。
 
 By default, Ray tasks use 1 logical CPU resource and Ray actors use 1 logical CPU for scheduling, and 0 logical CPU for running.
 默认的，Ray 任务使用 1 个逻辑 CPU 资源，Ray actor 使用 1 个逻辑 CPU 资源进行调度，0 个逻辑 CPU 资源进行运行。
-（这意味着，默认情况下，actor 不能在零 CPU 节点上调度，但是无限数量的 actor 可以在任何非零 CPU 节点上运行。
+「这意味着，默认情况下，actor 不能在零 CPU 节点上调度，但是无限数量的 actor 可以在任何非零 CPU 节点上运行。
 默认的 actor 资源需求是为了历史原因而选择的。
 推荐的做法是始终为 actor 明确设置 ``num_cpus``，以避免任何意外。
-如果资源是显式指定的，它们对调度和运行都是必需的。）
+如果资源是显式指定的，它们对调度和运行都是必需的。」
 
 你可以通过 :func:`ray.remote() <ray.remote>` 和 :meth:`task.options() <ray.remote_function.RemoteFunction.options>`/:meth:`actor.options() <ray.actor.ActorClass.options>` 明确指定任务或 actor 的逻辑资源需求
-（例如，一个任务可能需要一个 GPU）。
+「例如，一个任务可能需要一个 GPU」。
 
 .. tab-set::
 

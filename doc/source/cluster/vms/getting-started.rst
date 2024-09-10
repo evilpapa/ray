@@ -12,7 +12,7 @@
 
 此演示将介绍端到端流程：
 
-1. 创建一个（基本）Python 应用程序。
+1. 创建一个「基本」Python 应用程序。
 2. 在云提供商上启动集群。
 3. 在云中运行该应用程序。
 
@@ -21,7 +21,7 @@
 
 要运行此演示，您需要：
 
-* 在你的开发机器（通常是笔记本电脑）上安装 Python，并且
+* 在你的开发机器「通常是笔记本电脑」上安装 Python，并且
 * 具有您首选的云提供商 (AWS、GCP、Azure、阿里云或 vSphere) 的帐户。
 
 设置
@@ -63,7 +63,7 @@
 
                 $ pip install -U "ray[default]" aliyun-python-sdk-core aliyun-python-sdk-ecs
             
-            阿里云集群启动器维护者（GitHub 账号）：@zhuangzhuang131419、@chenk008
+            阿里云集群启动器维护者「GitHub 账号」：@zhuangzhuang131419、@chenk008
 
          .. tab:: vSphere
 
@@ -71,7 +71,7 @@
 
                 $ pip install -U "ray[default]" "git+https://github.com/vmware/vsphere-automation-sdk-python.git"
 
-            vSphere Cluster Launcher 维护者（GitHub 帐号）：@LaynePeng、@roshankathawate、@JingChen23
+            vSphere Cluster Launcher 维护者「GitHub 帐号」：@LaynePeng、@roshankathawate、@JingChen23
 
 
 接下来，如果您尚未设置从命令行使用云提供商，则必须配置您的凭据：
@@ -114,7 +114,7 @@
                 $ export VSPHERE_PASSWORD=password # Enter your password
 
 
-创建一个（基本）Python 应用
+创建一个「基本」Python 应用
 -----------------------------------
 
 我们将编写一个简单的 Python 应用程序来跟踪执行其任务的机器的 IP 地址：
@@ -135,7 +135,7 @@
 
 将此应用程序另存为 ``script.py`` 并通过运行 ``python script.py``命令来执行它。该应用程序应需要 10 秒钟才能运行并输出类似于 ``Counter({'127.0.0.1': 10000})`` 的内容。
 
-通过一些小的改动，我们可以让这个应用程序在 Ray 上运行（有关如何执行此操作的更多信息，请参阅 :ref:`the Ray Core Walkthrough <core-walkthrough>`):
+通过一些小的改动，我们可以让这个应用程序在 Ray 上运行「有关如何执行此操作的更多信息，请参阅 :ref:`the Ray Core Walkthrough <core-walkthrough>`):
 
 .. code-block:: python
 

@@ -319,7 +319,7 @@ Ray Train 还提供了一个 :class:`~ray.train.lightning.RayLightningEnvironmen
 在你的训练功能之外，创建一个 :class:`~ray.train.ScalingConfig` 对象来配置：
 
 1. `num_workers` - 分布式训练 worker 的数量。
-2. `use_gpu` - 每个 worker 是否应该使用 GPU（或 CPU）。
+2. `use_gpu` - 每个 worker 是否应该使用 GPU「或 CPU」。
 
 .. code-block:: python
 

@@ -5,7 +5,7 @@
 
 .. _train-run-config:
 
-在 Train 中运行配置 （``RunConfig``）
+在 Train 中运行配置 「``RunConfig``」
 ------------------------------------------
 
 ``RunConfig`` 是 Ray Train 中用来定义与调用 ``trainer.fit()`` 相对应的实验规范的配置对象。
@@ -27,5 +27,5 @@
 
     查看 :class:`~ray.train.RunConfig` API 参考。
 
-    查看 :ref:`persistent-storage-guide` 以获取存储配置示例 （关联 ``storage_path``）。
+    查看 :ref:`persistent-storage-guide` 以获取存储配置示例 「关联 ``storage_path``」。
 

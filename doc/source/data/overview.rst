@@ -48,7 +48,7 @@ Ray Data 构建在 Ray 之上，因此它可以有效地扩展到大型集群，
 
 .. dropdown:: Python 优先
 
-    借助 Ray Data，您可以直接使用 Python（而不是 YAML 或其他格式）表达推理作业，
+    借助 Ray Data，您可以直接使用 Python「而不是 YAML 或其他格式」表达推理作业，
     从而实现更快的迭代、更轻松的调试和原生开发人员体验。
 
 
@@ -83,7 +83,7 @@ Ray Data 与离线推理 X 相比如何？
 .. dropdown:: 在线推理解决方案： Bento ML 、 Sagemaker Batch Transform
 
     `Bento ML <https://www.bentoml.com/>`_ 、 `Sagemaker Batch Transform <https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html>`_ 、:ref:`Ray Serve <rayserve>` 等解决方案提供了 API ，让你可以轻松编写高性能推理代码，并消除基础设施的复杂性。
-    但它们是为在线推理而不是离线批量推理而设计的，这是具有不同要求的两个不同问题。这些解决方案引入了额外的复杂性（如 HTTP），并且无法有效处理大型数据集，导致 Bento ML 等推理服务提供商 `无法与 Apache Spark 集成 <https://modelserving.com/blog/unifying-real-time-and-batch-inference-with-bentoml-and-spark>` 以进行离线推理。
+    但它们是为在线推理而不是离线批量推理而设计的，这是具有不同要求的两个不同问题。这些解决方案引入了额外的复杂性「如 HTTP」，并且无法有效处理大型数据集，导致 Bento ML 等推理服务提供商 `无法与 Apache Spark 集成 <https://modelserving.com/blog/unifying-real-time-and-batch-inference-with-bentoml-and-spark>` 以进行离线推理。
 
     Ray Data 专为离线批处理作业而构建，无需启动服务器或发送 HTTP 请求的所有额外复杂性。
 
@@ -145,9 +145,9 @@ Ray Data 与 ML 训练摄取的 X 相比如何？
 
 .. dropdown:: NVTabular
 
-    * **支持的数据类型：** `NVTabular <https://github.com/NVIDIA-Merlin/NVTabular>`__ 仅支持表格（Parquet、CSV、Avro）数据，而 Ray Data 支持许多其他文件格式。
+    * **支持的数据类型：** `NVTabular <https://github.com/NVIDIA-Merlin/NVTabular>`__ 仅支持表格「Parquet、CSV、Avro」数据，而 Ray Data 支持许多其他文件格式。
     * **较低的开销：** 数据集的开销较低：与 Petastorm 使用的基于多处理的管道相比，它支持进程之间的零拷贝交换。
-    * **无数据处理：** NVTabular 不支持在数据集转换中混合异构资源（例如CPU 和GPU 转换），而Ray Data 支持这一点。
+    * **无数据处理：** NVTabular 不支持在数据集转换中混合异构资源「例如CPU 和GPU 转换」，而Ray Data 支持这一点。
 
 ML 摄取案例研究
 ~~~~~~~~~~~~~~~~~~~~~~

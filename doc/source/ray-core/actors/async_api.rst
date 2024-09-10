@@ -189,7 +189,7 @@ ObjectRefs 也可以被包装到 ``concurrent.futures.Future`` 对象。
 在底层，Ray 在单个 Python 事件循环中运行所有方法。
 请注意，不允许在异步 actor 方法中运行阻塞的 ``ray.get`` 或 ``ray.wait``，因为 ``ray.get`` 会阻塞事件循环的执行。
 
-在异步 actor 中，一次只能运行一个任务（尽管任务可以多路复用）。在 AsyncActor 中只有一个线程！如果你想要一个线程池，请参阅 :ref:`threaded-actors`。
+在异步 actor 中，一次只能运行一个任务「尽管任务可以多路复用」。在 AsyncActor 中只有一个线程！如果你想要一个线程池，请参阅 :ref:`threaded-actors`。
 
 在异步 actor 设置并发
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -242,7 +242,7 @@ ObjectRefs 也可以被包装到 ``concurrent.futures.Future`` 对象。
 比如，你可能有一个方法执行一些计算密集型任务，而不释放事件循环的控制权。这会影响异步 Actor 的性能，因为异步 Actor 一次只能执行一个任务，并依赖 ``await`` 来切换上下文。
 
 
-相反，你可以使用 ``max_concurrency`` Actor 选项，而不使用任何异步方法，从而实现线程并发（如线程池）。
+相反，你可以使用 ``max_concurrency`` Actor 选项，而不使用任何异步方法，从而实现线程并发「如线程池」。
 
 
 .. warning::

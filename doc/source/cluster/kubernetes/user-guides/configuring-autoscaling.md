@@ -6,7 +6,7 @@
 Ray Autoscaler 是一个 Ray 集群进程，可根据资源需求自动扩展和缩小集群。 
 Autoscaler 通过根据任务、actor 或置放组所需的资源调整集群中的节点 (Ray Pod) 数量来实现此目的。
 
-Autoscaler 利用逻辑资源请求（如 `@ray.remote` 和 `ray status` 的展示）而不是物理机利用率来进行扩展。
+Autoscaler 利用逻辑资源请求「如 `@ray.remote` 和 `ray status` 的展示」而不是物理机利用率来进行扩展。
 如果您启动的 actor、任务或置放群组并且资源不足，则自动缩放器会将请求排队。
 它会调整节点数量以满足队列需求，并随着时间的推移删除没有任务、 actor 或对象的空闲节点。
 
@@ -29,8 +29,8 @@ Autoscaler 利用逻辑资源请求（如 `@ray.remote` 和 `ray status` 的展�
 ```
 
 ```{admonition} 3 KubeRay 中的 3 个级别的自动缩放
-  * **Ray actor/task**: 一些 Ray 库，如 Ray Serve，可以根据传入的请求量自动调整 Serve 副本（即 Ray Actor）的数量。
-  * **Ray node**: Ray Autoscaler 根据 Ray Actor/任务的资源需求自动调整 Ray 节点（即 Ray Pod）的数量。
+  * **Ray actor/task**: 一些 Ray 库，如 Ray Serve，可以根据传入的请求量自动调整 Serve 副本「即 Ray Actor」的数量。
+  * **Ray node**: Ray Autoscaler 根据 Ray Actor/任务的资源需求自动调整 Ray 节点「即 Ray Pod」的数量。
   * **Kubernetes node**: 如果 Kubernetes 集群缺乏足够的资源来容纳 Ray Autoscaler 创建的新 Ray Pod，Kubernetes Autoscaler 可以配置新的 Kubernetes 节点。 ***您必须自行配置 Kubernetes Autoscaler。***
 ```
 
@@ -162,7 +162,7 @@ Ray Autoscaler 为每个新的独立 Actor 生成一个新的 worker Pod。
 * 在此 RayCluster 自定义资源中，从 Ray Autoscaler 的角度来看，每个 Ray Worker Pod 仅拥有 1 个逻辑 CPU。
 因此，如果您使用 `@ray.remote(num_cpus=2)` 来创建分离的 Actor，则 Autoscaler 不会启动新 worker Pod 的创建，因为现有 Pod 的容量仅限于 1 个 CPU。
 
-* 高级）Ray Autoscaler 还提供 [Python SDK](ref-autoscaler-sdk)，使高级用户（如 Ray 维护人员）能够直接从 Autoscaler 请求资源。一般来说，大多数用户不需要使用SDK。
+* 高级」Ray Autoscaler 还提供 [Python SDK](ref-autoscaler-sdk)，使高级用户「如 Ray 维护人员」能够直接从 Autoscaler 请求资源。一般来说，大多数用户不需要使用SDK。
 
 ### 步骤 6: 通过终止分离的 Actor 来触发 RayCluster 缩容
 
@@ -278,8 +278,8 @@ helm uninstall kuberay-operator
   - `Aggressive`:Default 的别名；升级不受速率限制。
 
 * **`idleTimeoutSeconds`** (默认 60s):
-这表示缩小空闲 worker Pod 之前的等待时间（以秒为单位）。
-当 worker 节点没有活动任务、 actor 或引用的对象（存储在内存中或溢出到磁盘）时，它处于空闲状态。
+这表示缩小空闲 worker Pod 之前的等待时间「以秒为单位」。
+当 worker 节点没有活动任务、 actor 或引用的对象「存储在内存中或溢出到磁盘」时，它处于空闲状态。
 
 ### 3. Autoscaler sidecar 容器
 
@@ -313,4 +313,4 @@ helm uninstall kuberay-operator
 
 ## 下一步
 
-参阅 [（高级）了解 Kubernetes 上下文中的 Ray Autoscaler ](ray-k8s-autoscaler-comparison) 获取跟多有关 Ray Autoscaler 和 Kubernetes 自动缩放器之间关系的详细信息。
+参阅 [「高级」了解 Kubernetes 上下文中的 Ray Autoscaler ](ray-k8s-autoscaler-comparison) 获取跟多有关 Ray Autoscaler 和 Kubernetes 自动缩放器之间关系的详细信息。

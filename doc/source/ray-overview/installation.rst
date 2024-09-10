@@ -251,7 +251,7 @@ Ray 在 Windows 中当前处于 beta 状态。
 
   当你运行 ``pip install`` 来安装 Ray，Java jars 也会被安装。上述依赖项仅用于构建您的 Java 代码以及在本地模式下运行您的代码。
 
-  如果你想在多节点 Ray 集群运行你的 Java 代码，如果（通过 ``pip install`` 安装的 Ray 和 maven 依赖项）的版本不匹配，最好在打包代码时排除 Ray jars，以避免 jar 冲突。
+  如果你想在多节点 Ray 集群运行你的 Java 代码，如果「通过 ``pip install`` 安装的 Ray 和 maven 依赖项」的版本不匹配，最好在打包代码时排除 Ray jars，以避免 jar 冲突。
 
 .. _ray-install-cpp:
 
@@ -276,7 +276,7 @@ Ray 在 Windows 中当前处于 beta 状态。
 M1 Mac (Apple Silicon) 支持
 ------------------------------
 
-Ray 支持运行 Apple Silicon（例如 M1 Mac）的机器。
+Ray 支持运行 Apple Silicon「例如 M1 Mac」的机器。
 多节点集群未经测试。要开始本地 Ray 开发：
 
 #. 安装 `miniforge <https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh>`_。

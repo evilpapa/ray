@@ -43,10 +43,10 @@ gcloud container clusters create autoscaler-ray-cluster \
 Kubernetes 节点池或节点组：
 - 共 10 个节点
 - 每个节点容量为 16 个 CPU 和 64 Gi 内存。对于主要的云提供商，合适的实例类型包括
-    * m5.4xlarge（亚马逊网络服务）
+    * m5.4xlarge「亚马逊网络服务」
     * Standard_D5_v2 (Azure)
     * e2-standard-16 (Google Cloud)
-- 每个节点应配置1000 GB的磁盘空间（用于存储训练集）。
+- 每个节点应配置1000 GB的磁盘空间「用于存储训练集」。
 
 ## 部署 KubeRay operator
 

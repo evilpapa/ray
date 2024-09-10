@@ -10,7 +10,7 @@
    :align: center
    :width: 80%
 
-单击“Stack Trace”将使用 ``py-spy``返回当前堆栈跟踪示例. 。默认情况下，仅显示 Python 堆栈跟踪。要显示本机代码帧，请设置 URL 参数 ``native=1`` （仅在 Linux 上支持）。
+单击“Stack Trace”将使用 ``py-spy``返回当前堆栈跟踪示例. 。默认情况下，仅显示 Python 堆栈跟踪。要显示本机代码帧，请设置 URL 参数 ``native=1`` 「仅在 Linux 上支持」。
 
 .. image:: /images/stack.png
    :align: center
@@ -28,7 +28,7 @@
 使用 ``ray stack`` CLI 命令
 ------------------------------
 
-安装完 ``py-spy`` 后（当 :ref:`安装 Ray <installation>` 的 “Ray Dashboard” 组件之后，也会自动的安装进来），你可以执行 ``ray stack`` 转储当前节点上所有 Ray Worker 进程的堆栈跟踪。
+安装完 ``py-spy`` 后「当 :ref:`安装 Ray <installation>` 的 “Ray Dashboard” 组件之后，也会自动的安装进来」，你可以执行 ``ray stack`` 转储当前节点上所有 Ray Worker 进程的堆栈跟踪。
 
 本文档讨论了人们在使用 Ray 时遇到的一些常见问题以及一些已知问题。如果您遇到其他问题，请 `告知我们`_ 。
 

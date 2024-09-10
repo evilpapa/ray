@@ -18,11 +18,11 @@ Ray 可能在 actor 进程失败后自动重启 actor。
 当 actor 重启时，它的状态将通过重新运行其构造函数来重新创建。
 在指定的重启次数之后，后续的 actor 方法将引发 ``RayActorError``。
 
-默认的，actor 任务以最多一次的语义执行（``@ray.remote`` 中 :func:``decorator <ray.remote>`` 的 ``max_task_retries=0``）。
+默认的，actor 任务以最多一次的语义执行「``@ray.remote`` 中 :func:``decorator <ray.remote>`` 的 ``max_task_retries=0``」。
 这意味着如果一个 actor 任务被提交到一个不可达的 actor，Ray 将会报告错误，抛出 ``RayActorError``，这是一个 Python 级别的异常，当调用 ``ray.get`` 时，会抛出这个异常。
 请注意，即使任务确实成功执行，也可能抛出这个异常。例如，如果 actor 在执行任务后立即死亡，就会发生这种情况。
 
-Ray 还为 actor 任务提供了至少一次的执行语义（ ``max_task_retries=-1`` 或 ``max_task_retries > 0``）。
+Ray 还为 actor 任务提供了至少一次的执行语义「 ``max_task_retries=-1`` 或 ``max_task_retries > 0``」。
 这意味着如果一个 actor 任务被提交到一个不可达的 actor，系统将自动重试任务。
 使用此选项，系统只会在发生以下情况之一时向应用程序抛出 ``RayActorError``：(1) actor 的 ``max_restarts`` 限制已经超过，actor 不能再重启，
 或者 (2) 此特定任务的 ``max_task_retries`` 限制已经超过。
@@ -38,7 +38,7 @@ Ray 还为 actor 任务提供了至少一次的执行语义（ ``max_task_retrie
 
 对于至少一次执行的 actor，系统仍然会根据初始提交顺序保证执行顺序。
 例如，任何在失败的 actor 任务之后提交的任务都不会在 actor 上执行，直到失败的 actor 任务成功重试。
-系统不会尝试重新执行任何在失败之前成功执行的任务（除非 ``max_task_retries`` 不为零且任务对于 :ref:`对象重建 <fault-tolerance-objects-reconstruction>` 是必要的）。
+系统不会尝试重新执行任何在失败之前成功执行的任务「除非 ``max_task_retries`` 不为零且任务对于 :ref:`对象重建 <fault-tolerance-objects-reconstruction>` 是必要的」。
 
 .. note::
 
@@ -74,7 +74,7 @@ Actor 检查点
 .. note::
 
   如果检查点保存在外部存储中，请确保整个集群都可以访问它，因为 actor 可能会在不同的节点上重启。
-  例如，将检查点保存到云存储（例如 S3）或共享目录（例如通过 NFS）。
+  例如，将检查点保存到云存储「例如 S3」或共享目录「例如通过 NFS」。
 
 
 Actor 创建者失败

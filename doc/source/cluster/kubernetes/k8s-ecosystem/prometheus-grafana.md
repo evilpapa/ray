@@ -155,7 +155,7 @@ spec:
   #     release: prometheus
   ```
 
-* `namespaceSelector` 和 `seletor` 用于选择导出器的 Kubernetes 服务。 。由于 Ray 使用内置导出器，因此 **ServiceMonitor** 选择 Ray 的头服务来公开指标端点（即此处的端口 8080）。
+* `namespaceSelector` 和 `seletor` 用于选择导出器的 Kubernetes 服务。 。由于 Ray 使用内置导出器，因此 **ServiceMonitor** 选择 Ray 的头服务来公开指标端点「即此处的端口 8080」。
   ```sh
   kubectl get service -n default -l ray.io/node-type=head
   # NAME                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                                         AGE

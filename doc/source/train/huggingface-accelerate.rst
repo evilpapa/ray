@@ -51,7 +51,7 @@
     对象及其 `Accelerator.prepare() <https://huggingface.co/docs/accelerate/main/en/package_reference/accelerator#accelerate.Accelerator.prepare>`_  方法处理。
     
     与原生 PyTorch、PyTorch Lightning 或 Hugging Face Transformers 不同， **不要** 在训练函数中
-    调用任何其他 Ray Train 实用程序（如 :meth:`~ray.train.torch.prepare_model` 或 :meth:`~ray.train.torch.prepare_data_loader` ）。
+    调用任何其他 Ray Train 实用程序「如 :meth:`~ray.train.torch.prepare_model` 或 :meth:`~ray.train.torch.prepare_data_loader` 」。
 
 配置加速
 --------------------

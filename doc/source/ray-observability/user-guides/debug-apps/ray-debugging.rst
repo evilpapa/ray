@@ -91,7 +91,7 @@ Ray 程序 ``debugging.py`` 现在已经完成，应该已经打印了 ``[0, 1]`
 
 Ray 调试器支持在运行在 Ray 集群上的任务和 actor 中设置断点。
 要使用 ``ray debug`` 从集群的头节点附加到这些任务和 actor，
-您需要确保在启动集群时使用 ``ray start`` 传递 ``--ray-debugger-external`` 标志（可能在您的 ``cluster.yaml`` 文件或 k8s Ray 集群规范中）。
+您需要确保在启动集群时使用 ``ray start`` 传递 ``--ray-debugger-external`` 标志「可能在您的 ``cluster.yaml`` 文件或 k8s Ray 集群规范中」。
 
 注意，这个标志会导致 worker 在外部 IP 地址上监听 PDB 命令，
 所以 *只有* 在您的集群在防火墙后面时才应该使用。

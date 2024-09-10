@@ -168,7 +168,7 @@ Ray 示例
         :link: /serve/tutorials/serve-ml-models
         :link-type: doc
 
-        使用 Ray Serve 服务 ML 模型（Tensorflow、PyTorch、Scikit-Learn 等）
+        使用 Ray Serve 服务 ML 模型「Tensorflow、PyTorch、Scikit-Learn 等」
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item serving
@@ -626,7 +626,7 @@ Ray 示例
         :class-item: gallery-item rl
         :link: https://medium.com/distributed-computing-with-ray/attention-nets-and-more-with-rllibs-trajectory-view-api-d326339a6e65
 
-        RLlib 的轨迹视图 API 及如何实现 GTrXL（注意力网络）架构
+        RLlib 的轨迹视图 API 及如何实现 GTrXL「注意力网络」架构
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
@@ -650,7 +650,7 @@ Ray 示例
         :class-item: gallery-item tensorflow rl
         :link: https://medium.com/riselab/functional-rl-with-keras-and-tensorflow-eager-7973f81d6345
 
-        探索了一种用于实现强化学习（RL）算法的函数式范式
+        探索了一种用于实现强化学习「RL」算法的函数式范式
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
@@ -680,13 +680,13 @@ Ray 示例
         :class-item: gallery-item rl rllib
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/dmlab_watermaze.py
 
-        如何使用 DMLab 环境（Watermaze）的示例
+        如何使用 DMLab 环境「Watermaze」的示例
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl
         :link: https://github.com/ray-project/ray/blob/master/rllib/examples/recommender_system_with_recsim_and_slateq.py
 
-        RecSym 环境示例（用于推荐系统）使用 SlateQ 算法
+        RecSym 环境示例「用于推荐系统」使用 SlateQ 算法
 
     .. grid-item-card:: :bdg-secondary:`Code example`
         :class-item: gallery-item rl rllib

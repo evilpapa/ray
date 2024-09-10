@@ -66,8 +66,8 @@ size.
     :ref:`除了 "OMP_NUM_THREADS" <omp-num-thread-note>`，
     Ray 不会自动设置任何与本地并行或线程相关的环境变量或配置。
     如果您想要更好地控制 TensorFlow 线程，请在 ``train_loop_per_worker`` 函数开头使用
-    ``tf.config.threading`` 模块 （例如：
-    ``tf.config.threading.set_inter_op_parallelism_threads(num_cpus)``）。
+    ``tf.config.threading`` 模块 「例如：
+    ``tf.config.threading.set_inter_op_parallelism_threads(num_cpus)``」。
 
 创建 TensorflowTrainer
 --------------------------

@@ -19,7 +19,7 @@ ___________________________________________
 
 `Ray Docker Hub <https://hub.docker.com/r/rayproject/>`_ 托管与 Ray 和某些机器学习库打包的基于 CUDA 的容器映像。
 例如，镜像 ``rayproject/ray-ml:2.6.3-gpu`` 非常适合使用 Ray 2.6.3 运行基于 GPU 的 ML 工作负载。
-Ray ML 镜像与这些文档中使用的 Ray 库所需的依赖项（例如 TensorFlow 和 PyTorch）一起打包。
+Ray ML 镜像与这些文档中使用的 Ray 库所需的依赖项「例如 TensorFlow 和 PyTorch」一起打包。
 要添加自定义依赖项，请使用以下一种或两种方法：
 
 * 使用官方 :ref:`Ray docker 镜像 <docker-images>` 作为基础构建 docker 镜像。
@@ -127,7 +127,7 @@ Ray 自动缩放器知道每个 Ray 工作组的 GPU 容量。
     ray.get([actor.say_hello.remote() for actor in gpu_actors])
 
 程序退出后，actor 将会被垃圾回收。
-GPU Worker Pod 将在空闲超时（默认为 60 秒）后缩容。
+GPU Worker Pod 将在空闲超时「默认为 60 秒」后缩容。
 如果 GPU Worker Pod 在 Kubernetes 节点的自动缩放池上运行，则 Kubernetes 节点也将缩小。
 
 请求 GPU
@@ -155,7 +155,7 @@ GPU Worker Pod 将在空闲超时（默认为 60 秒）后缩容。
 
 .. _kuberay-gpu-override:
 
-覆盖 Ray GPU 容量（高级）
+覆盖 Ray GPU 容量「高级」
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 对于专门的用例，可以覆盖向 Ray 公布的 Ray pod GPU 容量。
 为此，请在头或者工作组的 `rayStartParams` 中设置 `num-gpus` 键的值。
@@ -169,7 +169,7 @@ GPU Worker Pod 将在空闲超时（默认为 60 秒）后缩容。
 
 Ray 调度器和自动缩放器将为组中的每个 Ray pod 分配 2 个 GPU 容量单位，即使容器限制不指示 GPU 的存在。
 
-GPU Pod 调度（高级）
+GPU Pod 调度「高级」
 _____________________________
 
 GPU 污染和容忍
@@ -204,7 +204,7 @@ GKE、EKS 和 AKS 等托管 Kubernetes 服务会自动将匹配的 `tolerations`
 
 节点选择器和节点标签
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-为了确保 Ray Pod 绑定到满足特定条件（例如存在 GPU 硬件）的 Kubernetes 节点，您可能希望使用`workerGroup` 的 `pod`` 模板 `nodeSelector` 字段。
+为了确保 Ray Pod 绑定到满足特定条件「例如存在 GPU 硬件」的 Kubernetes 节点，您可能希望使用`workerGroup` 的 `pod`` 模板 `nodeSelector` 字段。
 有关 Pod 到节点分配的更多信息，请参阅 `Kubernetes docs`_。
 
 

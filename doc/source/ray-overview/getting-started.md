@@ -607,7 +607,7 @@ pip install -U "ray[default]"
 `````{dropdown} <img src="images/ray_svg_logo.svg" alt="ray" width="50px"> Ray State APIs: CLI to access cluster states
 :animate: fade-in-slide-down
 
-Ray 状态 API 允许用户通过 CLI 或 Python SDK 方便地访问 Ray 的当前状态（快照）。
+Ray 状态 API 允许用户通过 CLI 或 Python SDK 方便地访问 Ray 的当前状态「快照」。
 
 ````{note}
 要开始使用状态 API，请参考默认安装，如下所示：

@@ -4,8 +4,8 @@
 ==============================
 
 Ray Train 提供了一个 API，用于通过
-调用 ``train.report(metrics)`` 从分布式工作节点上的训练函数（运行）
-到 ``Trainer``（执行您的 python 脚本）报告中间结果和检查点。
+调用 ``train.report(metrics)`` 从分布式工作节点上的训练函数「运行」
+到 ``Trainer``「执行您的 python 脚本」报告中间结果和检查点。
 结果将从分布式 worker 收集并传递给驱动程序进行记录和显示。
 
 .. warning::
@@ -14,7 +14,7 @@ Ray Train 提供了一个 API，用于通过
     必须在每个 worker 上调用 ``train.report()``。
     如果要聚合来自多个 worker 的结果，请参见 :ref:`train-aggregating-results`。
 
-报告的主要用例是每个训练阶段结束时的指标（准确性、损失等）。
+报告的主要用例是每个训练阶段结束时的指标「准确性、损失等」。
 
 .. tab-set::
 

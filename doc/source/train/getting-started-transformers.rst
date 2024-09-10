@@ -29,7 +29,7 @@
     result = trainer.fit()
 
 1. `train_func` 是在每个分布式训练 :ref:`worker <train-overview-worker>` 上执行的 Python 代码。
-2. :class:`~ray.train.ScalingConfig` 定义分布式训练 worker 和计算资源（例如 GPU）的数量。
+2. :class:`~ray.train.ScalingConfig` 定义分布式训练 worker 和计算资源「例如 GPU」的数量。
 3. :class:`~ray.train.torch.TorchTrainer` 启动分布式训练作业。
 
 比较有和没有 Ray Train 的 Hugging Face Transformers 训练脚本。
@@ -245,7 +245,7 @@ Ray Train 在进入此函数之前在每个 worker 上设置分布式进程组�
 在你的训练功能之外，创建一个 :class:`~ray.train.ScalingConfig` 对象来配置：
 
 1. `num_workers` - T分布式训练 worker 的数量。
-2. `use_gpu` - 每个 worker 是否应该使用 GPU（或 CPU）。
+2. `use_gpu` - 每个 worker 是否应该使用 GPU「或 CPU」。
 
 .. code-block:: python
 

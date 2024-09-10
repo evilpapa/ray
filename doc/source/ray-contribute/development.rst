@@ -43,13 +43,13 @@
 
     cd ray
 
-接下来确保将你的仓库连接到上游（主项目）Ray 仓库。这样你就可以在提出更改（pull requests）时将你的代码推送到你的仓库，同时也可以从主项目中拉取更新。
+接下来确保将你的仓库连接到上游「主项目」Ray 仓库。这样你就可以在提出更改「pull requests」时将你的代码推送到你的仓库，同时也可以从主项目中拉取更新。
 
 .. tab-set::
 
     .. tab-item:: Git SSH
 
-        通过 SSH 连接你的仓库（默认）运行以下命令：
+        通过 SSH 连接你的仓库「默认」运行以下命令：
 
         .. code-block:: shell
 
@@ -114,7 +114,7 @@
 
         你需要在每次启动新的 shell/terminal 时激活虚拟环境来工作在 Ray 上。
 
-        创建一个新的虚拟环境可能会使用较旧版本的 ``pip`` 和 ``wheel``。为了避免安装包时出现问题，请使用模块 ``pip`` 安装 ``pip``（本身）和 ``wheel`` 的最新版本：
+        创建一个新的虚拟环境可能会使用较旧版本的 ``pip`` 和 ``wheel``。为了避免安装包时出现问题，请使用模块 ``pip`` 安装 ``pip``「本身」和 ``wheel`` 的最新版本：
 
         .. code-block:: shell
 
@@ -122,7 +122,7 @@
 
 .. _python-develop:
 
-构建 Ray（仅 Python）
+构建 Ray「仅 Python」
 --------------------------
 
 .. note:: 除非另有说明，目录和文件路径都是相对于项目根目录的。
@@ -131,7 +131,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 
 1. 如上所述，确保您克隆了 Ray 的 git 存储库。
 
-2. 确保如上所述激活 Python（虚拟）环境。
+2. 确保如上所述激活 Python「虚拟」环境。
 
 3. 使用 Pip 安装 **最新的 Ray wheels.** 参考 :ref:`install-nightlies` 说明。
 
@@ -140,7 +140,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
     # 例如，对于 Python 3.8:
     pip install -U https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl
 
-4. 用本地的已编辑拷贝版本替换安装包重的 Python 文件。我们提供了一个简单的脚本来帮助你完成操作： ``python python/ray/setup-dev.py``。运行此脚本会移除 ``ray`` pip 包绑定的  ``ray/tune``， ``ray/rllib``， ``ray/autoscaler`` 文件夹 （在其他文件夹），并替换为本地代码链接。这种方法，在你 git 克隆中改变文件会直接影响于你安装的 Ray 的行为。
+4. 用本地的已编辑拷贝版本替换安装包重的 Python 文件。我们提供了一个简单的脚本来帮助你完成操作： ``python python/ray/setup-dev.py``。运行此脚本会移除 ``ray`` pip 包绑定的  ``ray/tune``， ``ray/rllib``， ``ray/autoscaler`` 文件夹 「在其他文件夹」，并替换为本地代码链接。这种方法，在你 git 克隆中改变文件会直接影响于你安装的 Ray 的行为。
 
 .. code-block:: shell
 
@@ -155,7 +155,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
     # This links all folders except "_private" and "dashboard" without user prompt.
     python setup-dev.py -y --skip _private dashboard
 
-.. warning:: （对于 Ray 或 Ray wheel）如果使用此方法设置你的环境，请不要运行 ``pip uninstall ray`` 或 ``pip install -U`` 。要卸载或者升级，你首先必须运行 ``rm -rf`` 删除 pip 安装 site （通常为 ``site-packages/ray`` 路径），然后使用 pip 重新安装（参考上面的命令），最终重新运行上面的 ``setup-dev.py`` 脚本。
+.. warning:: 「对于 Ray 或 Ray wheel」如果使用此方法设置你的环境，请不要运行 ``pip uninstall ray`` 或 ``pip install -U`` 。要卸载或者升级，你首先必须运行 ``rm -rf`` 删除 pip 安装 site 「通常为 ``site-packages/ray`` 路径」，然后使用 pip 重新安装「参考上面的命令」，最终重新运行上面的 ``setup-dev.py`` 脚本。
 
 .. code-block:: shell
 
@@ -189,7 +189,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
   nvm use 14
 
 
-对于 RHELv8（Redhat EL 8.0-64 Minimal），运行以下命令：
+对于 RHELv8「Redhat EL 8.0-64 Minimal」，运行以下命令：
 
 .. code-block:: bash
 
@@ -201,7 +201,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 准备在 MacOS 上构建 Ray
 -------------------------------
 
-.. tip:: 假设您已经在 Mac 上安装了 Brew 和 Bazel，并且还在 Mac 上安装了 grpc 和 protobuf，请先考虑便通过命令``brew uninstall grpc``， ``brew uninstall protobuf``删除它们（grpc 和 protobuf） , 以顺利构建。如果您之前已经构建了源代码但仍然出现类似 ``No such file or directory:``，的错误，请尝试通过运行命令 ``brew uninstall binutils`` 和 ``bazel clean --expunge`` 清理主机上的先前构建。
+.. tip:: 假设您已经在 Mac 上安装了 Brew 和 Bazel，并且还在 Mac 上安装了 grpc 和 protobuf，请先考虑便通过命令``brew uninstall grpc``， ``brew uninstall protobuf``删除它们「grpc 和 protobuf」 , 以顺利构建。如果您之前已经构建了源代码但仍然出现类似 ``No such file or directory:``，的错误，请尝试通过运行命令 ``brew uninstall binutils`` 和 ``bazel clean --expunge`` 清理主机上的先前构建。
 
 要在 MacOS 上构建 Ray，首先安装以下依赖项：
 
@@ -213,7 +213,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
   # Install Bazel.
   ray/ci/env/install-bazel.sh
 
-在 Linux 和 MacOS 上构建 Ray（完整版）
+在 Linux 和 MacOS 上构建 Ray「完整版」
 ------------------------------------
 
 确保您拥有 Ray 的 git 存储库的本地克隆，如上所述。您还需要安装 NodeJS_ 来构建仪表板。
@@ -244,7 +244,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
   cd ../..
 
 
-现在让我们为 Python 构建 Ray。确保您激活了可以使用的任何 Python（或 conda） 虚拟环境，如上所述。
+现在让我们为 Python 构建 Ray。确保您激活了可以使用的任何 Python「或 conda」 虚拟环境，如上所述。
 
 进入Ray 项目 ``python/`` 目录并使用以下 ``pip`` 命令安装项目：
 
@@ -261,7 +261,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 ``-e`` 意味着 “可编辑”，因此您对 Ray 目录中的文件所做的更改
 将生效，而无需重新安装该包。
 
-.. warning:: 如果你运行 ``python setup.py install`` 文件将从 Ray 目录复制到 Python 包目录 （``/lib/python3.6/site-packages/ray``）。这意味着你对 Ray 目录中的文件所做的更改不会产生任何效果。
+.. warning:: 如果你运行 ``python setup.py install`` 文件将从 Ray 目录复制到 Python 包目录 「``/lib/python3.6/site-packages/ray``」。这意味着你对 Ray 目录中的文件所做的更改不会产生任何效果。
 
 .. tip::
 
@@ -276,7 +276,7 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 
 .. _NodeJS: https://nodejs.org
 
-在 Windows 上构建 Ray（完整版）
+在 Windows 上构建 Ray「完整版」
 ------------------------------
 
 **要求**
@@ -317,9 +317,9 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 
 4. Bazel 4.2 安装。 转到 Bazel 4.2 发布网页并
 下载 bazel-4.2.1-windows-x86_64.exe。将 exe 复制到您选择的目录中。
-将环境变量 BAZEL_PATH 定义为完整的 exe 路径（例如：
-``set BAZEL_PATH=C:\bazel\bazel.exe``）。还将 Bazel 目录添加到
- ``PATH`` （例如： ``set PATH=%PATH%;C:\bazel`` ）
+将环境变量 BAZEL_PATH 定义为完整的 exe 路径「例如：
+``set BAZEL_PATH=C:\bazel\bazel.exe``」。还将 Bazel 目录添加到
+ ``PATH`` 「例如： ``set PATH=%PATH%;C:\bazel`` 」
 
 5. 下载 Ray 源码并构建。
 
@@ -333,13 +333,13 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 影响构建的环境变量
 --------------------------------------------
 
-您可以使用以下环境变量来调整构建（运行 ``pip install -e .`` 或 ``python setup.py install`` ）：
+您可以使用以下环境变量来调整构建「运行 ``pip install -e .`` 或 ``python setup.py install`` 」：
 
 - ``RAY_INSTALL_JAVA``: 如果设置等于 ``1``，将执行额外的构建步骤
   来构建代码库的 Java 部分
 - ``RAY_INSTALL_CPP``: 如果设置等于 ``1``， ``ray-cpp`` 将安装
-- ``RAY_DISABLE_EXTRA_CPP``: 如果设置等于 ``1``，则常规（非
-  ``cpp``）构建将不会提供某些 ``cpp`` 接口
+- ``RAY_DISABLE_EXTRA_CPP``: 如果设置等于 ``1``，则常规「非
+  ``cpp``」构建将不会提供某些 ``cpp`` 接口
 - ``SKIP_BAZEL_BUILD``: 如果设置等于 ``1``，则不会执行任何 Bazel 构建步骤
 - ``SKIP_THIRDPARTY_INSTALL``: 如果设置将跳过第三方python包的安装
 - ``RAY_DEBUG_BUILD``: 可以设置为 ``debug``， ``asan`` 或 ``tsan``。任何其他值将被忽略
@@ -373,17 +373,17 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 
 目前，Ray 的构建经过了优化，这可能需要很长时间
 并且会干扰调试。 要执行快速、调试或优化构建，您可以运行
-以下命令 （分别通过 ``-c`` ``fastbuild`` / ``dbg`` / ``opt``）：
+以下命令 「分别通过 ``-c`` ``fastbuild`` / ``dbg`` / ``opt``」：
 
 .. code-block:: shell
 
  bazel build -c fastbuild //:ray_pkg
 
-这将使用适当的选项重建 Ray（可能需要一段时间）。如果您需要
+这将使用适当的选项重建 Ray「可能需要一段时间」。如果您需要
 构建所有目标，则可以使用 ``"//:all"`` 替代
 ``//:ray_pkg``。
 
-为了使此更改永久生效，您可以向用户级 ``~/.bazelrc`` 文件（不要与工作区级文件 ``.bazelrc`` 混淆）
+为了使此更改永久生效，您可以向用户级 ``~/.bazelrc`` 文件「不要与工作区级文件 ``.bazelrc`` 混淆」
 添加如下行选项：
 
 .. code-block:: shell
@@ -406,8 +406,8 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 使用本地存储库来获取依赖
 -----------------------------------------
 
-如果您想使用自定义依赖项构建 Ray（例如，
-使用不同版本的 Cython），您可以按如下方式修改 ``.bzl`` 文件：
+如果您想使用自定义依赖项构建 Ray「例如，
+使用不同版本的 Cython」，您可以按如下方式修改 ``.bzl`` 文件：
 
 .. code-block:: python
 
@@ -423,8 +423,8 @@ RLlib， Tune， Autoscaler 以及大多数 Python 文件不需要您构建和�
 This replaces the existing ``http_archive`` rule with one that references a
 sibling of your Ray directory (named ``cython``) using the build file
 provided in the Ray repository (``bazel/BUILD.cython``).
-这将使用 Ray 存储库（名为 ``cython`` ）中提供的构建文件
-（ ``bazel/BUILD.cython`` ），将现有 ``http_archive`` 规则替换为引用 Ray 目录的
+这将使用 Ray 存储库「名为 ``cython`` 」中提供的构建文件
+「 ``bazel/BUILD.cython`` 」，将现有 ``http_archive`` 规则替换为引用 Ray 目录的
 同级规则。
 If the dependency already has a Bazel build file in it, you can use
 ``native.local_repository`` instead, and omit ``build_file``.

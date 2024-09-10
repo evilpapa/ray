@@ -55,7 +55,7 @@ Ray Train 提供了一种快照训练进度的方法 :class:`Checkpoints <ray.tr
 然后，调用 ``train.report``
 将检查点上传到其最终持久存储位置。
 然后，可以安全地清理本地临时目录以释放磁盘空间
-（例如，从存在的 ``tempfile.TemporaryDirectory``）。
+「例如，从存在的 ``tempfile.TemporaryDirectory``」。
 
 .. tip::
 
@@ -110,7 +110,7 @@ Ray Train 提供了一种快照训练进度的方法 :class:`Checkpoints <ray.tr
         您始终可以从 :attr:`result.checkpoint <ray.train.Result.checkpoint>` 和
         :attr:`result.best_checkpoints <ray.train.Result.best_checkpoints>` 路径获取检查点。
 
-        对于更高级的用法（例如以不同的频率报告、报告自定义检查点文件），您可以实现自己的自定义回调。
+        对于更高级的用法「例如以不同的频率报告、报告自定义检查点文件」，您可以实现自己的自定义回调。
         这是一个每 3 个 epoch 报告一次检查点的简单示例：
 
         .. literalinclude:: ../doc_code/checkpoints.py
@@ -140,7 +140,7 @@ Ray Train 提供了一种快照训练进度的方法 :class:`Checkpoints <ray.tr
         用户可以正确配置 ``logging_strategy``， ``save_strategy`` 和 ``evaluation_strategy``
         来确保监控指标与检查点保存在同一步骤记录。
 
-        例如，评估指标（在本例中的 ``eval_loss``）在评估期间被记录。
+        例如，评估指标「在本例中的 ``eval_loss``」在评估期间被记录。
         如果用户希望根据 ``eval_loss`` 保留最佳的 3 个检查点，
         他们应该调整保存和评估频率。以下是两个有效配置的示例：
 
@@ -175,13 +175,13 @@ Ray Train 提供了一种快照训练进度的方法 :class:`Checkpoints <ray.tr
             :end-before: __transformers_custom_save_example_end__
 
 
-        您可以通过实现自己的 Transformers Trainer 回调来确定何时报告（``on_save``， ``on_epoch_end``， ``on_evaluate``）
-        以及报告什么（自定义指标和检查点文件）
+        您可以通过实现自己的 Transformers Trainer 回调来确定何时报告「``on_save``， ``on_epoch_end``， ``on_evaluate``」
+        以及报告什么「自定义指标和检查点文件」
 
 
 .. _train-distributed-checkpointing:
 
-保存来自多个 worker 的检查点（分布式检查点）
+保存来自多个 worker 的检查点「分布式检查点」
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 在每个 worker 仅具有完整模型的一个分片的模型并行训练策略中，
@@ -192,7 +192,7 @@ Ray Train 提供了一种快照训练进度的方法 :class:`Checkpoints <ray.tr
     Ray Train 的分布式检查点。每个 worker 将自己的检查点分片独立上传到持久存储。
 
 分布式检查点是进行
-模型并行训练（例如 DeepSpeed、FSDP、Megatron-LM）时保存检查点的最佳实践。
+模型并行训练「例如 DeepSpeed、FSDP、Megatron-LM」时保存检查点的最佳实践。
 
 有两个主要好处：
 
@@ -318,6 +318,6 @@ Ray Train 通过 :class:`~ray.train.CheckpointConfig` 提供了一些检查点�
 
     **如果同一节点上的多个进程同时调用此方法，**
     则只有一个进程会执行下载，而其他进程则等待下载完成。
-    下载完成后，所有进程都会收到相同的本地（临时）目录以供读取。
+    下载完成后，所有进程都会收到相同的本地「临时」目录以供读取。
 
     一旦所有进程完成检查点工作，临时目录就会被清理。

@@ -29,9 +29,9 @@ kind create cluster --config ray-operator/config/security/kind-config.yaml --ima
 `audit-policy.yaml` 定义了一个审计策略来监听 `pod-security` 命名空间中的 Pod 事件。
 通过这个策略，我们可以检查我们的 Pod 是否违反了标准的 `restricted` 策略。
 
-[Pod 安全准入](https://kubernetes.io/docs/concepts/security/pod-security-admission/) 功能首次在 Kubernetes v1.22（alpha）中引入，
+[Pod 安全准入](https://kubernetes.io/docs/concepts/security/pod-security-admission/) 功能首次在 Kubernetes v1.22「alpha」中引入，
 并在 Kubernetes v1.25 中变得稳定。
-此外，KubeRay目前支持Kubernetes v1.19到v1.24。（在撰写本文时，我们尚未使用 Kubernetes v1.25 测试 KubeRay）。 因此，我在此步骤中使用 **Kubernetes v1.24** 。
+此外，KubeRay目前支持Kubernetes v1.19到v1.24。「在撰写本文时，我们尚未使用 Kubernetes v1.25 测试 KubeRay」。 因此，我在此步骤中使用 **Kubernetes v1.24** 。
 
 # 步骤 2: 检查审核日志
 
@@ -135,4 +135,4 @@ kubectl delete -n pod-security -f ray-cluster.pod-security.yaml
 
  Head Pod 和 worker Pod 将按照 `ray-cluster.pod-security.yaml` 创建。
 首先，我们登录 head Pod，运行 XGBoost 示例脚本，并在仪表板中检查作业状态。
- 接下来，我们用来 `pip` 安装 Python 依赖项（即 `jsonpatch`），`pip` 命令的退出代码应该为 0。
+ 接下来，我们用来 `pip` 安装 Python 依赖项「即 `jsonpatch`」，`pip` 命令的退出代码应该为 0。

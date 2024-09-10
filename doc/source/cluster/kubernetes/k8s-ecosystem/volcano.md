@@ -1,7 +1,7 @@
 (kuberay-volcano)=
 # KubeRay 与 Volcano 集成
 
-[Volcano](https://github.com/volcano-sh/volcano) 是一个基于Kubernetes构建的批量调度系统。它提供了 Kubernetes 目前缺少的一套机制（组调度、作业队列、公平调度策略），而许多类别的批处理和弹性工作负载通常需要这些机制。 KubeRay 的 Volcano 集成可以在多租户 Kubernetes 环境中更有效地调度 Ray pod。
+[Volcano](https://github.com/volcano-sh/volcano) 是一个基于Kubernetes构建的批量调度系统。它提供了 Kubernetes 目前缺少的一套机制「组调度、作业队列、公平调度策略」，而许多类别的批处理和弹性工作负载通常需要这些机制。 KubeRay 的 Volcano 集成可以在多租户 Kubernetes 环境中更有效地调度 Ray pod。
 
 ## 设置
 
@@ -107,7 +107,7 @@ EOF
 
 **容量** 是对队列在任何给定时间支持的最大资源的硬性约束。您可以根据需要更新它，以允许一次运行更多或更少的工作负载。
 
-接下来，创建一个具有头节点（1 个 CPU + 2Gi RAM）和两个 worker 节点（每个 worker 节点 1 CPU + 1Gi RAM）的 RayCluster，总共 3 个 CPU 和 4Gi RAM：
+接下来，创建一个具有头节点「1 个 CPU + 2Gi RAM」和两个 worker 节点「每个 worker 节点 1 CPU + 1Gi RAM」的 RayCluster，总共 3 个 CPU 和 4Gi RAM：
 
 ```shell
 # Path: kuberay/ray-operator/config/samples
@@ -226,7 +226,7 @@ kubectl get podgroup ray-test-cluster-1-pg -o yaml
 #   phase: Pending
 ```
 
-由于新集群需要的 CPU 和 RAM 超过了队列允许的数量，因此即使其中一个 Pod 可以容纳剩余的 1 个 CPU 和 2Gi RAM，在有足够的空间容纳所有 Pod 之前，不会放置任何集群的 Pod。如果不以这种方式使用 Volcano 进行群组调度，通常会放置其中一个 Pod，从而导致集群被部分分配，并且某些作业（例如 [Horovod](https://github.com/horovod/horovod) 训练）陷入等待资源可用的状态。
+由于新集群需要的 CPU 和 RAM 超过了队列允许的数量，因此即使其中一个 Pod 可以容纳剩余的 1 个 CPU 和 2Gi RAM，在有足够的空间容纳所有 Pod 之前，不会放置任何集群的 Pod。如果不以这种方式使用 Volcano 进行群组调度，通常会放置其中一个 Pod，从而导致集群被部分分配，并且某些作业「例如 [Horovod](https://github.com/horovod/horovod) 训练」陷入等待资源可用的状态。
 
 查看这对为我们的新 RayCluster 调度 Pod 的影响，这些 Pod 列出如下 `Pending`:
 

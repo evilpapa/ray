@@ -39,7 +39,7 @@ Ray Tune 有两种定义 `trainable` 的方法，即， :ref:`函数 API <tune-f
 
     .. tab-item:: 函数 API
 
-        使用 :ref:`基于函数的 API <tune-function-api>` ，您可以创建一个函数（此处称为 ``trainable``），
+        使用 :ref:`基于函数的 API <tune-function-api>` ，您可以创建一个函数「此处称为 ``trainable``」，
         该函数接受超参数字典。
         此函数在“训练循环”中计算  ``score`` 值，并 `reports` 分数给 Tune：
 
@@ -75,7 +75,7 @@ Ray Tune 有两种定义 `trainable` 的方法，即， :ref:`函数 API <tune-f
 
 为了优化 *超参数*，你必须定义一个 *搜索空间*。
 搜索空间定义超参数的有效值，并可以指定如何
-对这些值进行采样（例如从均匀分布或正态分布中采样）。
+对这些值进行采样「例如从均匀分布或正态分布中采样」。
 
 
 
@@ -113,7 +113,7 @@ Tune 提供各种函数来定义搜索空间和采样方法。
 :ref:`Trial 对象 <trial-docstring>` 中。
 
 试验包含大量信息。
-例如，您可以使用 ( ``trial.config``)、试验 ID (``trial.trial_id``），
+例如，您可以使用 ( ``trial.config``)、试验 ID (``trial.trial_id``」，
 试验的资源规范 (``resources_per_trial`` 或 ``trial.placement_group_factory``) 以及许多其他值来获取超参数配置。
 
 默认的， ``Tuner.fit`` 将执行直到所有试验停止或出错。
@@ -135,10 +135,10 @@ Tune 提供各种函数来定义搜索空间和采样方法。
     +----------------------+----------+---------------------+-----------+--------+--------+----------------+-------+
 
 
-您还可以通过指定样本数量（ ``num_samples`` ）轻松运行 10 次试验。
+您还可以通过指定样本数量「 ``num_samples`` 」轻松运行 10 次试验。
 Tune 会自动 :ref:`确定将并行运行多少次试验 <tune-parallelism>`。
 请注意，除了样本数量的设置，如果你设置了 ``num_samples=-1``， 
-你也可以通过  ``time_budget_s`` （以秒为单位）指定时间预算。
+你也可以通过  ``time_budget_s`` 「以秒为单位」指定时间预算。
 
 .. literalinclude:: doc_code/key_concepts.py
     :language: python
@@ -168,7 +168,7 @@ Tune 会自动 :ref:`确定将并行运行多少次试验 <tune-parallelism>`。
 如果您未指定搜索算法，Tune 将默认使用随机搜索，这可以
 为您的超参数优化提供一个良好的起点。
 
-例如，要通过 ``bayesian-optimization`` 包使用 Tune 进行简单的贝叶斯优化（请确保首先运行 ``pip install bayesian-optimization`` ），
+例如，要通过 ``bayesian-optimization`` 包使用 Tune 进行简单的贝叶斯优化「请确保首先运行 ``pip install bayesian-optimization`` 」，
 我们可以定义一个使用 ``BayesOptSearch`` 的  ``algo`` 。
 只需将其通过一个 ``search_alg`` 参数传递给 ``tune.TuneConfig``，该参数由 ``Tuner`` 接收：
 

@@ -11,10 +11,10 @@
 
 在集群上运行时，一个常见问题是 Ray 期望这些“依赖项”存在于每个 Ray 节点上。如果不存在这些，您可能会遇到诸如 ``ModuleNotFoundError`` 或 ``FileNotFoundError`` 等问题。
 
-为了解决这个问题，您可以 (1) 使用 Ray :ref:`Cluster Launcher <vm-cluster-quick-start>` 提前准备集群上的依赖项（例如使用容器映像），或者 (2) 使用 Ray 的 :ref:`运行时环境 <runtime-environments>` 动态安装它们。
+为了解决这个问题，您可以 (1) 使用 Ray :ref:`Cluster Launcher <vm-cluster-quick-start>` 提前准备集群上的依赖项「例如使用容器映像」，或者 (2) 使用 Ray 的 :ref:`运行时环境 <runtime-environments>` 动态安装它们。
 
 对于生产用途或非变更环境，我们建议将依赖项安装到容器映像中，并使用 Cluster Launcher 指定映像。
-对于动态环境（例如用于开发和实验），我们建议使用运行时环境。
+对于动态环境「例如用于开发和实验」，我们建议使用运行时环境。
 
 
 概念
@@ -41,7 +41,7 @@
 
 - 您可以将所有文件和依赖项构建到容器映像中，并在 :ref:`Cluster YAML 配置项 <cluster-config>` 指定。
 
-- 您还可以在Ray Cluster 配置文件（:ref:`参考 <cluster-configuration-setup-commands>`）使用 ``setup_commands`` 安装依赖项；这些命令将在每个节点加入集群时运行。
+- 您还可以在Ray Cluster 配置文件「:ref:`参考 <cluster-configuration-setup-commands>`」使用 ``setup_commands`` 安装依赖项；这些命令将在每个节点加入集群时运行。
   请注意，对于生产设置，建议将任何必要的软件包构建到容器映像中。
 
 - 您可以使用使用 ``ray rsync_up`` (:ref:`参考<ray-rsync>`) 将本地文件推送到集群。
@@ -58,11 +58,11 @@
 设置依赖项的第二种方法是在 Ray 运行时动态安装它们。
 
 **运行时环境** 描述了 Ray 应用程序运行时所需的依赖项，包括 :ref:`文件、包、环境变量等 <runtime-environments-api-ref>`。
-它在运行时动态安装在集群上并缓存以供将来使用 （有关生命周期的详细信息，请参阅 :ref:`缓存和垃圾收集 <runtime-environments-caching>`）。
+它在运行时动态安装在集群上并缓存以供将来使用 「有关生命周期的详细信息，请参阅 :ref:`缓存和垃圾收集 <runtime-environments-caching>`」。
 
 如果使用了 :ref:`Ray 集群启动器 <using-the-cluster-launcher>` ，则可以在准备好的环境上使用运行时环境。
 例如，您可以使用 Cluster 启动器安装一组基本软件包，然后使用运行时环境安装其他软件包。
-与基本集群环境相比，运行时环境仅对 Ray 进程有效。（例如，如果使用运行时环境 指定的 ``pip`` 包 ``my_pkg``，则在 Ray 任务、 actor 或作业之外调用 ``import my_pkg`` 语句将失败。）
+与基本集群环境相比，运行时环境仅对 Ray 进程有效。「例如，如果使用运行时环境 指定的 ``pip`` 包 ``my_pkg``，则在 Ray 任务、 actor 或作业之外调用 ``import my_pkg`` 语句将失败。」
 
 运行时环境还允许您在长期运行的 Ray 集群上设置每个任务、actor 和每个作业的依赖项。
 
@@ -144,7 +144,7 @@
 
 .. warning::
 
-    如果使用 Ray Jobs API（Python SDK 或 CLI），请在调用 ``submit_job`` 或者 ``ray job submit`` 指定 ``runtime_env`` 参数，而不是在入口点脚本中的 ``ray.init()`` 调用中指定（在这个示例中为 ``my_ray_script.py``）。
+    如果使用 Ray Jobs API「Python SDK 或 CLI」，请在调用 ``submit_job`` 或者 ``ray job submit`` 指定 ``runtime_env`` 参数，而不是在入口点脚本中的 ``ray.init()`` 调用中指定「在这个示例中为 ``my_ray_script.py``」。
 
     这可确保在运行入口点脚本之前在集群上安装运行时环境。
 
@@ -152,7 +152,7 @@
 
   何时安装运行环境有两种选择：
 
-  1. 一旦作业开始（例如， ``ray.init()`` 被调用），依赖项将被急切地下载和安装。
+  1. 一旦作业开始「例如， ``ray.init()`` 被调用」，依赖项将被急切地下载和安装。
   2. 仅当调用任务或创建 actor 时才会安装依赖项。
 
   默认是选项 1。要将行为更改为选项 2，请添加 ``"eager_install": False``到 ``config`` 的 ``runtime_env``。
@@ -169,7 +169,7 @@
    :start-after: __per_task_per_actor_start__
    :end-before: __per_task_per_actor_end__
 
-这样，actor 和任务就可以在自己的环境中运行，不受周围环境的影响。（周围环境可能是作业的运行时环境，也可能是集群的系统环境。）
+这样，actor 和任务就可以在自己的环境中运行，不受周围环境的影响。「周围环境可能是作业的运行时环境，也可能是集群的系统环境。」
 
 .. warning::
 
@@ -224,7 +224,7 @@
 
 .. note::
   上面的例子是为了在本地机器上运行而编写的，但是对于所有这些例子，在指定要连接的 Ray 集群时它也同样有效
-  （比如：使用 ``ray.init("ray://123.456.7.89:10001", runtime_env=...)`` 或 ``ray.init(address="auto", runtime_env=...)``）。
+  「比如：使用 ``ray.init("ray://123.456.7.89:10001", runtime_env=...)`` 或 ``ray.init(address="auto", runtime_env=...)``」。
 
 指定的本地目录将在 ``ray.init()`` 调用时自动推送到集群节点。
 
@@ -233,7 +233,7 @@
 使用 ``conda`` 或 ``pip`` 包
 """""""""""""""""""""""""""""""""""
 
-您的 Ray 应用程序可能通过 ``import`` 语句依赖了 Python 包（比如，``pendulum`` 或 ``requests``）。
+您的 Ray 应用程序可能通过 ``import`` 语句依赖了 Python 包「比如，``pendulum`` 或 ``requests``」。
 
 Ray 通常希望所有导入的包都预先安装在集群的每个节点上；特别是，这些包不会自动从本地机器运送到集群或从任何存储库下载。
 
@@ -280,7 +280,7 @@ Ray 通常希望所有导入的包都预先安装在集群的每个节点上；�
 
 .. note::
 
-  ``ray[default]`` 软件包，本身会自动安装到环境中。仅对于 ``conda`` 字段，如果使用了任何其他 Ray 类库（如：Ray Serve），则需要在运行时环境指定类库（如： ``runtime_env = {"conda": {"dependencies": ["pytorch", "pip", {"pip": ["requests", "ray[serve]"]}]}}``。）
+  ``ray[default]`` 软件包，本身会自动安装到环境中。仅对于 ``conda`` 字段，如果使用了任何其他 Ray 类库「如：Ray Serve」，则需要在运行时环境指定类库「如： ``runtime_env = {"conda": {"dependencies": ["pytorch", "pip", {"pip": ["requests", "ray[serve]"]}]}}``。」
 
 .. note::
 
@@ -322,7 +322,7 @@ API 参考
 
 ``runtime_env`` 是个 Python 字典或者一个 Python 类 :class:`ray.runtime_env.RuntimeEnv <ray.runtime_env.RuntimeEnv>` 包含以下一个或多个字段：
 
-- ``working_dir`` (str): 指定 Ray worker 的工作目录。必须是 (1) 一个大小最多在 100 MiB 的本地存在的目录，(2) 一个解压后大小最多 100 MiB 的压缩文件（注意：``excludes`` 会不生效），或者 (3) 包含作业工作目录的远程存储压缩文件的 URI。有关详细信息，请参阅 :ref:`remote-uris` 。
+- ``working_dir`` (str): 指定 Ray worker 的工作目录。必须是 (1) 一个大小最多在 100 MiB 的本地存在的目录，(2) 一个解压后大小最多 100 MiB 的压缩文件「注意：``excludes`` 会不生效」，或者 (3) 包含作业工作目录的远程存储压缩文件的 URI。有关详细信息，请参阅 :ref:`remote-uris` 。
   指定的目录将下载到集群上的每个节点，并且 Ray 工作程序将在其节点的此目录副本中启动。
 
   - 示例
@@ -335,11 +335,11 @@ API 参考
 
     - ``"s3://path/to/my_dir.zip"``
 
-  注意：目前不支持按任务或按 actor 设置本地目录；只能按作业进行设置（即，在 ``ray.init()`` ）。
+  注意：目前不支持按任务或按 actor 设置本地目录；只能按作业进行设置「即，在 ``ray.init()`` 」。
 
   注意：如果本地目录包含 ``.gitignore`` 文件，则其中指定的文件和路径不会上传到集群。您可以通过在执行上传的机器上设置环境变量 `RAY_RUNTIME_ENV_IGNORE_GITIGNORE=1` 来禁用此功能。
 
-- ``py_modules`` (List[str|module]): 指定可在 Ray worker 中导入的 Python 模块。  （有关指定包的更多方法，另请参阅下面的 ``pip`` 和 ``conda`` 字段。）
+- ``py_modules`` (List[str|module]): 指定可在 Ray worker 中导入的 Python 模块。  「有关指定包的更多方法，另请参阅下面的 ``pip`` 和 ``conda`` 字段。」
   每个条目必须是 (1) 本地目录的路径、(2) 远程 zip 文件的 URI、(3) Python 模块对象、或者 (4) 本地 `.whl` 文件的路径。
 
   - 列表中条目的示例：
@@ -356,7 +356,7 @@ API 参考
 
   这些模块将被下载到集群上的每个节点。
 
-  注意：目前不支持按任务或按 actor 设置选项 (1)、(3) 和 (4)，只能按作业设置（即，在 ``ray.init()`` 中）。
+  注意：目前不支持按任务或按 actor 设置选项 (1)、(3) 和 (4)，只能按作业设置「即，在 ``ray.init()`` 中」。
 
   注意：对于选项 (1)，如果本地目录包含 ``.gitignore`` 文件，则不会将其中指定的文件和路径上传到集群。您可以通过在 `RAY_RUNTIME_ENV_IGNORE_GITIGNORE=1` 执行上传的机器上设置环境变量来禁用此功能。
 
@@ -364,8 +364,8 @@ API 参考
 
 - ``excludes`` (List[str]): 当使用了 ``working_dir`` 或 ``py_modules``，指定要排除在上传到集群之外的文件或路径列表。
   此字段使用 ``.gitignore`` 文件使用的模式匹配语法：有关详细信息，请参阅 `<https://git-scm.com/docs/gitignore>`_。
-  注意：根据 ``.gitignore`` 语法，如果模式的开头或中间（或两者）有分隔符（``/``），则该模式相对于 ``working_dir`` 的级别进行解释。
-  特别是，你不应该在 `excludes` 使用绝对路径（例如 `/Users/my_working_dir/subdir/`）；相反，你应该使用相对路径 `/subdir/`（这里写成 `/` 开头，以匹配只有顶级 `subdir` 目录，而不是所有级别的所有名为 `subdir` 的目录。）
+  注意：根据 ``.gitignore`` 语法，如果模式的开头或中间「或两者」有分隔符「``/``」，则该模式相对于 ``working_dir`` 的级别进行解释。
+  特别是，你不应该在 `excludes` 使用绝对路径「例如 `/Users/my_working_dir/subdir/`」；相反，你应该使用相对路径 `/subdir/`「这里写成 `/` 开头，以匹配只有顶级 `subdir` 目录，而不是所有级别的所有名为 `subdir` 的目录。」
 
   - 示例: ``{"working_dir": "/Users/my_working_dir/", "excludes": ["my_file.txt", "/subdir/, "path/to/dir", "*.log"]}``
 
@@ -385,11 +385,11 @@ API 参考
   - 示例: ``{"packages":["tensorflow", "requests"], "pip_check": False, "pip_version": "==22.0.2;python_version=='3.8.11'"}``
 
   指定 ``requirements.txt`` 文件路径时，文件必须存在于本地计算机上，并且必须是相对于本地当前工作目录的有效绝对路径或相对文件路径，而 *不是* 相对于 `runtime_env` 指定的 `working_dir`。
-  此外，不支持在 `requirements.txt` 文件中引用本地文件。（如：``-r ./my-laptop/more-requirements.txt``，``./my-pkg.whl``）。
+  此外，不支持在 `requirements.txt` 文件中引用本地文件。「如：``-r ./my-laptop/more-requirements.txt``，``./my-pkg.whl``」。
 
 - ``conda`` (dict | str): (1) 示 conda 环境 YAML 的字典， (2) 包含本地
   `conda “environment.yml” <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_ 文件的路径字符串，
-  或 (3) 已安装在集群中每个节点上的本地 conda 环境的名称（例如， ``"pytorch_p36"``）。
+  或 (3) 已安装在集群中每个节点上的本地 conda 环境的名称「例如， ``"pytorch_p36"``」。
   前两种情况下，Ray 和 Python 依赖项将自动注入到环境中以确保兼容性，因此无需手动包含它们。
   Python 和 Ray 版本必须与集群的版本匹配，因此您可能不应该手动指定它们。
   请注意，``conda`` 和 ``pip`` 的 ``runtime_env`` 键不能同时指定---要一起使用它们，请使用 ``conda`` 并在 conda 的 ``environment.yaml`` 中的 ``"pip"`` 字段中添加您的 pip 依赖项。
@@ -442,8 +442,8 @@ API 参考
 
 缓存和垃圾回收
 """"""""""""""""""""""""""""""
-在每个节点上的运行时资源（如 conda 环境、pip 包或下载的 ``working_dir`` 或 ``py_modules`` 目录）将被缓存在集群上，以便在作业内的不同运行时环境之间快速重用。
-每个字段（``working_dir``、``py_modules`` 等）都有自己的缓存，默认大小为 10 GB。要更改此默认值，您可以在启动 Ray 之前在集群中的每个节点上设置环境变量 ``RAY_RUNTIME_ENV_<field>_CACHE_SIZE_GB``，例如 ``export RAY_RUNTIME_ENV_WORKING_DIR_CACHE_SIZE_GB=1.5``。
+在每个节点上的运行时资源「如 conda 环境、pip 包或下载的 ``working_dir`` 或 ``py_modules`` 目录」将被缓存在集群上，以便在作业内的不同运行时环境之间快速重用。
+每个字段「``working_dir``、``py_modules`` 等」都有自己的缓存，默认大小为 10 GB。要更改此默认值，您可以在启动 Ray 之前在集群中的每个节点上设置环境变量 ``RAY_RUNTIME_ENV_<field>_CACHE_SIZE_GB``，例如 ``export RAY_RUNTIME_ENV_WORKING_DIR_CACHE_SIZE_GB=1.5``。
 
 当超过缓存大小限制时，不被任何 actor、任务或作业当前使用的资源将被删除。
 
@@ -452,7 +452,7 @@ API 参考
 
 运行时环境是可继承的，因此它将应用于作业中的所有任务 / actor 以及task 或 actor的所有子任务 / actor，除非它被覆盖。
 
-如果一个 actor 或任务指定了一个新的 ``runtime_env``，它将覆盖父级的 ``runtime_env``（即，父级 actor/任务的 ``runtime_env``，或者如果没有父级 actor 或任务，则是作业的 ``runtime_env``）如下：
+如果一个 actor 或任务指定了一个新的 ``runtime_env``，它将覆盖父级的 ``runtime_env``「即，父级 actor/任务的 ``runtime_env``，或者如果没有父级 actor 或任务，则是作业的 ``runtime_env``」如下：
 
 * ``runtime_env["env_vars"]`` 字段会与父级的 ``runtime_env["env_vars"]`` 字段合并。
   这允许在父级的运行时环境中设置的环境变量自动传播到子级，即使在子级的运行时环境中设置了新的环境变量。
@@ -483,13 +483,13 @@ API 参考
 """""""""""""""""""""""""""""""""""""""""
 
 如果在 ``ray.init(runtime_env=...)`` 中指定了运行时环境，则该环境将安装在每个节点上。有关更多详细信息，请参阅 :ref:`Per-Job <rte-per-job>`。
-（注意，默认情况下，运行时环境将急切地安装在集群中的每个节点上。如果您想按需懒惰地安装运行时环境，请将 ``eager_install`` 选项设置为 false：``ray.init(runtime_env={..., "config": {"eager_install": False}}``。）
+「注意，默认情况下，运行时环境将急切地安装在集群中的每个节点上。如果您想按需懒惰地安装运行时环境，请将 ``eager_install`` 选项设置为 false：``ray.init(runtime_env={..., "config": {"eager_install": False}}``。」
 
 环境什么时候安装？
 """"""""""""""""""""""""""""""""""
 
-当指定为每个作业时，环境在调用 ``ray.init()`` 安装（除非设置了 ``"eager_install": False``）。
-当指定为每个任务或每个 actor 时，环境在调用任务或创建 actor 时安装（即，当你调用 ``my_task.remote()`` 或 ``my_actor.remote()`` 时）。
+当指定为每个作业时，环境在调用 ``ray.init()`` 安装「除非设置了 ``"eager_install": False``」。
+当指定为每个任务或每个 actor 时，环境在调用任务或创建 actor 时安装「即，当你调用 ``my_task.remote()`` 或 ``my_actor.remote()`` 时」。
 参考 :ref:`Per-Job <rte-per-job>` 和 :ref:`Per-Task/Actor, within a job <rte-per-task-actor>` 以获取更多详细信息。
 
 环境缓存在哪里？
@@ -505,7 +505,7 @@ API 参考
 
 另一方面，从缓存加载运行时环境应该几乎与普通 Ray worker 启动时间一样快，大约几秒钟。对于每个需要新运行时环境的 Ray actor 或任务，都会启动一个新的 Ray worker。
 
-（请注意，加载缓存的 ``conda`` 环境可能仍然很慢，因为 ``conda activate`` 命令有时需要几秒钟。）
+「请注意，加载缓存的 ``conda`` 环境可能仍然很慢，因为 ``conda activate`` 命令有时需要几秒钟。」
 
 你可以设置 ``setup_timeout_seconds`` 配置来避免安装时间过长。如果安装在此时间内没有完成，您的task 或 actor将无法启动。
 
@@ -553,7 +553,7 @@ API 参考
 
 注意，这个命令必须从所需 ``working_dir`` 的 *父目录* 运行，以确保生成的 zip 文件包含一个顶级目录。
 通常，zip 文件的名称和顶级目录的名称可以是任何东西。
-顶级目录的内容将被用作 ``working_dir``（或 ``py_module``）。
+顶级目录的内容将被用作 ``working_dir``「或 ``py_module``」。
 
 你可以通过在终端中运行以下命令来检查 zip 文件是否包含一个顶级目录：
 
@@ -583,16 +583,16 @@ API 参考
 当前支持三种远程 URI 类型来托管 ``working_dir`` 和 ``py_modules`` 包：
 
 - ``HTTPS``: ``HTTPS`` 引用时以 ``https`` 打头的 URL。
-  这些 URL 特别有用，因为远程 Git 提供商（如：GitHub、Bitbucket、GitLab 等）使用 ``https`` URL 作为存储库存档的下载链接。
-  这允许你将依赖项托管在远程 Git 提供商上，推送更新，并指定作业应使用哪些依赖项版本（即提交版本）。
-  要通过 ``HTTPS`` URI 使用包，你必须安装 ``smart_open`` 库（你可以使用 ``pip install smart_open`` 安装它）。
+  这些 URL 特别有用，因为远程 Git 提供商「如：GitHub、Bitbucket、GitLab 等」使用 ``https`` URL 作为存储库存档的下载链接。
+  这允许你将依赖项托管在远程 Git 提供商上，推送更新，并指定作业应使用哪些依赖项版本「即提交版本」。
+  要通过 ``HTTPS`` URI 使用包，你必须安装 ``smart_open`` 库「你可以使用 ``pip install smart_open`` 安装它」。
 
   - 示例:
 
     - ``runtime_env = {"working_dir": "https://github.com/example_username/example_respository/archive/HEAD.zip"}``
 
 - ``S3``: ``S3`` 引用是以 ``s3://`` 打头的 URI，它指向了存储在 `AWS S3 <https://aws.amazon.com/s3/>`_ 压缩包。
-  要使用 ``S3`` URI，你必须安装 ``smart_open`` 和 ``boto3`` 库（你可以使用 ``pip install smart_open`` 和 ``pip install boto3`` 安装它们）。
+  要使用 ``S3`` URI，你必须安装 ``smart_open`` 和 ``boto3`` 库「你可以使用 ``pip install smart_open`` 和 ``pip install boto3`` 安装它们」。
   Ray 不会为认证传递任何凭据给 ``boto3``。
   ``boto3`` 将使用你的环境变量、共享凭据文件和/或 AWS 配置文件来验证访问。
   参考 `AWS S3 文档 <https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html>`_ 来设置你的远程包。
@@ -602,7 +602,7 @@ API 参考
     - ``runtime_env = {"working_dir": "s3://example_bucket/example_file.zip"}``
 
 - ``GS``: ``GS`` 引用是以 ``gs://`` 打头的 URI，它指向了存储在 `Google Cloud Storage <https://cloud.google.com/storage>`_ 压缩包。
-  要通过 ``GS`` URI 使用包，你必须安装 ``smart_open`` 和 ``google-cloud-storage`` 库（你可以使用 ``pip install smart_open`` 和 ``pip install google-cloud-storage`` 安装它们）。
+  要通过 ``GS`` URI 使用包，你必须安装 ``smart_open`` 和 ``google-cloud-storage`` 库「你可以使用 ``pip install smart_open`` 和 ``pip install google-cloud-storage`` 安装它们」。
   Ray 不会为 ``google-cloud-storage`` 的 ``Client`` 对象传递任何凭据。
   ``google-cloud-storage`` 默认情况下将使用你的本地服务帐户密钥和环境变量。
   参考 `Google Cloud Storage 文档 <https://cloud.google.com/storage/docs>`_ 来设置认证，它允许你接入远程包。
@@ -617,11 +617,11 @@ API 参考
 在远程 Git 提供商上托管依赖项：手把手指南
 -----------------------------------------------------------------
 
-您可以将依赖项存储在远程 Git 提供商（例如 GitHub、Bitbucket、GitLab 等）的存储库中，并且可以定期推送更改以使其保持更新。
+您可以将依赖项存储在远程 Git 提供商「例如 GitHub、Bitbucket、GitLab 等」的存储库中，并且可以定期推送更改以使其保持更新。
 在本节中，您将学习如何将依赖项存储在 GitHub 上并在运行时环境中使用它。
 
 .. note::
-  如果您使用其他大型远程 Git 提供商（例如 BitBucket、GitLab 等），这些步骤也将很有用。
+  如果您使用其他大型远程 Git 提供商「例如 BitBucket、GitLab 等」，这些步骤也将很有用。
   为简单起见，本节仅指 GitHub，但您可以在提供商上继续操作。
 
 首先，在 GitHub 上创建一个存储 ``working_dir`` 内容或 ``py_module`` 依赖项的存储库。
@@ -667,10 +667,10 @@ API 参考
 
 第二个选项是通过将你的特定用例与以下示例之一进行模式匹配，手动创建此 URL。
 **建议这样做** 因为它可以更细粒度地控制在生成依赖项 zip 文件时要使用哪个存储库分支和提交。
-这些选项可防止 Ray Clusters 上的一致性问题（有关更多信息，请参阅上面的警告）。
-要创建 URL，请选择下面适合您用例的 URL 模板，并使用存储库中的特定值填写括号中的所有参数（例如 [用户名]、[存储库] 等）。
+这些选项可防止 Ray Clusters 上的一致性问题「有关更多信息，请参阅上面的警告」。
+要创建 URL，请选择下面适合您用例的 URL 模板，并使用存储库中的特定值填写括号中的所有参数「例如 [用户名]、[存储库] 等」。
 例如，假设你的 GitHub 用户名是 ``example_user``，存储库的名称是 ``example_repository``，并且所需的提交哈希是 ``abcdefg``。
-如果 ``example_repository`` 是公共的，并且你想要检索 ``abcdefg`` 提交（与第一个示例用例匹配），URL 将是：
+如果 ``example_repository`` 是公共的，并且你想要检索 ``abcdefg`` 提交「与第一个示例用例匹配」，URL 将是：
 
 .. testcode::
 
@@ -719,7 +719,7 @@ API 参考
 
 调试
 ---------
-如果 runtime_env 无法设置（例如，网络问题、下载失败等），Ray 将无法调度需要 runtime_env 的任务/ actor 。
+如果 runtime_env 无法设置「例如，网络问题、下载失败等」，Ray 将无法调度需要 runtime_env 的任务/ actor 。
 如果你调用 ``ray.get``，它将引发 ``RuntimeEnvSetupError`` 并提供详细的错误消息。
 
 .. testcode::
@@ -762,7 +762,7 @@ API 参考
 在使用 Ray Client 时用于每个作业的环境中的 ``runtime_env_setup-ray_client_server_[port].log`` 文件中找到。
 
  你也可以在每个节点上在启动 Ray 之前设置环境变量 ``RAY_RUNTIME_ENV_LOG_TO_DRIVER_ENABLED=1``，例如使用 Ray 集群配置文件中的 ``setup_commands`` (:ref:`reference <cluster-configuration-setup-commands>`)。
-这会打印完整的 ``runtime_env`` 设置日志消息到驱动程序（调用 ``ray.init()`` 的脚本）。
+这会打印完整的 ``runtime_env`` 设置日志消息到驱动程序「调用 ``ray.init()`` 的脚本」。
 
 示例日志输出：
 

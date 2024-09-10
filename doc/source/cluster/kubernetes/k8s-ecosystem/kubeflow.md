@@ -10,7 +10,7 @@
 
 # 要求
 * 依赖关系
-    * `kustomize`: v3.2.0 （Kubeflow 清单对 `kustomize` 版本敏感)
+    * `kustomize`: v3.2.0 「Kubeflow 清单对 `kustomize` 版本敏感)
     * `Kubernetes`: v1.23
 
 * 计算资源：
@@ -51,7 +51,7 @@ kubectl get pod -l ray.io/cluster=raycluster-kuberay
 # raycluster-kuberay-worker-workergroup-8gr5q   1/1     Running   0          63s
 ```
 
-* 此步骤 `rayproject/ray:2.2.0-py38-cpu` 作为镜像。Ray对服务器端（RayCluster）和客户端（JupyterLab）之间的Python版本和Ray版本非常敏感。该镜像使用：
+* 此步骤 `rayproject/ray:2.2.0-py38-cpu` 作为镜像。Ray对服务器端「RayCluster」和客户端「JupyterLab」之间的Python版本和Ray版本非常敏感。该镜像使用：
     * Python 3.8.13
     * Ray 2.2.0
 
@@ -68,7 +68,7 @@ kubectl get pod -l ray.io/cluster=raycluster-kuberay
 ## 步骤 7: 使用 JupyterLab 中的 Ray 客户端连接到 RayCluster
 > Warning: Ray 客户端有一些已知的 [限制](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/ray-client.html#things-to-know) ，并且没有得到积极维护。我们建议改用 [Ray Job Submission](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/) 。
 
-* 正如步骤 4 提到的，Ray对服务器端（RayCluster）和客户端（JupyterLab）之间的Python版本和Ray版本非常敏感。在 JupyterLab 中打开终端：
+* 正如步骤 4 提到的，Ray对服务器端「RayCluster」和客户端「JupyterLab」之间的Python版本和Ray版本非常敏感。在 JupyterLab 中打开终端：
     ```sh
     # Check Python version. The version's MAJOR and MINOR should match with RayCluster (i.e. Python 3.8)
     python --version 

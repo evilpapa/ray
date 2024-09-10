@@ -35,7 +35,7 @@ Ray Train 让您可以使用原生实验追踪类库在 :ref:`train_func<train-o
 
 让我们先看一些代码片段。
 
-以下示例使用权重和偏差（W＆B）和 MLflow，但它可以适用于其他框架。
+以下示例使用权重和偏差「W＆B」和 MLflow，但它可以适用于其他框架。
 
 .. tabs::
 
@@ -167,7 +167,7 @@ Ray Train 让您可以使用原生实验追踪类库在 :ref:`train_func<train-o
 
     .. tab:: MLflow
         
-        MLflow 提供了 *本地* 和 *远程*（例如，到 Databrick 的 MLflow 服务）模式。
+        MLflow 提供了 *本地* 和 *远程*「例如，到 Databrick 的 MLflow 服务」模式。
 
         **本地**
 

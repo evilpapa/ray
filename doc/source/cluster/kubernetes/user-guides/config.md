@@ -95,7 +95,7 @@ RayCluster CR 中指定的容器镜像版本与 CR 的 `rayVersion` 版本是相
 
 从较高层面来看，RayCluster 是 Kubernetes Pod 的集合，类似于 Kubernetes Deployment 或 StatefulSet。就像 Kubernetes 内置程序一样，配置的关键部分是
 * Pod 规格
-* 规模信息（需要多少个 Pod）
+* 规模信息「需要多少个 Pod」
 
 Deployment 和 `RayCluster` 之间的主要区别在于 `RayCluster` 是专门用于运行 Ray 应用的。
 一个Ray 集群包括
@@ -135,7 +135,7 @@ Ray pod 模板还可以指定额外的 sidecar 容器，用于处理诸如 {ref}
 一般来说，使用几个大型 Ray pod 比使用许多小型 Ray pod 更有效。较少大型 Ray pod 的模式具有以下优点：
 - 更有效地使用每个 Ray pod 的共享内存对象存储
 - 减少 Ray pod 之间的通信开销
-- 减少每个 Pod Ray 控制结构（例如 Raylet）的冗余
+- 减少每个 Pod Ray 控制结构「例如 Raylet」的冗余
 
 Ray 容器配置中指定的CPU、GPU 和内存 **限制** 将自动通告给 Ray。
 这些值将用作头或工作组中 Ray pod 的逻辑资源容量。
@@ -173,23 +173,23 @@ KubeRay operator 会自动生成一个 `generateName` 以避免名称冲突。
 
 ### dashboard-host
 对于大多数用例，对于 Ray head pod，该字段应设置为“0.0.0.0”。
-这是在 Ray 集群外部公开 Ray 仪表板所必需的。 （未来版本可能会默认设置此参数。）
+这是在 Ray 集群外部公开 Ray 仪表板所必需的。 「未来版本可能会默认设置此参数。」
 
 (kuberay-num-cpus)=
 ### num-cpus
 此可选字段告诉 Ray 调度程序和自动缩放程序有多少个 CPU 可用于 Ray pod。
 CPU 计数可以从组规范的 pod 中 `template` 指定的 Kubernetes 资源限制中自动检测。
 但是，有时覆盖此自动检测到的值很有用。例如，`num-cpus:"0"` 的设置将阻止在头上调度具有非零 CPU 要求的 Ray 工作负载。
-请注意，所有 Ray 启动参数的值（包括 `num-cpus`）必须以 **字符串** 形式提供。
+请注意，所有 Ray 启动参数的值「包括 `num-cpus`」必须以 **字符串** 形式提供。
 
 ### num-gpus
 该字段指定 Ray 容器可用的 GPU 数量。
 在未来的 KubeRay 版本中，GPU 的数量将从 Ray 容器资源限制中自动检测。
-请注意，所有 Ray 启动参数的值（包括 `num-gpus`）必须以 **字符串** 形式提供。
+请注意，所有 Ray 启动参数的值「包括 `num-gpus`」必须以 **字符串** 形式提供。
 
 ### memory
-Ray 可用的内存是从 Kubernetes 资源限制中自动检测的。如果您愿意，您可以通过在 `rayStartParams.memory` 下设置所需的内存值（以字节为单位）来覆盖此自动检测到的值。
-请注意，所有 Ray 启动参数的值（包括 `memory`）必须以 **字符串** 形式提供。
+Ray 可用的内存是从 Kubernetes 资源限制中自动检测的。如果您愿意，您可以通过在 `rayStartParams.memory` 下设置所需的内存值「以字节为单位」来覆盖此自动检测到的值。
+请注意，所有 Ray 启动参数的值「包括 `memory`」必须以 **字符串** 形式提供。
 
 ### resources
 该字段可用于指定 Ray pod 的自定义资源容量。这些资源容量将通告给 Ray 调度器和 Ray 自动缩放器。
@@ -232,7 +232,7 @@ ray.init("ray://raycluster-example-head-svc:10001")
 ```python
 ray.init("ray://raycluster-example-head-svc.default.svc.cluster.local:10001")
 ```
-这假设 Ray 集群部署到默认的 Kubernetes 命名空间中。如果 Ray 集群部署在非默认命名空间中，请使用该命名空间代替 `default`.）
+这假设 Ray 集群部署到默认的 Kubernetes 命名空间中。如果 Ray 集群部署在非默认命名空间中，请使用该命名空间代替 `default`.」
 
 ### ServiceType, Ingresses
 Ray Client 和其他服务可以使用端口转发或入口暴露在 Kubernetes 集群外部。

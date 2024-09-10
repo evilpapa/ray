@@ -127,7 +127,7 @@ Ray 集体库与发布的 Ray 轮包捆绑在一起。除了 Ray 之外，用户
 ^^^^^^^^^^^^^^
 
 集合函数在集合组上运行。
-集合组包含一组进程（在 Ray 中，它们通常是 Ray 管理的 actor 或 task），这些进程将一起进入集合函数调用。
+集合组包含一组进程「在 Ray 中，它们通常是 Ray 管理的 actor 或 task」，这些进程将一起进入集合函数调用。
 在进行集体调用之前，用户需要将一组 actor/task 静态地声明为一个集体组。
 
 以下是一个示例代码片段，使用两个 API ``init_collective_group()`` 和 ``declare_collective_group()`` 在几个远程 actor 之间初始化集体组。
@@ -184,7 +184,7 @@ Ray 集体库与发布的 Ray 轮包捆绑在一起。除了 Ray 之外，用户
    results = ray.get([w.compute.remote() for w in workers])
 
 注意，对于相同的 actor/task 进程集合，可以构建多个集合组，其中 ``group_name`` 是它们的唯一标识符。
-这使得可以在不同（子）进程集之间指定复杂的通信模式。
+这使得可以在不同「子」进程集之间指定复杂的通信模式。
 
 集合通信
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -195,8 +195,8 @@ Ray 集体库与发布的 Ray 轮包捆绑在一起。除了 Ray 之外，用户
 
 
 * 所有的集体 API 都是同步阻塞调用
-* 由于每个 API 仅指定集体通信的一部分，因此预计该 API 将由（预先声明的）集体组的每个参与进程调用。当所有进程都进行了调用并相互会合后，集体通信就会发生并继续进行。
-* API 是命令式的，并且通信发生在带外 —— 它们需要在集体流程（ actor /任务）代码内使用。
+* 由于每个 API 仅指定集体通信的一部分，因此预计该 API 将由「预先声明的」集体组的每个参与进程调用。当所有进程都进行了调用并相互会合后，集体通信就会发生并继续进行。
+* API 是命令式的，并且通信发生在带外 —— 它们需要在集体流程「 actor /任务」代码内使用。
 
 一个使用 ``ray.util.collective.allreduce`` 的示例如下：
 
@@ -279,7 +279,7 @@ send/recv 与集体函数表现出相同的行为：
 有效利用GPU-GPU带宽，例如 `NVLINK <https://www.nvidia.com/en-us/design-visualization/nvlink-bridges/>`_\ ，
 可以显着提高通信性能。
 
-``ray.util.collective`` 支持多GPU集体调用，在这种情况下，一个进程 (actor/tasks) 管理超过1个GPU（例如，通过 ``ray.remote(num_gpus=4)``\ ）。
+``ray.util.collective`` 支持多GPU集体调用，在这种情况下，一个进程 (actor/tasks) 管理超过1个GPU「例如，通过 ``ray.remote(num_gpus=4)``\ 」。
 使用这些多 GPU 集体函数通常比使用单 GPU 集体 API 更具性能优势，
 并且生成的进程数量等于 GPU 数量。
 请参阅 API 参考，了解多 GPU 集体 API 的签名。

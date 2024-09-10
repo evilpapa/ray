@@ -61,7 +61,7 @@ kubectl annotate serviceaccount my-ksa \
 
 请按照 <https://cloud.google.com/storage/docs/creating-buckets>  上的文档使用 Google Cloud Console 或命令行工具 `gsutil` 创建存储桶。 
 
-此示例授予主体 `my-iam-sa@my-project-id.iam.gserviceaccount.com` 对存储桶的“存储管理员”权限。 在 Google Cloud Console 中（“存储桶”>“存储桶详细信息”下的“权限”选项卡）或使用以下命令启用权限：
+此示例授予主体 `my-iam-sa@my-project-id.iam.gserviceaccount.com` 对存储桶的“存储管理员”权限。 在 Google Cloud Console 中「“存储桶”>“存储桶详细信息”下的“权限”选项卡」或使用以下命令启用权限：
 
 ```bash
 gsutil iam ch serviceAccount:my-iam-sa@my-project-id.iam.gserviceaccount.com:roles/storage.admin gs://my-bucket
@@ -84,7 +84,7 @@ curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-o
           iam.gke.io/gke-metadata-server-enabled: "true"
 ```
 
-将这些行包含在 Ray 集群的每个 pod 规范中。为了简单起见，本示例使用单节点集群（1 个头节点和 0 个 worker 节点）。
+将这些行包含在 Ray 集群的每个 pod 规范中。为了简单起见，本示例使用单节点集群「1 个头节点和 0 个 worker 节点」。
 
 ## 创建 RayCluster
 
@@ -102,7 +102,7 @@ kubectl exec -it raycluster-mini-head-xxxx -- /bin/bash
 
 在 shell 中，运行 `pip install google-cloud-storage` 安装 Google Cloud Storage Python 客户端库。
 
-（对于生产用例，您需要确保 `google-cloud-storage` 安装在集群的每个节点上，或者使用 `ray.init(runtime_env={"pip": ["google-cloud-storage"]})` 在运行时根据需要安装软件包 - 请参阅 <https://docs.ray.io/en/latest/ray-core/handling-dependencies.html#runtime-environments> 了解更多详细信息。）
+「对于生产用例，您需要确保 `google-cloud-storage` 安装在集群的每个节点上，或者使用 `ray.init(runtime_env={"pip": ["google-cloud-storage"]})` 在运行时根据需要安装软件包 - 请参阅 <https://docs.ray.io/en/latest/ray-core/handling-dependencies.html#runtime-environments> 了解更多详细信息。」
 
 然后运行以下Python代码来测试对存储桶的访问：
 

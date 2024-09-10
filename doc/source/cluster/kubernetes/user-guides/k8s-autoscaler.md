@@ -1,5 +1,5 @@
 (ray-k8s-autoscaler-comparison)=
-# （高级）了解 Kubernetes 背景下的 Ray Autoscaler
+# 「高级」了解 Kubernetes 背景下的 Ray Autoscaler
 我们描述了 Ray 自动缩放器和 Kubernetes 生态系统中其他自动缩放器之间的关系。
 
 ## Ray Autoscaler 与 Horizo​​ntal Pod Autoscaler
@@ -45,7 +45,7 @@ Ray Autoscaler 决定创建 Ray Pod 后，Kubernetes Cluster Autoscaler
 Kubernetes Cluster Autoscaler 可以清理剩余的空闲 Kubernetes 节点。
 建议配置 RayCluster，以便每个 Kubernetes 节点仅适合一个 Ray Pod。
 如果遵循此模式，Ray Autoscaler Pod 缩放事件与集群​​自动缩放器节点缩放事件
-大致一一对应。（我们说“大致”是因为在底层 Kubernetes 节点缩小之前，Ray Pod 可能会被删除并替换为新的 Ray Pod。）
+大致一一对应。「我们说“大致”是因为在底层 Kubernetes 节点缩小之前，Ray Pod 可能会被删除并替换为新的 Ray Pod。」
 
 
 ## 垂直 Pod 自动缩放器

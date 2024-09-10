@@ -2,14 +2,14 @@
 # 配置管理 Ray 仪表盘
 {ref}`Ray 仪表盘<observability-getting-started>` 是监控和调试 Ray 应用程序和集群的最重要工具之一。本页介绍如何在集群上配置 Ray 仪表盘。
 
-仪表板配置可能因您启动 Ray 集群的方式而异（例如，本地 Ray 集群与 KubeRay）。与 Prometheus 和 Grafana 的集成是可选的，以增强仪表板体验。
+仪表板配置可能因您启动 Ray 集群的方式而异「例如，本地 Ray 集群与 KubeRay」。与 Prometheus 和 Grafana 的集成是可选的，以增强仪表板体验。
 
 :::{note}
 Ray Dashboard 仅适用于交互式开发和调试，因为集群终止后，仪表板 UI 和底层数据将无法访问。对于生产监控和调试，用户应依赖 [日志持久化](../cluster/kubernetes/user-guides/logging.md)， [指标持久化](./metrics.md)， [Ray 状态持久化](../ray-observability/user-guides/cli-sdk.rst)，和其他可观察性工具。
 :::
 
 ## 更改 Ray Dashboard 端口
-Ray Dashboard 运行在头节点的 `8265` 端口。请按照以下说明自定义端口（如果需要）。
+Ray Dashboard 运行在头节点的 `8265` 端口。请按照以下说明自定义端口「如果需要」。
 
 ::::{tab-set}
 
@@ -40,7 +40,7 @@ head_start_ray_commands:
 
 (dashboard-in-browser)=
 ## 在浏览器查看 Ray Dashboard
-当你在笔记本电脑上启动单节点 Ray 集群时，你可以通过 Ray 初始化时打印的 URL 访问仪表板（默认 URL 为 `http://localhost:8265`）。
+当你在笔记本电脑上启动单节点 Ray 集群时，你可以通过 Ray 初始化时打印的 URL 访问仪表板「默认 URL 为 `http://localhost:8265`」。
 
 
 当你通过 {ref}`VM cluster launcher <vm-cluster-quick-start>`，{ref}`KubeRay operator <kuberay-quickstart>`，或手动配置启动一个远程 Ray 集群，Ray 仪表盘会在头节点启动，端口可能是非公开的。你需要额外的设置以从头节点之外进行访问。
@@ -259,10 +259,10 @@ nginx.ingress.kubernetes.io/configuration-snippet: |
 
 ##### 收到 `RAY_GRAFANA_HOST` 未设置错误提示
 如果您已设置 Grafana，请检查：
-* 您已在 URL 协议中包含了（例如，`http://your-grafana-url.com` 而不是 `your-grafana-url.com`）。
-* URL 没有反斜杠（例如， `http://your-grafana-url.com` 而不是 `http://your-grafana-url.com/`）。
+* 您已在 URL 协议中包含了「例如，`http://your-grafana-url.com` 而不是 `your-grafana-url.com`」。
+* URL 没有反斜杠「例如， `http://your-grafana-url.com` 而不是 `http://your-grafana-url.com/`」。
 
-##### 证书颁发机构（CA 错误）
+##### 证书颁发机构「CA 错误」
 如果您的 Grafana 实例托管在 HTTPS 后面，您可能会看到 CA 错误。请联系 Grafana 服务所有者以正确启用 HTTPS 流量。
 
 

@@ -18,13 +18,13 @@
 使用 [RayService](kuberay-rayservice-quickstart) 来部署模型，使用 [RayCluster](kuberay-raycluster-quickstart) 来部署 Ray 应用是我们的明智推荐。
 然而，使用场景不是模型服务或模型原型设计，我该如何在 [RayCluster](kuberay-raycluster-quickstart) 以及 [RayJob](kuberay-rayjob-quickstart) 之间进行选择？
 
-### 问：是否能容忍集群升级的下线状态（例如：升级 Ray 版本）？
+### 问：是否能容忍集群升级的下线状态「例如：升级 Ray 版本」？
 
 如果不，选择 RayJob。RayJob 可以配置为一旦任务完成就自动删除 RayCluster 集群。你可以为每个使用 RayJob 提交的任务指定 Ray 版本及配置。
 
 如果可以，选择 RayCluster。Ray 并未原生支持滚动升级；因此，你需要手动停止并创建一个新的 RayCluster。
 
-### 问：你是否部署在公有云上（例如：AWS，GCP，Azure）？
+### 问：你是否部署在公有云上「例如：AWS，GCP，Azure」？
 
 如果是，选择 RayJob。它允许在任务完成之上自动删除 RayCluster，可帮你节省支出。
 

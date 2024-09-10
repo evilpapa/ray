@@ -12,7 +12,7 @@ Actor 监督是一种模式，其中监督 Actor 管理一组工作 Actor。
 
 .. note::
 
-    - 如果 supervisor 死亡（或 driver 死亡），那么根据 actor 引用计数，工作者 actor 将自动终止。
+    - 如果 supervisor 死亡「或 driver 死亡」，那么根据 actor 引用计数，工作者 actor 将自动终止。
     - Actor 可以嵌套多层，形成一棵树。
 
 用例

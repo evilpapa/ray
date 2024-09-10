@@ -30,7 +30,7 @@ Ray 默认使用对象溢出。如果不进行任何设置，对象将溢出到 
         },
     )
 
-您还可以指定多个目录进行溢出，以便在需要时将 IO 负载和磁盘空间使用情况分散到多个物理设备（例如 SSD 设备）上：
+您还可以指定多个目录进行溢出，以便在需要时将 IO 负载和磁盘空间使用情况分散到多个物理设备「例如 SSD 设备」上：
 
 .. testcode::
   :hide:
@@ -95,7 +95,7 @@ Ray 默认使用对象溢出。如果不进行任何设置，对象将溢出到 
 
 为防止磁盘空间耗尽，如果磁盘利用率超过预定义阈值，将抛出本地对象溢出 ``OutOfDiskError`` 。
 如果使用多个物理设备，任何物理设备的过度使用都将触发 ``OutOfDiskError``。
-默认阈值为 0.95（95%）。您可以通过设置 ``local_fs_capacity_threshold``，或将其设置为 1 以禁用保护。
+默认阈值为 0.95「95%」。您可以通过设置 ``local_fs_capacity_threshold``，或将其设置为 1 以禁用保护。
 
 .. testcode::
   :hide:
@@ -124,7 +124,7 @@ Ray 默认使用对象溢出。如果不进行任何设置，对象将溢出到 
     )
 
 
-使对象溢出到远程存储（任何支持 `smart_open <https://pypi.org/project/smart-open/>`__ 的URI）：
+使对象溢出到远程存储「任何支持 `smart_open <https://pypi.org/project/smart-open/>`__ 的URI」：
 
 .. testcode::
   :hide:
@@ -199,7 +199,7 @@ Ray 默认使用对象溢出。如果不进行任何设置，对象将溢出到 
 统计
 -----
 
-当发生溢出时，以下 INFO 级别的消息将被打印到 raylet 日志中（例如 ``/tmp/ray/session_latest/logs/raylet.out``）::
+当发生溢出时，以下 INFO 级别的消息将被打印到 raylet 日志中「例如 ``/tmp/ray/session_latest/logs/raylet.out``」::
 
   local_object_manager.cc:166: Spilled 50 MiB, 1 objects, write throughput 230 MiB/s
   local_object_manager.cc:334: Restored 50 MiB, 1 objects, read throughput 505 MiB/s

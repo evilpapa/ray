@@ -46,7 +46,7 @@ curl -LO https://raw.githubusercontent.com/ray-project/kuberay/v1.0.0-rc.0/ray-o
 kubectl apply -f ray_v1alpha1_rayservice.yaml
 ```
 
-* 首先查看RayService YAML 中嵌入的Ray Serve 配置 （即 `serveConfigV2`）。 请注意两个高级应用程序： 水果摊应用程序和计算器应用程序。请注意有关水果摊应用的一些细节：
+* 首先查看RayService YAML 中嵌入的Ray Serve 配置 「即 `serveConfigV2`」。 请注意两个高级应用程序： 水果摊应用程序和计算器应用程序。请注意有关水果摊应用的一些细节：
   * 水果摊应用程序包含在 [test_dag](https://github.com/ray-project/test_dag/tree/41d09119cbdf8450599f993f51318e9e27c59098) 中 `fruit.py` 脚本的 `deployment_graph` 变量中，所以配置 `import_path` 指向此变量以告诉 Serve 从何处导入应用程序。
   * 水果应用程序托管在路由前缀 `/fruit`，这意味着以该前缀 `/fruit` 开头的路由的 HTTP 请求将发送到水果摊应用程序。
   * 工作目录指向 [test_dag](https://github.com/ray-project/test_dag/tree/41d09119cbdf8450599f993f51318e9e27c59098)存储库，该存储库在运行时下载，RayService 在此目录中启动您的应用程序。 参阅 {ref}`Runtime Environments <runtime-environments>` 了解更多细节。
@@ -104,10 +104,10 @@ kubectl get services
 ```
 
 KubeRay 根据 RayService YAML 中定义的 `spec.rayClusterConfig` 创建 自定义资源 RayService 。
-接下来，在 head Pod 运行并准备就绪后，KubeRay 向 head 的仪表板代理端口（默认：52365）提交请求，按照 `spec.serveConfigV2` 的定义创建 Ray Serve 应用程序。
+接下来，在 head Pod 运行并准备就绪后，KubeRay 向 head 的仪表板代理端口「默认：52365」提交请求，按照 `spec.serveConfigV2` 的定义创建 Ray Serve 应用程序。
 
-当 Ray Serve 应用程序健康并准备就绪时，KubeRay 为 RayService 自定义资源创建一个头服务和一个服务服务（例如，在步骤 4.4 的 `rayservice-sample-head-svc` 和 `rayservice-sample-serve-svc` in Step 4.4）。
-用户可以通过RayService管理的头服务（即 `rayservice-sample-head-svc`）和RayCluster管理的头服务（即`rayservice-sample-raycluster-6mj28-head-svc`）管理头服务。
+当 Ray Serve 应用程序健康并准备就绪时，KubeRay 为 RayService 自定义资源创建一个头服务和一个服务服务「例如，在步骤 4.4 的 `rayservice-sample-head-svc` 和 `rayservice-sample-serve-svc` in Step 4.4」。
+用户可以通过RayService管理的头服务「即 `rayservice-sample-head-svc`」和RayCluster管理的头服务「即`rayservice-sample-raycluster-6mj28-head-svc`」管理头服务。
 
 但是，在零停机升级过程中，会创建一个新的 RayCluster，并为新的 RayCluster 创建一个新的头服务。
 如果不使用 `rayservice-sample-head-svc`，则需要更新入口配置以指向新的头服务。
@@ -220,10 +220,10 @@ curl -X POST -H 'Content-Type: application/json' rayservice-sample-serve-svc:800
 在步骤 7， 修改 `serveConfigV2` 不会触发Ray集群的零停机升级。相反，它将新配置重新应用到现有 RayCluster。
 但是，他将新的配置应用于已有的集群。
 然而，如果你修改了 RayService YAML 配置文件的 `spec.rayClusterConfig` ，则会触发 Ray 集群的零停机升级。
-RayService 临时创建一个新的 RayCluster 并等待其准备就绪，然后通过更新 RayService 管理的头服务的选择器（即 `rayservice-sample-head-svc`）将流量切换到新的 RayCluster 并终止旧的 RayCluster。
+RayService 临时创建一个新的 RayCluster 并等待其准备就绪，然后通过更新 RayService 管理的头服务的选择器「即 `rayservice-sample-head-svc`」将流量切换到新的 RayCluster 并终止旧的 RayCluster。
 
 在零停机升级过程中，RayService会临时创建一个新的RayCluster并等待其准备就绪。
-一旦新的RayCluster准备就绪，RayService会更新RayService管理的头部服务的选择器（即 `rayservice-sample-head-svc`），使其指向新的RayCluster，从而将流量切换到新的RayCluster。
+一旦新的RayCluster准备就绪，RayService会更新RayService管理的头部服务的选择器「即 `rayservice-sample-head-svc`」，使其指向新的RayCluster，从而将流量切换到新的RayCluster。
 最后，旧的 RayCluster 被终止。
 
 某些异常不会触发零停机升级。

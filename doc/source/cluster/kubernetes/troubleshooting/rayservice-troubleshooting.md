@@ -196,7 +196,7 @@ Put "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:5
 Put "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:52365: i/o timeout"
 ```
 
-导致此问题的一个可能原因可能是 Kubernetes NetworkPolicy 阻止了 Ray Pods 和仪表板代理端口（即 52365）之间的流量。
+导致此问题的一个可能原因可能是 Kubernetes NetworkPolicy 阻止了 Ray Pods 和仪表板代理端口「即 52365」之间的流量。
 
 (kuberay-raysvc-issue6)=
 ### 问题 6: `runtime_env`
@@ -218,7 +218,7 @@ Get "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:5
 ```
 
 如 [Issue 5](#issue-5-fail-to-create--update-serve-applications) 提到，KubeRay 控制器当 head Pod 就绪时，提交一个 `Put` 请求到 RayCluster。
-在 `Put` 请求 dashboard agent 成功后，会向仪表盘代理端口（即 52365）发送请求。
+在 `Put` 请求 dashboard agent 成功后，会向仪表盘代理端口「即 52365」发送请求。
 提交成功表明包括仪表盘代理在内的所有必要组件都已完全正常运行。
 因此，与问题 5 不同，`Get` 请求失败是意料之中的。
 
@@ -255,7 +255,7 @@ Get "http://${HEAD_SVC_FQDN}:52365/api/serve/applications/": dial tcp $HEAD_IP:5
   ```
 
 (kuberay-raysvc-issue8)=
-### 问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。（KubeRay v0.6.1 及以下版本）
+### 问题 8: Kubernetes 集群资源耗尽时，循环重启 RayCluster。「KubeRay v0.6.1 及以下版本」
 
 > 注意：目前 KubeRay 运营团队还没有明确的方案来应对 Kubernetes 集群资源耗尽的情况，
 因此，我们建议确保 Kubernetes 集群有足够的资源来承载服务应用。
@@ -313,7 +313,7 @@ kubectl logs $KUBERAY_OPERATOR_POD -n $YOUR_NAMESPACE | tee operator-log
 (kuberay-raysvc-issue9)=
 ### Issue 9: 无需停机即可从 Ray Serve 的单应用程序 API 升级到其多应用程序 API
 
-KubeRay v0.6.0 已开始通过在 RayService CRD 中  `serveConfigV2` 暴露的方式支持 Ray Serve API V2（多应用） 。
+KubeRay v0.6.0 已开始通过在 RayService CRD 中  `serveConfigV2` 暴露的方式支持 Ray Serve API V2「多应用」 。
 但 Ray Serve 不支持在集群中同时部署 API V1 和 API V2。
 因此，如果用户想要通过替换 `serveConfig` 为 `serveConfigV2` 进行就地升级，可能会遇到以下错误信息：
 

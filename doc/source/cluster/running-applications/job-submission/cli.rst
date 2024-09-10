@@ -18,7 +18,7 @@ Ray Jobs CLI API 参考
 
 .. warning::
 
-   你必须提供 entrypoint 命令， ``python script.py``, 最后（在 ``--`` 之后）以及 `ray job submit` 的任何其他参数（例如 ``--working_dir="."``）必须在两个连字符（``--``）之前提供。
+   你必须提供 entrypoint 命令， ``python script.py``, 最后「在 ``--`` 之后」以及 `ray job submit` 的任何其他参数「例如 ``--working_dir="."``」必须在两个连字符「``--``」之前提供。
    比如使用 ``ray job submit --working_dir="." -- python script.py`` 而不是 ``ray job submit -- python script.py --working_dir="."``.
    此语法支持使用 “--” 将 “ray job submit” 的参数与 entrypoint 命令的参数分开。
 

@@ -6,7 +6,7 @@ Ray 导出许多系统指标，这些指标可以对 Ray 工作负载的状态�
 
 .. note::
 
-些标签在所有指标中都是通用的，例如 `SessionName`（唯一标识 Ray 集群实例）、`instance` （Prometheus 应用的每个节点标签，以及 `JobId`（Ray 作业 ID，如适用）。
+些标签在所有指标中都是通用的，例如 `SessionName`「唯一标识 Ray 集群实例」、`instance` 「Prometheus 应用的每个节点标签，以及 `JobId`「Ray 作业 ID，如适用」。
 
 .. list-table:: Ray 系统指标
    :header-rows: 1
@@ -16,7 +16,7 @@ Ray 导出许多系统指标，这些指标可以对 Ray 工作负载的状态�
      - 描述
    * - `ray_tasks`
      - `Name`, `State`, `IsRetry`
-     - 按状态划分的当前任务数量（远程函数和 actor 调用）。 状态标签 (如 RUNNING, FINISHED, FAILED) 描述任务的状态。 有关详细信息，参考 `rpc::TaskState <https://github.com/ray-project/ray/blob/e85355b9b593742b4f5cb72cab92051980fa73d3/src/ray/protobuf/common.proto#L583>`_ 。 function/method 名称可作为名称标签使用。 如果任务由于失败或重建而重试，则 IsRetry  标签将设置为“1”，否则设置为“0”。
+     - 按状态划分的当前任务数量「远程函数和 actor 调用」。 状态标签 (如 RUNNING, FINISHED, FAILED) 描述任务的状态。 有关详细信息，参考 `rpc::TaskState <https://github.com/ray-project/ray/blob/e85355b9b593742b4f5cb72cab92051980fa73d3/src/ray/protobuf/common.proto#L583>`_ 。 function/method 名称可作为名称标签使用。 如果任务由于失败或重建而重试，则 IsRetry  标签将设置为“1”，否则设置为“0”。
    * - `ray_actors`
      - `Name`, `State`
      - 特定状态下的当前 actor 数量。 状态标签在 gcs.proto 的 `rpc::ActorTableData <https://github.com/ray-project/ray/blob/e85355b9b593742b4f5cb72cab92051980fa73d3/src/ray/protobuf/gcs.proto#L85>`_ 协议。 The actor class name is available in the Name label.
@@ -70,7 +70,7 @@ Ray 导出许多系统指标，这些指标可以对 Ray 工作负载的状态�
      - The amount of GPU memory used per GPU, in bytes.
    * - `ray_node_network_receive_speed`
      - `InstanceId`
-     - 每个节点的网络发送吞吐量（以字节/秒为单位）。
+     - 每个节点的网络发送吞吐量「以字节/秒为单位」。
    * - `ray_node_network_send_speed`
      - `InstanceId`
      - 集群中健康节点的数量，按自动缩放程序节点类型细分。

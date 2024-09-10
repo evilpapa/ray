@@ -7,7 +7,7 @@ Ray 为 Ray 核心和库中的公共 API 提供稳定性保证，并进行相应
 
 API 可以被标记为：
 
-* :ref:`PublicAPI <public-api-def>`，这意味着 API 公开给最终用户。 PublicAPI 具有三个子级别（alpha、beta、stable），如下所述。
+* :ref:`PublicAPI <public-api-def>`，这意味着 API 公开给最终用户。 PublicAPI 具有三个子级别「alpha、beta、stable」，如下所述。
 * :ref:`DeveloperAPI <developer-api-def>`这意味着 API 显式暴露给 *高级* Ray 用户和库开发人员
 * :ref:`Deprecated <deprecated-api-def>`，可能会在 Ray 的未来版本中删除。
 
@@ -48,7 +48,7 @@ deprecation period to provide users with an opportunity to migrate their code.
 
 *稳定* 组件 **必须** 在主要 API 版本的生命周期内得到全面支持。
 由于用户期望标记为稳定的组件具有这样的稳定​​性，
-因此在主要版本中这些组件 **必须** 不得有重大更改（特殊情况除外）。
+因此在主要版本中这些组件 **必须** 不得有重大更改「特殊情况除外」。
 
 Docstrings
 ----------

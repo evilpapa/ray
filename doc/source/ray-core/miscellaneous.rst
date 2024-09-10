@@ -30,7 +30,7 @@
   a2 = Counter.options(num_cpus=2, resources={"Custom2": 1}).remote()
   a3 = Counter.options(num_cpus=3, resources={"Custom3": 1}).remote()
 
-您可以为任务指定不同的资源需求（但不能为 actor 方法指定）：
+您可以为任务指定不同的资源需求「但不能为 actor 方法指定」：
 
 .. testcode::
   :hide:
@@ -51,7 +51,7 @@
     dynamic_object_gpu_ids = g.options(num_cpus=1, num_gpus=1).remote()
     assert ray.get(dynamic_object_gpu_ids) == [0]
 
-并改变任务（以及 actor 方法）的返回值的数量：
+并改变任务「以及 actor 方法」的返回值的数量：
 
 .. testcode::
 
@@ -63,7 +63,7 @@
     assert ray.get(id1) == 0
     assert ray.get(id2) == 1
 
-并在提交任务时指定任务（以及 actor 方法）的名称：
+并在提交任务时指定任务「以及 actor 方法」的名称：
 
 .. testcode::
 
@@ -78,7 +78,7 @@
    assert ray.get(obj) == 4
 
 该名称将出现在仪表板的机器视图中的任务名称中，
-将在执行此任务时作为工作进程名称出现（如果是 Python 任务），
+将在执行此任务时作为工作进程名称出现「如果是 Python 任务」，
 并将出现在日志中的任务名称中。
 
 .. image:: images/task_name_dashboard.png
@@ -150,7 +150,7 @@ Ray Java API 支持远程调用重载的 Java 函数。但是，由于 Java 编�
 一些常见问题包括：
 
     1. 我的自动扩展集群中有多少个节点？
-    2. 我的集群中当前可用的资源有哪些（已使用资源和总计资源）？
+    2. 我的集群中当前可用的资源有哪些「已使用资源和总计资源」？
     3. 我的集群中当前有哪些对象？
 
 为此，您可以使用全局状态 API。
@@ -265,8 +265,8 @@ Resource 广播
 
 机器设置：
 
-- 1 个头节点：m5.4xlarge（16 个 vCPU/64GB 内存）
-- 2000 个 worker 节点：m5.large（2 个 vCPU/8GB 内存）
+- 1 个头节点：m5.4xlarge「16 个 vCPU/64GB 内存」
+- 2000 个 worker 节点：m5.large「2 个 vCPU/8GB 内存」
 
 操作系统设置：
 

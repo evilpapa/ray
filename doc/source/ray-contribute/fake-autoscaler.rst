@@ -89,10 +89,10 @@ Python 文档：
 使用 Docker Compose 在本地测试容器化的多节点
 =============================================================
 为了更进一步并在本地测试多节点设置，其中每个节点
-使用自己的容器（因此具有单独的文件系统、IP 地址和 Ray 进程），您可以使用 ``fake_multinode_docker`` 节点提供程序。
+使用自己的容器「因此具有单独的文件系统、IP 地址和 Ray 进程」，您可以使用 ``fake_multinode_docker`` 节点提供程序。
 
 该设置与 :ref:`fake_multinode <fake-multinode>` 提供程序非常类似。但是，您需要启动一个监控进程
-（``docker_monitor.py``）来负责运行 ``docker compose`` 命令。 
+「``docker_monitor.py``」来负责运行 ``docker compose`` 命令。 
 
 先决条件：
 
@@ -152,28 +152,28 @@ Python 文档：
 仍然存在一些限制：
 
 1. 不支持身份验证、设置、初始化、Ray 启动、文件同步以及任何特定于云的配置
-  （但将来可能会支持）。
+  「但将来可能会支持」。
 
 2. 有必要限制节点/节点 CPU/对象存储内存的数量，以避免本地机器过载。
 
-3. 在 docker-in-docker 设置中，必须遵循仔细的设置才能使虚假的多节点 docker 提供程序工作（见下文）。
+3. 在 docker-in-docker 设置中，必须遵循仔细的设置才能使虚假的多节点 docker 提供程序工作「见下文」。
 
 Docker 环境内的共享目录
 ------------------------------------------------
 容器将在两个位置安装主机存储：
 
-- ``/cluster/node``: 此位置（在容器中）将指向 ``cluster_dir/nodes/<node_id>``（在主机上）。
+- ``/cluster/node``: 此位置「在容器中」将指向 ``cluster_dir/nodes/<node_id>``「在主机上」。
   此位置每个节点都是单独的，但可以使用它来让主机检查存储在此目录中的内容。
-- ``/cluster/shared``: 此位置（在容器中）将指向 ``cluster_dir/shared`` （在主机上）。此位置
-  在节点之间共享，并有效地充当共享文件系统（与 NFS 类似）。
+- ``/cluster/shared``: 此位置「在容器中」将指向 ``cluster_dir/shared`` 「在主机上」。此位置
+  在节点之间共享，并有效地充当共享文件系统「与 NFS 类似」。
 
 
-在 Docker-in-Docker（dind）环境中进行设置
+在 Docker-in-Docker「dind」环境中进行设置
 ---------------------------------------------------
-在 Docker-in-Docker (dind) 环境（例如 Ray OSS Buildkite 环境）中进行设置时，必须
+在 Docker-in-Docker (dind) 环境「例如 Ray OSS Buildkite 环境」中进行设置时，必须
 牢记一些事项。为了清楚起见，请考虑以下概念：
 
-* **host** 是执行代码的非容器化机器（例如 Buildkite 运行器）
+* **host** 是执行代码的非容器化机器「例如 Buildkite 运行器」
 * **outer container** 是直接在 **host** 上运行的容器。在 Ray OSS Buildkite 环境中，
   启动了两个容器 —— 一个 *dind *网络主机和一个里面装有 Ray 源代码和 wheel 的容器。
 * **inner container** 是由伪造的多节点docker节点提供商启动的容器。
@@ -183,11 +183,11 @@ Docker 环境内的共享目录
 如果您从主机挂载  ``/var/run/docker.sock`` ，它将是主机 docker 守护程序。
 从现在开始，我们将两者都称为 **主机守护** 程序。
 
-外部容器修改必须挂载在内部容器中的文件（并从那里进行修改）。
+外部容器修改必须挂载在内部容器中的文件「并从那里进行修改」。
 这意味着主机守护进程也必须有权访问这些文件。
 
 类似地，内部容器暴露端口 - 但由于容器实际上是由主机守护进程启动的，
-因此端口也只能在主机（或 dind 容器）上访问。
+因此端口也只能在主机「或 dind 容器」上访问。
 
 对于 Ray OSS Buildkite 环境，我们设置了一些环境变量：
 
@@ -197,14 +197,14 @@ Docker 环境内的共享目录
 
 * ``RAY_HOSTDIR="/ray"``。如果共享目录在主机上的名称不同，我们可以动态重写挂载点。
   在此示例中，外部容器以 ``-v /ray:/ray-mount`` 或类似名称启动，
-  因此主机上的目录为  ``/ray`` ，而外部容器中的目录为 ``/ray-mount``（请参阅 ``RAY_TEMPDIR`` ）。
+  因此主机上的目录为  ``/ray`` ，而外部容器中的目录为 ``/ray-mount``「请参阅 ``RAY_TEMPDIR`` 」。
 
 * ``RAY_TESTHOST="dind-daemon"`` 由于容器是由主机守护程序启动的，因此我们不能直接连接到
   ``localhost``，因为端口不会暴露给外部容器。因此，我们可以使用此环境变量设置 Ray 主机。
 
 最后，docker-compose 显然需要一个 docker 镜像。默认的 docker 镜像是 ``rayproject/ray:nightly``。
 docker 镜像 ``openssh-server`` 的安装和启用。在 Buildkite 中，我们从
-``rayproject/ray:nightly-py37-cpu`` 构建一个新镜像，以避免为每个节点动态安装它（这是默认方式）。
+``rayproject/ray:nightly-py37-cpu`` 构建一个新镜像，以避免为每个节点动态安装它「这是默认方式」。
 此基础镜像是在前面的构建步骤之一中构建的。
 
 因此，我们设定

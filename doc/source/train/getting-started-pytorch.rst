@@ -209,7 +209,7 @@ PyTorch 入门
 
 .. tip::
     请记住， ``DataLoader`` 其中 ``batch_size``是每个 worker 的批处理大小。
-    全局批处理大小可以通过以下公式根据工作器批处理大小计算得出（反之亦然）：
+    全局批处理大小可以通过以下公式根据工作器批处理大小计算得出「反之亦然」：
 
     .. code-block:: python
 
@@ -245,7 +245,7 @@ PyTorch 入门
 在你的训练功能之外，创建一个 :class:`~ray.train.ScalingConfig` 对象来配置：
 
 1. `num_workers` - 分布式训练 worker 的数量。
-2. `use_gpu` - 每个 worker 至少使用一个 GPU （或 CPU）。
+2. `use_gpu` - 每个 worker 至少使用一个 GPU 「或 CPU」。
 
 .. code-block:: python
 

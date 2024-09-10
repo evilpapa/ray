@@ -17,8 +17,8 @@ Ray Train 运行会产生一系列的 :ref:`reported metrics <train-monitoring-a
 
 **Ray Train 期望所有 worker 都能够将文件写入同一个持久存储位置。**
 因此，Ray Train 需要某种形式的外部持久存储，
-例如云存储（例如 S3、GCS）或
-共享文件系统（例如 AWS EFS、Google Filestore、HDFS）来进行多节点训练。
+例如云存储「例如 S3、GCS」或
+共享文件系统「例如 AWS EFS、Google Filestore、HDFS」来进行多节点训练。
 
 以下是持久存储支持的一些功能：
 
@@ -31,7 +31,7 @@ Ray Train 运行会产生一系列的 :ref:`reported metrics <train-monitoring-a
   与他人共享或在下游任务中使用它们。
 
 
-云存储（AWS S3、Google Cloud 存储 ）
+云存储「AWS S3、Google Cloud 存储 」
 --------------------------------------------
 
 .. tip::
@@ -89,7 +89,7 @@ Ray Train 运行会产生一系列的 :ref:`reported metrics <train-monitoring-a
 对单节点集群使用本地存储
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果您只是在单个节点（例如笔记本电脑）上运行实验，
+如果您只是在单个节点「例如笔记本电脑」上运行实验，
 Ray Train 将使用本地文件系统作为检查点和其他工件的存储位置。
 默认情况下，结果将保存到 ``~/ray_results`` 具有唯一自动生成名称的子目录中，
 除非您使用在 :class:`~ray.train.RunConfig` 自定义 ``storage_path`` 和 ``name``。
@@ -367,7 +367,7 @@ Ray Train 输出概述
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 当指定 ``storage_path`` ，训练输出将保存到
-*中间本地目录*，然后持久化（复制/上传）到 ``storage_path``。
+*中间本地目录*，然后持久化「复制/上传」到 ``storage_path``。
 认情况下，此中间本地目录是 ``~/ray_results`` 的子目录。
 
 使用环境变量 ``RAY_AIR_LOCAL_CACHE_DIR`` 定制这个中间本地目录：

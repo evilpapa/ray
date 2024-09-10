@@ -26,7 +26,7 @@ Ray 远程支持 GPU 作为预定义的 :ref:`resource <core-resources>` 类型�
 在任务和 actor 中使用 GPU
 ------------------------------
 
-如果一个任务或 actor 需要 GPU，你可以指定相应的 :ref:`资源需求 <resource-requirements>`（比如 ``@ray.remote(num_gpus=1)``）。
+如果一个任务或 actor 需要 GPU，你可以指定相应的 :ref:`资源需求 <resource-requirements>`「比如 ``@ray.remote(num_gpus=1)``」。
 Ray 然后会将任务或 actor 调度到一个有足够空闲 GPU 资源的节点上，
 并在运行任务或 actor 代码之前通过设置 ``CUDA_VISIBLE_DEVICES`` 环境变量来分配 GPU。
 
@@ -41,7 +41,7 @@ Ray 然后会将任务或 actor 调度到一个有足够空闲 GPU 资源的节�
 
 **注意：** 上面定义的 ``use_gpu``  函数实际上并没有使用任何 GPU。Ray 会将其调度到至少有一个 GPU 的节点上，
 并在其执行时为其保留一个 GPU，但实际上使用 GPU 是由函数自己决定的。
-这通常通过外部库（比如 TensorFlow）来完成。下面是一个实际使用 GPU 的例子。
+这通常通过外部库「比如 TensorFlow」来完成。下面是一个实际使用 GPU 的例子。
 为了使这个例子工作，你需要安装 TensorFlow 的 GPU 版本。
 
 .. literalinclude:: ../doc_code/gpus.py
@@ -78,7 +78,7 @@ TensorFlow 可以配置为限制其内存使用量。
 Worker 不释放 GPU 资源
 -----------------------------------
 
-目前，当 worker 执行使用 GPU 的任务（比如，通过 TensorFlow）时，任务可能会在 GPU 上分配内存，并且在任务执行完毕后可能不会释放它。
+目前，当 worker 执行使用 GPU 的任务「比如，通过 TensorFlow」时，任务可能会在 GPU 上分配内存，并且在任务执行完毕后可能不会释放它。
 这可能会导致下次任务尝试使用相同的 GPU 时出现问题。为了解决这个问题，Ray 默认情况下禁用了 GPU 任务之间的 worker 进程重用，其中 GPU 资源在任务进程退出后被释放。
 由于这会增加 GPU 任务调度的开销，你可以通过在 :func:`ray.remote <ray.remote>` 装饰器中设置 ``max_calls=0`` 来重新启用 worker 重用。
 
@@ -107,7 +107,7 @@ Ray 支持特定资源的加速器类型。``accelerator_type`` 选项可以用�
  - Nvidia GPU
  - AWS Neuron Cores
 
-AWS Neuron Core 加速器（实验性）
+AWS Neuron Core 加速器「实验性」
 ------------------------------------------
 
 类似于 Nvidia GPU，Ray 默认情况下会自动检测 `AWS Neuron Cores`_。

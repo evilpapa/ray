@@ -23,14 +23,14 @@ Ray 不仅仅是一个分布式应用程序的框架，它还是一个由
 .. tip:: `在我们的论坛 <https://discuss.ray.io/>`_提问！ 
   社区非常活跃，致力于帮助人们成功构建他们的 Ray 应用程序。
 
-您可以在 `GitHub`_` 上加入我们（并加星标！） 。
+您可以在 `GitHub`_` 上加入我们「并加星标！」 。
 
 .. _`GitHub`: https://github.com/ray-project/ray
 
 贡献给 Ray
 -------------------
 
-我们欢迎（并鼓励！）对 Ray 的所有形式的贡献，包括但不限于：
+我们欢迎「并鼓励！」对 Ray 的所有形式的贡献，包括但不限于：
 
 - 补丁和 PR 的代码审查。
 - 推送补丁。
@@ -67,12 +67,12 @@ Ray 不仅仅是一个分布式应用程序的框架，它还是一个由
 2. 确保所有现有 `tests <getting-involved.html#testing>`__ 和 `linters <getting-involved.html#lint-and-formatting>`__ 均已通过。
    运行 ``setup_hooks.sh`` 以创建一个 git hook，它将在推送更改之前运行 linter。
 3. 如果引入新功能或修补错误，请确保在 ``ray/python/ray/tests/`` 相关文件中添加新的测试用例。
-4. 记录代码。公共函数需要记录，并记得提供使用示例（如果适用）。
+4. 记录代码。公共函数需要记录，并记得提供使用示例「如果适用」。
    请参阅 ``doc/README.md`` 获取有关编辑和构建公共文档的说明。
 5. 处理 PR 上的评论。在审核过程中，
    您可能需要解决与其他更改的合并冲突。要解决合并冲突，
-   请在您的分支上运行 ``git pull . upstream/master`` （请不要使用 rebase，因为
-   它对 GitHub 审核工具不太友好。合并时所有提交都将被压缩。）
+   请在您的分支上运行 ``git pull . upstream/master`` 「请不要使用 rebase，因为
+   它对 GitHub 审核工具不太友好。合并时所有提交都将被压缩。」
 6. 审阅者将合并并批准拉取请求；如果拉取请求变得陈旧，
    请务必 ping 他们。
 
@@ -111,7 +111,7 @@ PR 审核流程
 Python 开发测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-完整的测试套件太大，无法在一台机器上运行。但是，您可以运行单独的相关 Python 测试文件。假设测试集中的某个测试文件（例如 ``python/ray/tests/test_basic.py`` 失败。您可以按如下方式在本地运行该测试文件：
+完整的测试套件太大，无法在一台机器上运行。但是，您可以运行单独的相关 Python 测试文件。假设测试集中的某个测试文件「例如 ``python/ray/tests/test_basic.py`` 失败。您可以按如下方式在本地运行该测试文件：
 
 .. code-block:: shell
 
@@ -254,7 +254,7 @@ Lint 和 格式化
    * branch                master     -> FETCH_HEAD
   python/ray/util/sgd/tf/tf_runner.py:4:1: F401 'numpy as np' imported but unused  # Below is the failure
 
-此外，还有其他格式和语义检查器，用于检查下列组件（未包含在 ``scripts/format.sh``）：
+此外，还有其他格式和语义检查器，用于检查下列组件「未包含在 ``scripts/format.sh``」：
 
 * Python README 格式：
 
@@ -315,11 +315,11 @@ API 兼容性样式指南
 
 Ray 为 Ray 核心和库中的公共 API 提供稳定性保证，这些保证在 :ref:`API 稳定性指南 <api-stability>` 有描述。
 
-很难将 API 兼容性的语义完全捕获到单个注释中（例如，公共 API 可能具有 “实验性” 参数）。对于更细粒度的稳定性合同，可以在 pydoc 中注明（例如，“该 ``random_shuffle`` 选项是实验性的”）。 如果可能，实验性参数也应在 Python 中以下划线为前缀（例如， `_owner=`）。
+很难将 API 兼容性的语义完全捕获到单个注释中「例如，公共 API 可能具有 “实验性” 参数」。对于更细粒度的稳定性合同，可以在 pydoc 中注明「例如，“该 ``random_shuffle`` 选项是实验性的”」。 如果可能，实验性参数也应在 Python 中以下划线为前缀「例如， `_owner=`」。
 
 **其他建议**:
 
-在 Python API 中，考虑强制使用 kwargs 而不是位置参数（使用 ``*`` 运算符）。与位置参数相比，kwargs 更容易保持向后兼容，例如，想象一下，如果您需要在下面弃用“opt1”，那么强制使用 kwargs 会更容易：
+在 Python API 中，考虑强制使用 kwargs 而不是位置参数「使用 ``*`` 运算符」。与位置参数相比，kwargs 更容易保持向后兼容，例如，想象一下，如果您需要在下面弃用“opt1”，那么强制使用 kwargs 会更容易：
 
 .. code-block:: python
 

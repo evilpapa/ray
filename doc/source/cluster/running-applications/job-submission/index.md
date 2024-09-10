@@ -2,7 +2,7 @@
 
 # Ray Job 概述
 
-一旦部署了 Ray 集群（在 [VMs](vm-cluster-quick-start) 或 [Kubernetes](kuberay-quickstart)），您就可以运行 Ray 应用程序了！
+一旦部署了 Ray 集群「在 [VMs](vm-cluster-quick-start) 或 [Kubernetes](kuberay-quickstart)」，您就可以运行 Ray 应用程序了！
 ![A diagram that shows three ways of running a job on a Ray cluster.](../../images/ray-job-diagram.svg "Three ways of running a job on a Ray cluster.")
 
 ## Ray Jobs API
@@ -30,12 +30,12 @@ Ray Jobs API 的提交包括：
 
 ## 以交互方式运行 Job
 
-如果您想以 *交互方式* 运行应用程序并实时查看输出（例如，在开发或调试期间），您可以：
+如果您想以 *交互方式* 运行应用程序并实时查看输出「例如，在开发或调试期间」，您可以：
 
-- （推荐） 直接在集群节点上运行脚本（例如，使用 [`ray attach`](ray-attach-doc) SSH 进入节点后），或者
-- （仅限专家）使用 [Ray Client](ray-client-ref) 从本地机器运行脚本，同时保持与集群的连接。
+- 「推荐」 直接在集群节点上运行脚本「例如，使用 [`ray attach`](ray-attach-doc) SSH 进入节点后」，或者
+- 「仅限专家」使用 [Ray Client](ray-client-ref) 从本地机器运行脚本，同时保持与集群的连接。
 
-请注意，以这些方式启动的作业不受 Ray Jobs API 管理，因此 Ray Jobs API 将无法看到它们或与它们交互 （ `ray job list` 和 `JobSubmissionClient.list_jobs()` 除外）。
+请注意，以这些方式启动的作业不受 Ray Jobs API 管理，因此 Ray Jobs API 将无法看到它们或与它们交互 「 `ray job list` 和 `JobSubmissionClient.list_jobs()` 除外」。
 
 ## 内容
 

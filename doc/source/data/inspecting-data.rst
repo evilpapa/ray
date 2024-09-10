@@ -39,7 +39,7 @@
     petal width (cm)   double
     target             int64
 
-如需更多信息（例如行数），请打印数据集。
+如需更多信息「例如行数」，请打印数据集。
 
 .. testcode::
 

@@ -8,7 +8,7 @@
 该控制器提供了一个 Kubernetes 原生方式来管理 Ray clusters。
 每个 Ray 集群由一个头节点 pod 以及一批 work 节点 pod 组成。
 可选的自动缩放支持允许 KubeRay Operator 根据 Ray 工作负载的要求调整 Ray 集群的大小，并根据需要添加和删除 Ray pod。
-KubeRay 支持异构计算节点（包括 GPU）以及在同一 Kubernetes 集群中运行具有不同 Ray 版本的多个 Ray 集群。
+KubeRay 支持异构计算节点「包括 GPU」以及在同一 Kubernetes 集群中运行具有不同 Ray 版本的多个 Ray 集群。
 
 ```{eval-rst}
 .. image:: images/ray_on_kubernetes.png

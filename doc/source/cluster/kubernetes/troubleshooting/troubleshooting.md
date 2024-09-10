@@ -33,12 +33,12 @@ worker 进程初始化容器陷入 `Init:0/1` 状态的一些常见原因是：
 ### 2. 禁用 init 容器注入
 
 如果你想自定义worker init容器，你可以禁用注入并添加你自己的 init 容器。
-要禁用注入，请将 KubeRay operator 中的环境变量 `ENABLE_INIT_CONTAINER_INJECTION` 设置为f `false` （适用于 KubeRay v0.5.2）。
+要禁用注入，请将 KubeRay operator 中的环境变量 `ENABLE_INIT_CONTAINER_INJECTION` 设置为f `false` 「适用于 KubeRay v0.5.2」。
 请参阅 [#1069](https://github.com/ray-project/kuberay/pull/1069) 和 [KubeRay Helm chart](https://github.com/ray-project/kuberay/blob/ddb5e528c29c2e1fb80994f05b1bd162ecbaf9f2/helm-chart/kuberay-operator/values.yaml#L83-L87) ，了解如何设置环境变量的说明。禁用后，您可以将自定义 init 容器添加到 worker Pod 模板中。
 
 ## 集群域
 
-在 KubeRay 中，我们使用完全限定域名（FQDN）来建立 worker 和 head 之间的连接。
+在 KubeRay 中，我们使用完全限定域名「FQDN」来建立 worker 和 head 之间的连接。
 head service 的 FQDN 是 `${HEAD_SVC}.${NAMESPACE}.svc.${CLUSTER_DOMAIN}`。
 默认的 [集群域](https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#introduction) 是 `cluster.local`，适用于大多数 Kubernetes 集群。
 但是，请务必注意，某些集群可能具有不同的集群域。

@@ -1,7 +1,7 @@
 预防 OOM
 ========================
 
-如果程序任务或 actor 用了大量堆内存，可能导致节点内存耗尽（OOM）。当这种情况发生时，操作系统会开始杀死 worker 或 raylet 进程，从而中断应用程序。OOM 也可能导致指标停滞，如果这种情况发生在 head 节点上，可能会导致 :ref:`仪表盘 <observability-getting-started>` 或其他控制进程停滞，并导致集群无法使用。
+如果程序任务或 actor 用了大量堆内存，可能导致节点内存耗尽「OOM」。当这种情况发生时，操作系统会开始杀死 worker 或 raylet 进程，从而中断应用程序。OOM 也可能导致指标停滞，如果这种情况发生在 head 节点上，可能会导致 :ref:`仪表盘 <observability-getting-started>` 或其他控制进程停滞，并导致集群无法使用。
 
 本节中我们将讨论：
 
@@ -25,7 +25,7 @@
 如何禁用内存监视器？
 --------------------------------------
 
-内存监视器是默认启用的，可以通过在 Ray 启动时将环境变量 ``RAY_memory_monitor_refresh_ms`` 设置为零来禁用（例如，RAY_memory_monitor_refresh_ms=0 ray start ...）。
+内存监视器是默认启用的，可以通过在 Ray 启动时将环境变量 ``RAY_memory_monitor_refresh_ms`` 设置为零来禁用「例如，RAY_memory_monitor_refresh_ms=0 ray start ...」。
 
 如何配置内存监视器？
 --------------------------------------
@@ -44,7 +44,7 @@
 重试策略
 ~~~~~~~~~~~~
 
-当一个任务或 actor 被内存监视器杀死时，它将使用指数回退进行重试。重试延迟有一个上限，为 60 秒。如果任务被内存监视器杀死，它将无限重试（不考虑 :ref:`max_retries <task-fault-tolerance>`）。如果 actor 被内存监视器杀死，它不会无限重建 actor（它遵守 :ref:`max_restarts <actor-fault-tolerance>`，默认为 0）。
+当一个任务或 actor 被内存监视器杀死时，它将使用指数回退进行重试。重试延迟有一个上限，为 60 秒。如果任务被内存监视器杀死，它将无限重试「不考虑 :ref:`max_retries <task-fault-tolerance>`」。如果 actor 被内存监视器杀死，它不会无限重建 actor「它遵守 :ref:`max_restarts <actor-fault-tolerance>`，默认为 0」。
 
 Worker 终止策略
 ~~~~~~~~~~~~~~~~~~~~~

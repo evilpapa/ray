@@ -10,7 +10,7 @@ Ray Train 概览
 
 #. :ref:`训练函数 <train-overview-training-function>`: 包含模型训练逻辑的 Python 函数。
 #. :ref:`Worker <train-overview-worker>`: 运行训练功能的进程。
-#. :ref:`扩展配置: <train-overview-scaling-config>` worker 数量和计算资源（例如 CPU 或 GPU）的配置。
+#. :ref:`扩展配置: <train-overview-scaling-config>` worker 数量和计算资源「例如 CPU 或 GPU」的配置。
 #. :ref:`训练器 <train-overview-trainers>`: 一个 Python 类，将训练函数、工作者和扩展配置结合在一起，以执行分布式训练作业。
 
 .. figure:: images/overview.png

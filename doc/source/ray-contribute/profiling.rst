@@ -9,9 +9,9 @@ Ray 开发人员的分析
 ------------------------------------------
 
 您可以使用以下 GDB 命令查看任何
-正在运行的 Ray 进程（例如 raylet）的当前堆栈跟踪。
+正在运行的 Ray 进程「例如 raylet」的当前堆栈跟踪。
 这对于调试 100% CPU 利用率或无限循环非常
-有用（只需运行该命令几次即可查看进程卡在了哪里）。
+有用「只需运行该命令几次即可查看进程卡在了哪里」。
 
 .. code-block:: shell
 
@@ -46,7 +46,7 @@ Ray 开发人员的分析
 
 内存分析
 ----------------
-如果要在 Ray 核心组件上运行内存分析，可以使用 Jemalloc （https://github.com/jemalloc/jemalloc）。
+如果要在 Ray 核心组件上运行内存分析，可以使用 Jemalloc 「https://github.com/jemalloc/jemalloc」。
 Ray 支持环境变量来覆盖核心组件上的 LD_PRELOAD。
 
 您可以从 `ray_constants.py` 中找到组件名称。例如，如果您要分析 gcs_server，
@@ -55,8 +55,8 @@ Ray 支持环境变量来覆盖核心组件上的 LD_PRELOAD。
 用户应该提供 3 个环境变量来进行内存分析。
 
 - RAY_JEMALLOC_LIB_PATH: jemalloc共享库 `.so` 的路径。
-- RAY_JEMALLOC_CONF: jemalloc 的 MALLOC_CONF（以逗号分隔）。
-- RAY_JEMALLOC_PROFILE: 以逗号分隔的 Ray 组件，用于运行 Jemalloc `.so`。例如（“raylet,gcs_server”）。请注意，组件应与 `ray_constants.py` 中的进程类型匹配。（这意味着“RAYLET,GCS_SERVER”不起作用）。
+- RAY_JEMALLOC_CONF: jemalloc 的 MALLOC_CONF「以逗号分隔」。
+- RAY_JEMALLOC_PROFILE: 以逗号分隔的 Ray 组件，用于运行 Jemalloc `.so`。例如「“raylet,gcs_server”」。请注意，组件应与 `ray_constants.py` 中的进程类型匹配。「这意味着“RAYLET,GCS_SERVER”不起作用」。
 
 .. code-block:: bash
 

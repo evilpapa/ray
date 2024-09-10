@@ -26,16 +26,16 @@ RayJob 管理两个方面：
 
 * `entrypoint` - 为此作业运行的 shell 命令。
 * `rayClusterSpec` - 用于运行 Job 的 **RayCluster** 配置。
-* `jobId` - _（可选）_ 为作业指定的作业 ID。如果未提供，则会生成一个。
-* `metadata` - _（可选）_ 用户为作业提供的任意元数据。
-* `runtimeEnvYAML` - _（可选）_ 以多行 YAML 字符串形式提供的运行时环境配置。 _（KubeRay 1.0 版中的新增功能。）_
-* `shutdownAfterJobFinishes` - _（可选）_ 作业完成后是否回收集群。默认为 false。
-* `ttlSecondsAfterFinished` - _（可选）_ 用于清理集群的 TTL。仅当`shutdownAfterJobFinishes`设置时才有效。
-* `submitterPodTemplate` - _（可选）_ 针对 Ray 集群运行 `ray job submit` 的 Pod 的 Pod 模板规范。
-* `entrypointNumCpus` - _（可选）_ 指定为入口点命令保留的 CPU 核心数量。 _（KubeRay 1.0 版中的新增功能。）_
-* `entrypointNumGpus` - _（可选）_ 指定为入口点命令保留的 GPU 数量。 _（KubeRay 1.0 版中的新增功能。）_
-* `entrypointResources` - _（可选）_ 一个 json 格式的字典，用于指定自定义资源及其数量。 _（KubeRay 1.0 版中的新增功能。）_
-* `runtimeEnv` - [已弃用] _（可选）_ 运行时环境 json 字符串的 base64 编码字符串。
+* `jobId` - _「可选」_ 为作业指定的作业 ID。如果未提供，则会生成一个。
+* `metadata` - _「可选」_ 用户为作业提供的任意元数据。
+* `runtimeEnvYAML` - _「可选」_ 以多行 YAML 字符串形式提供的运行时环境配置。 _「KubeRay 1.0 版中的新增功能。」_
+* `shutdownAfterJobFinishes` - _「可选」_ 作业完成后是否回收集群。默认为 false。
+* `ttlSecondsAfterFinished` - _「可选」_ 用于清理集群的 TTL。仅当`shutdownAfterJobFinishes`设置时才有效。
+* `submitterPodTemplate` - _「可选」_ 针对 Ray 集群运行 `ray job submit` 的 Pod 的 Pod 模板规范。
+* `entrypointNumCpus` - _「可选」_ 指定为入口点命令保留的 CPU 核心数量。 _「KubeRay 1.0 版中的新增功能。」_
+* `entrypointNumGpus` - _「可选」_ 指定为入口点命令保留的 GPU 数量。 _「KubeRay 1.0 版中的新增功能。」_
+* `entrypointResources` - _「可选」_ 一个 json 格式的字典，用于指定自定义资源及其数量。 _「KubeRay 1.0 版中的新增功能。」_
+* `runtimeEnv` - [已弃用] _「可选」_ 运行时环境 json 字符串的 base64 编码字符串。
 
 ## 示例: 使用 RayJob 运行简单的 Ray 作业
 

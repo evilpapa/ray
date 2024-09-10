@@ -2,7 +2,7 @@
 
 # 日志持久化
 
-日志（系统日志和应用程序日志）对于 Ray 应用程序和集群的故障排除非常有用。例如，如果节点意外终止，您可能想要访问系统日志。
+日志「系统日志和应用程序日志」对于 Ray 应用程序和集群的故障排除非常有用。例如，如果节点意外终止，您可能想要访问系统日志。
 
 与 Kubernetes 类似，Ray 不提供日志数据的原生存储解决方案。用户需要自行管理日志的生命周期。本页面提供有关如何从 Kubernetes 上运行的 Ray 集群收集日志的说明。
 
@@ -60,7 +60,7 @@ Kubernetes 生态系统中有许多可用的开源日志处理工具。本页展
   到Fluent Bit 支持的任何[后端存储][FluentBitStorage]。
 - 上面的 `Path_Key true` 行确保了文件名包含在 Fluent Bit 发出的日志记录中。
 - `Refresh_Interval 5` 行要求 Fluent Bit 每 5 秒刷新一次日志目录中的文件列表，而不是默认的 60 次。
-  原因是该 `/tmp/ray/session_latest/logs/` 目录最初不存在（Ray 必须先创建它）。
+  原因是该 `/tmp/ray/session_latest/logs/` 目录最初不存在「Ray 必须先创建它」。
   设置 `Refresh_Interval` 较低的值可以让我们更快地看到 Fluent Bit 容器的标准输出中的日志。
 
 
@@ -104,7 +104,7 @@ Kubernetes 生态系统中有许多可用的开源日志处理工具。本页展
 ### 部署带有日志记录 sidecar 的 RayCluster 
 
 
-要部署上述配置，请部署 KubeRay Operator（如果尚未部署）：
+要部署上述配置，请部署 KubeRay Operator「如果尚未部署」：
 参阅 {ref}`入门指南 <kuberay-operator-deploy>`
 以获取有关此步骤的说明。
 

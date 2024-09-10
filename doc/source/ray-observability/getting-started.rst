@@ -21,7 +21,7 @@ Ray 提供了一个基于 Web 的仪表板，用于监视和调试 Ray 应用程
 
   pip install -U "ray[default]"
 
-当您在笔记本电脑上启动单节点 Ray 集群时，可以使用 Ray 初始化时打印的 URL（默认 URL 为 **http://localhost:8265**5）或使用 `ray.init` 返回的上下文对象来访问仪表板。
+当您在笔记本电脑上启动单节点 Ray 集群时，可以使用 Ray 初始化时打印的 URL「默认 URL 为 **http://localhost:8265**5」或使用 `ray.init` 返回的上下文对象来访问仪表板。
 
 .. testcode::
   :hide:
@@ -87,7 +87,7 @@ Ray 提供了一个基于 Web 的仪表板，用于监视和调试 Ray 应用程
     </div>
 
 作业视图可让您监控 Ray Cluster 上运行的不同作业。
-:ref:`Ray Job <jobs-overview>` 是使用 Ray API（例如 `ray.init`）的 Ray 工作负载。建议通过 :ref:`Ray Job API <jobs-quickstart>`将作业提交到集群。您还可以交互地运行 Ray 作业（例如，通过在头节点内执行 Python 脚本）。
+:ref:`Ray Job <jobs-overview>` 是使用 Ray API「例如 `ray.init`」的 Ray 工作负载。建议通过 :ref:`Ray Job API <jobs-quickstart>`将作业提交到集群。您还可以交互地运行 Ray 作业「例如，通过在头节点内执行 Python 脚本」。
 
 作业视图显示活动、已完成和失败作业的列表，单击 ID 允许用户查看有关该作业的详细信息。
 有关 Ray 作业的更多信息，请参阅 :ref:`Ray 作业概述部分 <jobs-overview>`。
@@ -110,11 +110,11 @@ Job 概况
 任务和 actor 使用以下标准进行分组和嵌套：
 
 - A所有task 和 actor都分组在一起。通过展开相应的行来查看各个条目。
-- T任务按其 ``name`` 属性分组（例如， ``task.options(name="<name_here>").remote()``）。
-- 子任务（嵌套任务）嵌套在其父任务行下。
+- T任务按其 ``name`` 属性分组「例如， ``task.options(name="<name_here>").remote()``」。
+- 子任务「嵌套任务」嵌套在其父任务行下。
 - Actors 按他们的类名分组。
-- 子 Actors（在 Actor 内创建的 Actor）嵌套在其父 Actor 的行下。
-- Actor 任务（Actor 内的远程方法）嵌套在相应 Actor 方法的 Actor 下。
+- 子 Actors「在 Actor 内创建的 Actor」嵌套在其父 Actor 的行下。
+- Actor 任务「Actor 内的远程方法」嵌套在相应 Actor 方法的 Actor 下。
 
 .. note::
 
@@ -130,8 +130,8 @@ Job 概况
 
 其次，使用 ``chrome://tracing`` 或者 `Perfetto UI <https://ui.perfetto.dev/>`_ 等工具并拖拽下载的 chrome 跟踪文件。我们将使用 Perfetto，因为它是可视化 chrome 跟踪文件的推荐方法。
 
-在 Ray Tasks 和 Actors 的时间线可视化中，有 Node 行（硬件）和 Worker 行（进程）。
-每个 worker 行显示该 worker 随时间发生的任务事件列表（例如，计划的任务、运行的任务、输入/输出反序列化等）。
+在 Ray Tasks 和 Actors 的时间线可视化中，有 Node 行「硬件」和 Worker 行「进程」。
+每个 worker 行显示该 worker 随时间发生的任务事件列表「例如，计划的任务、运行的任务、输入/输出反序列化等」。
 
 
 
@@ -144,7 +144,7 @@ Ray 状态
 
 .. note::
 
-  输出显示整个集群的聚合信息（不是按作业）。如果您运行多个作业，则某些需求可能来自其他作业。
+  输出显示整个集群的聚合信息「不是按作业」。如果您运行多个作业，则某些需求可能来自其他作业。
 
 .. _dash-workflow-state-apis:
 
@@ -209,7 +209,7 @@ Ray Serve 导出各种时间序列指标，以帮助您了解 Serve 应用程序
         <iframe width="560" height="315" src="https://www.youtube.com/embed/K2jLoIhlsnY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
 
-Cluster 视图是机器（节点）和 Workers（进程）层次关系的可视化。
+Cluster 视图是机器「节点」和 Workers「进程」层次关系的可视化。
 每台主机由许多 Worker 组成，您可以通过单击 + 按钮查看。
 另请参阅将 GPU 资源分配给特定的 Actor 或任务。
 
@@ -280,7 +280,7 @@ Metrics 视图提供 Ray 发出的时间序列指标的可视化。
 分析Tasks和Actors的CPU和内存使用情况
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-仪表板中的 :ref:`标视图 <dash-metrics-view>` 提供了“每个组件的 CPU/内存使用情况图表”，显示应用程序（以及系统组件）中每个task 和 actor随时间的 CPU 和内存使用情况。
+仪表板中的 :ref:`标视图 <dash-metrics-view>` 提供了“每个组件的 CPU/内存使用情况图表”，显示应用程序「以及系统组件」中每个task 和 actor随时间的 CPU 和内存使用情况。
 您可以识别可能消耗比预期更多资源的task 和 actor，并优化应用程序的性能。
 
 .. image:: https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/node_cpu_by_comp.png
@@ -305,10 +305,10 @@ Metrics 视图提供 Ray 发出的时间序列指标的可视化。
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ray 要求用指定 :ref:`资源 <logical-resources>` 数量，以及 Tasks 和 Actors 通过 ``num_cpus``、 ``num_gpus``、 ``memory`` 和 ``resource`` 等参数指定资源数量. 
-这些值用于调度，但可能并不总是与实际资源利用率（物理资源利用率）匹配。
+这些值用于调度，但可能并不总是与实际资源利用率「物理资源利用率」匹配。
 
 - 从 :ref:`指标视图 <dash-metrics-view>`中查看一段时间内逻辑和物理资源的利用率。
-- 物理资源利用率（CPU、GPU、内存、磁盘、网络）的快照也可以从 :ref:`集群视图 <dash-node-view>` 获得。
+- 物理资源利用率「CPU、GPU、内存、磁盘、网络」的快照也可以从 :ref:`集群视图 <dash-node-view>` 获得。
 
 .. image:: https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/logical_resource.png
     :align: center
@@ -318,7 +318,7 @@ Ray 要求用指定 :ref:`资源 <logical-resources>` 数量，以及 Tasks 和 
 .. image:: https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/physical_resource.png
     :align: center
 
-物理资源（硬件）使用情况。 Ray 提供集群中每台机器的 CPU、GPU、内存、GRAM、磁盘和网络使用情况。
+物理资源「硬件」使用情况。 Ray 提供集群中每台机器的 CPU、GPU、内存、GRAM、磁盘和网络使用情况。
 
 .. _dash-logs-view:
 
@@ -345,7 +345,7 @@ Ray 要求用指定 :ref:`资源 <logical-resources>` 数量，以及 Tasks 和 
 
 .. note::
 
-如果直接在 Ray 集群的头节点上执行驱动程序（不使用作业 API）或使用 :ref:`Ray 客户端 <ray-client-ref>` 运行，则无法从仪表板访问驱动程序日志。在这种情况下，请查看终端或 Jupyter Notebook 输出以查看驱动程序日志。
+如果直接在 Ray 集群的头节点上执行驱动程序「不使用作业 API」或使用 :ref:`Ray 客户端 <ray-client-ref>` 运行，则无法从仪表板访问驱动程序日志。在这种情况下，请查看终端或 Jupyter Notebook 输出以查看驱动程序日志。
 
 **Task 和 Actor 日志 (Worker 日志)**
 
@@ -355,7 +355,7 @@ Task 和 Actor 日志通过 :ref:`Task 和 Actor 表视图 <dash-workflow-state-
 
 .. note::
 
-    异步 Actor 任务或线程 Actor 任务（并发度>1）的日志仅作为 Actor 日志的一部分提供。按照仪表板中的说明查看 Actor 日志。
+    异步 Actor 任务或线程 Actor 任务「并发度>1」的日志仅作为 Actor 日志的一部分提供。按照仪表板中的说明查看 Actor 日志。
 
 **Task 和 Actor 错误**
 
@@ -375,7 +375,7 @@ task 和 actor表分别显示失败的task 或 actor的名称。它们还提供�
 
 **概览指标**
 
-概览指标页面提供集群级别的硬件利用率和自动缩放状态（待处理、活动和故障节点的数量）。
+概览指标页面提供集群级别的硬件利用率和自动缩放状态「待处理、活动和故障节点的数量」。
 
 **最近的 Job**
 
@@ -392,7 +392,7 @@ task 和 actor表分别显示失败的task 或 actor的名称。它们还提供�
 .. image:: https://raw.githubusercontent.com/ray-project/Images/master/docs/new-dashboard-v2/dashboard-pics/event-page.png
     :align: center
 
-事件视图按时间顺序显示与特定类型（例如，自动缩放器或作业）关联的事件列表。
+事件视图按时间顺序显示与特定类型「例如，自动缩放器或作业」关联的事件列表。
 可以使用 :ref:`(Ray state APIs)<state-api-overview-ref>` 的 CLI 命令 ``ray list cluster-events`` 访问相同的信息。
 
 有两种类型的事件可用：

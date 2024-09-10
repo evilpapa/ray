@@ -18,7 +18,7 @@
 ### 创建 CPU 节点组
 
 通常，避免在 Ray head 上运行 GPU 工作负载。
-为除 Ray GPU 工作器之外的所有 Pod（例如 KubeRay 运算符、Ray head 和 CoreDNS Pod）创建 CPU 节点组。
+为除 Ray GPU 工作器之外的所有 Pod「例如 KubeRay 运算符、Ray head 和 CoreDNS Pod」创建 CPU 节点组。
 
 以下是适用于文档中大多数 KubeRay 示例的常用配置：
   * 实例类型： [**m5.xlarge**](https://aws.amazon.com/ec2/instance-types/m5/) (4 vCPU; 16 GB RAM)
@@ -31,13 +31,13 @@
 
 1. 以下是适用于文档中大多数 KubeRay 示例的常用配置：
    * AMI 类型：Bottlerocket NVIDIA (BOTTLEROCKET_x86_64_NVIDIA)
-   * 实例类型： [**g5.xlarge**](https://aws.amazon.com/ec2/instance-types/g5/) （1 GPU；24 GB GPU 内存；4 vCPU；16 GB RAM）
+   * 实例类型： [**g5.xlarge**](https://aws.amazon.com/ec2/instance-types/g5/) 「1 GPU；24 GB GPU 内存；4 vCPU；16 GB RAM」
    * 磁盘大小：1024 GB
    * 所需尺寸：1，最小尺寸：0，最大尺寸：1
 
 > **注意:** 如果您遇到 `kubectl` 权限问题，请参考 [AWS 文档](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html#) 按照 "步骤 2: 配置您的计算机以与您的集群通信" 进行操作
 
-2. 请安装 NVIDIA 设备插件。 （注意：如果您在上面的步骤中使用了 `BOTTLEROCKET_x86_64_NVIDIA` AMI。）
+2. 请安装 NVIDIA 设备插件。 「注意：如果您在上面的步骤中使用了 `BOTTLEROCKET_x86_64_NVIDIA` AMI。」
    * 安装 DaemonSet for NVIDIA 设备插件以在 Amazon EKS 集群中运行支持 GPU 的容器。你可参考 [Amazon EKS 优化的加速 Amazon Linux AMIs](https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html#gpu-ami)
    或 [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) 了解更多详细信息。
    * 如果 GPU 节点有污点，则添加 `tolerations` 到 `nvidia-device-plugin.yml` 启用 DaemonSet 在 GPU 节点上调度 Pod。
