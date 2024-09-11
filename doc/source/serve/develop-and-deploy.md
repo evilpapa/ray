@@ -2,16 +2,16 @@
 
 # 开发并部署 ML 应用
 
-The flow for developing a Ray Serve application locally and deploying it in production covers the following steps:
+在本地开发 Ray Serve 应用程序并将其部署到生产中的流程包括以下步骤：
 
-* Converting a Machine Learning model into a Ray Serve application
-* Testing the application locally
-* Building Serve config files for production deployment
-* Deploying applications using a config file
+* 将机器学习模型转换为 Ray Serve 应用程序
+* 本地测试应用程序
+* 为生产部署构建服务配置文件
+* 使用配置文件部署应用程序
 
-## Convert a model into a Ray Serve application
+## 将模型转换为 Ray Serve 应用
 
-This example uses a text-translation model:
+此示例使用文本翻译模型：
 
 ```{literalinclude} ../serve/doc_code/getting_started/models.py
 :start-after: __start_translation_model__
@@ -19,17 +19,17 @@ This example uses a text-translation model:
 :language: python
 ```
 
-The Python file, called `model.py`, uses the `Translator` class to translate English text to French.
+这个名为 `model.py` 的 Python 文件，使用类 `Translator` 将英文文本翻译成法语。
 
-- The `self.model` variable inside the `Translator`'s `__init__` method
-  stores a function that uses the [t5-small](https://huggingface.co/t5-small)
-  model to translate text.
-- When `self.model` is called on English text, it returns translated French text
-  inside a dictionary formatted as `[{"translation_text": "..."}]`.
-- The `Translator`'s `translate` method extracts the translated text by indexing into the dictionary.
+- 在 `Translator` 的 `__init__` 方法的 `self.model` 变量
+  存储了一个使用 [t5-small](https://huggingface.co/t5-small)
+  模型的方法来翻译文本。
+- 当 `self.model` 对英文文本调用时，它会返回格式
+  为 `[{"translation_text": "..."}]` 字典的法语翻译文本。
+- `Translator` 的 `translate` 方法通过索引字典来提取翻译的文本。
 
-Copy and paste the script and run it locally. It translates `"Hello world!"`
-into `"Bonjour Monde!"`.
+复制并粘贴脚本并在本地运行。它会翻译 `"Hello world!"`
+成 `"Bonjour Monde!"`。
 
 ```console
 $ python model.py
@@ -37,12 +37,12 @@ $ python model.py
 Bonjour Monde!
 ```
 
-Converting this model into a Ray Serve application with FastAPI requires three changes:
-1. Import Ray Serve and Fast API dependencies
-2. Add decorators for Serve deployment with FastAPI: `@serve.deployment` and `@serve.ingress(app)`
-3. `bind` the `Translator` deployment to the arguments that are passed into its constructor
+将此模型转换为具有 FastAPI 的 Ray Serve 应用程序需要进行三处更改：
+1. 导入 Ray Serve 和 Fast API 依赖项
+2. 使用 FastAPI 的装饰器 `@serve.deployment` 和 `@serve.ingress(app)` 添加用于 Serve 部署
+3. `bind` `Translator` deployment 到其构造函数中传递的参数
 
-For other HTTP options, see [Set Up FastAPI and HTTP](serve-set-up-fastapi-http). 
+对于其他 HTTP 选项，请参阅 [设置 FastAPI 和 HTTP](serve-set-up-fastapi-http)。
 
 ```{literalinclude} ../serve/doc_code/develop_and_deploy/model_deployment_with_fastapi.py
 :start-after: __deployment_start__
@@ -50,25 +50,25 @@ For other HTTP options, see [Set Up FastAPI and HTTP](serve-set-up-fastapi-http)
 :language: python
 ```
 
-Note that the code configures parameters for the deployment, such as `num_replicas` and `ray_actor_options`. These parameters help configure the number of copies of the deployment and the resource requirements for each copy. In this case, we set up 2 replicas of the model that take 0.2 CPUs and 0 GPUs each. For a complete guide on the configurable parameters on a deployment, see [Configure a Serve deployment](serve-configure-deployment).
+请注意，代码配置了部署的参数，例如 `num_replicas` 和 `ray_actor_options`.。这些参数有助于配置部署的副本数以及每个副本的资源要求。在本例中，我们设置了 2 个模型副本，每个副本占用 0.2 个 CPU 和 0 个 GPU。有关部署上可配置参数的完整指南，请参阅 [配置 Serve 部署](serve-configure-deployment)。
 
-## Test a Ray Serve application locally
+## 本地测试 Ray Serve 应用程序
 
-To test locally, run the script with the `serve run` CLI command. This command takes in an import path formatted as `module:application`. Run the command from a directory containing a local copy of the script saved as `model.py`, so it can import the application:
+要在本地测试，请使用 CLI 命令 `serve run` 运行脚本。此命令接受格式为 `module:application`的导入路径。从包含保存为 `model.py` 脚本本地副本的目录运行该命令，以便它可以导入应用程序：
 
 ```console
 $ serve run model:translator_app
 ```
 
-This command runs the `translator_app` application and then blocks streaming logs to the console. You can kill it with `Ctrl-C`, which tears down the application.
+此命令运行 `translator_app` 应用程序，然后阻止将日志流式传输到控制台。您可以使用 `Ctrl-C` 来终止它，这将关闭应用程序。
 
-Now test the model over HTTP. Reach it at the following default URL:
+现在通过 HTTP 测试模型。通过以下默认 URL 访问：
 
 ```
 http://127.0.0.1:8000/
 ```
 
-Send a POST request with JSON data containing the English text. This client script requests a translation for "Hello world!":
+发送包含英文文本的 JSON 数据的 POST 请求。此客户端脚本请求“Hello world!”的翻译：
 
 ```{literalinclude} ../serve/doc_code/develop_and_deploy/model_deployment_with_fastapi.py
 :start-after: __client_function_start__
@@ -76,7 +76,7 @@ Send a POST request with JSON data containing the English text. This client scri
 :language: python
 ```
 
-While a Ray Serve application is deployed, use the `serve status` CLI command to check the status of the application and deployment. For more details on the output format of `serve status`, see [Inspect Serve in production](serve-in-production-inspecting).
+部署 Ray Serve 应用程序时，使用CLI 命令 `serve status` 检查应用程序和部署的状态。有关 `serve status` 输出格式的更多详细信息，请参阅 [检查生产中的 Serve](serve-in-production-inspecting)。
 
 ```console
 $ serve status
@@ -95,15 +95,14 @@ applications:
         message: ''
 ```
 
-## Build Serve config files for production deployment
+## 为生产部署构建服务配置文件
 
-To deploy Serve applications in production, you need to generate a Serve config YAML file. A Serve config file is the single source of truth for the cluster, allowing you to specify system-level configuration and your applications in one place. It also allows you to declaratively update your applications. The `serve build` CLI command takes as input the import path and saves to an output file using the `-o` flag. You can specify all deployment parameters in the Serve config files.
 
 ```console
 $ serve build model:translator_app -o config.yaml
 ```
 
-The `serve build` command adds a default application name that can be modified. The resulting Serve config file is:
+该 `serve build` 命令添加了一个可以修改的默认应用程序名称。生成的 Serve 配置文件为：
 
 ```
 proxy_location: EveryNode
@@ -130,7 +129,7 @@ applications:
       num_gpus: 0.0
 ```
 
-You can also use the Serve config file with `serve run` for local testing. For example:
+您还可以使用 Serve 配置文件运行 `serve run` 进行本地测试。例如：
 
 ```console
 $ serve run config.yaml
@@ -153,14 +152,14 @@ applications:
         message: ''
 ```
 
-For more details, see [Serve Config Files](serve-in-production-config-file).
+有关更多详细信息，请参阅 [Serve 配置文件](serve-in-production-config-file)。
 
-## Deploy Ray Serve in production
+## 在生产中部署 Ray Serve
 
-Deploy the Ray Serve application in production on Kubernetes using the [KubeRay] operator. Copy the YAML file generated in the previous step directly into the Kubernetes configuration. KubeRay supports zero-downtime upgrades, status reporting, and fault tolerance for your production application. See [Deploying on Kubernetes](serve-in-production-kubernetes) for more information. For production usage, consider implementing the recommended practice of setting up [head node fault tolerance](serve-e2e-ft-guide-gcs).
+使用 [KubeRay] 操作器在 Kubernetes 上将 Ray Serve 应用程序部署到生产环境中。将上一步生成的 YAML 文件直接复制到 Kubernetes 配置中。KubeRay 支持零停机升级、状态报告和容错，让您的生产应用程序更具弹性。有关更多信息，请参阅 [在 Kubernetes 上部署](serve-in-production-kubernetes) 。对于生产用途，请考虑实施设置 [头节点容错](serve-e2e-ft-guide-gcs) 的推荐用法。
 
-## Monitor Ray Serve
+## 监控 Ray Serve
 
-Use the Ray Dashboard to get a high-level overview of your Ray Cluster and Ray Serve application's states. The Ray Dashboard is available both during local testing and on a remote cluster in production. Ray Serve provides some in-built metrics and logging as well as utilities for adding custom metrics and logs in your application. For production deployments, exporting logs and metrics to your observability platforms is recommended. See [Monitoring](serve-monitoring) for more details. 
+使用 Ray Dashboard 可以概览 Ray Cluster 和 Ray Serve 应用程序的状态。Ray Dashboard 既可以在本地测试期间使用，也可以在生产中的远程集群上使用。Ray Serve 提供了一些内置指标和日志记录，以及用于在应用程序中添加自定义指标和日志的实用程序。对于生产部署，建议将日志和指标导出到可观察性平台。有关更多详细信息，请参阅 [监控](serve-monitoring) 。
 
 [KubeRay]: kuberay-index

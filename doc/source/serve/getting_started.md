@@ -93,15 +93,15 @@ Bonjour Monde!
 装饰器将 `Translator` Python 类转换成 Ray Serve `Deployment` 对象。
 
 每个部署都会存储您编写的单个 Python 函数或类，并使用
-它来处理请求。 You can scale and configure each of your deployments independently using
-parameters in the `@serve.deployment` decorator. The example configures a few common parameters:
+它来处理请求。 您可以使用 `@serve.deployment` 装饰器中的参数
+单独扩展和配置每个部署。该示例配置了一些常用参数：
 
-* `num_replicas`: an integer that determines how many copies of our deployment process run in Ray. Requests are load balanced across these replicas, allowing you to scale your deployments horizontally.
-* `ray_actor_options`: a dictionary containing configuration options for each replica.
-    * `num_cpus`: a float representing the logical number of CPUs each replica should reserve. You can make this a fraction to pack multiple replicas together on a machine with fewer CPUs than replicas.
-    * `num_gpus`: a float representing the logical number of GPUs each replica should reserve. You can make this a fraction to pack multiple replicas together on a machine with fewer GPUs than replicas.
+* `num_replicas`: 整数，决定我们的部署流程在 Ray 中运行的副本数。请求在这些副本之间进行负载平衡，允许您水平扩展部署。
+* `ray_actor_options`: 包含每个副本的配置选项的字典。
+    * `num_cpus`: 示每个副本应保留的逻辑 CPU 数量的浮点数。您可以将其设为分数，以便将多个副本打包到 CPU 数量少于副本数量的机器上。
+    * `num_gpus`: 示每个副本应保留的逻辑 GPU 数量的浮点数。您可以将其设为分数，以便将多个副本打包到 GPU 数量少于副本数量的机器上。
 
-All these parameters are optional, so feel free to omit them:
+所有这些参数都是可选的，因此可以随意省略它们：
 
 ```python
 ...
@@ -110,11 +110,11 @@ class Translator:
   ...
 ```
 
-Deployments receive Starlette HTTP `request` objects [^f1]. By default, the deployment class's `__call__` method is called on this `request` object. The return value is sent back in the HTTP response body.
+部署接收 Starlette HTTP `request` 对象 [^f1]。 默认，部署类的 `__call__` 方法在 `request` 对象上被调用。返回值在 HTTP 响应主体中发回。
 
-This is why `Translator` needs a new `__call__` method. The method processes the incoming HTTP request by reading its JSON data and forwarding it to the `translate` method. The translated text is returned and sent back through the HTTP response. You can also use Ray Serve's FastAPI integration to avoid working with raw HTTP requests. Check out {ref}`serve-fastapi-http` for more info about FastAPI with Serve.
+这是为什么 `Translator` 需要一个新的 `__call__` 方法。该方法处理传入的 HTTP 请求读取 JSON 数据并转发到 `translate` 方法。翻译后的文本将返回并通过 HTTP 响应发送回去。您还可以使用 Ray Serve 的 FastAPI 集成来避免使用原始 HTTP 请求。查看 {ref}`serve-fastapi-http` 以获取有关带有 Serve 的 FastAPI 的更多信息。
 
-Next, we need to `bind` our `Translator` deployment to arguments that will be passed into its constructor. This defines a Ray Serve application that we can run locally or deploy to production (you'll see later that applications can consist of multiple deployments). Since `Translator`'s constructor doesn't take in any arguments, we can call the deployment's `bind` method without passing anything in:
+接下来我们需要将我们的 `Translator` deployment  `bind` 传递给其构造函数的参数。这定义了一个 Ray Serve 应用程序，我们可以在本地运行它或将其部署到生产环境（稍后您将看到应用程序可以由多个部署组成）。 犹豫 `Translator` 的构造函数不接受任何参数，因此我们可以调用 deployment 的 `bind` 方法而无需传入任何内容：
 
 ```{literalinclude} ../serve/doc_code/getting_started/model_deployment.py
 :start-after: __model_deploy_start__
@@ -122,11 +122,11 @@ Next, we need to `bind` our `Translator` deployment to arguments that will be pa
 :language: python
 ```
 
-With that, we are ready to test the application locally.
+这样，我们就可以准备在本地测试该应用程序了。
 
-## Running a Ray Serve Application
+## 运行 Ray Serve 应用
 
-Here's the full Ray Serve script that we built above:
+以下是我们上面构建的完整 Ray Serve 脚本：
 
 ```{literalinclude} ../serve/doc_code/getting_started/model_deployment_full.py
 :start-after: __deployment_full_start__
@@ -134,24 +134,24 @@ Here's the full Ray Serve script that we built above:
 :language: python
 ```
 
-To test locally, we run the script with the `serve run` CLI command. This command takes in an import path
-to our deployment formatted as `module:application`. Make sure to run the command from a directory containing a local copy of this script saved as `serve_quickstart.py`, so it can import the application:
+为了在本地进行测试，我们使用 CLI 命令 `serve run` 运行脚本。此命令接受
+格式为 `module:application` 的部署导入路径。确保从包含此脚本的本地副本（保存为 `serve_quickstart.py` ）的目录运行命令，以便它可以导入应用程序：
 
 ```console
 $ serve run serve_quickstart:translator_app
 ```
 
-This command will run the `translator_app` application and then block, streaming logs to the console. It can be killed with `Ctrl-C`, which will tear down the application.
+该命令将会运行 `translator_app` 应用程序，然后阻止将日志流式传输到控制台。可以使用 `Ctrl-C`，这将关闭应用程序。
 
-We can now test our model over HTTP. It can be reached at the following URL by default:
+我们现在可以通过 HTTP 测试我们的模型。默认情况下，可以通过以下 URL 访问：
 
 ```
 http://127.0.0.1:8000/
 ```
 
-We'll send a POST request with JSON data containing our English text.
-`Translator`'s `__call__` method will unpack this text and forward it to the
-`translate` method. Here's a client script that requests a translation for "Hello world!":
+我们将发送一个包含英文文本的 JSON 数据的 POST 请求。
+`Translator` 的 `__call__` 方法将解压此文本并将其转发给
+`translate` 方法。以下是请求翻译“Hello world!”的客户端脚本：
 
 ```{literalinclude} ../serve/doc_code/getting_started/model_deployment.py
 :start-after: __client_function_start__
@@ -159,13 +159,13 @@ We'll send a POST request with JSON data containing our English text.
 :language: python
 ```
 
-To test our deployment, first make sure `Translator` is running:
+为了测试我们的部署，首先确保 `Translator` 运行：
 
 ```
 $ serve run serve_deployment:translator_app
 ```
 
-While `Translator` is running, we can open a separate terminal window and run the client script. This will get a response over HTTP:
+当 `Translator` 在运行，我们可以打开一个单独的终端窗口并运行客户端脚本。这将通过 HTTP 获得响应：
 
 ```console
 $ python model_client.py
@@ -173,17 +173,17 @@ $ python model_client.py
 Bonjour monde!
 ```
 
-## Composing Multiple Models
+## 组合多模型
 
-Ray Serve allows you to compose multiple deployments into a single Ray Serve application. This makes it easy to combine multiple machine learning models along with business logic to serve a single request.
-We can use parameters like `autoscaling_config`, `num_replicas`, `num_cpus`, and `num_gpus` to independently configure and scale each deployment in the application.
+Ray Serve 允许您将多个部署组合成一个 Ray Serve 应用程序。这样可以轻松地将多个机器学习模型与业务逻辑结合起来以满足单个请求。
+我们可以使用 `autoscaling_config`、`num_replicas`、`num_cpus` 以及 `num_gpus` 等参数来独立配置和扩展应用程序中的每个部署。
 
-For example, let's deploy a machine learning pipeline with two steps:
+例如，让我们部署一个包含两个步骤的机器学习管道：
 
-1. Summarize English text
-2. Translate the summary into French
+1. 总结英文文本
+2. 将摘要翻译成法语
 
-`Translator` already performs step 2. We can use [HuggingFace's SummarizationPipeline](https://huggingface.co/docs/transformers/v4.21.0/en/main_classes/pipelines#transformers.SummarizationPipeline) to accomplish step 1. Here's an example of the `SummarizationPipeline` that runs locally:
+`Translator` 已经执行了步骤2。我们可以使用 [HuggingFace 的 SummarizationPipeline](https://huggingface.co/docs/transformers/v4.21.0/en/main_classes/pipelines#transformers.SummarizationPipeline) 来完成步骤1。以下是 `SummarizationPipeline` 在本地运行的一个例子：
 
 ```{literalinclude} ../serve/doc_code/getting_started/models.py
 :start-after: __start_summarization_model__
@@ -191,7 +191,7 @@ For example, let's deploy a machine learning pipeline with two steps:
 :language: python
 ```
 
-You can copy-paste this script and run it locally. It summarizes the snippet from _A Tale of Two Cities_ to `it was the best of times, it was worst of times .`
+您可以复制粘贴此脚本并在本地运行。它将《双城记》中的片段总结为 `it was the best of times, it was worst of times .`
 
 ```console
 $ python summary_model.py
@@ -199,7 +199,7 @@ $ python summary_model.py
 it was the best of times, it was worst of times .
 ```
 
-Here's an application that chains the two models together. The graph takes English text, summarizes it, and then translates it:
+下面是将两个模型连接在一起的应用程序。该图采用英文文本，对其进行总结，然后进行翻译：
 
 ```{literalinclude} ../serve/doc_code/getting_started/translator.py
 :start-after: __start_graph__
@@ -207,27 +207,27 @@ Here's an application that chains the two models together. The graph takes Engli
 :language: python
 ```
 
-This script contains our `Summarizer` class converted to a deployment and our `Translator` class with some modifications. In this script, the `Summarizer` class contains the `__call__` method since requests are sent to it first. It also takes in a handle to the `Translator` as one of its constructor arguments, so it can forward summarized texts to the `Translator` deployment. The `__call__` method also contains some new code:
+此脚本包含已转换为部署的类 `Summarizer` 和经过一些修改的类 `Translator`。在此脚本中， `Summarizer` 类包含 `__call__` 方法，因为请求首先发送给它。它还将作为 `Translator` 构造函数的参数之一，因此它可以将摘要文本转发到部署 `Translator` 部署。该 `__call__` 方法还包含一些新代码：
 
 ```python
 translation = await self.translator.translate.remote(summary)
 ```
 
-`self.translator.translate.remote(summary)` issues an asynchronous call to the `Translator`'s `translate` method and returns a `DeploymentResponse` object immediately. Calling `await` on the response waits for the remote method call to execute and returns its return value. The response could also be passed directly to another `DeploymentHandle` call.
+`self.translator.translate.remote(summary)` 对 `Translator` 的 `translate` 方法发起异步调用，并立即返回一个 `DeploymentResponse` 对象。 调用 `await` 应等待远程方法调用执行并返回其返回值。响应也可以直接传递给另一个 `DeploymentHandle` 调用。
 
-We define the full application as follows:
+我们对完整应用程序的定义如下：
 
 ```python
 app = Summarizer.bind(Translator.bind())
 ```
 
-Here, we bind `Translator` to its (empty) constructor arguments, and then we pass in the bound `Translator` as the constructor argument for the `Summarizer`. We can run this deployment graph using the `serve run` CLI command. Make sure to run this command from a directory containing a local copy of the `serve_quickstart_composed.py` code:
+在这里，我们绑定 `Translator` 到它的（空）构造函数参数，然后将绑定的 `Translator` 作为 `Summarizer` 的构造函数参数传入。我们可以使用 CLI 命令 `serve run` 运行此部署图。确保从包含代码本地副本 `serve_quickstart_composed.py` 的目录运行此命令： 
 
 ```console
 $ serve run serve_quickstart_composed:app
 ```
 
-We can use this client script to make requests to the graph:
+我们可以使用此客户端脚本向图表发出请求：
 
 ```{literalinclude} ../serve/doc_code/getting_started/translator.py
 :start-after: __start_client__
@@ -235,7 +235,7 @@ We can use this client script to make requests to the graph:
 :language: python
 ```
 
-While the application is running, we can open a separate terminal window and query it:
+在应用程序运行时，我们可以打开一个单独的终端窗口并查询它：
 
 ```console
 $ python composed_client.py
@@ -243,16 +243,16 @@ $ python composed_client.py
 c'était le meilleur des temps, c'était le pire des temps .
 ```
 
-Composed Ray Serve applications let you deploy each part of your machine learning pipeline, such as inference and business logic steps, in separate deployments. Each of these deployments can be individually configured and scaled, ensuring you get maximal performance from your resources. See the guide on [model composition](serve-model-composition) to learn more.
+组合式 Ray Serve 应用程序可让您在单独的部署中部署机器学习管道的每个部分，例如推理和业务逻辑步骤。这些部署中的每一个都可以单独配置和扩展，确保您从资源中获得最大性能。请参阅 [模型组合](serve-model-composition) 指南以了解更多信息。
 
-## Next Steps
+## 下一步
 
-- Dive into the {doc}`key-concepts` to get a deeper understanding of Ray Serve.
-- View details about your Serve application in the Ray Dashboard: {ref}`dash-serve-view`.
-- Learn more about how to deploy your Ray Serve application to production: {ref}`serve-in-production`.
-- Check more in-depth tutorials for popular machine learning frameworks: {doc}`tutorials/index`.
+- 深入 {doc}`key-concepts` 以更深入地了解 Ray Serve。
+- 在 Ray Dashboard:  {ref}`dash-serve-view` 中查看有关 Serve 应用程序的详细信息。
+- 了解有关如何将 Ray Serve 应用程序部署到生产环境的更多信息： {ref}`serve-in-production`。
+- 查看有关流行机器学习框架的更多深入教程： {doc}`tutorials/index`。
 
 ```{rubric} Footnotes
 ```
 
-[^f1]: [Starlette](https://www.starlette.io/) is a web server framework used by Ray Serve.
+[^f1]: [Starlette](https://www.starlette.io/) 是 Ray Serve 使用的 Web 服务器框架。
